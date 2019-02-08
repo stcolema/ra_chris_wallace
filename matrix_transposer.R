@@ -2,6 +2,7 @@
 
 # Rscript to convert data from CEDAR cohorts (found here: http://cedar-web.giga.ulg.ac.be/)
 # Call from the command line with input arguments
+# Writes to current directory
 
 # For command line arguments
 library("optparse") # install.packages("optparse")
@@ -24,21 +25,31 @@ input_arguments <- function() {
       help = "command to transpose all .txt files in currect directory [default= %default]",
       metavar = "logical"
     ),
-    make_option(c("-ext", "--extension"),
+    make_option(c("-d", "--dir"),
+      type = "character", default = ".",
+      help = "directory to read files from (used if all set to TRUE)",
+      metavar = "character"
+    ),
+    make_option(c("-e", "--extension"),
       type = "character", default = ".txt",
       help = "file extension of target files (only used if --all set to TRUE)",
       metavar = "character"
+    ),
+    make_option(c("-w", "--write_dir"),
+                type = "character", default = ".",
+                help = "directory to write files to",
+                metavar = "character"
     )
   )
   opt_parser <- OptionParser(option_list = option_list)
   opt <- parse_args(opt_parser)
 }
 
-read_in_data <- function(args, file_ext = ".txt") {
+read_in_data <- function(args) {
   # If instructed to process all files, find all suitable files (i.e. ending in file_ext)
   if (args$all) {
-    files_present <- list.files()
-    file_name <- grep(file_ext, files_present, value = TRUE)
+    files_present <- list.files(path = args$dir)
+    file_name <- grep(args$extension, files_present, value = TRUE)
     return(file_name)
   }
   if (!is.na(args$file) & file.exists(args$file)) {
@@ -80,7 +91,7 @@ create_col_names_vector <- function(dt) {
     unlist()
 }
 
-write_data <- function(file_name, extension) {
+write_data <- function(file_name, extension, write_dir) {
   for (file in file_name) {
     # Read in the data with the first row as the header
     dt <- fread("~/Desktop/Data/CD14_GE_Corrected4_Covars.txt", header = T)
@@ -108,7 +119,9 @@ write_data <- function(file_name, extension) {
     row.names(dt_out) <- row.names(conv_dt)
 
     # Write to a csv file
-    file_to_write <- sub(paste0(extension, "$"), "", file)
+    file_to_write <- sub(paste0(extension, "$"), "", file) %>% 
+      paste0(write_dir, "/transposed_", ., ".csv")
+    
     fwrite(dt_out, file = file_to_write, row.names = T)
   }
 }
@@ -116,4 +129,4 @@ write_data <- function(file_name, extension) {
 # Call functions to receive arguments and write a csv of the ransposed data
 args <- input_arguments()
 files <- read_in_data(args)
-write_data(files, args$extension)
+write_data(files, args$extension, args$write_dir)
