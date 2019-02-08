@@ -16,29 +16,39 @@ library(magrittr)
 # User inputs from command line
 input_arguments <- function() {
   option_list <- list(
+    
+    # File to convert (if all is TRUE this is not used)
     make_option(c("-f", "--file"),
       type = "character", default = NA,
       help = "dataset file name", metavar = "character"
     ),
+    
+    # Convert all files in target destination (default is FALSE)
     make_option(c("-a", "--all"),
       type = "logical", default = FALSE,
       help = "command to transpose all .txt files in currect directory [default= %default]",
       metavar = "logical"
     ),
+    
+    # Directory to read from
     make_option(c("-d", "--dir"),
       type = "character", default = ".",
       help = "directory to read files from (used if all set to TRUE)",
       metavar = "character"
     ),
+    
+    # File extension to be accepting
     make_option(c("-e", "--extension"),
       type = "character", default = ".txt",
       help = "file extension of target files (only used if --all set to TRUE)",
       metavar = "character"
     ),
+    
+    # Directory to write to
     make_option(c("-w", "--write_dir"),
-                type = "character", default = ".",
-                help = "directory to write files to",
-                metavar = "character"
+      type = "character", default = ".",
+      help = "directory to write files to",
+      metavar = "character"
     )
   )
   opt_parser <- OptionParser(option_list = option_list)
@@ -119,9 +129,9 @@ write_data <- function(file_name, extension, write_dir) {
     row.names(dt_out) <- row.names(conv_dt)
 
     # Write to a csv file
-    file_to_write <- sub(paste0(extension, "$"), "", file) %>% 
+    file_to_write <- sub(paste0(extension, "$"), "", file) %>%
       paste0(write_dir, "/transposed_", ., ".csv")
-    
+
     fwrite(dt_out, file = file_to_write, row.names = T)
   }
 }
