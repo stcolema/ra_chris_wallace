@@ -16,34 +16,34 @@ library(magrittr)
 # User inputs from command line
 input_arguments <- function() {
   option_list <- list(
-    
+
     # File to convert (if all is TRUE this is not used)
     make_option(c("-f", "--file"),
       type = "character", default = NA,
       help = "dataset file name", metavar = "character"
     ),
-    
+
     # Convert all files in target destination (default is FALSE)
     make_option(c("-a", "--all"),
       type = "logical", default = FALSE,
       help = "command to transpose all .txt files in currect directory [default= %default]",
       metavar = "logical"
     ),
-    
+
     # Directory to read from
     make_option(c("-d", "--dir"),
       type = "character", default = ".",
       help = "directory to read files from (used if all set to TRUE)",
       metavar = "character"
     ),
-    
+
     # File extension to be accepting
     make_option(c("-e", "--extension"),
       type = "character", default = ".txt",
       help = "file extension of target files (only used if --all set to TRUE)",
       metavar = "character"
     ),
-    
+
     # Directory to write to
     make_option(c("-w", "--write_dir"),
       type = "character", default = ".",
@@ -62,26 +62,33 @@ read_in_data <- function(args) {
     file_name <- grep(args$extension, files_present, value = TRUE)
     return(file_name)
   }
-  if (!is.na(args$file) & file.exists(args$file)) {
-    file_name <- args$file
-    return(file_name)
-  } else {
-    if (!is.na(args$file) & !file.exists(args$file)) {
-      print("File not found.")
-    }
-    cat("Enter a filename: ")
-    file_name <- readLines("stdin", 1)
+  # If not transforming all files check if the user supplied a filename and
+  # check if the file exists (I think this should not be working - not sure why
+  # as I do not tell it where to look)
 
-    # file_name <- readline(prompt="Enter a filename: ")
-    while (!file.exists(file_name)) {
-      cat("File not found, please try again or quit [:q]: ")
-      file_name <- readLines("stdin", 1)
-      # quit <- readline(prompt="File not found, please try again or quit [:q]: ")
-      if (file_name == ":q") {
-        stop("User terminated script.")
-      }
-      # file_name <- readline(prompt="Enter a filename: ")
+  supplied_file <- paste0(args$dir, "/", args$file)
+  if (!is.na(args$file) & file.exists(supplied_file)) {
+    file_name <- args$file
+    return(args$file)
+  } else {
+    if (!is.na(args$file) & !file.exists(supplied_file)) {
+      cat("File not found. \n")
+      cat(paste(
+        "Please check that the read directory (--dir) and filename",
+        "(--file) are correct. \n"
+      ))
     }
+    stop("Script aborted.")
+    # cat("Enter a filename: ")
+    # file_name <- readLines("stdin", 1)
+    # 
+    # while (!file.exists(file_name)) {
+    #   cat("File not found, please try again or quit [:q]: ")
+    #   file_name <- readLines("stdin", 1)
+    #   if (file_name == ":q") {
+    #     stop("User terminated script.")
+    #   }
+    # }
   }
   file_name
 }
