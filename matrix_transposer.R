@@ -13,6 +13,9 @@ library(data.table) # install.packages("data.table", dep = T)
 # Load magrittr for the pipe %>%
 library(magrittr)
 
+# Load dplyr for access to select function
+# library(dplyr) 
+
 # User inputs from command line
 input_arguments <- function() {
   option_list <- list(
@@ -49,7 +52,21 @@ input_arguments <- function() {
       type = "character", default = ".",
       help = "directory to write files to",
       metavar = "character"
-    )
+    ),
+    
+    # Directory to write to
+    make_option(c("-n", "--na"),
+                type = "logical", default = FALSE,
+                help = "instruction to remove NAs from data",
+                metavar = "logical"
+    ) 
+
+    # # Index of columns containing row names
+    # make_option(c("-r", "--row_names"),
+    #   type = "complex", default = 0,
+    #   help = "Index of columns containing row names",
+    #   metavar = "complex"
+    # )
   )
   opt_parser <- OptionParser(option_list = option_list)
   opt <- parse_args(opt_parser)
@@ -59,7 +76,8 @@ read_in_data <- function(args) {
   # If instructed to process all files, find all suitable files (i.e. ending in file_ext)
   if (args$all) {
     files_present <- list.files(path = args$dir)
-    file_name <- grep(args$extension, files_present, value = TRUE)
+    file_name <- grep(args$extension, files_present, value = TRUE) %>%
+      paste0(args$dir, "/", .)
     return(file_name)
   }
   # If not transforming all files check if the user supplied a filename and
@@ -68,8 +86,8 @@ read_in_data <- function(args) {
 
   supplied_file <- paste0(args$dir, "/", args$file)
   if (!is.na(args$file) & file.exists(supplied_file)) {
-    file_name <- args$file
-    return(args$file)
+    # file_name <- args$file
+    return(supplied_file)
   } else {
     if (!is.na(args$file) & !file.exists(supplied_file)) {
       cat("File not found. \n")
@@ -81,7 +99,7 @@ read_in_data <- function(args) {
     stop("Script aborted.")
     # cat("Enter a filename: ")
     # file_name <- readLines("stdin", 1)
-    # 
+    #
     # while (!file.exists(file_name)) {
     #   cat("File not found, please try again or quit [:q]: ")
     #   file_name <- readLines("stdin", 1)
@@ -108,21 +126,35 @@ create_col_names_vector <- function(dt) {
     unlist()
 }
 
-write_data <- function(file_name, extension, write_dir) {
+write_data <- function(file_name, extension, write_dir, row_names, 
+                       remove.na = FALSE) {
   for (file in file_name) {
     # Read in the data with the first row as the header
-    dt <- fread("~/Desktop/Data/CD14_GE_Corrected4_Covars.txt", header = T)
+    dt <- fread(file, header = T)
 
     # Remove the first two columns (the ID and its duplicate) and transpose the data
-    conv_dt <- dt[, -(1:2)] %>%
+    col_classes <- sapply(dt, class)
+    cols_to_drop <- col_classes != "numeric"
+    names_to_drop <- names(cols_to_drop) [unname(cols_to_drop)]
+    conv_dt <- dt %>% dplyr::select(-c(names_to_drop)) %>%
       as.matrix() %>%
       t()
-
-    # ID column
-    # Ensure that the first two columns are indeed duplicates
-    if (any(dt[, 1] != dt[, 2])) {
-      print("ID columns not duplicates. Please inspect data.")
+    
+    if(remove.na){
+      conv_dt <- conv_dt %>% na.omit()
     }
+    
+    # if (row_names != 0) {
+    #   # Ensure that the first two columns are indeed duplicates
+    #   if (any(dt[, 1] != dt[, 2])) {
+    #     cat("ID columns not duplicates. Please inspect data.\n")
+    #   }
+    # 
+    #   conv_dt <- dt[, -(row_names)]
+    # }
+    # conv_dt <- dt %>%
+    #   as.matrix() %>%
+    #   t()
 
     # Create list of column names
     id <- dt[, 1] %>%
@@ -135,8 +167,11 @@ write_data <- function(file_name, extension, write_dir) {
     dt_out <- as.data.table(conv_dt)
     row.names(dt_out) <- row.names(conv_dt)
 
+    file_name <- strsplit(paste0("/", file) , "/([^/]*).")[[1]]
+    file_name <- file_name[[length(file_name)]]
+
     # Write to a csv file
-    file_to_write <- sub(paste0(extension, "$"), "", file) %>%
+    file_to_write <- sub(paste0(extension, "$"), "", file_name) %>%
       paste0(write_dir, "/transposed_", ., ".csv")
 
     fwrite(dt_out, file = file_to_write, row.names = T)
@@ -146,4 +181,4 @@ write_data <- function(file_name, extension, write_dir) {
 # Call functions to receive arguments and write a csv of the ransposed data
 args <- input_arguments()
 files <- read_in_data(args)
-write_data(files, args$extension, args$write_dir)
+write_data(files, args$extension, args$write_dir, args$row_names, args$na)
