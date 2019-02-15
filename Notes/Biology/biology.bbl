@@ -1,0 +1,55 @@
+\begin{thebibliography}{7}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Burgess(2017)]{burgess2010principles}
+Darren~J Burgess.
+\newblock Principles of gene regulation across tissues.
+\newblock \emph{Nature Reviews Genetics}, 18, 2017.
+
+\bibitem[Consortium et~al.(2017)]{gtex2017genetic}
+GTEx Consortium et~al.
+\newblock Genetic effects on gene expression across human tissues.
+\newblock \emph{Nature}, 550\penalty0 (7675):\penalty0 204, 2017.
+
+\bibitem[Dixon et~al.(2007)Dixon, Liang, Moffatt, Chen, Heath, Wong, Taylor,
+  Burnett, Gut, Farrall, et~al.]{dixon2007genome}
+Anna~L Dixon, Liming Liang, Miriam~F Moffatt, Wei Chen, Simon Heath, Kenny~CC
+  Wong, Jenny Taylor, Edward Burnett, Ivo Gut, Martin Farrall, et~al.
+\newblock A genome-wide association study of global gene expression.
+\newblock \emph{Nature genetics}, 39\penalty0 (10):\penalty0 1202, 2007.
+
+\bibitem[Grundberg et~al.(2012)Grundberg, Small, Hedman, Nica, Buil, Keildson,
+  Bell, Yang, Meduri, Barrett, et~al.]{grundberg2012mapping}
+Elin Grundberg, Kerrin~S Small, {\AA}sa~K Hedman, Alexandra~C Nica, Alfonso
+  Buil, Sarah Keildson, Jordana~T Bell, Tsun-Po Yang, Eshwar Meduri, Amy
+  Barrett, et~al.
+\newblock Mapping cis-and trans-regulatory effects across multiple tissues in
+  twins.
+\newblock \emph{Nature genetics}, 44\penalty0 (10):\penalty0 1084, 2012.
+
+\bibitem[Manolio(2010)]{manolio2010genomewide}
+Teri~A Manolio.
+\newblock Genomewide association studies and assessment of the risk of disease.
+\newblock \emph{New England journal of medicine}, 363\penalty0 (2):\penalty0
+  166--176, 2010.
+
+\bibitem[Nica and Dermitzakis(2013)]{nica2013expression}
+Alexandra~C Nica and Emmanouil~T Dermitzakis.
+\newblock Expression quantitative trait loci: present and future.
+\newblock \emph{Philosophical Transactions of the Royal Society B: Biological
+  Sciences}, 368\penalty0 (1620):\penalty0 20120362, 2013.
+
+\bibitem[V{\~o}sa et~al.(2018)V{\~o}sa, Claringbould, Westra, Bonder, Deelen,
+  Zeng, Kirsten, Saha, Kreuzhuber, Kasela, et~al.]{vosa2018unraveling}
+Urmo V{\~o}sa, Annique Claringbould, Harm-Jan Westra, Marc~Jan Bonder, Patrick
+  Deelen, Biao Zeng, Holger Kirsten, Ashis Saha, Roman Kreuzhuber, Silva
+  Kasela, et~al.
+\newblock Unraveling the polygenic architecture of complex traits using blood
+  eqtl meta-analysis.
+\newblock \emph{bioRxiv}, page 447367, 2018.
+
+\end{thebibliography}

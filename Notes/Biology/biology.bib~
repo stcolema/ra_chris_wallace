@@ -1,0 +1,72 @@
+@article{nica2013expression,
+  title={Expression quantitative trait loci: present and future},
+  author={Nica, Alexandra C and Dermitzakis, Emmanouil T},
+  journal={Philosophical Transactions of the Royal Society B: Biological Sciences},
+  volume={368},
+  number={1620},
+  pages={20120362},
+  year={2013},
+  publisher={The Royal Society}
+}
+
+@article{vosa2018unraveling,
+  title={Unraveling the polygenic architecture of complex traits using blood eQTL meta-analysis},
+  author={V{\~o}sa, Urmo and Claringbould, Annique and Westra, Harm-Jan and Bonder, Marc Jan and Deelen, Patrick and Zeng, Biao and Kirsten, Holger and Saha, Ashis and Kreuzhuber, Roman and Kasela, Silva and others},
+  journal={bioRxiv},
+  pages={447367},
+  year={2018},
+  publisher={Cold Spring Harbor Laboratory}
+}
+
+@article{grundberg2012mapping,
+  title={Mapping cis-and trans-regulatory effects across multiple tissues in twins},
+  author={Grundberg, Elin and Small, Kerrin S and Hedman, {\AA}sa K and Nica, Alexandra C and Buil, Alfonso and Keildson, Sarah and Bell, Jordana T and Yang, Tsun-Po and Meduri, Eshwar and Barrett, Amy and others},
+  journal={Nature genetics},
+  volume={44},
+  number={10},
+  pages={1084},
+  year={2012},
+  publisher={Nature Publishing Group}
+}
+
+@article{dixon2007genome,
+  title={A genome-wide association study of global gene expression},
+  author={Dixon, Anna L and Liang, Liming and Moffatt, Miriam F and Chen, Wei and Heath, Simon and Wong, Kenny CC and Taylor, Jenny and Burnett, Edward and Gut, Ivo and Farrall, Martin and others},
+  journal={Nature genetics},
+  volume={39},
+  number={10},
+  pages={1202},
+  year={2007},
+  publisher={Nature Publishing Group}
+}
+
+@article{manolio2010genomewide,
+  title={Genomewide association studies and assessment of the risk of disease},
+  author={Manolio, Teri A},
+  journal={New England journal of medicine},
+  volume={363},
+  number={2},
+  pages={166--176},
+  year={2010},
+  publisher={Mass Medical Soc}
+}
+
+@article{gtex2017genetic,
+  title={Genetic effects on gene expression across human tissues},
+  author={GTEx Consortium and others},
+  journal={Nature},
+  volume={550},
+  number={7675},
+  pages={204},
+  year={2017},
+  publisher={Nature Publishing Group}
+}
+
+@article{burgess2010principles,
+  title={Principles of gene regulation across tissues},
+  author={Burgess, Darren J},
+  journal={Nature Reviews Genetics},
+  volume={18},
+  year={2017},
+  publisher={Nature Publishing Group}
+}
