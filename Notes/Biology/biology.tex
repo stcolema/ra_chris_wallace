@@ -1,0 +1,103 @@
+\documentclass[a4paper,10pt]{article}
+
+\usepackage[utf8]{inputenc}
+
+%%% PAGE DIMENSIONS
+\usepackage{geometry} % to change the page dimensions
+\geometry{a4paper} % or letterpaper (US) or a5paper or....
+%\geometry{margin=2in} % for example, change the margins to 2 inches all round
+%\geometry{left=2.75cm, right=2.75cm, top=3.5cm, bottom=4.5cm}
+
+\usepackage{graphicx} % support the \includegraphics command and options
+
+%%% BibTex packages (url for website references)
+\usepackage[english]{babel}
+\usepackage[numbers]{natbib}
+% \usepackage{url}
+% \usepackage{Biblatex}
+
+%For inclusion of hyperlinks
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+}
+
+%BibTex stuff and referencing sections by name 
+\urlstyle{same}
+\usepackage{nameref} 
+
+
+% \usepackage{natbib}
+
+%opening
+\title{Biology notes}
+\author{Stephen D. C.}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Some comments on relevant biology.
+
+\end{abstract}
+
+\section{Expression quantitative trait loci}
+The last two decades have seen a huge body of research focused on genome variability due to its 
+relevance in the risk of disease experienced by individuals. Fundamental to this study is 
+understanding the effect different genome variants have; i.e. understanding how this change 
+in genome translates to a different phenotype. This means we must investigate the change a 
+variant effects within the cell. Ideally this information allows biological insight into the 
+aetiology and nature of disease or of the phenotype. Genome-wide association studies (GWAS) 
+\cite{manolio2010genomewide} have shown that the majority of these variants are located within 
+the non-coding regions of the genome implying that they are involved in gene regulation. These 
+sites that explain some of the phenotypic variance are referred to as expression quantitative 
+trait loci (eQTL).
+
+eQTLs have transformated the study of genetics. They provide a comprehensuible, accessible and 
+most importantly interpretable loecular link between genetic variation and phenotype. Standard 
+eQTL analysis involves a direction association test between markers of genetic variation, 
+typically using data collected from tens to hundreds of people.
+
+This analysis can be proximal or distal.
+\begin{itemize}
+ \item Proximal: immedietely responsible for causing some observed result;
+ \item Distal: (also \emph{ultimate}) higher-level than proximal. The true cause for an event or 
+ result.
+\end{itemize}
+Consider the example of a ship sinking. This could have a \emph{proximate} cause such as the ship 
+being holed beneath the waterline leading to water entering the ship; this resulted in the ship 
+becoming denser than water and it sank. However, the \emph{distal} cause could be the ship hit a 
+rock tearing open the hull leading to the sinking.
+
+In terms of eQTLs, we designate proximal effects as \emph{cis-eQTL} and distal causes as 
+\emph{trans-eQTL}. We normally consider an eQTL to be cis-regulating if it is within 1MB of the 
+gene transcription start site (TSS) and trans-regulating if it is more than 5MB upstream or 
+downstream of the TSS or if found on a different chromosome.
+
+trans-eQTL are hard to find. They have weaker effects than cis-eQTL and thus require greater power 
+in the experiment \cite{dixon2007genome}. For some context, \citet{burgess2010principles} claims 
+that 449 donors provide low power in terms of finding trans-eQTL. As the power of experiments increases 
+more trans-eQTL are observed and cis-eQTL are shown to be generally tissue agnostic 
+\cite{gtex2017genetic}. Preivous results suggested cis-eQTL would be have tissue-specific effects, 
+but the increase in experimental power revealed that this is not the case \cite{grundberg2012mapping}. 
+The current power present in many genetic experiments is enough to observe trans-eQTLs and indicates 
+these have tissue-specific properties \cite{grundberg2012mapping} \cite{gtex2017genetic}. It is 
+possible that this result might be shown to be an artifact of insufficient power. However, for now 
+we assume it is true and that trans-eQTL are are more likely to display tissue-specifc behaviour 
+than cis-eQTL.
+
+\citet{nica2013expression} reccommend investigating groups of cis-eQTL affecting a gene network that 
+when perturbed results in a disease state. They claim this is far higher powered than the classical 
+approach. This claim is supported by the findings of \citet{vosa2018unraveling} who found that 
+associations between \emph{polygenic risk scores} and gene expression (this assoication is referred 
+to as ``expression quantitative trait score'' (eQTS) in \cite{vosa2018unraveling}) contained the 
+most biological information about disease in a comparison of cis-eQTL, trans-EQTL and eQTS.
+
+\bibliographystyle{plainnat}
+\bibliography{biology}
+
+\end{document}
