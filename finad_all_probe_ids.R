@@ -25,13 +25,14 @@ prep_data <- function(dt) {
 # files_present <- list.files(path = args$dir)
 # file_name <- grep(args$extension, files_present, value = TRUE) %>%
 #   paste0(args$dir, "/", .)
-setwd("~/Desktop/My_end/")
+setwd("~/Desktop/MDI/Data/My_end")
 # setwd("~/Desktop/Na_filled_data/")
-files_present <- list.files(path = "~/Desktop/My_end/")
+files_present <- list.files(path = "~/Desktop/MDI/Data/My_end")
 # files_present <- list.files(path = "~/Desktop/Na_filled_data/")
 file_name <- grep(".csv", files_present, value = TRUE)
 
 do_pca <- F
+eda <- F
 
 # file_name <-  file_name[-7]
 data_lst <- list()
@@ -51,9 +52,10 @@ for (f in file_name) {
   # Record the genes present in all datasets
   genes_present <- unique(c(genes_present, data_lst[[f]]$V1))
   
-  mean_lst[[f]] <- apply(data_lst[[f]][, -1], 2, mean)
-  sd_lst[[f]] <- apply(data_lst[[f]][, -1], 2, sd)
-  
+  if(eda){
+    mean_lst[[f]] <- apply(data_lst[[f]][, -1], 2, mean)
+    sd_lst[[f]] <- apply(data_lst[[f]][, -1], 2, sd)
+  }
   
   # Carry out PCA and record the biplot
   if (do_pca) {
@@ -70,6 +72,7 @@ for (f in file_name) {
   }
 }
 
+if(eda){
 hist(mean_lst$transposed_CD14_GE_Corrected4_Covars.csv)
 hist(mean_lst$transposed_CD15_GE_Corrected4_Covars.csv)
 hist(mean_lst$transposed_CD19_GE_Corrected4_Covars.csv)
@@ -89,7 +92,7 @@ hist(sd_lst$transposed_PLA_GE_Corrected4_Covars.csv)
 hist(sd_lst$transposed_IL_GE_Corrected4_Covars.csv)
 hist(sd_lst$transposed_RE_GE_Corrected4_Covars.csv)
 hist(sd_lst$transposed_TR_GE_Corrected4_Covars.csv)
-
+}
 
 # If PCA was done, print the plots (notice that the first compoen)
 if(do_pca){
@@ -103,7 +106,7 @@ print(pca_plot_lst$transposed_PLA_GE_Corrected4_Covars.csv)
 print(pca_plot_lst$transposed_RE_GE_Corrected4_Covars.csv)
 print(pca_plot_lst$transposed_TR_GE_Corrected4_Covars.csv)
 }
-length(genes_present)
+# length(genes_present)
 
 # Move the genes present to a list
 genes_present %<>% unname() %>% unlist()
@@ -112,7 +115,7 @@ genes_present %<>% unname() %>% unlist()
 for (f in names(data_lst)) {
   genes_to_add <- genes_present[! genes_present %in% data_lst[[f]]$V1] 
 
-  col_names <- colnames(data_lst)
+  col_names <- colnames(data_lst[[f]])
   
   additional_rows <- data.frame(matrix(0, 
                                        nrow = length(genes_to_add),
@@ -132,6 +135,8 @@ for (f in names(data_lst)) {
 
   fwrite(dt_out, file = file_write, row.names = F)
 }
+
+summary(dt_out[, 1:5])
 
 genes_present_dt <- data.table(Probe_ID = genes_present)
 fwrite(genes_present_dt, "probe_IDs_present.csv")
