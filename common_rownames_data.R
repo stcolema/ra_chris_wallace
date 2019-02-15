@@ -58,25 +58,3 @@ for(f in names(data_lst)){
   
   fwrite(data_lst[[f]], file = file_write, row.names = F)
 }
-
-# lapply(data_lst, nrow)
-# 
-# dt_1 <- fread("~/Desktop/My_end/transposed_TR_GE_Corrected4_Covars.csv", header = T)
-# dt_2 <- fread("~/Desktop/My_end/transposed_CD4_GE_Corrected4_Covars.csv", header = T)
-# 
-# # Find common genes present in both datasets
-# genes_present <- semi_join(
-#   select(dt_1, V1),
-#   select(dt_2, V1),
-#   by = "V1"
-# ) %>%
-#   unname() %>%
-#   unlist()
-# 
-# # Filter out any genes not present in all datasets
-# dt_1_small <- dt_1 %>% filter(V1 %in% genes_present) %>% prep_data()
-# dt_2_small <- dt_2 %>% filter(V1 %in% genes_present) %>% prep_data()
-# 
-# # Write to file
-# fwrite(dt_1_small, file = transposed_TR_GE.csv, row.names = T)
-# # fwrite(dt_out, file = file_to_write, row.names = T)
