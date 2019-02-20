@@ -1,0 +1,29 @@
+@article{mason2016mdi,
+  title={MDI-GPU: accelerating integrative modelling for genomic-scale data using GP-GPU computing},
+  author={Mason, Samuel A and Sayyid, Faiz and Kirk, Paul DW and Starr, Colin and Wild, David L},
+  journal={Statistical applications in genetics and molecular biology},
+  volume={15},
+  number={1},
+  pages={83--86},
+  year={2016},
+  publisher={De Gruyter}
+}
+
+@article{bardenet2017markov,
+  title={On Markov chain Monte Carlo methods for tall data},
+  author={Bardenet, R{\'e}mi and Doucet, Arnaud and Holmes, Chris},
+  journal={The Journal of Machine Learning Research},
+  volume={18},
+  number={1},
+  pages={1515--1557},
+  year={2017},
+  publisher={JMLR. org}
+}
+
+@article{betancourt2017conceptual,
+  title={A conceptual introduction to Hamiltonian Monte Carlo},
+  author={Betancourt, Michael},
+  journal={arXiv preprint arXiv:1701.02434},
+  year={2017}
+}
+
