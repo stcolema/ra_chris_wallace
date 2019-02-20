@@ -51,12 +51,12 @@ for (f in file_name) {
 
   # Record the genes present in all datasets
   genes_present <- unique(c(genes_present, data_lst[[f]]$V1))
-  
-  if(eda){
+
+  if (eda) {
     mean_lst[[f]] <- apply(data_lst[[f]][, -1], 2, mean)
     sd_lst[[f]] <- apply(data_lst[[f]][, -1], 2, sd)
   }
-  
+
   # Carry out PCA and record the biplot
   if (do_pca) {
     pca_lst[[f]] <- prcomp(data_lst[[f]][, -1])
@@ -72,69 +72,90 @@ for (f in file_name) {
   }
 }
 
-if(eda){
-hist(mean_lst$transposed_CD14_GE_Corrected4_Covars.csv)
-hist(mean_lst$transposed_CD15_GE_Corrected4_Covars.csv)
-hist(mean_lst$transposed_CD19_GE_Corrected4_Covars.csv)
-hist(mean_lst$transposed_CD4_GE_Corrected4_Covars.csv)
-hist(mean_lst$transposed_CD8_GE_Corrected4_Covars.csv)
-hist(mean_lst$transposed_PLA_GE_Corrected4_Covars.csv)
-hist(mean_lst$transposed_IL_GE_Corrected4_Covars.csv)
-hist(mean_lst$transposed_RE_GE_Corrected4_Covars.csv)
-hist(mean_lst$transposed_TR_GE_Corrected4_Covars.csv)
+if (eda) {
+  hist(mean_lst$transposed_CD14_GE_Corrected4_Covars.csv)
+  hist(mean_lst$transposed_CD15_GE_Corrected4_Covars.csv)
+  hist(mean_lst$transposed_CD19_GE_Corrected4_Covars.csv)
+  hist(mean_lst$transposed_CD4_GE_Corrected4_Covars.csv)
+  hist(mean_lst$transposed_CD8_GE_Corrected4_Covars.csv)
+  hist(mean_lst$transposed_PLA_GE_Corrected4_Covars.csv)
+  hist(mean_lst$transposed_IL_GE_Corrected4_Covars.csv)
+  hist(mean_lst$transposed_RE_GE_Corrected4_Covars.csv)
+  hist(mean_lst$transposed_TR_GE_Corrected4_Covars.csv)
 
-hist(sd_lst$transposed_CD14_GE_Corrected4_Covars.csv)
-hist(sd_lst$transposed_CD15_GE_Corrected4_Covars.csv)
-hist(sd_lst$transposed_CD19_GE_Corrected4_Covars.csv)
-hist(sd_lst$transposed_CD4_GE_Corrected4_Covars.csv)
-hist(sd_lst$transposed_CD8_GE_Corrected4_Covars.csv)
-hist(sd_lst$transposed_PLA_GE_Corrected4_Covars.csv)
-hist(sd_lst$transposed_IL_GE_Corrected4_Covars.csv)
-hist(sd_lst$transposed_RE_GE_Corrected4_Covars.csv)
-hist(sd_lst$transposed_TR_GE_Corrected4_Covars.csv)
+  hist(sd_lst$transposed_CD14_GE_Corrected4_Covars.csv)
+  hist(sd_lst$transposed_CD15_GE_Corrected4_Covars.csv)
+  hist(sd_lst$transposed_CD19_GE_Corrected4_Covars.csv)
+  hist(sd_lst$transposed_CD4_GE_Corrected4_Covars.csv)
+  hist(sd_lst$transposed_CD8_GE_Corrected4_Covars.csv)
+  hist(sd_lst$transposed_PLA_GE_Corrected4_Covars.csv)
+  hist(sd_lst$transposed_IL_GE_Corrected4_Covars.csv)
+  hist(sd_lst$transposed_RE_GE_Corrected4_Covars.csv)
+  hist(sd_lst$transposed_TR_GE_Corrected4_Covars.csv)
 }
 
 # If PCA was done, print the plots (notice that the first compoen)
-if(do_pca){
-print(pca_plot_lst$transposed_CD14_GE_Corrected4_Covars.csv)
-print(pca_plot_lst$transposed_IL_GE_Corrected4_Covars.csv)
-print(pca_plot_lst$transposed_CD19_GE_Corrected4_Covars.csv)
-print(pca_plot_lst$transposed_CD15_GE_Corrected4_Covars.csv)
-print(pca_plot_lst$transposed_CD4_GE_Corrected4_Covars.csv)
-print(pca_plot_lst$transposed_CD8_GE_Corrected4_Covars.csv)
-print(pca_plot_lst$transposed_PLA_GE_Corrected4_Covars.csv)
-print(pca_plot_lst$transposed_RE_GE_Corrected4_Covars.csv)
-print(pca_plot_lst$transposed_TR_GE_Corrected4_Covars.csv)
+if (do_pca) {
+  print(pca_plot_lst$transposed_CD14_GE_Corrected4_Covars.csv)
+  print(pca_plot_lst$transposed_IL_GE_Corrected4_Covars.csv)
+  print(pca_plot_lst$transposed_CD19_GE_Corrected4_Covars.csv)
+  print(pca_plot_lst$transposed_CD15_GE_Corrected4_Covars.csv)
+  print(pca_plot_lst$transposed_CD4_GE_Corrected4_Covars.csv)
+  print(pca_plot_lst$transposed_CD8_GE_Corrected4_Covars.csv)
+  print(pca_plot_lst$transposed_PLA_GE_Corrected4_Covars.csv)
+  print(pca_plot_lst$transposed_RE_GE_Corrected4_Covars.csv)
+  print(pca_plot_lst$transposed_TR_GE_Corrected4_Covars.csv)
 }
 # length(genes_present)
 
 # Move the genes present to a list
 genes_present %<>% unname() %>% unlist()
 
+empty_probes_dt <- data.table(matrix(NA,
+                  nrow = length(genes_present),
+                  ncol = length(file_name) + 1
+))
+
+files_to_write <- strsplit(names(data_lst), "_?_(.*?)_?") %>% 
+  lapply("[[", 2) %>% 
+  unlist()
+
+colnames(empty_probes_dt) <- c("V1", files_to_write)
+empty_probes_dt$V1 <-  genes_present
+
 # For each dataset filter by genes present in all and write to file
 for (f in names(data_lst)) {
-  genes_to_add <- genes_present[! genes_present %in% data_lst[[f]]$V1] 
+  genes_to_add <- genes_present[!genes_present %in% data_lst[[f]]$V1]
 
   col_names <- colnames(data_lst[[f]])
-  
-  additional_rows <- data.frame(matrix(0, 
-                                       nrow = length(genes_to_add),
-                                       ncol = length(col_names))
-                                )
+
+  additional_rows <- data.frame(matrix(0,
+    nrow = length(genes_to_add),
+    ncol = length(col_names)
+  ))
   colnames(additional_rows) <- col_names
   additional_rows$V1 <- genes_to_add
-  
+
   # add the additional, empty probes and arrange in a common order
-  dt_out <- data_lst[[f]] %>% 
-    bind_rows(additional_rows) %>% 
-    .[match(genes_present, .$V1),]
+  dt_out <- data_lst[[f]] %>%
+    bind_rows(additional_rows) %>%
+    .[match(genes_present, .$V1), ]
   
-  if(any(dt_out$V1 != genes_present)){stop("Check order is correct")}
+  if (any(dt_out$V1 != genes_present)) {
+    stop("Check order is correct")
+  }
+
   
-  file_write <- strsplit(f, "_?_(.*?)_?")[[1]][2] %>% paste0(., ".csv")
+  
+  file_write <- strsplit(f, "_?_(.*?)_?")[[1]][2] 
+  empty_probes <- ! dt_out$V1 %in% genes_to_add
+  empty_probes_dt[[file_write]] <- empty_probes
+  
+  file_write %<>% paste0(., ".csv")
 
   fwrite(dt_out, file = file_write, row.names = F)
 }
+fwrite(empty_probes_dt, file = "probes_present_per_dataset.csv")
 
 summary(dt_out[, 1:5])
 
