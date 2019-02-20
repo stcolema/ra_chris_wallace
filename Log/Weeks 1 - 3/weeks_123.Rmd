@@ -10,6 +10,16 @@ bibliography: weeks_123_bib.bib
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+## Prelude
+
+Many of the R snippets below require these R packages [@kolde2019pheatmap, @dowle2019data, @neuwirth2014rcolorbrewer]:
+
+```{r libraries}
+library(pheatmap)
+library(data.table)
+library(RColorBrewer)
+```
+
 ## MDI
 
 ### Reading
@@ -17,26 +27,73 @@ Inital work involved reading @mason2016mdi and reading the manual of the associa
 
 
 ### Data handling
-MDI uses data that has common row names across all datasets. The data from [the CEDAR cohort](http://139.165.108.18/srv/genmol/permanent/1be6993fe41c12a051c9244d67c91da2be49e5dd26a6cd79f442bc006971e2ef/crohn-index.html) is in the form of [people $\times$ probes]. We want to transpose this. We wrote an Rscript that can finds all the .csv files in a given directory, transposes them and saves them with a new name. The `data.table` package by @dowle2019data was of great use in making this quick to call - for our 9 datasets of ~300 people and 8-16 thousand probes it took less than a minute to convert the files.
+MDI uses data that has common row names across all datasets. The data from [the CEDAR cohort](http://139.165.108.18/srv/genmol/permanent/1be6993fe41c12a051c9244d67c91da2be49e5dd26a6cd79f442bc006971e2ef/crohn-index.html) is in the form of [people $\times$ probes]. We want to transpose this; to accomplish this task we wrote [an Rscript](https://github.com/stcolema/ra_chris_wallace/blob/master/matrix_transposer.R) that can be called form the Linux command line with appropriate arguments to transpose .csv files in a given directory. The `data.table` package by @dowle2019data was of great use in making this quick to call - for our 9 datasets of ~300 people and 8-16 thousand probes it took less than a minute to convert the files.
 
-Another script was required to remove all the non-ubiquitous probe IDs. Any probe not present in all datasets was removed to allow MDI to perform as MDI cannot handle missing data. 
+Another [script was required to remove all the non-ubiquitous probe IDs](https://github.com/stcolema/ra_chris_wallace/blob/master/common_rownames_data.R). Any probe not present in all datasets was removed to allow MDI to perform as MDI cannot handle missing data. This reduced the set of probes to 4,964.
 
+We performed MDI on these 9 reduced datasets with 10,000 iterations, a burn-in of 1,000 and a thinning rate of 25. MDI overfits the clustering problem beginning with 50 clusters; this reduced down to around 10 occupied clusters per dataset. We assumed that the median cluster allocation was the predicted cluster forgetting about the **label-flipping** problem of unsupervised methods.
 
+We constructed a dataframe of the median allocation per dataset for each probe. The probes are translated to the associated gene using the [key available online](http://139.165.108.18/srv/genmol/permanent/1be6993fe41c12a051c9244d67c91da2be49e5dd26a6cd79f442bc006971e2ef/CEDAR_GE/Probes_good_reanno_31137_TSS.txt). As some of the probes mapped to non-unique genes we use a matrix to hold our data (as this does not require unique row names). We read this in and visually inspect the head of the data.
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+```{r mdi_1_alloc_data}
+# Read in the data and convert to a matrix with apporpriate row names
+compare_df <- data.table::fread("~/Desktop/MDI/Runs/Run 1/allocation_data_run_1.csv")
+compare_df_mat <- as.matrix(compare_df[, -10])
+row.names(compare_df_mat) <- compare_df$V1
 
-```{r cars}
-summary(cars)
+# Inspect the data
+head(compare_df_mat)
 ```
 
-## Including Plots
+Using this data we generated a heatmap.
 
-You can also embed plots, for example:
+```{r mdi_1_heatmap, echo = FALSE}
+col_pal <- c("#DDDDDD", rev(RColorBrewer::brewer.pal(n = 11, "RdYlBu")))
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+ph_full <- pheatmap::pheatmap(compare_df_mat,
+ cluster_cols = F,
+ color = col_pal,
+ main = "Heatmap for common probes"
+)
+
 ```
+There are 14 clusters present here; to enable comparison we went for a wider colour palette. This is the reason for the garishness of this heatplot. There is lower similarity than one might expect in the probes that are sufficiently expressed in each cell type to register for measurement. Possibly this is an artifact of not considering label-flipping. Maintaining the ordering from the heatmap of the full dataset we inspect subsamples of the data.
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+```{r mdi_1_small_heatmaps, echo = FALSE}
+row_order <- ph_full$tree_row[["order"]]
+
+df_ph_order <- compare_df_mat[row_order, ]
+
+pheatmap(df_ph_order[1:1000, ],
+         cluster_rows = F, 
+         cluster_cols = F,
+         color = col_pal,
+         main = "Entries 1:1000")
+
+pheatmap(df_ph_order[1001:2000, ],
+         cluster_rows = F, 
+         cluster_cols = F, 
+         color = col_pal,
+         main = "Entries 1001:2000")
+
+pheatmap(df_ph_order[2001:3000, ], 
+         cluster_rows = F, 
+         cluster_cols = F, 
+         color = col_pal,
+         main = "Entries 2001:3000")
+
+pheatmap(df_ph_order[3001:4000, ], 
+         cluster_rows = F, 
+         cluster_cols = F, 
+         color = col_pal,
+         main = "Entries 3001:4000")
+
+pheatmap(df_ph_order[4001:4964, ], 
+         cluster_rows = F,
+         cluster_cols = F, 
+         color = col_pal,
+         main = "Entries 4001:4964")
+
+```
 
 # References
