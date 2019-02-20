@@ -57,7 +57,10 @@ ph_full <- pheatmap::pheatmap(compare_df_mat,
 )
 
 ```
-There are 14 clusters present here; to enable comparison we went for a wider colour palette. This is the reason for the garishness of this heatplot. There is lower similarity than one might expect in the probes that are sufficiently expressed in each cell type to register for measurement. Possibly this is an artifact of not considering label-flipping. Maintaining the ordering from the heatmap of the full dataset we inspect subsamples of the data.
+
+There are 14 clusters present here; to enable comparison we went for a wider colour palette. This is the reason for the garishness of this heatplot. There is appears to have lower similarity than one might expect, particularly considering the selection of data - we only include the probes that are sufficiently expressed in each cell type to register for measurement. Possibly this is an artifact of not considering label-flipping. 
+
+With the same allocation data and maintaining the ordering from the heatmap of the full dataset we inspect subsamples of the data.
 
 ```{r mdi_1_small_heatmaps, echo = FALSE}
 row_order <- ph_full$tree_row[["order"]]
@@ -95,5 +98,44 @@ pheatmap(df_ph_order[4001:4964, ],
          main = "Entries 4001:4964")
 
 ```
+
+With this increased granularity, we see that after the first 1,000 rows the similarity across tissues becomes greater. There is still large sections of dissimilarity, but the clustering more coherent than the first plot suggests. Notice also that the PLA dataset (platelets) is the greatest source of dissimialrity - this is also the thinnest dataset with only 8 thousand probes present in the full format. 
+
+Please note that these following heatmaps have **unique** clusterings and have not inherited the clustering of the original heatmap unlike thpse preceding this section.
+
+```{r no_platelets, echo = FALSE}
+pheatmap::pheatmap(compare_df_mat[, -7],
+ cluster_cols = F,
+ color = col_pal,
+ main = "Heatmap for common probes excluding PLA"
+)
+```
+
+We consider only four most similar datasets, CD14, CD4, CD8, RE and TR.
+ 
+```{r sim_heatmaps, echo = FALSE}
+pheatmap::pheatmap(compare_df_mat[, -c(2, 3, 6, 7)],
+ cluster_cols = F,
+ color = col_pal,
+ main = "Heatmap for datasets of greatest similarity"
+)
+```
+
+Out of curiousity we check the clustering and heatmap for the excluded datasets.
+
+```{r dis_heatmaps, echo = FALSE}
+pheatmap::pheatmap(compare_df_mat[, c(2, 3, 6, 7)],
+ cluster_cols = F,
+ color = col_pal,
+ main = "Heatmap for datasets of least similarity"
+)
+```
+
+This is sligthly more coherent than our first heatmap where we considered all datasets at once - this suggests that trying to process the output of all 9 datasets at once is not optimal and is in itself a non-trivial task (particulalrly if label-flipping cannot be ignored).
+
+## Including all probes
+Next we attempt to include all probes present across the 9 datasets. The challenge here is to include the probes in such a fashion as to not add noise to the final clustering. To do this we first inspect the spread of the expression values in the datasets. As this is too large to consider in normal summary statistics, we inspect histograms of these - we notice that all of the probe expression values have very similar means and standard deviations - these are densely (i.e. within 1.0 for the mean, within 0.2 for the standard deviation) distributed around 7.0 and 2.10 respectively.
+
+We thus write [an Rscript](https://github.com/stcolema/ra_chris_wallace/blob/master/finad_all_probe_ids.R) that finds the list of all unique probe IDs present across the 9 datasets and adds the required rows to each .csv file (filled with 0's but any arbitrarily distant number from the range inhabitated by the actual measurements should be acceptable) and rearranging to have common row names and row orders in each dataset for all 18,900 prob IDs. Using these new datasets we perform MDI with the same arguments. This script also saves a binary matrix indicating for each probe which datasets it is present in. We will use this later as part of a sense check.
 
 # References
