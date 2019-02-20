@@ -1,0 +1,42 @@
+---
+title: "MDI: weeks 1 to 3"
+author: "Stephen Coleman"
+date: "20 February 2019"
+output: html_document
+bibliography: weeks_123_bib.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## MDI
+
+### Reading
+Inital work involved reading @mason2016mdi and reading the manual of the associated program. Expecting that this would have difficulties scaling (based on Paul's beliefs from November) to nine datasets I also looked into @bardenet2017markov for general ideas, but more specifically read a good chunk of @betancourt2017conceptual. These topics were of interest as I know the MDI implementation uses a Gibbs sampler - I hoped we could make gains in the computational trtactability of using all 9 datasets in one go with a more clever sampling method.
+
+
+### Data handling
+MDI uses data that has common row names across all datasets. The data from [the CEDAR cohort](http://139.165.108.18/srv/genmol/permanent/1be6993fe41c12a051c9244d67c91da2be49e5dd26a6cd79f442bc006971e2ef/crohn-index.html) is in the form of [people $\times$ probes]. We want to transpose this. We wrote an Rscript that can finds all the .csv files in a given directory, transposes them and saves them with a new name. The `data.table` package by @dowle2019data was of great use in making this quick to call - for our 9 datasets of ~300 people and 8-16 thousand probes it took less than a minute to convert the files.
+
+Another script was required to remove all the non-ubiquitous probe IDs. Any probe not present in all datasets was removed to allow MDI to perform as MDI cannot handle missing data. 
+
+
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+# References
