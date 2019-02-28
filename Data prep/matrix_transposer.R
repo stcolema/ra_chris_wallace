@@ -14,7 +14,7 @@ library(data.table) # install.packages("data.table", dep = T)
 library(magrittr)
 
 # Load dplyr for access to select function
-# library(dplyr) 
+# library(dplyr)
 
 # User inputs from command line
 input_arguments <- function() {
@@ -53,13 +53,27 @@ input_arguments <- function() {
       help = "directory to write files to",
       metavar = "character"
     ),
-    
-    # Directory to write to
+
+    # Instruction to remove NAs
     make_option(c("-n", "--na"),
-                type = "logical", default = FALSE,
-                help = "instruction to remove NAs from data",
-                metavar = "logical"
-    ) 
+      type = "logical", default = FALSE,
+      help = "instruction to remove NAs from data",
+      metavar = "logical"
+    ),
+
+    # Threshold at which to remove PROBES
+    make_option(c("--na_probe_threshold"),
+      type = "double", default = 0.0,
+      help = "na threshold at which to remove PROBES from data",
+      metavar = "double"
+    ),
+
+    # Threshold at which to remove PEOPLE
+    make_option(c("--na_people_threshold"),
+      type = "double", default = 0.0,
+      help = "na threshold at which to remove PEOPLE from data",
+      metavar = "double"
+    )
 
     # # Index of columns containing row names
     # make_option(c("-r", "--row_names"),
@@ -126,8 +140,87 @@ create_col_names_vector <- function(dt) {
     unlist()
 }
 
-write_data <- function(file_name, extension, write_dir, row_names, 
-                       remove.na = FALSE) {
+
+# Remove columns / rows with too high a proportion of NAs
+na_threshold <- function(dt, threshold = 0.1, cols = TRUE) {
+  
+  
+  if (cols) {
+    
+    cols_to_keep <- ! (colSums(is.na(dt)) / nrow(dt)) > threshold
+    
+    # If this happens (that we keep all columns) data.table seems to get 
+    # confused and move to a 0x0 object. Thus we return dt if not removing 
+    # any columns
+    if(sum(cols_to_keep) == ncol(dt)){
+      return(dt)
+    }
+    new_dt <- dt[, cols_to_keep, with = F]
+    
+    return(new_dt)
+  }
+  
+  # Find all rows not exceeding our threshold for proportion of NAs
+  rows_to_keep <- !(rowSums(is.na(dt)) / ncol(dt)) > threshold
+  
+  # Again ,if keeping all rows return the original object
+  if(sum(rows_to_keep) == nrow(dt)){
+    return(dt)
+  }
+  new_dt <- dt[rows_to_keep, ]
+
+  new_dt
+}
+
+# Convert NAs in a vector to the median value
+na_to_median <- function(x) {
+
+  # first convert each column into numeric if it is from factor
+  x <- as.numeric(as.character(x))
+
+  # convert the item with NA to median value from the column
+  x[is.na(x)] <- median(x, na.rm = TRUE)
+}
+
+# Handle NAs by removing rows / columns with too high a proportion of NAs and
+# replace remaining NAs with the associated column's median value
+na_handling <- function(dt, row_threshold = 0.1, col_threshold = 0.1, dir = 2) {
+  # dt is the data in data.table format
+  # row_threshold is the threshold for which rows with proportions of NAs
+  # exceeding this are removed
+  # col_threshold is the corresponding vlaue for the columns
+  # dir is the dimension to fill NAs with median vlaues (1 is rows, 2 columns)
+
+  # Remove columns / rows with too high a proportion of NAs
+  dt_cols_dropped <- na_threshold(dt,
+    threshold = col_threshold,
+    cols = TRUE
+  )
+
+  dt_na_dropped <- na_threshold(dt_cols_dropped,
+    threshold = row_threshold,
+    cols = FALSE
+  )
+
+  # For any remaining NAs replace with the column / row median as instructed
+  if(dir == 2){
+    for (col in colnames(dt)){
+      dt_no_na <- dt_na_dropped[,col := ifelse(is.na(col), median(col, na.rm=TRUE), col)]
+      return(dt_no_na)
+    }  
+  }
+  for (row in row.names(dt)){
+    dt_no_na <- dt_na_dropped[row := ifelse(is.na(row), median(row, na.rm=TRUE), row), ]
+  }  
+  
+  dt_no_na
+}
+
+write_data <- function(file_name, extension, write_dir, row_names,
+                       remove.na = FALSE,
+                       na_people_threshold = 0.0,
+                       na_probe_threshold = 0.0,
+                       dir = 2) {
   for (file in file_name) {
     # Read in the data with the first row as the header
     dt <- fread(file, header = T)
@@ -136,25 +229,16 @@ write_data <- function(file_name, extension, write_dir, row_names,
     col_classes <- sapply(dt, class)
     cols_to_drop <- col_classes != "numeric"
     names_to_drop <- names(cols_to_drop) [unname(cols_to_drop)]
-    conv_dt <- dt %>% dplyr::select(-c(names_to_drop)) %>%
+    
+    # Drop the ID variables and transpose the data
+    conv_dt <- dt %>%
+      dplyr::select(-c(names_to_drop)) %>%
       as.matrix() %>%
-      t()
+      t() %>% 
+      as.data.table()
     
-    if(remove.na){
-      conv_dt <- conv_dt %>% na.omit()
-    }
-    
-    # if (row_names != 0) {
-    #   # Ensure that the first two columns are indeed duplicates
-    #   if (any(dt[, 1] != dt[, 2])) {
-    #     cat("ID columns not duplicates. Please inspect data.\n")
-    #   }
-    # 
-    #   conv_dt <- dt[, -(row_names)]
-    # }
-    # conv_dt <- dt %>%
-    #   as.matrix() %>%
-    #   t()
+    # Assign row.names
+    # row.names(conv_dt) <- colnames(dt[, -(1:2)])
 
     # Create list of column names
     id <- dt[, 1] %>%
@@ -162,23 +246,51 @@ write_data <- function(file_name, extension, write_dir, row_names,
 
     # Assign the ID as column names
     colnames(conv_dt) <- id
+    
+    # Get the probe IDs into our data table
+    conv_dt$V1 <- colnames(dt[, -(1:2)])
+    
+    # If removing NAs, do so
+    if (remove.na) {
+      conv_dt <- conv_dt %>%
+        na_handling(
+          row_threshold = na_probe_threshold,
+          col_threshold = na_people_threshold,
+          dir = dir
+        ) 
+    }
 
     # Convert to data.table to use fwrite
     dt_out <- as.data.table(conv_dt)
-    row.names(dt_out) <- row.names(conv_dt)
+    # row.names(dt_out) <- conv_dt$V1
+    # row.names(dt_out) <- row.names(conv_dt)
 
-    file_name <- strsplit(paste0("/", file) , "/([^/]*).")[[1]]
+    # Rearragne order with V1 (the probe ids) in the first position
+    col_order <- names(dt_out) %>%
+      .[. != "V1"]%>%
+      c("V1", .)
+      
+    dt_out <- setcolorder(dt_out, col_order)
+    
+    # Create file name
+    file_name <- strsplit(paste0("/", file), "/([^/]*).")[[1]]
     file_name <- file_name[[length(file_name)]]
 
     # Write to a csv file
     file_to_write <- sub(paste0(extension, "$"), "", file_name) %>%
       paste0(write_dir, "/transposed_", ., ".csv")
 
-    fwrite(dt_out, file = file_to_write, row.names = T)
+    fwrite(dt_out, file = file_to_write)
   }
 }
 
 # Call functions to receive arguments and write a csv of the ransposed data
 args <- input_arguments()
+stm_i <- Sys.time()
 files <- read_in_data(args)
-write_data(files, args$extension, args$write_dir, args$row_names, args$na)
+write_data(files, args$extension, args$write_dir, args$row_names,
+  remove.na = args$na,
+  na_people_threshold = args$na_people_threshold,
+  na_probe_threshold = args$na_probe_threshold
+)
+print(Sys.time() - stm_i)
