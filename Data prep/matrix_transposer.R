@@ -143,28 +143,25 @@ create_col_names_vector <- function(dt) {
 
 # Remove columns / rows with too high a proportion of NAs
 na_threshold <- function(dt, threshold = 0.1, cols = TRUE) {
-  
-  
   if (cols) {
-    
-    cols_to_keep <- ! (colSums(is.na(dt)) / nrow(dt)) > threshold
-    
-    # If this happens (that we keep all columns) data.table seems to get 
-    # confused and move to a 0x0 object. Thus we return dt if not removing 
+    cols_to_keep <- !(colSums(is.na(dt)) / nrow(dt)) > threshold
+
+    # If this happens (that we keep all columns) data.table seems to get
+    # confused and move to a 0x0 object. Thus we return dt if not removing
     # any columns
-    if(sum(cols_to_keep) == ncol(dt)){
+    if (sum(cols_to_keep) == ncol(dt)) {
       return(dt)
     }
     new_dt <- dt[, cols_to_keep, with = F]
-    
+
     return(new_dt)
   }
-  
+
   # Find all rows not exceeding our threshold for proportion of NAs
   rows_to_keep <- !(rowSums(is.na(dt)) / ncol(dt)) > threshold
-  
+
   # Again ,if keeping all rows return the original object
-  if(sum(rows_to_keep) == nrow(dt)){
+  if (sum(rows_to_keep) == nrow(dt)) {
     return(dt)
   }
   new_dt <- dt[rows_to_keep, ]
@@ -176,7 +173,7 @@ na_threshold <- function(dt, threshold = 0.1, cols = TRUE) {
 na_to_median <- function(x) {
 
   # first convert each column into numeric if it is from factor
-  x <- as.numeric(as.character(x))
+  # x <- as.numeric(as.character(x))
 
   # convert the item with NA to median value from the column
   x[is.na(x)] <- median(x, na.rm = TRUE)
@@ -203,16 +200,51 @@ na_handling <- function(dt, row_threshold = 0.1, col_threshold = 0.1, dir = 2) {
   )
 
   # For any remaining NAs replace with the column / row median as instructed
-  if(dir == 2){
-    for (col in colnames(dt)){
-      dt_no_na <- dt_na_dropped[,col := ifelse(is.na(col), median(col, na.rm=TRUE), col)]
-      return(dt_no_na)
-    }  
+  if (dir == 2) {
+    for (col in colnames(dt_na_dropped)) {
+
+      # Create the expression to evaluate within the data.table
+      # Specifically, replace any NAs with the column median otherwise leave
+      # them untouched
+      e <- substitute(
+        X := ifelse(is.na(X), median(X, na.rm = TRUE), X),
+        list(X = as.symbol(col))
+      )
+
+      # Evaluate this within the data.table
+      dt_no_na <- dt_na_dropped[, eval(e)]
+    }
+    return(dt_no_na)
   }
-  for (row in row.names(dt)){
-    dt_no_na <- dt_na_dropped[row := ifelse(is.na(row), median(row, na.rm=TRUE), row), ]
-  }  
-  
+
+  # If we want to do this by row, it seems easiest (as this is unlikely to be of
+  # actual interest) t ouse the preceding method. This means we must transpose
+  # our data
+  dummy_dt <- dt_na_dropped %>%
+    as.matrix() %>%
+    t() %>%
+    as.data.table()
+
+  # As above, cycle through each collumn replacing NAs with the median value
+  for (col in colnames(dummy_dt)) {
+    e <- substitute(
+      X := ifelse(is.na(X), median(X, na.rm = TRUE), X),
+      list(X = as.symbol(col))
+    )
+
+    # Evaluate this within the data.table
+    dt_no_na <- dummy_dt[, eval(e)]
+  }
+
+  # Return to the correct orientation and object
+  dt_no_na %<>%
+    as.matrix() %>%
+    t() %>%
+    as.data.table()
+
+  # Re-assign column names
+  colnames(dt_no_na) <- colnames(dt_na_dropped)
+
   dt_no_na
 }
 
@@ -229,14 +261,14 @@ write_data <- function(file_name, extension, write_dir, row_names,
     col_classes <- sapply(dt, class)
     cols_to_drop <- col_classes != "numeric"
     names_to_drop <- names(cols_to_drop) [unname(cols_to_drop)]
-    
+
     # Drop the ID variables and transpose the data
     conv_dt <- dt %>%
       dplyr::select(-c(names_to_drop)) %>%
       as.matrix() %>%
-      t() %>% 
+      t() %>%
       as.data.table()
-    
+
     # Assign row.names
     # row.names(conv_dt) <- colnames(dt[, -(1:2)])
 
@@ -246,10 +278,10 @@ write_data <- function(file_name, extension, write_dir, row_names,
 
     # Assign the ID as column names
     colnames(conv_dt) <- id
-    
+
     # Get the probe IDs into our data table
     conv_dt$V1 <- colnames(dt[, -(1:2)])
-    
+
     # If removing NAs, do so
     if (remove.na) {
       conv_dt <- conv_dt %>%
@@ -257,8 +289,10 @@ write_data <- function(file_name, extension, write_dir, row_names,
           row_threshold = na_probe_threshold,
           col_threshold = na_people_threshold,
           dir = dir
-        ) 
+        )
     }
+
+    # print(summary(conv_dt))
 
     # Convert to data.table to use fwrite
     dt_out <- as.data.table(conv_dt)
@@ -267,11 +301,11 @@ write_data <- function(file_name, extension, write_dir, row_names,
 
     # Rearragne order with V1 (the probe ids) in the first position
     col_order <- names(dt_out) %>%
-      .[. != "V1"]%>%
+      .[. != "V1"] %>%
       c("V1", .)
-      
+
     dt_out <- setcolorder(dt_out, col_order)
-    
+
     # Create file name
     file_name <- strsplit(paste0("/", file), "/([^/]*).")[[1]]
     file_name <- file_name[[length(file_name)]]
@@ -293,4 +327,5 @@ write_data(files, args$extension, args$write_dir, args$row_names,
   na_people_threshold = args$na_people_threshold,
   na_probe_threshold = args$na_probe_threshold
 )
+
 print(Sys.time() - stm_i)
