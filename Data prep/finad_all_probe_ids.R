@@ -25,9 +25,9 @@ prep_data <- function(dt) {
 # files_present <- list.files(path = args$dir)
 # file_name <- grep(args$extension, files_present, value = TRUE) %>%
 #   paste0(args$dir, "/", .)
-setwd("~/Desktop/MDI/Data/My_end")
+setwd("~/Desktop/MDI/Data/Transposed_na_data")
 # setwd("~/Desktop/Na_filled_data/")
-files_present <- list.files(path = "~/Desktop/MDI/Data/My_end")
+files_present <- list.files(path = "~/Desktop/MDI/Data/Transposed_na_data")
 # files_present <- list.files(path = "~/Desktop/Na_filled_data/")
 file_name <- grep(".csv", files_present, value = TRUE)
 
