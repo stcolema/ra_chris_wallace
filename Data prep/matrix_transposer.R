@@ -21,57 +21,57 @@ input_arguments <- function() {
   option_list <- list(
 
     # File to convert (if all is TRUE this is not used)
-    make_option(c("-f", "--file"),
+    optparse::make_option(c("-f", "--file"),
       type = "character", default = NA,
       help = "dataset file name", metavar = "character"
     ),
 
     # Convert all files in target destination (default is FALSE)
-    make_option(c("-a", "--all"),
+    optparse::make_option(c("-a", "--all"),
       type = "logical", default = FALSE,
-      help = "command to transpose all .txt files in currect directory [default= %default]",
+      help = "command to transpose all [EXT] files in currect directory [default= %default]",
       metavar = "logical"
     ),
 
     # Directory to read from
-    make_option(c("-d", "--dir"),
+    optparse::make_option(c("-d", "--dir"),
       type = "character", default = ".",
-      help = "directory to read files from (used if all set to TRUE)",
+      help = "directory to read files from (used if all set to TRUE) [default= %default]",
       metavar = "character"
     ),
 
     # File extension to be accepting
-    make_option(c("-e", "--extension"),
+    optparse::make_option(c("-e", "--extension"),
       type = "character", default = ".txt",
-      help = "file extension of target files (only used if --all set to TRUE)",
+      help = "file extension of target files (only used if --all set to TRUE) [default= %default]",
       metavar = "character"
     ),
 
     # Directory to write to
-    make_option(c("-w", "--write_dir"),
+    optparse::make_option(c("-w", "--write_dir"),
       type = "character", default = ".",
-      help = "directory to write files to",
+      help = "directory to write files to [default= %default]",
       metavar = "character"
     ),
 
     # Instruction to remove NAs
-    make_option(c("-n", "--na"),
+    optparse::make_option(c("-n", "--na"),
       type = "logical", default = FALSE,
-      help = "instruction to remove NAs from data",
+      help = "instruction to remove NAs from data [default= %default]",
       metavar = "logical"
     ),
 
     # Threshold at which to remove PROBES
-    make_option(c("--na_probe_threshold"),
+    optparse::make_option(c("--na_probe_threshold"),
       type = "double", default = 0.0,
-      help = "na threshold at which to remove PROBES from data",
+      help = "na threshold at which to remove PROBES from data [default= %default]",
       metavar = "double"
     ),
 
     # Threshold at which to remove PEOPLE
-    make_option(c("--na_people_threshold"),
+    optparse::make_option(c("--na_people_threshold"),
       type = "double", default = 0.0,
-      help = "na threshold at which to remove PEOPLE from data",
+      help = "na threshold at which to remove PEOPLE from data [default= %default]",
       metavar = "double"
     )
 
@@ -82,8 +82,8 @@ input_arguments <- function() {
     #   metavar = "complex"
     # )
   )
-  opt_parser <- OptionParser(option_list = option_list)
-  opt <- parse_args(opt_parser)
+  opt_parser <- optparse::OptionParser(option_list = option_list)
+  opt <- optparse::parse_args(opt_parser)
 }
 
 read_in_data <- function(args) {
@@ -179,6 +179,12 @@ na_to_median <- function(x) {
   x[is.na(x)] <- median(x, na.rm = TRUE)
 }
 
+# Samll function to call is using apply or purrr::map to replace NAs with median
+na_replace <- function(x) {
+  y <- ifelse(is.na(x), median(x, na.rm = TRUE), x)
+  y
+}
+
 # Handle NAs by removing rows / columns with too high a proportion of NAs and
 # replace remaining NAs with the associated column's median value
 na_handling <- function(dt, row_threshold = 0.1, col_threshold = 0.1, dir = 2) {
@@ -188,19 +194,17 @@ na_handling <- function(dt, row_threshold = 0.1, col_threshold = 0.1, dir = 2) {
   # col_threshold is the corresponding vlaue for the columns
   # dir is the dimension to fill NAs with median vlaues (1 is rows, 2 columns)
 
-  # Remove columns / rows with too high a proportion of NAs
-  dt_cols_dropped <- na_threshold(dt,
-    threshold = col_threshold,
-    cols = TRUE
-  )
-
-  dt_na_dropped <- na_threshold(dt_cols_dropped,
-    threshold = row_threshold,
-    cols = FALSE
-  )
-
+  # Call an error if the dir input is not 1 or 2
+  if(! dir %in% c(1,2)) stop("dir must be one of 1 (for rows) or 2 (for columns")
+  
   # For any remaining NAs replace with the column / row median as instructed
   if (dir == 2) {
+    # Remove columns / rows with too high a proportion of NAs
+    dt_na_dropped <- na_threshold(dt,
+      threshold = col_threshold,
+      cols = TRUE
+    )
+
     for (col in colnames(dt_na_dropped)) {
 
       # Create the expression to evaluate within the data.table
@@ -214,12 +218,26 @@ na_handling <- function(dt, row_threshold = 0.1, col_threshold = 0.1, dir = 2) {
       # Evaluate this within the data.table
       dt_no_na <- dt_na_dropped[, eval(e)]
     }
+
+    # consdier purrr (tried this - significantly slower, roughly 4 times as long)
+    # dt_no_na <- purrr::map_df(dt_na_dropped, na_replace)
+
     return(dt_no_na)
   }
+
+  # If dir == 1 do the analog of the above to the rows.
+  dt_na_dropped <- na_threshold(dt,
+    threshold = row_threshold,
+    cols = FALSE
+  )
 
   # If we want to do this by row, it seems easiest (as this is unlikely to be of
   # actual interest) t ouse the preceding method. This means we must transpose
   # our data
+  dt_no_na <- purrr::pmap(dt_na_dropped, function(x) {
+    y <- ifelse(is.na(x), median(x, na.rm = TRUE), x)
+  })
+
   dummy_dt <- dt_na_dropped %>%
     as.matrix() %>%
     t() %>%
@@ -314,7 +332,7 @@ write_data <- function(file_name, extension, write_dir, row_names,
     file_to_write <- sub(paste0(extension, "$"), "", file_name) %>%
       paste0(write_dir, "/transposed_", ., ".csv")
 
-    fwrite(dt_out, file = file_to_write)
+    data.table::fwrite(dt_out, file = file_to_write)
   }
 }
 
