@@ -180,7 +180,7 @@ na_to_median <- function(x) {
 }
 
 # Samll function to call is using apply or purrr::map to replace NAs with median
-na_replace <- function(x){
+na_replace <- function(x) {
   y <- ifelse(is.na(x), median(x, na.rm = TRUE), x)
   y
 }
@@ -195,8 +195,8 @@ na_handling <- function(dt, row_threshold = 0.1, col_threshold = 0.1, dir = 2) {
   # dir is the dimension to fill NAs with median vlaues (1 is rows, 2 columns)
 
   # Call an error if dir outside acceptable values
-  if(! dir %in% c(1, 2)) stop("dir must be one of 1 (rows) or 2 (columns).")
-  
+  if (!dir %in% c(1, 2)) stop("dir must be one of 1 (rows) or 2 (columns).")
+
   # Remove columns / rows with too high a proportion of NAs
   dt_cols_dropped <- na_threshold(dt,
     threshold = col_threshold,
@@ -223,10 +223,10 @@ na_handling <- function(dt, row_threshold = 0.1, col_threshold = 0.1, dir = 2) {
       # Evaluate this within the data.table
       dt_no_na <- dt_na_dropped[, eval(e)]
     }
-    
+
     # consdier purrr (tried this - significantly slower, roughly 4 times as long)
     # dt_no_na <- purrr::map_df(dt_na_dropped, na_replace)
-    
+
     return(dt_no_na)
   }
 
@@ -236,7 +236,7 @@ na_handling <- function(dt, row_threshold = 0.1, col_threshold = 0.1, dir = 2) {
   dt_no_na <- purrr::pmap(dt_na_dropped, function(x) {
     y <- ifelse(is.na(x), median(x, na.rm = TRUE), x)
   })
-  
+
   dummy_dt <- dt_na_dropped %>%
     as.matrix() %>%
     t() %>%
@@ -265,14 +265,42 @@ na_handling <- function(dt, row_threshold = 0.1, col_threshold = 0.1, dir = 2) {
   dt_no_na
 }
 
+last_element <- function(x) {
+  last_elem <- length(x)
+  x[[last_elem]]
+}
+
+
+
 write_data <- function(file_name, extension, write_dir, row_names,
                        remove.na = FALSE,
                        na_people_threshold = 0.0,
                        na_probe_threshold = 0.0,
                        dir = 2) {
-  for (file in file_name) {
+
+
+
+  # Strip the files (do here as can utilise vectorised functions)
+  files_to_write <- strsplit(paste0("/", file_name), "/([^/]*).") %>%
+    sapply(., last_element) %>%
+    tools::file_path_sans_ext()
+
+  # List to record number of people and probes lost due to NA cleaning
+  num_files <- length(file_name)
+  dim_drop <- data.table(
+    File = files_to_write,
+    N_probes_lost = rep(0, num_files),
+    N_people_lost = rep(0, num_files)
+  )
+
+  # Iterate over the files - use index as can then access the read files and
+  # write files both
+  for (i in 1:num_files) {
+    read_file <- file_name[[i]]
+    write_file <- files_to_write[[i]]
+
     # Read in the data with the first row as the header
-    dt <- fread(file, header = T)
+    dt <- fread(read_file, header = T)
 
     # Remove the first two columns (the ID and its duplicate) and transpose the data
     col_classes <- sapply(dt, class)
@@ -299,6 +327,10 @@ write_data <- function(file_name, extension, write_dir, row_names,
     # Get the probe IDs into our data table
     conv_dt$V1 <- colnames(dt[, -(1:2)])
 
+    # Initial dimensionality before cleaning
+    n_col_i <- ncol(conv_dt)
+    n_row_i <- nrow(conv_dt)
+
     # If removing NAs, do so
     if (remove.na) {
       conv_dt <- conv_dt %>%
@@ -309,12 +341,16 @@ write_data <- function(file_name, extension, write_dir, row_names,
         )
     }
 
-    # print(summary(conv_dt))
+    # Dimensionality post-cleaning
+    n_col_o <- ncol(conv_dt)
+    n_row_o <- nrow(conv_dt)
+
+    # Record the number of people and probes dropped for this file
+    dim_drop[dim_drop$File == write_file]$N_probes_lost <- n_row_i - n_row_o
+    dim_drop[dim_drop$File == write_file]$N_people_lost <- n_col_i - n_col_o
 
     # Convert to data.table to use fwrite
     dt_out <- as.data.table(conv_dt)
-    # row.names(dt_out) <- conv_dt$V1
-    # row.names(dt_out) <- row.names(conv_dt)
 
     # Rearragne order with V1 (the probe ids) in the first position
     col_order <- names(dt_out) %>%
@@ -323,15 +359,16 @@ write_data <- function(file_name, extension, write_dir, row_names,
 
     dt_out <- setcolorder(dt_out, col_order)
 
-    # Create file name
-    file_name <- strsplit(paste0("/", file), "/([^/]*).")[[1]]
-    file_name <- file_name[[length(file_name)]]
-
     # Write to a csv file
-    file_to_write <- sub(paste0(extension, "$"), "", file_name) %>%
-      paste0(write_dir, "/transposed_", ., ".csv")
+    write_file <- paste0(write_dir, "/transposed_", write_file, ".csv")
+    data.table::fwrite(dt_out, file = write_file)
+  }
 
-    data.table::fwrite(dt_out, file = file_to_write)
+  if (remove.na) {
+    print(dim_drop)
+    data.table::fwrite(dim_drop,
+      file = paste0(write_dir, "Observations_lost.csv")
+    )
   }
 }
 
