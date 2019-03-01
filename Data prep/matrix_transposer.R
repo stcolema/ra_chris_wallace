@@ -180,7 +180,7 @@ na_to_median <- function(x) {
 }
 
 # Samll function to call is using apply or purrr::map to replace NAs with median
-na_replace <- function(x) {
+na_replace <- function(x){
   y <- ifelse(is.na(x), median(x, na.rm = TRUE), x)
   y
 }
@@ -194,17 +194,22 @@ na_handling <- function(dt, row_threshold = 0.1, col_threshold = 0.1, dir = 2) {
   # col_threshold is the corresponding vlaue for the columns
   # dir is the dimension to fill NAs with median vlaues (1 is rows, 2 columns)
 
-  # Call an error if the dir input is not 1 or 2
-  if(! dir %in% c(1,2)) stop("dir must be one of 1 (for rows) or 2 (for columns")
+  # Call an error if dir outside acceptable values
+  if(! dir %in% c(1, 2)) stop("dir must be one of 1 (rows) or 2 (columns).")
   
+  # Remove columns / rows with too high a proportion of NAs
+  dt_cols_dropped <- na_threshold(dt,
+    threshold = col_threshold,
+    cols = TRUE
+  )
+
+  dt_na_dropped <- na_threshold(dt_cols_dropped,
+    threshold = row_threshold,
+    cols = FALSE
+  )
+
   # For any remaining NAs replace with the column / row median as instructed
   if (dir == 2) {
-    # Remove columns / rows with too high a proportion of NAs
-    dt_na_dropped <- na_threshold(dt,
-      threshold = col_threshold,
-      cols = TRUE
-    )
-
     for (col in colnames(dt_na_dropped)) {
 
       # Create the expression to evaluate within the data.table
@@ -218,18 +223,12 @@ na_handling <- function(dt, row_threshold = 0.1, col_threshold = 0.1, dir = 2) {
       # Evaluate this within the data.table
       dt_no_na <- dt_na_dropped[, eval(e)]
     }
-
+    
     # consdier purrr (tried this - significantly slower, roughly 4 times as long)
     # dt_no_na <- purrr::map_df(dt_na_dropped, na_replace)
-
+    
     return(dt_no_na)
   }
-
-  # If dir == 1 do the analog of the above to the rows.
-  dt_na_dropped <- na_threshold(dt,
-    threshold = row_threshold,
-    cols = FALSE
-  )
 
   # If we want to do this by row, it seems easiest (as this is unlikely to be of
   # actual interest) t ouse the preceding method. This means we must transpose
@@ -237,7 +236,7 @@ na_handling <- function(dt, row_threshold = 0.1, col_threshold = 0.1, dir = 2) {
   dt_no_na <- purrr::pmap(dt_na_dropped, function(x) {
     y <- ifelse(is.na(x), median(x, na.rm = TRUE), x)
   })
-
+  
   dummy_dt <- dt_na_dropped %>%
     as.matrix() %>%
     t() %>%
