@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+mdipp-1.0.1/mdipp N Prepped_data/CD14.csv N Prepped_data/CD15.csv N Prepped_data/IL.csv N Prepped_data/CD4.csv N Prepped_data/CD8.csv Prepped_data/CD19.csv Prepped_data/PLA.csv N Prepped_data/RE.csv N Prepped_data/TR.csv -n 10000 -t 25 -s 1 > output_all.csv
+
