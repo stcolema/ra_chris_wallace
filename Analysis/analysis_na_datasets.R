@@ -15,16 +15,27 @@
 # -s 1
 # > output_full_sets.csv
 
+
+# Function to find the mode of a vector
+getmode <- function(v) {
+  uniqv <- unique(v)
+  uniqv[which.max(tabulate(match(v, uniqv)))]
+}
+
+
+
 # === Libraries ================================================================
 
 source("~/Desktop/MDI/mdipp-1.0.1/scripts/analysis.R")
-Rcpp::sourceCpp('Analysis/posterior_sim_mat.cpp')
+Rcpp::sourceCpp("Analysis/posterior_sim_mat.cpp")
 library(magrittr)
 library(dplyr)
 library(data.table)
 library(rlist)
 library(pheatmap) # install.packages("pheatmap", dep = T)
 library(RColorBrewer)
+library(mclust)
+library(ggplot2)
 
 # output <- loadDataGauss("~/Desktop/First attempt/output_1.csv")
 
@@ -42,13 +53,17 @@ probes_present_dt <- fread("Analysis/probes_present_per_dataset.csv")
 probe_key <- fread("Analysis/probe_key.csv")
 
 # Read in the MDI output file
-mdi_output_file <- "output_full_sets.csv"
+mdi_output_file <- "Analysis/MDI runs/Full sets with NAs dropped if above 0.1/output_full_na_sets.csv"
 
 # Convert this into useable output using functions provided by Sam Mason
 mcmc_output <- readMdiMcmcOutput(mdi_output_file)
 
 clust_occ <- getClustersOccupied(mcmc_output)
 head(clust_occ)
+
+# By the 8 x 25 = 200 iteration we have reached stationarity in the number of
+# clusters occupied
+summary(clust_occ[8:800, ])
 
 # Declare empty variable to capture information
 n_genes <- NA
@@ -57,7 +72,7 @@ allocation_list <- list()
 
 # MDI call specific values
 num_datasets <- 9
-n_iter <- 1e4
+n_iter <- 2e4
 thin <- 25
 burn <- 0.1 * (n_iter / thin)
 eff_n_iter <- n_iter / thin - burn
@@ -67,18 +82,22 @@ col_names <- paste0("D", 1:num_datasets)
 
 # The number of genes is the number of columns in the mcmc_output
 # exclusing the columns containing information on the phi and mass parameters
+n_genes <- 18523 # SPECIFIC TO CURRENT RUN
 if (is.na(n_genes)) {
   n_genes <- mcmc_output %>%
     select(contains("Dataset")) %>%
     ncol() / num_datasets
 }
 
+do_heatplot_clusterings <- F
+do_rand_plot <- F
+
 # Create an empty dataframe with column names corresponding to dataset numbers
 compare_df <- data.frame(matrix(ncol = num_datasets, nrow = n_genes))
 # colnames(compare_df) <- col_names
 
 # The actual names of the datasets are
-files_present <- list.files(path = ".") %>%
+files_present <- list.files(path = "~/Desktop/MDI/Data/Full_NA_filled_data") %>%
   grep(".csv", ., value = TRUE)
 
 # Remove the output file from this list if you saved it in the same location as
@@ -108,34 +127,98 @@ colnames(compare_df) <- dataset_names
 mdi_pos_sim_mat <- list()
 check_median_makes_sense_map <- list()
 
+
+# x4 <- sample(1:eff_iter, 50, replace=F)
+
 # Capture the allocation information in the named lists and the predicted
 # allocation in the dataframe
 for (i in 1:num_datasets) {
   dataset_name <- paste0("D", i)
-  
+
   # Get the allocation and drop the burn in
   mdi_allocation[[i]] <- .mdi_alloc <- getMdiAllocations(mcmc_output, i) %>%
     .[-(1:burn), ]
-  
+
   # sams_pos_sim <- genPosteriourSimilarityMatrix(.mdi_alloc)
-  # 
+  #
   # # Individuals are columns rather than rows (henc transpose)
-  # mdi_pos_sim_mat[[i]] <- .sim_mat <- similarity_mat(t(.mdi_alloc))
+  # mdi_pos_sim_mat[[i]] <- list()
+  # mdi_pos_sim_mat[[i]][[1]] <- .sim_mat <- similarity_mat(t(.mdi_alloc[,1:1000]))
+  # mdi_pos_sim_mat[[i]][[2]] <- .sim_mat <- similarity_mat(t(.mdi_alloc[,5000:6000]))
+  # mdi_pos_sim_mat[[i]][[3]] <- .sim_mat <- similarity_mat(t(.mdi_alloc[,11000:12000 ]))
+  # # break
+  # # By checking the imilarity of each row we can decide if the median is an
+  # # accurate method to allocate class (if all rows are highly similar label
+  # # flipping did not occur)
+  check_median_makes_sense_map[[i]] <- .sense_check <- similarity_mat(.mdi_alloc[c(seq(1, eff_n_iter, 25), eff_n_iter), ])
   # break
-  # By checking the imilarity of each row we can decide if the median is an 
-  # accurate method to allocate class (if all rows are highly similar label 
-  # flipping did not occur) 
-  # check_median_makes_sense_map[[i]] <- .sense_check <- similarity_mat(.mdi_alloc)
-# }
+  # }
 
-# pheatmap(mdi_pos_sim_mat[[1]])
+  # pheatmap(mdi_pos_sim_mat[[1]])
 
-  allocation_list[[i]] <- .pred_alloc <- apply(.mdi_alloc, 2, median)
-
+  allocation_list[[i]] <- .pred_alloc <- apply(.mdi_alloc, 2, getmode)
   compare_df[[dataset_names[i]]] <- .pred_alloc
 
   if (i == 1) {
     row.names(compare_df) <- names(.pred_alloc)
+  }
+}
+
+
+# pheatmap(mdi_allocation[[1]][c(seq(1, eff_n_iter, 25), eff_n_iter), 1:6], cluster_rows = F, main = "Hi",filename = "Analysis/MDI runs/Full sets with NAs dropped if above 0.1/iteration_heatplot_cd15.pdf")
+if (do_heatplot_clusterings) {
+  save_path <- "Analysis/MDI runs/Full sets with NAs dropped if above 0.1/"
+  for (i in 1:num_datasets) {
+    dataset <- dataset_names[[i]]
+    file_name <- paste0(save_path, "iteration_heatplot_", dataset, ".pdf")
+    title <- paste("Clustering across sample of iterations for", dataset)
+
+    pheatmap(mdi_allocation[[i]][c(seq(1, eff_n_iter, 25), eff_n_iter), ],
+      main = title,
+      cluster_rows = F,
+      filename = file_name
+    )
+  }
+}
+
+# pheatmap::pheatmap(check_median_makes_sense_map[[1]], cluster_rows = F, cluster_cols = T)
+# pheatmap::pheatmap(check_median_makes_sense_map[[2]], cluster_rows = F, cluster_cols = T)
+# pheatmap::pheatmap(check_median_makes_sense_map[[3]], cluster_rows = F, cluster_cols = T)
+# pheatmap::pheatmap(check_median_makes_sense_map[[4]], cluster_rows = F, cluster_cols = T)
+# pheatmap::pheatmap(check_median_makes_sense_map[[5]], cluster_rows = F, cluster_cols = T)
+# pheatmap::pheatmap(check_median_makes_sense_map[[6]], cluster_rows = F, cluster_cols = T)
+# pheatmap::pheatmap(check_median_makes_sense_map[[7]], cluster_rows = F, cluster_cols = T)
+# pheatmap::pheatmap(check_median_makes_sense_map[[8]], cluster_rows = F, cluster_cols = T)
+# pheatmap::pheatmap(check_median_makes_sense_map[[9]], cluster_rows = F, cluster_cols = T)
+
+# === rand indexing =============================================================
+if (do_rand_plot) {
+  rand <- list()
+  rand_plots <- list()
+  generic_title <- "MDI: Adjusted Rand index for"
+  generic_save_name <- "Analysis/MDI runs/Full sets with NAs dropped if above 0.1/"
+  for (i in 1:num_datasets) {
+    dataset <- dataset_names[[i]]
+    curr_title <- paste(generic_title, dataset)
+    curr_save_file <- paste0(generic_save_name, "rand_index_plot_", dataset, ".pdf")
+
+    rand[[i]] <- apply(
+      mdi_allocation[[i]],
+      1,
+      mclust::adjustedRandIndex, 
+      compare_df[, i]
+    )
+
+    rand_plots[[i]] <- ggplot2::ggplot(data = data.frame(Rand_index = rand[[i]], Index = 1:length(rand[[i]]))) +
+      ggplot2::geom_point(ggplot2::aes(x = Index, y = Rand_index)) +
+      ggplot2::labs(
+        title = curr_title,
+        subtitle = "Comparing modal clustering to clustering at each iteration",
+        x = "Index",
+        y = "Adjusted Rand Index"
+      )
+
+    ggplot2::ggsave(curr_save_file, plot = rand_plots[[i]])
   }
 }
 
@@ -190,19 +273,19 @@ col_pal <- c(rev(brewer.pal(n = 11, "RdYlBu"))) # name = "RdYlBu")))
 
 
 ph_full <- pheatmap(compare_df_new_labels,
-                    cluster_rows = T,
-                    cluster_cols = F,
-                    color = col_pal_old
+  cluster_rows = T,
+  cluster_cols = F,
+  color = col_pal_old
 )
 
 
-row_order <- ph_full_old$tree_row[["order"]]
+row_order <- ph_full$tree_row[["order"]]
 
 
 ph_full_old <- pheatmap(compare_df_old_labels[row_order, ],
-                        cluster_rows = F,
-                        cluster_cols = F,
-                        color = col_pal
+  cluster_rows = F,
+  cluster_cols = F,
+  color = col_pal
 )
 
 # Try and find an acceptable colour palette for the heatmap
@@ -228,109 +311,113 @@ row.names(compare_df_new_labels) <- gene_id
 # Ceck out some specific gene sets
 psmd_ind <- grep("PSMD", row.names(compare_df_new_labels))
 pheatmap(compare_df_new_labels[psmd_ind, ],
-         cluster_rows = F,
-         cluster_cols = F,
-         color = col_pal
+  cluster_rows = F,
+  cluster_cols = F,
+  color = col_pal
 )
 
 PTP4_ind <- grep("PTP4", row.names(compare_df_new_labels))
 pheatmap(compare_df_new_labels[PTP4_ind, ],
-         cluster_rows = F,
-         cluster_cols = F,
-         color = col_pal
+  cluster_rows = F,
+  cluster_cols = F,
+  color = col_pal
 )
 
 PTPN_ind <- grep("PTPN", row.names(compare_df_new_labels))
 pheatmap(compare_df_new_labels[PTPN_ind, ],
-         cluster_rows = F,
-         cluster_cols = F,
-         color = col_pal
+  cluster_rows = F,
+  cluster_cols = F,
+  color = col_pal
 )
 
 CFAP_ind <- grep("CFAP", row.names(compare_df_new_labels))
 pheatmap(compare_df_new_labels[CFAP_ind, ],
-         cluster_rows = F,
-         cluster_cols = F,
-         color = col_pal
+  cluster_rows = F,
+  cluster_cols = F,
+  color = col_pal
 )
 
 NOD_ind <- grep("NOD", row.names(compare_df_new_labels))
 pheatmap(compare_df_new_labels[NOD_ind, ],
-         luster_rows = F,
-         cluster_cols = F,
-         color = col_pal
+  luster_rows = F,
+  cluster_cols = F,
+  color = col_pal
 )
 
 ATG_ind <- grep("ATG", row.names(compare_df_new_labels))
 pheatmap(compare_df_new_labels[ATG_ind, ],
-         cluster_rows = F,
-         cluster_cols = F,
-         color = col_pal
+  cluster_rows = F,
+  cluster_cols = F,
+  color = col_pal
 )
 
 IL_ind <- grep("^IL[1, 2]", row.names(compare_df_new_labels))
 pheatmap(compare_df_new_labels[IL_ind, ],
-         cluster_rows = F,
-         cluster_cols = F,
-         color = col_pal
+  cluster_rows = F,
+  cluster_cols = F,
+  color = col_pal
 )
 
 MOX_ind <- grep("MOX", row.names(compare_df_new_labels))
 pheatmap(compare_df_new_labels[MOX_ind, ],
-         cluster_rows = F,
-         cluster_cols = F,
-         color = col_pal
+  cluster_rows = F,
+  cluster_cols = F,
+  color = col_pal
 )
 
 HOX_ind <- grep("HOX", row.names(compare_df_new_labels))
 pheatmap(compare_df_new_labels[HOX_ind, ],
-         cluster_rows = F,
-         cluster_cols = F,
-         color = col_pal
+  cluster_rows = F,
+  cluster_cols = F,
+  color = col_pal
 )
 
 
 # Heatmap of allocaiton
 ph_full <- pheatmap(compare_df_new_labels,
-                    cluster_cols = F,
-                    color = col_pal
+  cluster_cols = T,
+  color = col_pal
 )
 row_order <- ph_full$tree_row[["order"]]
+
+pheatmap(compare_df_new_labels[, c(1, 3, 4)], color = col_pal)
+pheatmap(compare_df_new_labels[, c(1, 3, 4, 5)], color = col_pal)
+pheatmap(compare_df_new_labels[, c(6, 8, 9)], color = col_pal)
 
 df_ph_order <- compare_df_new_labels[row_order, ]
 
 # Inspect this in more manageable section, keeping the same order
 # contains(row.names(df_ph_order))
 pheatmap(df_ph_order[1:2500, ],
-         cluster_rows = F,
-         cluster_cols = F,
-         color = col_pal
+  cluster_rows = F,
+  cluster_cols = F,
+  color = col_pal
 )
 
 pheatmap(df_ph_order[2501:5000, ],
-         cluster_rows = F,
-         cluster_cols = F,
-         color = col_pal
+  cluster_rows = F,
+  cluster_cols = F,
+  color = col_pal
 )
 
 # There's very little information here
 pheatmap(df_ph_order[5001:10000, ],
-         cluster_rows = F,
-         cluster_cols = F,
-         color = col_pal
+  cluster_rows = F,
+  cluster_cols = F,
+  color = col_pal
 )
 
 pheatmap(df_ph_order[10001:15000, ],
-         cluster_rows = F,
-         cluster_cols = F,
-         color = col_pal
+  cluster_rows = F,
+  cluster_cols = F,
+  color = col_pal
 )
 
 # Here it quite similar
 pheatmap(df_ph_order[15001:18517, ],
-         cluster_rows = F,
-         cluster_cols = F,
-         color = col_pal
+  cluster_rows = F,
+  cluster_cols = F,
+  color = col_pal
 )
 
 
