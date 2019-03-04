@@ -18,26 +18,28 @@
 # === Libraries ================================================================
 
 source("~/Desktop/MDI/mdipp-1.0.1/scripts/analysis.R")
+Rcpp::sourceCpp('Analysis/posterior_sim_mat.cpp')
 library(magrittr)
 library(dplyr)
 library(data.table)
 library(rlist)
 library(pheatmap) # install.packages("pheatmap", dep = T)
 library(RColorBrewer)
+
 # output <- loadDataGauss("~/Desktop/First attempt/output_1.csv")
 
 # === Setup ====================================================================
 
-setwd("~/Desktop/MDI/Data/Full_sets")
+# setwd("~/Desktop/MDI/Data/Full_sets")
 
 # Read in the probes present - this is a matrix of bools with the first column
 # as the probe IDs and the remaining columns corrresponding to the cell types
 # with TRUE indicating the probe is present in this cell type (i.e. not added
 # manually with an imputed value) and FALSE indicates we added it in.
-probes_present_dt <- fread("~/Desktop/MDI/Data/probes_present_per_dataset.csv")
+probes_present_dt <- fread("Analysis/probes_present_per_dataset.csv")
 
 # Read in the file relating the probe IDs to  the related gene
-probe_key <- fread("~/Desktop/MDI/Data/probe_key.csv")
+probe_key <- fread("Analysis/probe_key.csv")
 
 # Read in the MDI output file
 mdi_output_file <- "output_full_sets.csv"
@@ -47,111 +49,6 @@ mcmc_output <- readMdiMcmcOutput(mdi_output_file)
 
 clust_occ <- getClustersOccupied(mcmc_output)
 head(clust_occ)
-
-mdi_alloc <- getMdiAllocations(mcmc_output, 1)
-head(mdi_alloc[1:6, 1:6])
-
-psm_1 <- genPosteriourSimilarityMatrix(mdi_alloc)
-
-# clustering_1 <- hclust(psm_1)
-
-head(psm_1[1:6, 1:6])
-
-x <- c1[1:5]
-x2 <- c1[6:10]
-x3 <- c1[11:15]
-
-clux <- list(x, x2, x3)
-6900475 %in% names(unlist(clux))
-
-small_psm <- psm_1[1:10, 1:10]
-
-clusters <- list()
-probes_included <- c()
-n_clust <- 0
-for(i in 1:nrow(psm_1)){
-  probe_id <- row.names(psm_1)[i]
-  if(probe_id %in% probes_included){
-    next
-  }
-  n_clust = n_clust + 1
-  clusters[[n_clust]] <- psm_1[i, psm_1[i,] <= 0.20]
-  probes_included <- c(probes_included, names(clusters[[n_clust]]))
-  if(all(row.names(psm_1) %in% probes_included)){
-    break
-  }
-}
-
-new_clusts <- list()
-score <- matrix(0, nrow = n_clust, ncol = n_clust)
-for(i in 1:n_clust){
-  curr_clust <- clusters[[i]]
-  members <- names(curr_clust)
-  threshold <- 0.5
-  
-  
-  
-  for(j in 1:n_clust){
-    if(j == i) {
-      next
-    }
-    comp_members <- names(clusters[[j]])
-    score[i, j] <- sum(members %in% comp_members) / length(curr_clust)
-    
-  }
-  # if(max(score[i, ] > threshold)){
-  #   merge_clust <- which.max(score[i, ])
-  #   new_cluster <- unique(c(members, names(clusters[[merge_clust]])))
-  #   new_clusts
-  # }
-  
-  # }
-}
-
-# scores_to_use <- matrix(0, nrow = n_clust, ncol = n_clust)
-# scores_to_use[scores > 0.4] <- 1
-
-
-
-
-all(y1 %in% y)
-all(y1 %in% c(y, "z"))
-
-pheatmap::pheatmap(clusters[[n_clust]])
-
-length(unlist(clusters))
-length(names(unlist(clusters)))
-length(unique(names(unlist(clusters))))
-names(unlist(clusters))[duplicated(names(unlist(clusters)))]
-
-dupes <- c("3290347", "5720100", "5900441")
-
-c1_names <- names(clusters[[1]])
-c2_names <- names(clusters[[2]])
-
-ind_wanted <- row.names(psm_1) %in% c(c1_names, c2_names)
-small_psm_2 <- psm_1[ind_wanted, ind_wanted]
-pheatmap::pheatmap(small_psm_2)
-
-dupe_level <- c()
-for(i in 1:n_clust){
-  if(any(dupes %in% names(clusters[[i]]))){
-    dupe_level <- c(dupe_level, i)
-  }
-}
-clusters[[1]][[dupes[1]]]
-clusters[[4]][[dupes[1]]]
-clusters[[6]][[dupes[1]]]
-
-row.names(psm_1)[1:6]
-str(clusters)
-clusters[[6]]
-head(clusters[[1]][1:6])
-head(clusters[[2]][1:6])
-
-psm_1[1,]
-
-
 
 # Declare empty variable to capture information
 n_genes <- NA
