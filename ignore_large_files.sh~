@@ -16,6 +16,6 @@ while getopts f:s: option; do
     esac
 done
 
-# Add files to git ignore
+# Add files to git ignore (the grep aspect does not work)
 find . -size +${size} | grep -qxF ${file} || find . -size +${size} | cat >> ${file}
 
