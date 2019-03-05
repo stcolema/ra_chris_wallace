@@ -5,16 +5,16 @@
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "3029699960",
+    "hash" : "0",
     "id" : "1C650D24",
     "lastKnownWriteTime" : 1551783374,
     "last_content_update" : 1551783374378,
     "path" : "~/Desktop/ra_chris_wallace/Analysis/analysis_na_datasets.R",
     "project_path" : "Analysis/analysis_na_datasets.R",
     "properties" : {
-        "cursorPosition" : "261,0",
+        "cursorPosition" : "190,19",
         "docOutlineVisible" : "1",
-        "scrollLine" : "238"
+        "scrollLine" : "182"
     },
     "relative_order" : 2,
     "source_on_save" : false,
