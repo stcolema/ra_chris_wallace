@@ -1,15 +1,12 @@
 .Rproj.user
 .Rhistory
 .RData
-<<<<<<< HEAD
 .Ruserdat
 
 
 # Use command in terminal to add specific files to .gitignore
 # find . -size +50M | cat >> .gitignore
-./.git/objects/04/5dabe09b2881122f9546ff15a066bd8a5890c7
+# ./.git/objects/04/5dabe09b2881122f9546ff15a066bd8a5890c7
 ./Analysis/MDI_runs/Full_sets_NAs_dropped_above_0.1/output_full_na_sets.csv
 *output*.csv
-=======
-.Ruserdata
->>>>>>> a1e3325e7770d1050b4ab3dd54786d51394d1846
+
