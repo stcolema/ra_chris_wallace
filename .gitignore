@@ -7,3 +7,4 @@
 # find . -size +50M | cat >> .gitignore
 ./.git/objects/04/5dabe09b2881122f9546ff15a066bd8a5890c7
 ./Analysis/MDI_runs/Full_sets_NAs_dropped_above_0.1/output_full_na_sets.csv
+*output*.csv
