@@ -165,14 +165,28 @@ for (i in 1:num_datasets) {
 }
 
 
-# pheatmap(mdi_allocation[[1]][c(seq(1, eff_n_iter, 25), eff_n_iter), 1:6], cluster_rows = F, main = "Hi",filename = "Analysis/MDI runs/Full sets with NAs dropped if above 0.1/iteration_heatplot_cd15.pdf")
+# If making heatplots of the clusterings across iterations
 if (do_heatplot_clusterings) {
+  
+  # Define the type of file to save
+  plot_type <- ".pdf" # ".png" or ".pdf"
+  
+  # Create the common save path
   save_path <- "Analysis/MDI runs/Full sets with NAs dropped if above 0.1/"
+  
+  # Iterate over datasets
   for (i in 1:num_datasets) {
+    # Find the dataset name
     dataset <- dataset_names[[i]]
-    file_name <- paste0(save_path, "iteration_heatplot_", dataset, ".pdf")
+    
+    # Create the save location and file name
+    file_name <- paste0(save_path, "iteration_heatplot_", dataset, plot_type)
+    
+    # Create the title of the plot
     title <- paste("Clustering across sample of iterations for", dataset)
 
+    # Make the heatmap (note that we do not cluster rows).
+    # We use a sample of the iterations as otherwise it becomes too heavy
     pheatmap(mdi_allocation[[i]][c(seq(1, eff_n_iter, 25), eff_n_iter), ],
       main = title,
       cluster_rows = F,
@@ -192,16 +206,33 @@ if (do_heatplot_clusterings) {
 # pheatmap::pheatmap(check_median_makes_sense_map[[9]], cluster_rows = F, cluster_cols = T)
 
 # === rand indexing =============================================================
+# If instructed to make Rand index plots
 if (do_rand_plot) {
+  
+  # Define the plot type
+  plot_type <- ".pdf" # ".png" or ".pdf"
+  
+  # Create the lists to hold the dataset specific results
   rand <- list()
   rand_plots <- list()
+  
+  # Save the common part of each title
   generic_title <- "MDI: Adjusted Rand index for"
   generic_save_name <- "Analysis/MDI runs/Full sets with NAs dropped if above 0.1/"
+  
+  # Loop over the datasets
   for (i in 1:num_datasets) {
+    # The current dataset name
     dataset <- dataset_names[[i]]
+    
+    # Append this to the generic title to create the specific title
     curr_title <- paste(generic_title, dataset)
-    curr_save_file <- paste0(generic_save_name, "rand_index_plot_", dataset, ".pdf")
 
+    # Similarly for the name of the save file
+    curr_save_file <- paste0(generic_save_name, "rand_index_plot_", dataset, plot_type)
+
+    # Create a vector of the adjusted rand index comparing the modal cluster
+    # to the clustering at each iteration
     rand[[i]] <- apply(
       mdi_allocation[[i]],
       1,
@@ -209,8 +240,12 @@ if (do_rand_plot) {
       compare_df[, i]
     )
 
-    rand_plots[[i]] <- ggplot2::ggplot(data = data.frame(Rand_index = rand[[i]], Index = 1:length(rand[[i]]))) +
-      ggplot2::geom_point(ggplot2::aes(x = Index, y = Rand_index)) +
+    # As we use ggplot2, put this in a dataframe
+    plot_data <- data.frame(Rand_index = rand[[i]], Iteration = 1:length(rand[[i]]))
+    
+    # Plot the Rand index against iteration number
+    rand_plots[[i]] <- ggplot2::ggplot(data = plot_data) +
+      ggplot2::geom_point(ggplot2::aes(x = Iteration, y = Rand_index)) +
       ggplot2::labs(
         title = curr_title,
         subtitle = "Comparing modal clustering to clustering at each iteration",
@@ -218,9 +253,16 @@ if (do_rand_plot) {
         y = "Adjusted Rand Index"
       )
 
+    # Save the plot
     ggplot2::ggsave(curr_save_file, plot = rand_plots[[i]])
   }
 }
+
+# === Compare individual clusterings to all ====================================
+
+
+
+# === Some EDA =================================================================
 
 # Possibly need to rearrange based on call order
 # compare_df <- compare_df[, c(4,5,1,2,6,7,3,8,9)]
