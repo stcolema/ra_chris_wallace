@@ -25,6 +25,7 @@ library(rlist)
 library(pheatmap) # install.packages("pheatmap", dep = T)
 library(RColorBrewer)
 <<<<<<< HEAD
+<<<<<<< HEAD
 library(stringr)
 # output <- loadDataGauss("~/Desktop/First attempt/output_1.csv")
 
@@ -303,6 +304,8 @@ row_order <- ph_full$tree_row[["order"]]
 
 df_ph_order <- compare_mat[row_order, ]
 =======
+=======
+>>>>>>> a1e3325e7770d1050b4ab3dd54786d51394d1846
 # output <- loadDataGauss("~/Desktop/First attempt/output_1.csv")
 
 # === Setup ====================================================================
@@ -384,12 +387,16 @@ ph_full <- pheatmap(compare_df_new_labels,
 row_order <- ph_full$tree_row[["order"]]
 
 df_ph_order <- compare_df_new_labels[row_order, ]
+<<<<<<< HEAD
+>>>>>>> a1e3325e7770d1050b4ab3dd54786d51394d1846
+=======
 >>>>>>> a1e3325e7770d1050b4ab3dd54786d51394d1846
 
 # Inspect this in more manageable section, keeping the same order
 # contains(row.names(df_ph_order))
 pheatmap(df_ph_order[1:2500, ],
 <<<<<<< HEAD
+<<<<<<< HEAD
   cluster_rows = F,
   cluster_cols = F,
   color = col_pal
@@ -400,6 +407,8 @@ pheatmap(df_ph_order[2501:5000, ],
   cluster_cols = F,
   color = col_pal
 =======
+=======
+>>>>>>> a1e3325e7770d1050b4ab3dd54786d51394d1846
          cluster_rows = F,
          cluster_cols = F,
          color = col_pal
@@ -409,11 +418,15 @@ pheatmap(df_ph_order[2501:5000, ],
          cluster_rows = F,
          cluster_cols = F,
          color = col_pal
+<<<<<<< HEAD
+>>>>>>> a1e3325e7770d1050b4ab3dd54786d51394d1846
+=======
 >>>>>>> a1e3325e7770d1050b4ab3dd54786d51394d1846
 )
 
 # There's very little information here
 pheatmap(df_ph_order[5001:10000, ],
+<<<<<<< HEAD
 <<<<<<< HEAD
   cluster_rows = F,
   cluster_cols = F,
@@ -425,6 +438,8 @@ pheatmap(df_ph_order[10001:15000, ],
   cluster_cols = F,
   color = col_pal
 =======
+=======
+>>>>>>> a1e3325e7770d1050b4ab3dd54786d51394d1846
          cluster_rows = F,
          cluster_cols = F,
          color = col_pal
@@ -434,11 +449,15 @@ pheatmap(df_ph_order[10001:15000, ],
          cluster_rows = F,
          cluster_cols = F,
          color = col_pal
+<<<<<<< HEAD
+>>>>>>> a1e3325e7770d1050b4ab3dd54786d51394d1846
+=======
 >>>>>>> a1e3325e7770d1050b4ab3dd54786d51394d1846
 )
 
 # Here it quite similar
 pheatmap(df_ph_order[15001:18517, ],
+<<<<<<< HEAD
 <<<<<<< HEAD
   cluster_rows = F,
   cluster_cols = F,
@@ -498,6 +517,8 @@ pheatmap::pheatmap(compare_mat[, c(3, 4)],
   main = "Heatmap for CD19 and CD4 (all genes)"
 )
 =======
+=======
+>>>>>>> a1e3325e7770d1050b4ab3dd54786d51394d1846
          cluster_rows = F,
          cluster_cols = F,
          color = col_pal
@@ -518,4 +539,7 @@ pheatmap(df_ph_order[2501:5000, ], cluster_rows = F, cluster_cols = F)
 pheatmap(df_ph_order[5001:10000, ], cluster_rows = F, cluster_cols = F)
 pheatmap(df_ph_order[10001:15000, ], cluster_rows = F, cluster_cols = F)
 pheatmap(df_ph_order[15001:18517, ], cluster_rows = F, cluster_cols = F)
+<<<<<<< HEAD
+>>>>>>> a1e3325e7770d1050b4ab3dd54786d51394d1846
+=======
 >>>>>>> a1e3325e7770d1050b4ab3dd54786d51394d1846
