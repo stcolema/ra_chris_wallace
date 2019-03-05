@@ -1,0 +1,24 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1551714784040.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3688125596",
+    "id" : "3B3DFB2C",
+    "lastKnownWriteTime" : 1551723614,
+    "last_content_update" : 1551723614021,
+    "path" : "~/Desktop/ra_chris_wallace/Analysis/analysis_na_datasets.R",
+    "project_path" : "Analysis/analysis_na_datasets.R",
+    "properties" : {
+        "cursorPosition" : "225,0",
+        "docOutlineSize" : "110",
+        "docOutlineVisible" : "1",
+        "scrollLine" : "205"
+    },
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

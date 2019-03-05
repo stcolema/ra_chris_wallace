@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1551282498502.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "862511475",
+    "id" : "5D668FEE",
+    "lastKnownWriteTime" : 1550075748,
+    "last_content_update" : 1550075748,
+    "path" : "~/Desktop/ra_chris_wallace/Data prep/replace_na_col_mean.R",
+    "project_path" : "Data prep/replace_na_col_mean.R",
+    "properties" : {
+        "cursorPosition" : "43,33",
+        "docOutlineVisible" : "1",
+        "scrollLine" : "27"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
