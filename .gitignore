@@ -3,6 +3,7 @@
 .RData
 .Ruserdat
 
+
 # Use command in terminal to add specific files to .gitignore
 # find . -size +50M | cat >> .gitignore
 ./.git/objects/04/5dabe09b2881122f9546ff15a066bd8a5890c7
