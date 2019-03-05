@@ -53,7 +53,7 @@ probes_present_dt <- fread("Analysis/probes_present_per_dataset.csv")
 probe_key <- fread("Analysis/probe_key.csv")
 
 # Read in the MDI output file
-mdi_output_file <- "Analysis/MDI runs/Full sets with NAs dropped if above 0.1/output_full_na_sets.csv"
+mdi_output_file <- "Analysis/MDI_runs/Full_sets_NAs_dropped_above_0.1/output_full_na_sets.csv"
 
 # Convert this into useable output using functions provided by Sam Mason
 mcmc_output <- readMdiMcmcOutput(mdi_output_file)
@@ -172,7 +172,7 @@ if (do_heatplot_clusterings) {
   plot_type <- ".pdf" # ".png" or ".pdf"
   
   # Create the common save path
-  save_path <- "Analysis/MDI runs/Full sets with NAs dropped if above 0.1/"
+  save_path <- "Analysis/MDI_runs/Full_sets_with_NAs_dropped_if_above_0.1/"
   
   # Iterate over datasets
   for (i in 1:num_datasets) {
@@ -218,7 +218,7 @@ if (do_rand_plot) {
   
   # Save the common part of each title
   generic_title <- "MDI: Adjusted Rand index for"
-  generic_save_name <- "Analysis/MDI runs/Full sets with NAs dropped if above 0.1/"
+  generic_save_name <- "Analysis/MDI_runs/Full_sets_with_NAs_dropped_if_above_0.1/"
   
   # Loop over the datasets
   for (i in 1:num_datasets) {
@@ -260,7 +260,98 @@ if (do_rand_plot) {
 
 # === Compare individual clusterings to all ====================================
 
-
+# Read in the MDI output file
+generic_file_name_start <- "Analysis/MDI_runs/Individual_NAs_dropped_above_0.1/out_transposed_"
+generic_file_end <- "_GE_Corrected4_Covars.csv"
+plot_type <- ".pdf"
+save_path <- "Analysis/MDI_runs/Individual_NAs_dropped_above_0.1/heatmaps/"
+rand_save_path <-"Analysis/MDI_runs/Individual_NAs_dropped_above_0.1/rand_plots/" 
+rand_plots_ind <- list()
+for(i in 1:num_datasets){
+  dataset <- dataset_names[[i]]
+  specific_file <- paste0(generic_file_name_start, dataset_names[[i]], generic_file_end)
+  specific_mcmc_output <- readMdiMcmcOutput(specific_file)
+  
+  .mdi_alloc <- getMdiAllocations(specific_mcmc_output, 1) %>%
+    .[-(1:burn), ]
+  
+  # # By checking the imilarity of each row we can decide if the median is an
+  # # accurate method to allocate class (if all rows are highly similar label
+  # # flipping did not occur)
+   .sense_check <- similarity_mat(.mdi_alloc[c(seq(1, eff_n_iter, 25), eff_n_iter), ])
+  
+  .pred_alloc <- apply(.mdi_alloc, 2, getmode)
+  
+  names(.pred_alloc)
+  
+  # Get the clustering from the all MDI
+  comp_all_mdi <- compare_df[,i]
+  names(comp_all_mdi) <- row.names(compare_df)
+  
+  order_to_use <- match(names(.pred_alloc), names(comp_all_mdi))
+  
+  
+  compare_clusterings_df <- data.frame(Specific = .pred_alloc, All = comp_all_mdi[order_to_use])
+  row.names(compare_clusterings_df) <- names(.pred_alloc)
+  
+  # Create the save location and file name
+  file_name <- paste0(save_path, "mdi_comparison_heatplot", dataset, plot_type)
+  
+  pheatmap(.sense_check, cluster_rows = F, cluster_cols = F)
+  pheatmap(.mdi_alloc[c(seq(1, eff_n_iter, 25), eff_n_iter), ], cluster_rows = F)
+  pheatmap_title <- paste0(dataset_names[[i]], ": Comparison of clusterings")
+  pheatmap(compare_clusterings_df, main = dataset_names[[i]], 
+           filename = file_name)
+  
+  
+  
+  # The current dataset name
+  # dataset <- dataset_names[[i]]
+  
+  # Append this to the generic title to create the specific title
+  # curr_title <- paste(generic_title, dataset)
+  
+  # Similarly for the name of the save file
+  # curr_save_file <- paste0(generic_save_name, "rand_index_plot_", dataset, plot_type)
+  
+  # Create a vector of the adjusted rand index comparing the modal cluster
+  # to the clustering at each iteration
+  rand_comp_mode <- apply(
+    .mdi_alloc,
+    1,
+    mclust::adjustedRandIndex, 
+    .pred_alloc
+  )
+  
+  rand_comp_all <- apply(
+    .mdi_alloc,
+    1,
+    mclust::adjustedRandIndex, 
+    comp_all_mdi[order_to_use]
+  )
+  
+  # As we use ggplot2, put this in a dataframe
+  plot_data_specific <- data.frame(Rand_index_self = rand_comp_mode,
+                                   Rand_index_all = rand_comp_all,
+                                   Iteration = 1:length(rand_comp_all)
+                                   )
+  
+  # Plot the Rand index against iteration number
+  rand_plots_ind[[i]] <- ggplot2::ggplot(data = plot_data_specific) +
+    ggplot2::geom_point(ggplot2::aes(x = Iteration, y = Rand_index_self)) +
+    # ggplot2::geom_point(ggplot2::aes(x = Iteration, y = Rand_index_all)) +
+    ggplot2::labs(
+      title = dataset,
+      subtitle = "Comparing modal clustering to clustering at each iteration",
+      x = "Index",
+      y = "Adjusted Rand Index"
+    )
+  
+  ggplot2::ggsave(paste0(rand_save_path, dataset, plot_type),
+                  plot = rand_plots_ind[[i]]
+                  )
+  
+}
 
 # === Some EDA =================================================================
 
