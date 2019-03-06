@@ -1,9 +1,8 @@
-*Rproj.user*
 .Rhistory
 .RData
-<<<<<<< HEAD
 .Ruserdat
-
+.Ruserdata
+.Rproj.user
 
 # Use command in terminal to add specific files to .gitignore
 # find . -size +50M | cat >> .gitignore
@@ -12,8 +11,3 @@
 *output*.csv
 
 =======
-.Ruserdata
->>>>>>> a1e3325e7770d1050b4ab3dd54786d51394d1846
-
-
-.Rproj.user
