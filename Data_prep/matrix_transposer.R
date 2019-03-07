@@ -245,7 +245,7 @@ na_handling <- function(dt, row_threshold = 0.1, col_threshold = 0.1, dir = 2) {
   # As above, cycle through each collumn replacing NAs with the median value
   for (col in colnames(dummy_dt)) {
     e <- substitute(
-      X := ifelse(is.na(X), median(X, na.rm = TRUE), X),
+      X := ifelse(is.na(X), min(X, na.rm = TRUE), X),
       list(X = as.symbol(col))
     )
 
