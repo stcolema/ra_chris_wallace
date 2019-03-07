@@ -42,9 +42,11 @@ library(ggplot2)
 # === Setup ====================================================================
 
 # Instructions to check, save and do several different things
-do_heatplot_clusterings <- F
-do_rand_plot <- F
-do_individual_comparison <- F
+save_plots <- T
+plot_type <- ".pdf"
+do_heatplot_clusterings <- T
+do_rand_plot <- T
+do_individual_comparison <- T
 
 # setwd("~/Desktop/MDI/Data/Full_sets")
 
@@ -80,7 +82,8 @@ num_datasets <- 9
 n_iter <- 2e4
 thin <- 25
 burn <- 0.1 * (n_iter / thin)
-eff_n_iter <- n_iter / thin - burn
+
+eff_n_iter <- n_iter / thin # - burn
 
 # Create a dataframe to hold the output
 col_names <- paste0("D", 1:num_datasets)
@@ -138,8 +141,7 @@ for (i in 1:num_datasets) {
   dataset_name <- paste0("D", i)
 
   # Get the allocation and drop the burn in
-  mdi_allocation[[i]] <- .mdi_alloc <- getMdiAllocations(mcmc_output, i) %>%
-    .[-(1:burn), ]
+  mdi_allocation[[i]] <- .mdi_alloc <- getMdiAllocations(mcmc_output, i)
 
   # sams_pos_sim <- genPosteriourSimilarityMatrix(.mdi_alloc)
   #
@@ -152,13 +154,13 @@ for (i in 1:num_datasets) {
   # # By checking the imilarity of each row we can decide if the median is an
   # # accurate method to allocate class (if all rows are highly similar label
   # # flipping did not occur)
-  check_median_makes_sense_map[[i]] <- .sense_check <- similarity_mat(.mdi_alloc[c(seq(1, eff_n_iter, 25), eff_n_iter), ])
+  # check_median_makes_sense_map[[i]] <- .sense_check <- similarity_mat(.mdi_alloc[c(seq(1, eff_n_iter, 25), eff_n_iter), ])
   # break
   # }
 
   # pheatmap(mdi_pos_sim_mat[[1]])
 
-  allocation_list[[i]] <- .pred_alloc <- apply(.mdi_alloc, 2, getmode)
+  allocation_list[[i]] <- .pred_alloc <- apply(.mdi_alloc[-(1:burn), ], 2, getmode)
   compare_df[[dataset_names[i]]] <- .pred_alloc
 
   if (i == 1) {
@@ -166,15 +168,16 @@ for (i in 1:num_datasets) {
   }
 }
 
+# === Check clustering ocnvergence =============================================
 
 # If making heatplots of the clusterings across iterations
 if (do_heatplot_clusterings) {
 
   # Define the type of file to save
-  plot_type <- ".pdf" # ".png" or ".pdf"
+  # plot_type <- ".pdf" # ".png" or ".pdf"
 
   # Create the common save path
-  save_path <- "Analysis/MDI_runs/Full_sets_with_NAs_dropped_if_above_0.1/"
+  save_path <- "Analysis/MDI_runs/Full_sets_NAs_dropped_above_0.1/"
 
   # Iterate over datasets
   for (i in 1:num_datasets) {
@@ -182,22 +185,29 @@ if (do_heatplot_clusterings) {
     dataset <- dataset_names[[i]]
 
     # Create the save location and file name
-    file_name <- paste0(save_path, "iteration_heatplot_", dataset, plot_type)
+    file_name <- paste0(save_path, "iteration_heatplot_before_burn", dataset, plot_type)
 
     # Create the title of the plot
     title <- paste("Clustering across sample of iterations for", dataset)
 
     # Make the heatmap (note that we do not cluster rows).
     # We use a sample of the iterations as otherwise it becomes too heavy
-    pheatmap(mdi_allocation[[i]][c(seq(1, eff_n_iter, 25), eff_n_iter), ],
+    if(save_plots){
+    pheatmap(mdi_allocation[[i]][1:80, ],
       main = title,
       cluster_rows = F,
       filename = file_name
     )
+    } else {
+      pheatmap(mdi_allocation[[i]][c(seq(1, eff_n_iter, 25), eff_n_iter), ],
+               main = title,
+               cluster_rows = F
+      )
+    }
   }
 }
 
-# pheatmap::pheatmap(check_median_makes_sense_map[[1]], cluster_rows = F, cluster_cols = T)
+                                                                                                                                                                                              # pheatmap::pheatmap(check_median_makes_sense_map[[1]], cluster_rows = F, cluster_cols = T)
 # pheatmap::pheatmap(check_median_makes_sense_map[[2]], cluster_rows = F, cluster_cols = T)
 # pheatmap::pheatmap(check_median_makes_sense_map[[3]], cluster_rows = F, cluster_cols = T)
 # pheatmap::pheatmap(check_median_makes_sense_map[[4]], cluster_rows = F, cluster_cols = T)
@@ -212,7 +222,7 @@ if (do_heatplot_clusterings) {
 if (do_rand_plot) {
 
   # Define the plot type
-  plot_type <- ".pdf" # ".png" or ".pdf"
+  # plot_type <- ".pdf" # ".png" or ".pdf"
 
   # Create the lists to hold the dataset specific results
   rand <- list()
@@ -255,8 +265,10 @@ if (do_rand_plot) {
         y = "Adjusted Rand Index"
       )
 
-    # Save the plot
-    ggplot2::ggsave(curr_save_file, plot = rand_plots[[i]])
+    if(save_plots){
+      # Save the plot
+      ggplot2::ggsave(curr_save_file, plot = rand_plots[[i]])
+    }
   }
 }
 
@@ -303,10 +315,17 @@ if(do_individual_comparison){
     pheatmap(.sense_check, cluster_rows = F, cluster_cols = F)
     pheatmap(.mdi_alloc[c(seq(1, eff_n_iter, 25), eff_n_iter), ], cluster_rows = F)
     pheatmap_title <- paste0(dataset_names[[i]], ": Comparison of clusterings")
-    pheatmap(compare_clusterings_df,
-      main = dataset_names[[i]],
-      filename = file_name
-    )
+    
+    if(save_plots){
+      pheatmap(compare_clusterings_df,
+        main = dataset_names[[i]],
+        filename = file_name
+      )
+    } else {
+      pheatmap(compare_clusterings_df,
+               main = dataset_names[[i]]
+      )
+    }
   
     # Create a vector of the adjusted rand index comparing the modal cluster
     # to the clustering at each iteration
@@ -342,9 +361,11 @@ if(do_individual_comparison){
         y = "Adjusted Rand Index"
       )
   
+    if(save_plots){
     ggplot2::ggsave(paste0(rand_save_path, dataset, plot_type),
       plot = rand_plots_ind[[i]]
     )
+    }
   }
 }
 
