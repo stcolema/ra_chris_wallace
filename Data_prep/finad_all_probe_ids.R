@@ -21,17 +21,37 @@ prep_data <- function(dt) {
     select(-V1)
 }
 
+# Used in initial idea for removing points from PCA that failed to meet some 
+# criterion
+contrib_cut <- function(pca_res, cut = 1.5, dims = 1:3, criterion = "contrib"){
+  contrib <- get_pca_ind(pca_res)[[criterion]]
+  ind_to_remove <-  apply(contrib[,dims], 1, function(r) any(r > cut))
+}
+
+get_cut_data <- function(pca_lst, threshold = c(1.0, 1.5, 2.0), criterion = "contrib"){
+  cut_data <- list()
+  for(cut in threshold){
+    cut_data[[as.character(cut)]] <- pca_lst %>% 
+      lapply(., contrib_cut, cut = cut, criterion = criterion) %>% 
+      lapply(., sum) %>% 
+      unlist()
+    # unlist(lapply(lapply(pca_lst, contrib_cut), sum))
+  }
+  cut_data
+}
+
+
 # Read in data
 # files_present <- list.files(path = args$dir)
 # file_name <- grep(args$extension, files_present, value = TRUE) %>%
 #   paste0(args$dir, "/", .)
-setwd("~/Desktop/MDI/Data/Transposed_na_data")
+setwd("~/Desktop/MDI/Data/Fill_NAs_Min")
 # setwd("~/Desktop/Na_filled_data/")
-files_present <- list.files(path = "~/Desktop/MDI/Data/Transposed_na_data")
+files_present <- list.files(path = "~/Desktop/MDI/Data/Fill_NAs_Min")
 # files_present <- list.files(path = "~/Desktop/Na_filled_data/")
-file_name <- grep(".csv", files_present, value = TRUE)
+file_name <- grep("Covars.csv", files_present, value = TRUE)
 
-do_pca <- F
+do_pca <- T
 eda <- F
 
 # file_name <-  file_name[-7]
@@ -45,6 +65,8 @@ pca_plot_lst <- list()
 
 mean_lst <- list()
 sd_lst <- list()
+
+
 # Put all the data in a list of data tables
 for (f in file_name) {
   data_lst[[f]] <- fread(f, header = T)
@@ -58,17 +80,58 @@ for (f in file_name) {
   }
 
   # Carry out PCA and record the biplot
-  if (do_pca) {
-    pca_lst[[f]] <- prcomp(data_lst[[f]][, -1])
+  # if (do_pca) {
+  #   pca_lst[[f]] <- prcomp(t(data_lst[[f]][, -1]))
+  # 
+  #   pca_title <- paste()
+  #   
+  #   pca_plot_lst[[f]] <- fviz_pca_ind(pca_lst[[f]],
+  #     geom.ind = "point", # show points only (nbut not "text")
+  #     col.ind = "contrib"
+  #   ) +
+  #     scale_color_gradient2(
+  #       low = "black", mid = "blue",
+  #       high = "red", midpoint = 4
+  #     )
+  # }
+}
 
-    pca_plot_lst[[f]] <- fviz_pca_ind(pca_lst[[f]],
-      geom.ind = "point", # show points only (nbut not "text")
-      col.ind = "contrib"
+# Acquire the relevant file names
+files_to_write <- strsplit(names(data_lst), "_?_(.*?)_?") %>% 
+  lapply("[[", 2) %>%
+  unlist()
+
+num_datasets <- length(data_lst)
+
+for (i in 1:num_datasets) {
+# Carry out PCA and record the biplot
+  if (do_pca) {
+    raw_file_name <- file_name[[i]]
+    edit_file_name <- files_to_write[[i]]
+    
+    pca_lst[[edit_file_name]] <- .res_pca <- prcomp(t(data_lst[[raw_file_name]][, -1]))
+    
+    pca_title <- paste0(edit_file_name, ": PCA for individuals")
+    
+    pca_plot_lst[[edit_file_name]] <- fviz_pca_ind(.res_pca,
+      col.ind = "contrib", 
+      # gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
+      title = pca_title
     ) +
       scale_color_gradient2(
         low = "black", mid = "blue",
-        high = "red", midpoint = 4
+        high = "red", midpoint = 1.0
       )
+    
+    # pca_plot_lst[[edit_file_name]] <- fviz_pca_ind(pca_lst[[edit_file_name]],
+    #                                   geom.ind = "point", # show points only (nbut not "text")
+    #                                   col.ind = "contrib",
+    #                                   title = pca_title
+    # ) +
+    #   scale_color_gradient2(
+    #     low = "black", mid = "blue",
+    #     high = "red", midpoint = 1.5
+    #   )
   }
 }
 
@@ -95,18 +158,18 @@ if (eda) {
 }
 
 # If PCA was done, print the plots (notice that the first compoen)
+# These are all the same - something has gone wrong
 if (do_pca) {
-  print(pca_plot_lst$transposed_CD14_GE_Corrected4_Covars.csv)
-  print(pca_plot_lst$transposed_IL_GE_Corrected4_Covars.csv)
-  print(pca_plot_lst$transposed_CD19_GE_Corrected4_Covars.csv)
-  print(pca_plot_lst$transposed_CD15_GE_Corrected4_Covars.csv)
-  print(pca_plot_lst$transposed_CD4_GE_Corrected4_Covars.csv)
-  print(pca_plot_lst$transposed_CD8_GE_Corrected4_Covars.csv)
-  print(pca_plot_lst$transposed_PLA_GE_Corrected4_Covars.csv)
-  print(pca_plot_lst$transposed_RE_GE_Corrected4_Covars.csv)
-  print(pca_plot_lst$transposed_TR_GE_Corrected4_Covars.csv)
+  print(pca_plot_lst$CD14)
+  print(pca_plot_lst$CD15)
+  print(pca_plot_lst$CD19)
+  print(pca_plot_lst$CD4)
+  print(pca_plot_lst$CD8)
+  print(pca_plot_lst$IL)
+  print(pca_plot_lst$PLA)
+  print(pca_plot_lst$RE)
+  print(pca_plot_lst$TR)
 }
-# length(genes_present)
 
 # Move the genes present to a list
 genes_present %<>% unname() %>% unlist()
@@ -116,12 +179,10 @@ empty_probes_dt <- data.table(matrix(NA,
                   ncol = length(file_name) + 1
 ))
 
-files_to_write <- strsplit(names(data_lst), "_?_(.*?)_?") %>% 
-  lapply("[[", 2) %>% 
-  unlist()
 
 colnames(empty_probes_dt) <- c("V1", files_to_write)
 empty_probes_dt$V1 <-  genes_present
+
 
 # For each dataset filter by genes present in all and write to file
 for (f in names(data_lst)) {
