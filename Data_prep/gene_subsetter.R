@@ -53,14 +53,14 @@ input_arguments <- function() {
       metavar = "character"
     ),
 
-    # Threshold at which to remove PROBES
+    # gene set to use (current options based on data from Chris)
     optparse::make_option(c("-g", "--gene_set"),
       type = "character",
       help = "gene set to extract from the expression data. One of `small', `medium', `big' or `all'",
       metavar = "character"
     ),
 
-    # Threshold at which to remove PROBES
+    # File to load gene data from (curently has to be .RData file)
     optparse::make_option(c("--gene_data"),
       type = "character",
       default = "stephen-genesets.RData",
@@ -68,23 +68,21 @@ input_arguments <- function() {
       metavar = "character"
     ),
 
-    # Threshold at which to remove PROBES
+    # .csv file containing probe-gene key
     optparse::make_option(c("-p", "--probe_key"),
       type = "character",
       default = "probe_key.csv",
       help = "file containing conversion key from Probe ID to Gene [default= %default]",
       metavar = "character"
     ),
-    
-    # Threshold at which to remove PROBES
+
+    # Instruction to time programme
     optparse::make_option(c("-t", "--time"),
-                          type = "logical",
-                          default = FALSE,
-                          help = "instruction to print time programme takes to run [default= %default]",
-                          metavar = "logical"
+      type = "logical",
+      default = FALSE,
+      help = "instruction to print time programme takes to run [default= %default]",
+      metavar = "logical"
     )
-    
-    
   )
   opt_parser <- optparse::OptionParser(option_list = option_list)
   opt <- optparse::parse_args(opt_parser)
@@ -119,14 +117,14 @@ read_in_data <- function(args) {
   file_name
 }
 
-create_gene_set <- function(cmd){
-  if(cmd == "small"){
+create_gene_set <- function(cmd) {
+  if (cmd == "small") {
     return("smallnet")
   }
-  if(cmd == "medium"){
+  if (cmd == "medium") {
     return("midnet")
   }
-  if(cmd == "big"){
+  if (cmd == "big") {
     return("bignet")
   }
   c("smallnet", "midnet", "bignet")
@@ -158,7 +156,7 @@ write_data <- function(file_name,
   probe_key <- fread(probe_key, header = T)
 
   networks <- create_gene_set(gene_set)
-  
+
   # Iterate over the files - use index as can then access the read files and
   # write files both
   for (i in 1:num_files) {
@@ -210,7 +208,7 @@ write_data(
 
 stm_o <- Sys.time()
 
-if(args$time){
+if (args$time) {
   print(stm_o - stm_i)
 }
 

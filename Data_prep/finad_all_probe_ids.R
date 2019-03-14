@@ -78,22 +78,6 @@ for (f in file_name) {
     mean_lst[[f]] <- apply(data_lst[[f]][, -1], 2, mean)
     sd_lst[[f]] <- apply(data_lst[[f]][, -1], 2, sd)
   }
-
-  # Carry out PCA and record the biplot
-  # if (do_pca) {
-  #   pca_lst[[f]] <- prcomp(t(data_lst[[f]][, -1]))
-  # 
-  #   pca_title <- paste()
-  #   
-  #   pca_plot_lst[[f]] <- fviz_pca_ind(pca_lst[[f]],
-  #     geom.ind = "point", # show points only (nbut not "text")
-  #     col.ind = "contrib"
-  #   ) +
-  #     scale_color_gradient2(
-  #       low = "black", mid = "blue",
-  #       high = "red", midpoint = 4
-  #     )
-  # }
 }
 
 # Acquire the relevant file names
@@ -171,6 +155,57 @@ if (do_pca) {
   print(pca_plot_lst$TR)
 }
 
+# Dropping outliers
+cleaned_data <- vector("list", 9) 
+# cleaned_data <- list(length = 9)
+names(cleaned_data) <- files_to_write
+
+print(pca_plot_lst$CD14)
+cd14_cols_to_drop <- c("IPC154", "IPC155")
+keep_cols_cd14 <- !(colnames(data_lst$transposed_CD14_GE_Corrected4_Covars.csv) %in% cd14_cols_to_drop)
+cleaned_data$CD14 <- data_lst$transposed_CD14_GE_Corrected4_Covars.csv[, ..keep_cols_cd14 ]
+
+print(pca_plot_lst$CD15)
+cd15_cols_to_drop <- c("IPC137") # c("IPC300", "IPC097", "IPC244", "IPC315", "IPC334", "IPC332", "IPC262", "IPC137")
+keep_cols_cd15 <- !(colnames(data_lst$transposed_CD15_GE_Corrected4_Covars.csv) %in% cd15_cols_to_drop)
+cleaned_data$CD15 <- data_lst$transposed_CD15_GE_Corrected4_Covars.csv[, ..keep_cols_cd15 ]
+
+print(pca_plot_lst$CD19)
+cd19_cols_to_drop <- c()
+keep_cols_cd19 <- !(colnames(data_lst$transposed_CD19_GE_Corrected4_Covars.csv) %in% cd19_cols_to_drop)
+cleaned_data$CD19 <- data_lst$transposed_CD19_GE_Corrected4_Covars.csv[, ..keep_cols_cd19 ]
+
+print(pca_plot_lst$CD4)
+cd4_cols_to_drop <- c("IPC329", "IPC331")
+keep_cols_cd4 <- !(colnames(data_lst$transposed_CD4_GE_Corrected4_Covars.csv) %in% cd4_cols_to_drop)
+cleaned_data$CD4 <- data_lst$transposed_CD4_GE_Corrected4_Covars.csv[, ..keep_cols_cd4 ]
+
+print(pca_plot_lst$CD8)
+cd8_cols_to_drop <- c("IPC078", "IPC049", "IPC048", "IPC050")
+keep_cols_cd8 <- !(colnames(data_lst$transposed_CD8_GE_Corrected4_Covars.csv) %in% cd8_cols_to_drop)
+cleaned_data$CD8 <- data_lst$transposed_CD8_GE_Corrected4_Covars.csv[, ..keep_cols_cd8 ]
+
+print(pca_plot_lst$IL)
+il_cols_to_drop <- c("IPC434")
+keep_cols_il <- !(colnames(data_lst$transposed_IL_GE_Corrected4_Covars.csv) %in% il_cols_to_drop)
+cleaned_data$IL <- data_lst$transposed_IL_GE_Corrected4_Covars.csv[, ..keep_cols_il ]
+
+print(pca_plot_lst$PLA)
+pla_cols_to_drop <- c("IPC029") # maybe c("IPC029", "IPC106")
+keep_cols_pla <- !(colnames(data_lst$transposed_PLA_GE_Corrected4_Covars.csv) %in% pla_cols_to_drop)
+cleaned_data$PLA <- data_lst$transposed_PLA_GE_Corrected4_Covars.csv[, ..keep_cols_pla ]
+
+print(pca_plot_lst$RE)
+re_cols_to_drop <- c("IPC361") # maybe c("IPC361", "IPC253")
+keep_cols_re <- !(colnames(data_lst$transposed_RE_GE_Corrected4_Covars.csv) %in% re_cols_to_drop)
+cleaned_data$RE <- data_lst$transposed_RE_GE_Corrected4_Covars.csv[, ..keep_cols_re ]
+
+print(pca_plot_lst$TR)
+tr_cols_to_drop <- c()
+keep_cols_tr <- !(colnames(data_lst$transposed_TR_GE_Cortrcted4_Covars.csv) %in% tr_cols_to_drop)
+cleaned_data$TR <- data_lst$transposed_TR_GE_Corrected4_Covars.csv[, ..keep_cols_re ]
+
+
 # Move the genes present to a list
 genes_present %<>% unname() %>% unlist()
 
@@ -182,7 +217,6 @@ empty_probes_dt <- data.table(matrix(NA,
 
 colnames(empty_probes_dt) <- c("V1", files_to_write)
 empty_probes_dt$V1 <-  genes_present
-
 
 # For each dataset filter by genes present in all and write to file
 for (f in names(data_lst)) {
