@@ -113,12 +113,12 @@ vsn_data_table <- function(dt, exponent = 2) {
   # Convert to matrix, return to base values (as log2)
   # Apply vsn
   dt %>%
-    .[rowSums(.) != 0, ] %>%    # Remove any empty observations
-    as.matrix() %>%             # Convert to matrix (required by vsnMatrix)
-    exponent^. %>%              # Exponentiate to move from log scale
-    vsn::vsnMatrix() %>%        # Apply variance stabilization
-    vsn::exprs() %>%            # get the expression data
-    data.table::data.table()    # put it in a data table
+    .[rowSums(.) != 0, ] %>%   # Remove any empty observations
+    as.matrix() %>%            # Convert to matrix (required by vsnMatrix)
+    exponent^. %>%             # Exponentiate to move from log scale
+    vsn::vsnMatrix() %>%       # Apply variance stabilization
+    vsn::exprs() %>%           # get the expression data
+    data.table::data.table()   # put it in a data table
 }
 
 # Function to apply to file names to extract relevant part

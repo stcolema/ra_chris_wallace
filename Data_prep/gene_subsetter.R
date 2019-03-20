@@ -56,7 +56,8 @@ input_arguments <- function() {
     # gene set to use (current options based on data from Chris)
     optparse::make_option(c("-g", "--gene_set"),
       type = "character",
-      help = "gene set to extract from the expression data. One of `small', `medium', `big' or `all'",
+      default = "all",
+      help = "gene set to extract from the expression data [default= %default]", # One of `small', `medium', `big' or `all'",
       metavar = "character"
     ),
 
@@ -117,17 +118,25 @@ read_in_data <- function(args) {
   file_name
 }
 
-create_gene_set <- function(cmd) {
-  if (cmd == "small") {
-    return("smallnet")
+# Not very clever - should allow user to input "all" or name
+# create_gene_set <- function(cmd) {
+#   if (cmd == "small") {
+#     return("small")
+#   }
+#   if (cmd == "medium") {
+#     return("med")
+#   }
+#   if (cmd == "big") {
+#     return("big")
+#   }
+#   c("small", "med", "big")
+# }
+
+create_gene_set <- function(cmd, data) {
+  if (cmd == "all") {
+    return(names(data))
   }
-  if (cmd == "medium") {
-    return("midnet")
-  }
-  if (cmd == "big") {
-    return("bignet")
-  }
-  c("smallnet", "midnet", "bignet")
+  cmd
 }
 
 last_element <- function(x) {
@@ -142,9 +151,15 @@ write_data <- function(file_name,
                        probe_key,
                        gene_set) {
   # Strip the files (do here as can utilise vectorised functions)
-  files_to_write <- strsplit(paste0("/", file_name), "/([^/]*).") %>%
-    sapply(., last_element) %>%
-    tools::file_path_sans_ext()
+  # files_to_write <- strsplit(paste0("/", file_name), "/([^/]*).") %>%
+  #   sapply(., last_element) %>%
+  #   tools::file_path_sans_ext()
+
+  files_to_write <- file_name %>%
+    tools::file_path_sans_ext() %>%
+    basename()
+
+  print(files_to_write)
 
   # List to record number of people and probes lost due to NA cleaning
   num_files <- length(file_name)
@@ -155,7 +170,7 @@ write_data <- function(file_name,
   # Read in the probe key
   probe_key <- fread(probe_key, header = T)
 
-  networks <- create_gene_set(gene_set)
+  networks <- create_gene_set(gene_set, gene_sets)
 
   # Iterate over the files - use index as can then access the read files and
   # write files both
@@ -170,7 +185,7 @@ write_data <- function(file_name,
     dt$gene_name <- probe_key$Gene[match(dt$V1, probe_key$ProbeID)]
 
     for (set in networks) {
-      curr_write_file <- paste0(write_file, "_", set)
+      # curr_write_file <- paste0(write_file, "_", set)
 
       # Extract the relevant subset
       dt_subset <- dt[dt$gene_name %in% gene_sets[[set]]$external_gene_name, ]
@@ -180,11 +195,14 @@ write_data <- function(file_name,
         .[!(. %in% c("V1", "gene_name"))] %>%
         c("V1", "gene_name", .)
 
+      # print(head(dt_subset))
+      # print(col_order)
+
       dt_out <- setcolorder(dt_subset, col_order)
 
       # Write to a csv file
-      write_file <- paste0(write_dir, "/", write_file, "_", set, ".csv")
-      data.table::fwrite(dt_out, file = write_file)
+      curr_write_file <- paste0(write_dir, "/", write_file, "_", set, ".csv")
+      data.table::fwrite(dt_out, file = curr_write_file)
     }
   }
 }
@@ -223,7 +241,7 @@ if (F) {
   small_gene_set <- gene_sets$smallnet
 
   # Read in example data - this should be done after transofrmation
-  my_data <- read.csv("/home/MINTS/sdc56/Desktop/MDI/Data/Fill_NAs_Min/CD4.csv")
+  my_data <- read.csv("/home/MINTS/sdc56/Desktop/MDI/Data/VSN_NA_data/CD4.csv")
 
   # Read in the probe key
   probe_key <- read.csv("Analysis/probe_key.csv")
