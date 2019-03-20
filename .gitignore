@@ -8,7 +8,7 @@
 # find . -size +50M | cat >> .gitignore
 *output*.csv
 *.*~
-=======
+
 ./.git/objects/04/5dabe09b2881122f9546ff15a066bd8a5890c7
 ./.git/objects/db/92490b334ab9c89580d40ff8793f3566ecb347
 ./.git/objects/64/f061d984615b890216db7065b10e3fbe58b50c
