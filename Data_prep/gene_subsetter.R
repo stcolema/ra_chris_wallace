@@ -198,7 +198,9 @@ write_data <- function(file_name,
       # print(head(dt_subset))
       # print(col_order)
 
-      dt_out <- setcolorder(dt_subset, col_order)
+      # Reorder and drop V1 (to run MDI can have at most one row name column)
+      dt_out <- setcolorder(dt_subset, col_order) %>% 
+        .[, -1]
 
       # Write to a csv file
       curr_write_file <- paste0(write_dir, "/", write_file, "_", set, ".csv")
