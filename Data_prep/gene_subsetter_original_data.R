@@ -181,8 +181,13 @@ write_data <- function(file_name,
     # Read in the data with the first row as the header
     dt <- fread(read_file, header = T)
 
-    # Add in this new variable
-    dt$gene_name <- probe_key$Gene[match(dt$V1, probe_key$ProbeID)]
+    # Hold the people ID columns in their own object
+    people_id_cols <- dt[, c(1, 2)]
+    dt_rel <- dt[, -c(1, 2)]
+
+    # Remove the X from the Probe IDs in the column names (for comparison with
+    # the probe key file) (this is not necessary with data.table's fread)
+    probes <- stringr::str_remove(colnames(dt[, -c(1, 2)]), "X")
 
     for (set in networks) {
       # curr_write_file <- paste0(write_file, "_", set)
@@ -190,17 +195,20 @@ write_data <- function(file_name,
       # Extract the relevant subset
       dt_subset <- dt[dt$gene_name %in% gene_sets[[set]]$external_gene_name, ]
 
-      # Rearragne order with V1 (the probe ids) in the first position
-      col_order <- names(dt_subset) %>%
-        .[!(. %in% c("V1", "gene_name"))] %>%
-        c("V1", "gene_name", .)
+      # Find the column indices of the gene network
+      network_indices <- na.omit(match(
+        small_gene_set$external_gene_name,
+        probe_key$Gene
+      ))
 
-      # print(head(dt_subset))
-      # print(col_order)
+      # Find which of these probes is present in the dataset
+      cols_to_keep <- na.omit(match(probe_key$ProbeID[network_indices], probes))
 
-      # Reorder and drop V1 (to run MDI can have at most one row name column)
-      dt_out <- setcolorder(dt_subset, col_order) %>% 
-        .[, -1]
+      # Select this subset
+      gene_set_dt <- dt_rel[, ..cols_to_keep]
+
+      # Bind the output with the people id columns
+      out_dt <- cbind(people_id_cols, gene_set_dt)
 
       # Write to a csv file
       curr_write_file <- paste0(write_dir, "/", write_file, "_", set, ".csv")
@@ -244,9 +252,25 @@ if (F) {
 
   # Read in example data - this should be done after transofrmation
   my_data <- read.csv("/home/MINTS/sdc56/Desktop/MDI/Data/VSN_NA_data/CD4.csv")
+  my_data_2 <- fread("/home/MINTS/sdc56/Desktop/MDI/Data/Original_data/CD4_GE_Corrected4_Covars.txt", header = T, sep = " ")
+
+  #
+  probes <- stringr::str_remove(colnames(my_data_2[, -c(1, 2)]), "X")
 
   # Read in the probe key
-  probe_key <- read.csv("Analysis/probe_key.csv")
+  # probe_key <- read.csv("Analysis/probe_key.csv")
+  probe_key <- read.csv("Data/full_probe_key.csv")
+
+  my_data_3 <- my_data_2[, -c(1, 2)]
+  ncol(my_data_3)
+
+
+  network_indices <- na.omit(match(small_gene_set$external_gene_name, probe_key$Gene))
+  cols_to_keep <- na.omit(match(probe_key$ProbeID[network_indices], probes))
+
+  small_set_dt <- my_data_3[, ..cols_to_keep]
+
+  out_small <- cbind(my_data_2[, 1:2], small_set_dt)
 
   # Add in this new variable
   my_data$gene_name <- probe_key$Gene[match(my_data$V1, probe_key$ProbeID)]

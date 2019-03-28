@@ -1,6 +1,7 @@
 #!/usr/bin/env Rscript
 # File to create a .csv file for the info on the probes present
 
+library(data.table)
 # setwd("~/Desktop/MDI/Data")
 
 # Website for probe information

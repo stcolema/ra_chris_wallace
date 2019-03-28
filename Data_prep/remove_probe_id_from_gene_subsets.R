@@ -1,5 +1,5 @@
 
-
+# To remove the V1 columm from gene subset data
 library(magrittr)
 library(data.table)
 

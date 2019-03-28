@@ -1,5 +1,7 @@
 #!/usr/bin/env Rscript
 
+library(optparse)
+
 # Load data.table to access fread and fwrite functions
 library(data.table) # install.packages("data.table", dep = T)
 
@@ -40,16 +42,47 @@ get_cut_data <- function(pca_lst, threshold = c(1.0, 1.5, 2.0), criterion = "con
   cut_data
 }
 
+input_arguments <- function() {
+  option_list <- list(
+    
+    # Directory to read from
+    optparse::make_option(c("-d", "--dir"),
+                          type = "character",
+                          default = ".",
+                          help = "directory to read files from (used if all set to TRUE) [default= %default]",
+                          metavar = "character"
+    ),
+    
+    # File extension to be accepting
+    optparse::make_option(c("-v", "--vsn_applied"),
+                          type = "logical",
+                          default = FALSE,
+                          help = "logical indicating if vsn has been applied to data [default= %default]",
+                          metavar = "logical"
+    )
+  )
+  opt_parser <- optparse::OptionParser(option_list = option_list)
+  opt <- optparse::parse_args(opt_parser)
+}
+
+args <- input_arguments()
+dir_of_interest <- args$dir
+vsn_data <- args$vsn_applied
 
 # Read in data
 # files_present <- list.files(path = args$dir)
 # file_name <- grep(args$extension, files_present, value = TRUE) %>%
 #   paste0(args$dir, "/", .)
-setwd("~/Desktop/MDI/Data/VSN_NA_data")
+# dir_of_interest <- "~/Desktop/Transposed_data_na_0.1/"
+# vsn_data <- T
+setwd(dir_of_interest)
 # setwd("~/Desktop/Na_filled_data/")
-files_present <- list.files(path = "~/Desktop/MDI/Data/VSN_NA_data")
+files_present <- list.files(path = dir_of_interest, pattern=".csv")
 # files_present <- list.files(path = "~/Desktop/Na_filled_data/")
-file_name <- grep("vsn_*", files_present, value = TRUE)
+if(vsn_data){
+  file_name <- grep("vsn_*", files_present, value = TRUE)
+}
+# file_name <- grep("*.csv", files_present, value = TRUE)
 
 eda <- F
 
@@ -78,8 +111,12 @@ for (f in file_name) {
 
 # Acquire the relevant file names
 # files_to_write <- basename(tools::file_path_sans_ext(names(data_lst)))
+
+
+name_ind <- 2 + vsn_data
+
 files_to_write <- strsplit(names(data_lst), "_?_(.*?)_?") %>%
-  lapply("[[", 2) %>%
+  lapply("[[", name_ind) %>%
   unlist()
 
 num_datasets <- length(data_lst)
@@ -143,7 +180,8 @@ for (i in 1:num_datasets) {
 
   
   
-  file_write <- files_to_write[[i]]
+  file_write <- files_to_write[[i]] %>% 
+    paste0(., ".csv")
   empty_probes <- ! dt_out$V1 %in% genes_to_add
   empty_probes_dt[[file_write]] <- empty_probes
   
