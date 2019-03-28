@@ -59,6 +59,14 @@ input_arguments <- function() {
                           default = FALSE,
                           help = "logical indicating if vsn has been applied to data [default= %default]",
                           metavar = "logical"
+    ),
+    
+    # File extension to be accepting
+    optparse::make_option(c("-i", "--index"),
+                          type = "integer",
+                          default = 2,
+                          help = "integer indicating section of string to use [default= %default]",
+                          metavar = "integer"
     )
   )
   opt_parser <- optparse::OptionParser(option_list = option_list)
@@ -68,6 +76,8 @@ input_arguments <- function() {
 args <- input_arguments()
 dir_of_interest <- args$dir # "~/Desktop/subset_data/Small/" #  
 vsn_data <- args$vsn_applied # F
+
+name_ind <- args$index # 2 + vsn_data
 
 # Read in data
 # files_present <- list.files(path = args$dir)
@@ -115,12 +125,20 @@ for (f in file_name) {
 # files_to_write <- basename(tools::file_path_sans_ext(names(data_lst)))
 
 
-name_ind <- 2 + vsn_data
+
 
 print(names(data_lst))
-files_to_write <- strsplit(names(data_lst), "_?_(.*?)_?") %>%
-  lapply("[[", name_ind) %>%
-  unlist()
+
+files_to_write <- names(data_lst) %>%
+  tools::file_path_sans_ext() %>%
+  basename() %>% 
+  paste0(., "_filled")
+  
+# files_to_write <- strsplit(names(data_lst), "_?_(.*?)_?") %>%
+  # lapply("[[", name_ind) %>%
+  # unlist()
+
+print(files_to_write)
 
 num_datasets <- length(data_lst)
 
