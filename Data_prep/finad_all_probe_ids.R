@@ -13,7 +13,7 @@ library(dplyr) # install.packages("tidyverse", dep = T)
 
 # library("devtools") # install.packages("devtools", dep = T)
 # install_github("kassambara/factoextra")
-library(factoextra) # install.packages("factoextra", dep = T)
+# library(factoextra) # install.packages("factoextra", dep = T)
 
 prep_data <- function(dt) {
   row.names(dt) <- dt[, 1] %>%
@@ -66,8 +66,8 @@ input_arguments <- function() {
 }
 
 args <- input_arguments()
-dir_of_interest <- args$dir
-vsn_data <- args$vsn_applied
+dir_of_interest <- args$dir # "~/Desktop/subset_data/Small/" #  
+vsn_data <- args$vsn_applied # F
 
 # Read in data
 # files_present <- list.files(path = args$dir)
@@ -78,11 +78,13 @@ vsn_data <- args$vsn_applied
 setwd(dir_of_interest)
 # setwd("~/Desktop/Na_filled_data/")
 files_present <- list.files(path = dir_of_interest, pattern=".csv")
+
 # files_present <- list.files(path = "~/Desktop/Na_filled_data/")
 if(vsn_data){
   file_name <- grep("vsn_*", files_present, value = TRUE)
+} else {
+  file_name <- grep("*.csv", files_present, value = TRUE)
 }
-# file_name <- grep("*.csv", files_present, value = TRUE)
 
 eda <- F
 
@@ -115,6 +117,7 @@ for (f in file_name) {
 
 name_ind <- 2 + vsn_data
 
+print(names(data_lst))
 files_to_write <- strsplit(names(data_lst), "_?_(.*?)_?") %>%
   lapply("[[", name_ind) %>%
   unlist()
@@ -183,7 +186,7 @@ for (i in 1:num_datasets) {
   file_write <- files_to_write[[i]] %>% 
     paste0(., ".csv")
   empty_probes <- ! dt_out$V1 %in% genes_to_add
-  empty_probes_dt[[file_write]] <- empty_probes
+  empty_probes_dt[[files_to_write[[i]]]] <- empty_probes
   
   # file_write %<>% paste0(., ".csv")
 

@@ -127,8 +127,10 @@ read_in_data <- function(args) {
   # If instructed to process all files, find all suitable files (i.e. ending in file_ext)
   if (args$all) {
     files_present <- list.files(path = args$dir)
+    
     file_name <- grep(args$extension, files_present, value = TRUE) %>%
       paste0(args$dir, "/", .)
+    
     return(file_name)
   }
   # If not transforming all files check if the user supplied a filename and
@@ -359,6 +361,7 @@ write_data <- function(file_name, extension, write_dir,
     # Remove the first two columns (the ID and its duplicate) and transpose the data
     col_classes <- sapply(dt, class)
     cols_to_drop <- col_classes != "numeric"
+    
     names_to_drop <- names(cols_to_drop) [unname(cols_to_drop)]
 
     # Drop the ID variables and transpose the data
@@ -427,7 +430,6 @@ write_data <- function(file_name, extension, write_dir,
       c("V1", .)
     
     dt_out <- data.table::setcolorder(dt_out, col_order)
-    
 
     # Write to a csv file
     write_file <- paste0(write_dir, "/transposed_", write_file, ".csv")

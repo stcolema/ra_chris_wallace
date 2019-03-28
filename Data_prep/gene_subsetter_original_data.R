@@ -159,7 +159,7 @@ write_data <- function(file_name,
     tools::file_path_sans_ext() %>%
     basename()
 
-  print(files_to_write)
+  # print(files_to_write)
 
   # List to record number of people and probes lost due to NA cleaning
   num_files <- length(file_name)
@@ -196,10 +196,12 @@ write_data <- function(file_name,
       dt_subset <- dt[dt$gene_name %in% gene_sets[[set]]$external_gene_name, ]
 
       # Find the column indices of the gene network
-      network_indices <- na.omit(match(
-        small_gene_set$external_gene_name,
-        probe_key$Gene
-      ))
+      network_indices <- which(probe_key$Gene %in% gene_sets[[set]]$external_gene_name)
+      
+      # network_indices <- na.omit(match(
+      #   gene_sets[[set]]$external_gene_name,
+      #   probe_key$Gene
+      # ))
 
       # Find which of these probes is present in the dataset
       cols_to_keep <- na.omit(match(probe_key$ProbeID[network_indices], probes))
@@ -208,7 +210,7 @@ write_data <- function(file_name,
       gene_set_dt <- dt_rel[, ..cols_to_keep]
 
       # Bind the output with the people id columns
-      out_dt <- cbind(people_id_cols, gene_set_dt)
+      dt_out <- cbind(people_id_cols, gene_set_dt)
 
       # Write to a csv file
       curr_write_file <- paste0(write_dir, "/", write_file, "_", set, ".csv")
@@ -265,7 +267,11 @@ if (F) {
   ncol(my_data_3)
 
 
-  network_indices <- na.omit(match(small_gene_set$external_gene_name, probe_key$Gene))
+  # which(small_gene_set$external_gene_name %in% probe_key$Gene)
+  
+  network_indices <- which(probe_key$Gene %in% small_gene_set$external_gene_name)
+  
+  # network_indices <- na.omit(match(small_gene_set$external_gene_name, probe_key$Gene))
   cols_to_keep <- na.omit(match(probe_key$ProbeID[network_indices], probes))
 
   small_set_dt <- my_data_3[, ..cols_to_keep]

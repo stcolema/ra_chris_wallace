@@ -42,9 +42,10 @@ get_cut_data <- function(pca_lst, threshold = c(1.0, 1.5, 2.0), criterion = "con
 
 
 # Read in data
-setwd("~/Desktop/MDI/Data/Fill_NAs_Min")
-files_present <- list.files(path = "~/Desktop/MDI/Data/Fill_NAs_Min")
-file_name <- grep("Covars.csv", files_present, value = TRUE)
+wd_of_interest <- "~/Desktop/subset_data/Small/Transposed_vsn_data/"
+setwd(wd_of_interest)
+files_present <- list.files(path = wd_of_interest, pattern = ".csv")
+file_name <- grep("Covars", files_present, value = TRUE)
 
 do_pca <- T
 
