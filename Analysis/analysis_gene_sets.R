@@ -180,18 +180,25 @@ dataset_names <- tools::file_path_sans_ext(files_present)
 
 save_name <- paste(file_path, "compare_tibble.rds", sep = "/")
 
+gene_sets_out <- vector("list", n_sets)
+names(gene_sets_out) <- gene_sets
+
 # mdi_output_file <- "Analysis/MDI_runs/vsn_many_seeds/out_seed_1.csv"
 # If already found allocations and written to file, re-load
 if (data_written) {
-  compare_tibble <- readRDS("~/Desktop/ra_chris_wallace/Analysis/MDI_runs/vsn_many_seeds/compare_tibble.rds")
+  for(i in 1:n_sets){
+    curr_file <- save_name[[i]]
+    set_name <- gene_sets[[i]]
+    curr_tibble <- readRDS(curr_file)
+    gene_sets_out[[set_name]] <- curr_tibble
+  }
+  # compare_tibble <- readRDS("~/Desktop/ra_chris_wallace/Analysis/MDI_runs/vsn_many_seeds/compare_tibble.rds")
+  
 }
 
 
 if (!data_written) {
-  
-  gene_sets_out <- vector("list", n_sets)
-  names(gene_sets_out) <- gene_sets
-  
+
   n_genes <- vector("list", n_sets)
   names(n_genes) <- gene_sets
   
@@ -217,7 +224,7 @@ if (!data_written) {
   
   # NOte that as each mdi output is on the same data, we only need to count one dataset
   if (is.null(n_genes[[curr_set]])) {
-    n_genes[[curr_set]] <- mcmc_out_lst[[1]] %>%
+    n_genes[[curr_set]] <- .n_gene_curr <-  mcmc_out_lst[[1]] %>%
       select(contains("Dataset")) %>%
       ncol() / num_datasets
   }
@@ -269,6 +276,7 @@ if (!data_written) {
     mdi = f_name,
     dataset = tissue_var, # unlist(lapply(dataset_names, rep, num_files))
     seed = seed_var, # rep(1:num_files, num_datasets), 
+    n_genes = .n_gene_curr,
     pred_allocation = rep(vector("list", num_files[[curr_set]]), num_datasets), # list(compare_df),
     mdi_allocation = list(alloc_matrix) # rep(vector("list", num_files[[curr_set]]), num_datasets)
   )
