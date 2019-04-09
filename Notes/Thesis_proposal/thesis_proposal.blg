@@ -3,44 +3,44 @@ Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
 The top-level auxiliary file: thesis_proposal.aux
 The style file: plainnat.bst
 Database file #1: proposal_zotero.bib
-You've used 10 entries,
+You've used 15 entries,
             2773 wiz_defined-function locations,
-            692 strings with 9430 characters,
-and the built_in function-call counts, 9769 in all, are:
-= -- 811
-> -- 1034
-< -- 4
-+ -- 346
-- -- 336
-* -- 1040
-:= -- 1628
-add.period$ -- 60
-call.type$ -- 10
-change.case$ -- 142
-chr.to.int$ -- 10
-cite$ -- 20
-duplicate$ -- 206
-empty$ -- 428
-format.name$ -- 350
-if$ -- 1903
+            735 strings with 14148 characters,
+and the built_in function-call counts, 20945 in all, are:
+= -- 1588
+> -- 2703
+< -- 5
++ -- 903
+- -- 888
+* -- 2322
+:= -- 3579
+add.period$ -- 90
+call.type$ -- 15
+change.case$ -- 341
+chr.to.int$ -- 15
+cite$ -- 30
+duplicate$ -- 310
+empty$ -- 633
+format.name$ -- 907
+if$ -- 3985
 int.to.chr$ -- 1
 int.to.str$ -- 1
-missing$ -- 10
-newline$ -- 88
-num.names$ -- 40
-pop$ -- 236
+missing$ -- 15
+newline$ -- 128
+num.names$ -- 60
+pop$ -- 610
 preamble$ -- 1
-purify$ -- 132
+purify$ -- 326
 quote$ -- 0
-skip$ -- 227
+skip$ -- 466
 stack$ -- 0
-substring$ -- 329
-swap$ -- 20
+substring$ -- 463
+swap$ -- 30
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 110
+type$ -- 165
 warning$ -- 0
-while$ -- 49
+while$ -- 73
 width$ -- 0
-write$ -- 197
+write$ -- 292

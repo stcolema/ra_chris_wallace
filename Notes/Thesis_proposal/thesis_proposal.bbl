@@ -1,4 +1,4 @@
-\begin{thebibliography}{10}
+\begin{thebibliography}{15}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -37,6 +37,31 @@ Frank Dudbridge.
 \newblock \doi{10.1371/journal.pgen.1003348}.
 \newblock URL \url{https://dx.plos.org/10.1371/journal.pgen.1003348}.
 
+\bibitem[Frost(2018)]{frost_computation_2018}
+H~Robert Frost.
+\newblock Computation and application of tissue-specific gene set weights.
+\newblock \emph{Bioinformatics}, 34\penalty0 (17):\penalty0 2957--2964,
+  September 2018.
+\newblock ISSN 1367-4803, 1460-2059.
+\newblock \doi{10.1093/bioinformatics/bty217}.
+\newblock URL
+  \url{https://academic.oup.com/bioinformatics/article/34/17/2957/4962491}.
+
+\bibitem[Greene et~al.(2015)Greene, Krishnan, Wong, Ricciotti, Zelaya,
+  Himmelstein, Zhang, Hartmann, Zaslavsky, Sealfon, Chasman, FitzGerald,
+  Dolinski, Grosser, and Troyanskaya]{greene_understanding_2015}
+Casey~S Greene, Arjun Krishnan, Aaron~K Wong, Emanuela Ricciotti, Rene~A
+  Zelaya, Daniel~S Himmelstein, Ran Zhang, Boris~M Hartmann, Elena Zaslavsky,
+  Stuart~C Sealfon, Daniel~I Chasman, Garret~A FitzGerald, Kara Dolinski, Tilo
+  Grosser, and Olga~G Troyanskaya.
+\newblock Understanding multicellular function and disease with human
+  tissue-specific networks.
+\newblock \emph{Nature Genetics}, 47\penalty0 (6):\penalty0 569--576, June
+  2015.
+\newblock ISSN 1061-4036, 1546-1718.
+\newblock \doi{10.1038/ng.3259}.
+\newblock URL \url{http://www.nature.com/articles/ng.3259}.
+
 \bibitem[Kanehisa et~al.(2019)Kanehisa, Sato, Furumichi, Morishima, and
   Tanabe]{kanehisa_new_2019}
 Minoru Kanehisa, Yoko Sato, Miho Furumichi, Kanae Morishima, and Mao Tanabe.
@@ -46,6 +71,68 @@ Minoru Kanehisa, Yoko Sato, Miho Furumichi, Kanae Morishima, and Mao Tanabe.
 \newblock ISSN 0305-1048, 1362-4962.
 \newblock \doi{10.1093/nar/gky962}.
 \newblock URL \url{https://academic.oup.com/nar/article/47/D1/D590/5128935}.
+
+\bibitem[Kirk et~al.(2012)Kirk, Griffin, Savage, Ghahramani, and
+  Wild]{kirk_bayesian_2012}
+Paul Kirk, Jim~E. Griffin, Richard~S. Savage, Zoubin Ghahramani, and David~L.
+  Wild.
+\newblock Bayesian correlated clustering to integrate multiple datasets.
+\newblock \emph{Bioinformatics}, 28\penalty0 (24):\penalty0 3290--3297,
+  December 2012.
+\newblock ISSN 1460-2059, 1367-4803.
+\newblock \doi{10.1093/bioinformatics/bts595}.
+\newblock URL
+  \url{https://academic.oup.com/bioinformatics/article-lookup/doi/10.1093/bioinformatics/bts595}.
+
+\bibitem[Lonsdale et~al.(2013)Lonsdale, Thomas, Salvatore, Phillips, Lo, Shad,
+  Hasz, Walters, Garcia, Young, Foster, Moser, Karasik, Gillard, Ramsey,
+  Sullivan, Bridge, Magazine, Syron, Fleming, Siminoff, Traino, Mosavel,
+  Barker, Jewell, Rohrer, Maxim, Filkins, Harbach, Cortadillo, Berghuis,
+  Turner, Hudson, Feenstra, Sobin, Robb, Branton, Korzeniewski, Shive, Tabor,
+  Qi, Groch, Nampally, Buia, Zimmerman, Smith, Burges, Robinson, Valentino,
+  Bradbury, Cosentino, Diaz-Mayoral, Kennedy, Engel, Williams, Erickson,
+  Ardlie, Winckler, Getz, DeLuca, MacArthur, Kellis, Thomson, Young, Gelfand,
+  Donovan, Meng, Grant, Mash, Marcus, Basile, Liu, Zhu, Tu, Cox, Nicolae,
+  Gamazon, Im, Konkashbaev, Pritchard, Stevens, Flutre, Wen, Dermitzakis,
+  Lappalainen, Guigo, Monlong, Sammeth, Koller, Battle, Mostafavi, McCarthy,
+  Rivas, Maller, Rusyn, Nobel, Wright, Shabalin, Feolo, Sharopova, Sturcke,
+  Paschal, Anderson, Wilder, Derr, Green, Struewing, Temple, Volpi, Boyer,
+  Thomson, Guyer, Ng, Abdallah, Colantuoni, Insel, Koester, Little, Bender,
+  Lehner, Yao, Compton, Vaught, Sawyer, Lockhart, Demchok, and
+  Moore]{lonsdale_genotype-tissue_2013}
+John Lonsdale, Jeffrey Thomas, Mike Salvatore, Rebecca Phillips, Edmund Lo,
+  Saboor Shad, Richard Hasz, Gary Walters, Fernando Garcia, Nancy Young,
+  Barbara Foster, Mike Moser, Ellen Karasik, Bryan Gillard, Kimberley Ramsey,
+  Susan Sullivan, Jason Bridge, Harold Magazine, John Syron, Johnelle Fleming,
+  Laura Siminoff, Heather Traino, Maghboeba Mosavel, Laura Barker, Scott
+  Jewell, Dan Rohrer, Dan Maxim, Dana Filkins, Philip Harbach, Eddie
+  Cortadillo, Bree Berghuis, Lisa Turner, Eric Hudson, Kristin Feenstra, Leslie
+  Sobin, James Robb, Phillip Branton, Greg Korzeniewski, Charles Shive, David
+  Tabor, Liqun Qi, Kevin Groch, Sreenath Nampally, Steve Buia, Angela
+  Zimmerman, Anna Smith, Robin Burges, Karna Robinson, Kim Valentino, Deborah
+  Bradbury, Mark Cosentino, Norma Diaz-Mayoral, Mary Kennedy, Theresa Engel,
+  Penelope Williams, Kenyon Erickson, Kristin Ardlie, Wendy Winckler, Gad Getz,
+  David DeLuca, Daniel MacArthur, Manolis Kellis, Alexander Thomson, Taylor
+  Young, Ellen Gelfand, Molly Donovan, Yan Meng, George Grant, Deborah Mash,
+  Yvonne Marcus, Margaret Basile, Jun Liu, Jun Zhu, Zhidong Tu, Nancy~J Cox,
+  Dan~L Nicolae, Eric~R Gamazon, Hae~Kyung Im, Anuar Konkashbaev, Jonathan
+  Pritchard, Matthew Stevens, Timothèe Flutre, Xiaoquan Wen, Emmanouil~T
+  Dermitzakis, Tuuli Lappalainen, Roderic Guigo, Jean Monlong, Michael Sammeth,
+  Daphne Koller, Alexis Battle, Sara Mostafavi, Mark McCarthy, Manual Rivas,
+  Julian Maller, Ivan Rusyn, Andrew Nobel, Fred Wright, Andrey Shabalin, Mike
+  Feolo, Nataliya Sharopova, Anne Sturcke, Justin Paschal, James~M Anderson,
+  Elizabeth~L Wilder, Leslie~K Derr, Eric~D Green, Jeffery~P Struewing, Gary
+  Temple, Simona Volpi, Joy~T Boyer, Elizabeth~J Thomson, Mark~S Guyer, Cathy
+  Ng, Assya Abdallah, Deborah Colantuoni, Thomas~R Insel, Susan~E Koester,
+  A~Roger Little, Patrick~K Bender, Thomas Lehner, Yin Yao, Carolyn~C Compton,
+  Jimmie~B Vaught, Sherilyn Sawyer, Nicole~C Lockhart, Joanne Demchok, and
+  Helen~F Moore.
+\newblock The {Genotype}-{Tissue} {Expression} ({GTEx}) project.
+\newblock \emph{Nature Genetics}, 45\penalty0 (6):\penalty0 580--585, June
+  2013.
+\newblock ISSN 1061-4036, 1546-1718.
+\newblock \doi{10.1038/ng.2653}.
+\newblock URL \url{http://www.nature.com/articles/ng.2653}.
 
 \bibitem[Mooney and Wilmot(2015)]{mooney_gene_2015}
 Michael~A. Mooney and Beth Wilmot.
@@ -94,6 +181,31 @@ Damian Szklarczyk, Annika~L Gable, David Lyon, Alexander Junge, Stefan Wyder,
 \newblock ISSN 0305-1048, 1362-4962.
 \newblock \doi{10.1093/nar/gky1131}.
 \newblock URL \url{https://academic.oup.com/nar/article/47/D1/D607/5198476}.
+
+\bibitem[{The International IBD Genetics Consortium} et~al.(2018){The
+  International IBD Genetics Consortium}, Momozawa, Dmitrieva, Théâtre,
+  Deffontaine, Rahmouni, Charloteaux, Crins, Docampo, Elansary, Gori, Lecut,
+  Mariman, Mni, Oury, Altukhov, Alexeev, Aulchenko, Amininejad, Bouma,
+  Hoentjen, Löwenberg, Oldenburg, Pierik, vander Meulen-de Jong, Janneke
+  van~der Woude, Visschedijk, Lathrop, Hugot, Weersma, De~Vos, Franchimont,
+  Vermeire, Kubo, Louis, and
+  Georges]{the_international_ibd_genetics_consortium_ibd_2018}
+{The International IBD Genetics Consortium}, Yukihide Momozawa, Julia
+  Dmitrieva, Emilie Théâtre, Valérie Deffontaine, Souad Rahmouni, Benoît
+  Charloteaux, François Crins, Elisa Docampo, Mahmoud Elansary, Ann-Stephan
+  Gori, Christelle Lecut, Rob Mariman, Myriam Mni, Cécile Oury, Ilya Altukhov,
+  Dmitry Alexeev, Yuri Aulchenko, Leila Amininejad, Gerd Bouma, Frank Hoentjen,
+  Mark Löwenberg, Bas Oldenburg, Marieke~J. Pierik, Andrea~E. vander Meulen-de
+  Jong, C.~Janneke van~der Woude, Marijn~C. Visschedijk, Mark Lathrop,
+  Jean-Pierre Hugot, Rinse~K. Weersma, Martine De~Vos, Denis Franchimont,
+  Severine Vermeire, Michiaki Kubo, Edouard Louis, and Michel Georges.
+\newblock {IBD} risk loci are enriched in multigenic regulatory modules
+  encompassing putative causative genes.
+\newblock \emph{Nature Communications}, 9\penalty0 (1):\penalty0 2427, December
+  2018.
+\newblock ISSN 2041-1723.
+\newblock \doi{10.1038/s41467-018-04365-8}.
+\newblock URL \url{http://www.nature.com/articles/s41467-018-04365-8}.
 
 \bibitem[{The Multiple Tissue Human Expression Resource (MuTHER) Consortium}
   et~al.(2012){The Multiple Tissue Human Expression Resource (MuTHER)
