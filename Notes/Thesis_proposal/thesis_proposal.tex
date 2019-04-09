@@ -1,0 +1,210 @@
+% !TEX TS-program = pdflatex
+% !TEX encoding = UTF-8 Unicode
+
+% This is a simple template for a LaTeX document using the "article" class.
+% See "book", "report", "letter" for other types of document.
+
+\documentclass[11pt]{article} % use larger type; default would be 10pt
+
+\usepackage[utf8]{inputenc} % set input encoding (not needed with XeLaTeX)
+
+%%% Examples of Article customizations
+% These packages are optional, depending whether you want the features they provide.
+% See the LaTeX Companion or other references for full information.
+
+%%% PAGE DIMENSIONS
+\usepackage{geometry} % to change the page dimensions
+\geometry{a4paper} % or letterpaper (US) or a5paper or....
+%\geometry{margin=2in} % for example, change the margins to 2 inches all round
+\geometry{left=2.75cm, right=2.75cm, top=3.5cm, bottom=4.5cm}
+% \geometry{landscape} % set up the page for landscape
+%   read geometry.pdf for detailed page layout information
+
+\usepackage{graphicx} % support the \includegraphics command and options
+
+% \usepackage[parfill]{parskip} % Activate to begin paragraphs with an empty line rather than an indent
+
+%%% PACKAGES
+\usepackage{booktabs} % for much better looking tables
+\usepackage{array} % for better arrays (eg matrices) in maths
+\usepackage{paralist} % very flexible & customisable lists (eg. enumerate/itemize, etc.)
+\usepackage{verbatim} % adds environment for commenting out blocks of text & for better verbatim
+\usepackage{subfig} % make it possible to include more than one captioned figure/table in a single float
+% These packages are all incorporated in the memoir class to one degree or another...
+
+%%% HEADERS & FOOTERS
+\usepackage{fancyhdr} % This should be set AFTER setting up the page geometry
+\pagestyle{fancy} % options: empty , plain , fancy
+\renewcommand{\headrulewidth}{0pt} % customise the layout...
+\lhead{}\chead{}\rhead{}
+\lfoot{}\cfoot{\thepage}\rfoot{}
+
+%%% SECTION TITLE APPEARANCE
+\usepackage{sectsty}
+\allsectionsfont{\sffamily\mdseries\upshape} % (See the fntguide.pdf for font help)
+% (This matches ConTeXt defaults)
+
+%%% ToC (table of contents) APPEARANCE
+\usepackage[nottoc,notlof,notlot]{tocbibind} % Put the bibliography in the ToC
+\usepackage[titles,subfigure]{tocloft} % Alter the style of the Table of Contents
+\renewcommand{\cftsecfont}{\rmfamily\mdseries\upshape}
+\renewcommand{\cftsecpagefont}{\rmfamily\mdseries\upshape} % No bold!
+
+%%% BibTex packages (url for website references)
+\usepackage[english]{babel}
+\usepackage[numbers]{natbib}
+% \usepackage{url}
+% \usepackage{Biblatex}
+
+%For inclusion of hyperlinks
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks=true,
+	linkcolor=blue,
+	filecolor=magenta,      
+	urlcolor=cyan,
+}
+
+%BibTex stuff and referencing sections by name 
+\urlstyle{same}
+\usepackage{nameref} 
+
+%%% END Article customizations
+
+%%% Change distance between bullet points
+\usepackage{enumitem}
+%\setlist{noitemsep}
+\setlist{itemsep=0.2pt, topsep=6pt, partopsep=0pt}
+%\setlist{nosep} % or \setlist{noitemsep} to leave space around whole list
+
+%%% For aside comments
+\usepackage[framemethod=TikZ]{mdframed}
+\usepackage{caption}
+
+%%% AMS math
+\usepackage{amsmath}
+
+%%% For differential notation
+%\usepackage{physics}
+
+%%% For SI unit notation
+% Dependencies for siunitx
+\usepackage{cancel}
+\usepackage{caption}
+\usepackage{cleveref}
+\usepackage{colortbl}
+\usepackage{csquotes}
+\usepackage{helvet}
+\usepackage{mathpazo}
+\usepackage{multirow}
+\usepackage{listings}
+\usepackage{pgfplots}
+\usepackage{xcolor}
+%\usepackage{siunitx}
+
+%%% For formatting code
+\usepackage{listings}
+
+%%% User commands
+% theorem box
+\newcounter{aside}[section]\setcounter{aside}{0}
+\renewcommand{\theaside}{\arabic{section}.\arabic{aside}}
+\newenvironment{aside}[1][]{%
+	\refstepcounter{aside}%
+	\mdfsetup{%
+		frametitle={%
+			\tikz[baseline=(current bounding box.east),outer sep=0pt]
+			\node[anchor=east,rectangle,fill=blue!20]
+			{\strut Aside~\theaside};}}
+	\mdfsetup{innertopmargin=10pt,linecolor=blue!20,%
+		linewidth=2pt,topline=true,%
+		frametitleaboveskip=\dimexpr-\ht\strutbox\relax
+	}
+	\begin{mdframed}[]\relax%
+		\label{#1}}{\end{mdframed}}
+
+% For titification of tables
+\newcommand{\ra}[1]{\renewcommand{\arraystretch}{#1}}
+
+\usepackage{ctable} % for footnoting tables
+
+
+\usepackage{pgfplots} % for pgfplots
+
+% Aside environment for personal comments / ideas
+%\newcounter{asidectr}
+
+%\newenvironment{aside} 
+%  {\begin{mdframed}[style=0,%
+%      leftline=false,rightline=false,leftmargin=2em,rightmargin=2em,%
+%          innerleftmargin=0pt,innerrightmargin=0pt,linewidth=0.75pt,%
+%      skipabove=7pt,skipbelow=7pt]
+%  \refstepcounter{asidectr}% increment the environment's counter
+%  \small 
+%  \textit{Aside \theasidectr:}
+%  \newline
+%  \relax}
+%  {\end{mdframed}
+%}
+%\numberwithin{asidectr}{section}
+
+% For iid symbol
+\usepackage{graphicx}
+\makeatletter
+\newcommand{\distas}[1]{\mathbin{\overset{#1}{\kern\z@\sim}}}%
+\newsavebox{\mybox}\newsavebox{\mysim}
+
+\newcommand{\distras}[1]{%
+	\savebox{\mybox}{\hbox{\kern3pt$\scriptstyle#1$\kern3pt}}%
+	\savebox{\mysim}{\hbox{$\sim$}}%
+	\mathbin{\overset{#1}{\kern\z@\resizebox{\wd\mybox}{\ht\mysim}{$\sim$}}}%
+}
+\makeatother
+
+% Keywords command
+\providecommand{\keywords}[1]
+{
+	\small	
+	\textbf{\textit{Keywords---}} #1
+}
+
+\title{GEN80436 - Thesis proposal}
+
+\author{Stephen Coleman}
+%\author[1,*]{Stephen Coleman}
+%\affil[1]{MRC Biostatistics Unit, Cambridge, UK}
+%\affil[*]{stephen.coleman@mrc-bsu.cam.ac.uk}
+
+\begin{document} \pgfplotsset{compat=1.15}
+	\maketitle
+	
+	%\keywords{Keyword1, Keyword2, Keyword3}
+	\begin{abstract}
+		Gene sets are constructed to identify genes linked by 
+		Gene set analysis \cite{mooney_gene_2015} \cite{dudbridge_power_2013}
+		
+		
+		Better to look at set fo genes when perturbed diseases state \cite{wray_research_2014}\cite{nica_expression_2013}
+		
+		There exists an abundance of gene set databases \cite{szklarczyk_string_2019}\cite{subramanian_gene_2005}\cite{kanehisa_new_2019}\cite{ashburner_gene_2000}. 
+		
+		Tissue specific \cite{the_multiple_tissue_human_expression_resource_muther_consortium_mapping_2012} \cite{burgess_gene_2017}
+		
+		
+		
+		
+		
+	\end{abstract}
+	
+	\maketitle
+	%\thispagestyle{fancy}
+	
+	%\vspace{-1.0cm}
+	
+
+	%\bibliographystyle{abbrv}
+	\bibliographystyle{plainnat}
+	\bibliography{proposal_zotero}
+	
+\end{document}
+
