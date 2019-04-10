@@ -1,4 +1,4 @@
-\begin{thebibliography}{15}
+\begin{thebibliography}{28}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -20,6 +20,28 @@ Michael Ashburner, Catherine~A. Ball, Judith~A. Blake, David Botstein, Heather
 \newblock \doi{10.1038/75556}.
 \newblock URL \url{http://www.nature.com/articles/ng0500_25}.
 
+\bibitem[Aune et~al.(2004)Aune, Parker, Maas, Liu, Olsen, and
+  Moore]{aune_co-localization_2004}
+Thomas~M. Aune, Joel~S. Parker, Kevin Maas, Zheng Liu, Nancy~J. Olsen, and
+  Jason~H. Moore.
+\newblock Co-localization of differentially expressed genes and shared
+  susceptibility loci in human autoimmunity.
+\newblock \emph{Genetic Epidemiology}, 27\penalty0 (2):\penalty0 162--172,
+  September 2004.
+\newblock ISSN 0741-0395, 1098-2272.
+\newblock \doi{10.1002/gepi.20013}.
+\newblock URL \url{http://doi.wiley.com/10.1002/gepi.20013}.
+
+\bibitem[Botstein and Risch(2003)]{botstein_discovering_2003}
+David Botstein and Neil Risch.
+\newblock Discovering genotypes underlying human phenotypes: past successes for
+  mendelian disease, future approaches for complex disease.
+\newblock \emph{Nature Genetics}, 33\penalty0 (S3):\penalty0 228--237, March
+  2003.
+\newblock ISSN 1061-4036, 1546-1718.
+\newblock \doi{10.1038/ng1090}.
+\newblock URL \url{http://www.nature.com/articles/ng1090z}.
+
 \bibitem[Burgess(2017)]{burgess_gene_2017}
 Darren~J. Burgess.
 \newblock Gene expression: {Principles} of gene regulation across tissues.
@@ -28,6 +50,19 @@ Darren~J. Burgess.
 \newblock ISSN 1471-0056, 1471-0064.
 \newblock \doi{10.1038/nrg.2017.94}.
 \newblock URL \url{http://www.nature.com/doifinder/10.1038/nrg.2017.94}.
+
+\bibitem[Dixon et~al.(2007)Dixon, Liang, Moffatt, Chen, Heath, Wong, Taylor,
+  Burnett, Gut, Farrall, Lathrop, Abecasis, and
+  Cookson]{dixon_genome-wide_2007}
+Anna~L Dixon, Liming Liang, Miriam~F Moffatt, Wei Chen, Simon Heath, Kenny C~C
+  Wong, Jenny Taylor, Edward Burnett, Ivo Gut, Martin Farrall, G~Mark Lathrop,
+  Gonçalo~R Abecasis, and William O~C Cookson.
+\newblock A genome-wide association study of global gene expression.
+\newblock \emph{Nature Genetics}, 39\penalty0 (10):\penalty0 1202--1207,
+  October 2007.
+\newblock ISSN 1061-4036, 1546-1718.
+\newblock \doi{10.1038/ng2109}.
+\newblock URL \url{http://www.nature.com/articles/ng2109}.
 
 \bibitem[Dudbridge(2013)]{dudbridge_power_2013}
 Frank Dudbridge.
@@ -61,6 +96,56 @@ Casey~S Greene, Arjun Krishnan, Aaron~K Wong, Emanuela Ricciotti, Rene~A
 \newblock ISSN 1061-4036, 1546-1718.
 \newblock \doi{10.1038/ng.3259}.
 \newblock URL \url{http://www.nature.com/articles/ng.3259}.
+
+\bibitem[Grundberg et~al.(2012)Grundberg, Small, Hedman, Nica, Buil, Keildson,
+  Bell, Yang, Meduri, Barrett, Nisbett, Sekowska, Wilk, Shin, Glass, Travers,
+  Min, Ring, Ho, Thorleifsson, Kong, Thorsteindottir, Ainali, Dimas, Hassanali,
+  Ingle, Knowles, Krestyaninova, Lowe, Di~Meglio, Montgomery, Parts, Potter,
+  Surdulescu, Tsaprouni, Tsoka, Bataille, Durbin, Nestle, O'Rahilly, Soranzo,
+  Lindgren, Zondervan, Ahmadi, Schadt, Stefansson, Smith, McCarthy, Deloukas,
+  Dermitzakis, and Spector]{grundberg_mapping_2012}
+Elin Grundberg, Kerrin~S Small, Åsa~K Hedman, Alexandra~C Nica, Alfonso Buil,
+  Sarah Keildson, Jordana~T Bell, Tsun-Po Yang, Eshwar Meduri, Amy Barrett,
+  James Nisbett, Magdalena Sekowska, Alicja Wilk, So-Youn Shin, Daniel Glass,
+  Mary Travers, Josine~L Min, Sue Ring, Karen Ho, Gudmar Thorleifsson,
+  Augustine Kong, Unnur Thorsteindottir, Chrysanthi Ainali, Antigone~S Dimas,
+  Neelam Hassanali, Catherine Ingle, David Knowles, Maria Krestyaninova,
+  Christopher~E Lowe, Paola Di~Meglio, Stephen~B Montgomery, Leopold Parts,
+  Simon Potter, Gabriela Surdulescu, Loukia Tsaprouni, Sophia Tsoka, Veronique
+  Bataille, Richard Durbin, Frank~O Nestle, Stephen O'Rahilly, Nicole Soranzo,
+  Cecilia~M Lindgren, Krina~T Zondervan, Kourosh~R Ahmadi, Eric~E Schadt, Kari
+  Stefansson, George~Davey Smith, Mark~I McCarthy, Panos Deloukas, Emmanouil~T
+  Dermitzakis, and Tim~D Spector.
+\newblock Mapping cis- and trans-regulatory effects across multiple tissues in
+  twins.
+\newblock \emph{Nature Genetics}, 44\penalty0 (10):\penalty0 1084--1089,
+  October 2012.
+\newblock ISSN 1061-4036, 1546-1718.
+\newblock \doi{10.1038/ng.2394}.
+\newblock URL \url{http://www.nature.com/articles/ng.2394}.
+
+\bibitem[{GTEx Consortium}(2017)]{gtex_consortium_genetic_2017}
+{GTEx Consortium}.
+\newblock Genetic effects on gene expression across human tissues.
+\newblock \emph{Nature}, 550\penalty0 (7675):\penalty0 204--213, October 2017.
+\newblock ISSN 0028-0836, 1476-4687.
+\newblock \doi{10.1038/nature24277}.
+\newblock URL \url{http://www.nature.com/articles/nature24277}.
+
+\bibitem[Ju et~al.(2013)Ju, Greene, Eichinger, Nair, Hodgin, Bitzer, Lee, Zhu,
+  Kehata, Li, Jiang, Rastaldi, Cohen, Troyanskaya, and
+  Kretzler]{ju_defining_2013}
+Wenjun Ju, Casey~S. Greene, Felix Eichinger, Viji Nair, Jeffrey~B. Hodgin,
+  Markus Bitzer, Young-suk Lee, Qian Zhu, Masami Kehata, Min Li, Song Jiang,
+  Maria~Pia Rastaldi, Clemens~D. Cohen, Olga~G. Troyanskaya, and Matthias
+  Kretzler.
+\newblock Defining cell-type specificity at the transcriptional level in human
+  disease.
+\newblock \emph{Genome Research}, 23\penalty0 (11):\penalty0 1862--1873,
+  November 2013.
+\newblock ISSN 1088-9051.
+\newblock \doi{10.1101/gr.155697.113}.
+\newblock URL \url{http://genome.cshlp.org/lookup/doi/10.1101/gr.155697.113}.
 
 \bibitem[Kanehisa et~al.(2019)Kanehisa, Sato, Furumichi, Morishima, and
   Tanabe]{kanehisa_new_2019}
@@ -134,6 +219,42 @@ John Lonsdale, Jeffrey Thomas, Mike Salvatore, Rebecca Phillips, Edmund Lo,
 \newblock \doi{10.1038/ng.2653}.
 \newblock URL \url{http://www.nature.com/articles/ng.2653}.
 
+\bibitem[Maas et~al.(2002)Maas, Chan, Parker, Slater, Moore, Olsen, and
+  Aune]{maas_cutting_2002}
+K.~Maas, S.~Chan, J.~Parker, A.~Slater, J.~Moore, N.~Olsen, and T.~M. Aune.
+\newblock Cutting {Edge}: {Molecular} {Portrait} of {Human} {Autoimmune}
+  {Disease}.
+\newblock \emph{The Journal of Immunology}, 169\penalty0 (1):\penalty0 5--9,
+  July 2002.
+\newblock ISSN 0022-1767, 1550-6606.
+\newblock \doi{10.4049/jimmunol.169.1.5}.
+\newblock URL \url{http://www.jimmunol.org/cgi/doi/10.4049/jimmunol.169.1.5}.
+
+\bibitem[MacKay(2003)]{mackay_information_2003}
+David J~C MacKay.
+\newblock \emph{Information {Theory}, {Inference}, and {Learning}
+  {Algorithms}}.
+\newblock September 2003.
+
+\bibitem[Maniatis et~al.(1987)Maniatis, Goodbourn, and
+  Fischer]{maniatis_regulation_1987}
+T~Maniatis, S~Goodbourn, and J.~Fischer.
+\newblock Regulation of inducible and tissue-specific gene expression.
+\newblock \emph{Science}, 236\penalty0 (4806):\penalty0 1237--1245, June 1987.
+\newblock ISSN 0036-8075, 1095-9203.
+\newblock \doi{10.1126/science.3296191}.
+\newblock URL \url{http://www.sciencemag.org/cgi/doi/10.1126/science.3296191}.
+
+\bibitem[Manolio(2010)]{feero_genomewide_2010}
+Teri~A. Manolio.
+\newblock Genomewide {Association} {Studies} and {Assessment} of the {Risk} of
+  {Disease}.
+\newblock \emph{New England Journal of Medicine}, 363\penalty0 (2):\penalty0
+  166--176, July 2010.
+\newblock ISSN 0028-4793, 1533-4406.
+\newblock \doi{10.1056/NEJMra0905980}.
+\newblock URL \url{http://www.nejm.org/doi/10.1056/NEJMra0905980}.
+
 \bibitem[Mooney and Wilmot(2015)]{mooney_gene_2015}
 Michael~A. Mooney and Beth Wilmot.
 \newblock Gene set analysis: {A} step-by-step guide.
@@ -152,6 +273,26 @@ A.~C. Nica and E.~T. Dermitzakis.
 \newblock \doi{10.1098/rstb.2012.0362}.
 \newblock URL
   \url{http://rstb.royalsocietypublishing.org/cgi/doi/10.1098/rstb.2012.0362}.
+
+\bibitem[Ong and Corces(2011)]{ong_enhancer_2011}
+Chin-Tong Ong and Victor~G. Corces.
+\newblock Enhancer function: new insights into the regulation of
+  tissue-specific gene expression.
+\newblock \emph{Nature Reviews Genetics}, 12\penalty0 (4):\penalty0 283--293,
+  April 2011.
+\newblock ISSN 1471-0056, 1471-0064.
+\newblock \doi{10.1038/nrg2957}.
+\newblock URL \url{http://www.nature.com/articles/nrg2957}.
+
+\bibitem[Savage et~al.(2013)Savage, Ghahramani, Griffin, Kirk, and
+  Wild]{savage_identifying_2013}
+Richard~S. Savage, Zoubin Ghahramani, Jim~E. Griffin, Paul Kirk, and David~L.
+  Wild.
+\newblock Identifying cancer subtypes in glioblastoma by combining genomic,
+  transcriptomic and epigenomic data.
+\newblock \emph{arXiv:1304.3577 [q-bio, stat]}, April 2013.
+\newblock URL \url{http://arxiv.org/abs/1304.3577}.
+\newblock arXiv: 1304.3577.
 
 \bibitem[Subramanian et~al.(2005)Subramanian, Tamayo, Mootha, Mukherjee, Ebert,
   Gillette, Paulovich, Pomeroy, Golub, Lander, and
@@ -207,36 +348,57 @@ Damian Szklarczyk, Annika~L Gable, David Lyon, Alexander Junge, Stefan Wyder,
 \newblock \doi{10.1038/s41467-018-04365-8}.
 \newblock URL \url{http://www.nature.com/articles/s41467-018-04365-8}.
 
-\bibitem[{The Multiple Tissue Human Expression Resource (MuTHER) Consortium}
-  et~al.(2012){The Multiple Tissue Human Expression Resource (MuTHER)
-  Consortium}, Grundberg, Small, Hedman, Nica, Buil, Keildson, Bell, Yang,
-  Meduri, Barrett, Nisbett, Sekowska, Wilk, Shin, Glass, Travers, Min, Ring,
-  Ho, Thorleifsson, Kong, Thorsteindottir, Ainali, Dimas, Hassanali, Ingle,
-  Knowles, Krestyaninova, Lowe, Di~Meglio, Montgomery, Parts, Potter,
-  Surdulescu, Tsaprouni, Tsoka, Bataille, Durbin, Nestle, O'Rahilly, Soranzo,
-  Lindgren, Zondervan, Ahmadi, Schadt, Stefansson, Smith, McCarthy, Deloukas,
-  Dermitzakis, and
-  Spector]{the_multiple_tissue_human_expression_resource_muther_consortium_mapping_2012}
-{The Multiple Tissue Human Expression Resource (MuTHER) Consortium}, Elin
-  Grundberg, Kerrin~S Small, Åsa~K Hedman, Alexandra~C Nica, Alfonso Buil,
-  Sarah Keildson, Jordana~T Bell, Tsun-Po Yang, Eshwar Meduri, Amy Barrett,
-  James Nisbett, Magdalena Sekowska, Alicja Wilk, So-Youn Shin, Daniel Glass,
-  Mary Travers, Josine~L Min, Sue Ring, Karen Ho, Gudmar Thorleifsson,
-  Augustine Kong, Unnur Thorsteindottir, Chrysanthi Ainali, Antigone~S Dimas,
-  Neelam Hassanali, Catherine Ingle, David Knowles, Maria Krestyaninova,
-  Christopher~E Lowe, Paola Di~Meglio, Stephen~B Montgomery, Leopold Parts,
-  Simon Potter, Gabriela Surdulescu, Loukia Tsaprouni, Sophia Tsoka, Veronique
-  Bataille, Richard Durbin, Frank~O Nestle, Stephen O'Rahilly, Nicole Soranzo,
-  Cecilia~M Lindgren, Krina~T Zondervan, Kourosh~R Ahmadi, Eric~E Schadt, Kari
-  Stefansson, George~Davey Smith, Mark~I McCarthy, Panos Deloukas, Emmanouil~T
-  Dermitzakis, and Tim~D Spector.
-\newblock Mapping cis- and trans-regulatory effects across multiple tissues in
-  twins.
-\newblock \emph{Nature Genetics}, 44\penalty0 (10):\penalty0 1084--1089,
-  October 2012.
-\newblock ISSN 1061-4036, 1546-1718.
-\newblock \doi{10.1038/ng.2394}.
-\newblock URL \url{http://www.nature.com/articles/ng.2394}.
+\bibitem[Vyse and Todd(1996)]{vyse_genetic_1996}
+Timothy~J Vyse and John~A Todd.
+\newblock Genetic {Analysis} of {Autoimmune} {Disease}.
+\newblock \emph{Cell}, 85\penalty0 (3):\penalty0 311--318, May 1996.
+\newblock ISSN 00928674.
+\newblock \doi{10.1016/S0092-8674(00)81110-1}.
+\newblock URL
+  \url{https://linkinghub.elsevier.com/retrieve/pii/S0092867400811101}.
+
+\bibitem[Võsa et~al.(2018)Võsa, Claringbould, Westra, Bonder, Deelen, Zeng,
+  Kirsten, Saha, Kreuzhuber, Kasela, Pervjakova, Alvaes, Fave, Agbessi,
+  Christiansen, Jansen, Seppälä, Tong, Teumer, Schramm, Hemani, Verlouw,
+  Yaghootkar, Sönmez, Andrew, Kukushkina, Kalnapenkis, Rüeger, Porcu,
+  Kronberg-Guzman, Kettunen, Powell, Lee, Zhang, Arindrarto, Beutner, {BIOS
+  Consortium}, Brugge, {i2QTL Consortium}, Dmitrieva, Elansary, Fairfax,
+  Georges, Heijmans, Kähönen, Kim, Knight, Kovacs, Krohn, Li, Loeffler,
+  Marigorta, Mei, Momozawa, Müller-Nurasyid, Nauck, Nivard, Penninx,
+  Pritchard, Raitakari, Rotzschke, Slagboom, Stehouwer, Stumvoll, Sullivan,
+  't~Hoen, Thiery, Tönjes, van Dongen, van Iterson, Veldink, Völker,
+  Wijmenga, Swertz, Andiappan, Montgomery, Ripatti, Perola, Kutalik,
+  Dermitzakis, Bergmann, Frayling, van Meurs, Prokisch, Ahsan, Pierce,
+  Lehtimäki, Boomsma, Psaty, Gharib, Awadalla, Milani, Ouwehand, Downes,
+  Stegle, Battle, Yang, Visscher, Scholz, Gibson, Esko, and
+  Franke]{vosa_unraveling_2018}
+Urmo Võsa, Annique Claringbould, Harm-Jan Westra, Marc~Jan Bonder, Patrick
+  Deelen, Biao Zeng, Holger Kirsten, Ashis Saha, Roman Kreuzhuber, Silva
+  Kasela, Natalia Pervjakova, Isabel Alvaes, Marie-Julie Fave, Mawusse Agbessi,
+  Mark Christiansen, Rick Jansen, Ilkka Seppälä, Lin Tong, Alexander Teumer,
+  Katharina Schramm, Gibran Hemani, Joost Verlouw, Hanieh Yaghootkar, Reyhan
+  Sönmez, Andrew~A. Andrew, Viktorija Kukushkina, Anette Kalnapenkis, Sina
+  Rüeger, Eleonora Porcu, Jaanika Kronberg-Guzman, Johannes Kettunen, Joseph
+  Powell, Bernett Lee, Futao Zhang, Wibowo Arindrarto, Frank Beutner, {BIOS
+  Consortium}, Harm Brugge, {i2QTL Consortium}, Julia Dmitrieva, Mahmoud
+  Elansary, Benjamin~P. Fairfax, Michel Georges, Bastiaan~T Heijmans, Mika
+  Kähönen, Yungil Kim, Julian~C. Knight, Peter Kovacs, Knut Krohn, Shuang Li,
+  Markus Loeffler, Urko~M Marigorta, Hailang Mei, Yukihide Momozawa, Martina
+  Müller-Nurasyid, Matthias Nauck, Michel Nivard, Brenda Penninx, Jonathan
+  Pritchard, Olli Raitakari, Olaf Rotzschke, Eline~P. Slagboom, Coen~D.A.
+  Stehouwer, Michael Stumvoll, Patrick Sullivan, Peter~A.C. 't~Hoen, Joachim
+  Thiery, Anke Tönjes, Jenny van Dongen, Maarten van Iterson, Jan Veldink, Uwe
+  Völker, Cisca Wijmenga, Morris Swertz, Anand Andiappan, Grant~W. Montgomery,
+  Samuli Ripatti, Markus Perola, Zoltan Kutalik, Emmanouil Dermitzakis, Sven
+  Bergmann, Timothy Frayling, Joyce van Meurs, Holger Prokisch, Habibul Ahsan,
+  Brandon Pierce, Terho Lehtimäki, Dorret Boomsma, Bruce~M. Psaty, Sina~A.
+  Gharib, Philip Awadalla, Lili Milani, Willem~H. Ouwehand, Kate Downes, Oliver
+  Stegle, Alexis Battle, Jian Yang, Peter~M. Visscher, Markus Scholz, Gregory
+  Gibson, Tõnu Esko, and Lude Franke.
+\newblock Unraveling the polygenic architecture of complex traits using blood
+  {eQTL} meta-analysis.
+\newblock preprint, Genomics, October 2018.
+\newblock URL \url{http://biorxiv.org/lookup/doi/10.1101/447367}.
 
 \bibitem[Wray et~al.(2014)Wray, Lee, Mehta, Vinkhuyzen, Dudbridge, and
   Middeldorp]{wray_research_2014}

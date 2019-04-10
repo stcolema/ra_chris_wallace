@@ -34,7 +34,7 @@
 
 %opening
 \title{Biology notes}
-\author{Stephen D. C.}
+\author{Stephen D. Coleman}
 
 \begin{document}
 
@@ -52,19 +52,19 @@ understanding the effect different genome variants have; i.e. understanding how 
 in genome translates to a different phenotype. This means we must investigate the change a 
 variant effects within the cell. Ideally this information allows biological insight into the 
 aetiology and nature of disease or of the phenotype. Genome-wide association studies (GWAS) 
-\cite{manolio2010genomewide} have shown that the majority of these variants are located within 
-the non-coding regions of the genome implying that they are involved in gene regulation. These 
+\cite{feero_genomewide_2010} have shown that the majority of these variants are located within 
+the non-coding regions of the genome \cite{nica_expression_2013} implying that they are involved in gene regulation. These 
 sites that explain some of the phenotypic variance are referred to as expression quantitative 
 trait loci (eQTL).
 
-eQTLs have transformated the study of genetics. They provide a comprehensuible, accessible and 
+eQTLs have transformed the study of genetics. They provide a comprehensible, accessible and 
 most importantly interpretable loecular link between genetic variation and phenotype. Standard 
 eQTL analysis involves a direction association test between markers of genetic variation, 
 typically using data collected from tens to hundreds of people.
 
 This analysis can be proximal or distal.
 \begin{itemize}
- \item Proximal: immedietely responsible for causing some observed result;
+ \item Proximal: immediately responsible for causing some observed result;
  \item Distal: (also \emph{ultimate}) higher-level than proximal. The true cause for an event or 
  result.
 \end{itemize}
@@ -76,25 +76,24 @@ rock tearing open the hull leading to the sinking.
 In terms of eQTLs, we designate proximal effects as \emph{cis-eQTL} and distal causes as 
 \emph{trans-eQTL}. We normally consider an eQTL to be cis-regulating if it is within 1MB of the 
 gene transcription start site (TSS) and trans-regulating if it is more than 5MB upstream or 
-downstream of the TSS or if found on a different chromosome.
+downstream of the TSS or if found on a different chromosome \cite{nica_expression_2013}.
 
 trans-eQTL are hard to find. They have weaker effects than cis-eQTL and thus require greater power 
-in the experiment \cite{dixon2007genome}. For some context, \citet{burgess2010principles} claims 
+in the experiment \cite{dixon_genome-wide_2007}. For some context, \citet{burgess_gene_2017} claims 
 that 449 donors provide low power in terms of finding trans-eQTL. As the power of experiments increases 
 more trans-eQTL are observed and cis-eQTL are shown to be generally tissue agnostic 
-\cite{gtex2017genetic}. Preivous results suggested cis-eQTL would be have tissue-specific effects, 
-but the increase in experimental power revealed that this is not the case \cite{grundberg2012mapping}. 
+\cite{gtex_consortium_genetic_2017}. Previous results suggested cis-eQTL would be have tissue-specific effects, 
+but the increase in experimental power revealed that this is not the case \cite{grundberg_mapping_2012}. 
 The current power present in many genetic experiments is enough to observe trans-eQTLs and indicates 
-these have tissue-specific properties \cite{grundberg2012mapping} \cite{gtex2017genetic}. It is 
-possible that this result might be shown to be an artifact of insufficient power. However, for now 
-we assume it is true and that trans-eQTL are are more likely to display tissue-specifc behaviour 
+these have tissue-specific properties \cite{grundberg_mapping_2012}\cite{gtex_consortium_genetic_2017}. It is possible that this result might be shown as an artefact of insufficient power. However, for now 
+we assume it is true and that trans-eQTL are more likely to display tissue-specific behaviour 
 than cis-eQTL.
 
-\citet{nica2013expression} reccommend investigating groups of cis-eQTL affecting a gene network that 
+\citet{nica_expression_2013} recommend investigating groups of cis-eQTL affecting a gene network that 
 when perturbed results in a disease state. They claim this is far higher powered than the classical 
-approach. This claim is supported by the findings of \citet{vosa2018unraveling} who found that 
-associations between \emph{polygenic risk scores} and gene expression (this assoication is referred 
-to as ``expression quantitative trait score'' (eQTS) in \cite{vosa2018unraveling}) contained the 
+approach. This claim is supported by the findings of \citet{vosa_unraveling_2018} who found that 
+associations between \emph{polygenic risk scores} and gene expression (this association is referred 
+to as ``expression quantitative trait score'' (eQTS) in \cite{vosa_unraveling_2018}) contained the 
 most biological information about disease in a comparison of cis-eQTL, trans-EQTL and eQTS.
 
 \subsection{cis-eQTL}
@@ -111,7 +110,7 @@ Honestly, \href{https://www.wikiwand.com/en/Regulation_of_gene_expression#/Examp
 
 \section{Data}
 The data is from \href{http://139.165.108.18/srv/genmol/permanent/1be6993fe41c12a051c9244d67c91da2be49e5dd26a6cd79f442bc006971e2ef/crohn-index.html}
-{the CEDAR cohort} (CEDAR stands for Correlated Expression and Disease Association Research). This is 
+{the CEDAR cohort} (CEDAR stands for Correlated Expression and Disease Association Research) \cite{the_international_ibd_genetics_consortium_ibd_2018}. This is 
 data collected from 323 healthy individuals of European descent visting the University of Li\`ege with 
 samples across 9 tissue types. The cohort consists of 182 women and 141 men with an average age of 56 
 years (the total range is 19-86). To ensure the integrity of the data all of the individuals are not 
@@ -122,7 +121,11 @@ platelets) and from intestinal biopsies from three distinct locations (the illeu
 some other one) are present for each individual. We initially explored the gene expression data 
 corrected for sex, age, smoking and batch effects.
 
+\section{Tissue specificity}
+Cell-type specific gene pathways are pivotal in differentiating tissue function, implicated in hereditary organ failure, and mediate acquired chronic disease \cite{ju_defining_2013}. More and more evidence is being accrued to highlight the cell-type specific level of gene expression \cite{grundberg_mapping_2012}\cite{ong_enhancer_2011}\cite{maniatis_regulation_1987}. As many gene set databases are summaries of multiple experiments across many different tissues, we attempt to create tissue specific gene sets. This seems particularly pertinent in the application of immunology where many diseases are tissue-specific and have strong associations to genetic pre-disposition \cite{vyse_genetic_1996}\cite{maas_cutting_2002}\cite{aune_co-localization_2004}\cite{botstein_discovering_2003}. Previous attempts to achieve this have used the Genotype Tissue Expression (GTEx) database \cite{gtex_consortium_genetic_2017}, but this is a database that has a heavy focus on brain tissues and is also exclusively from tissues of dead people. We suspect that the data derived from these cells may not contain the same information as that collected from living, active cells. 
+
 \bibliographystyle{plainnat}
-\bibliography{biology}
+%\bibliography{biology}
+\bibliography{General_biology}
 
 \end{document}

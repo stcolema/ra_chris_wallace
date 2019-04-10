@@ -1,46 +1,46 @@
-This is BibTeX, Version 0.99d (TeX Live 2013/Debian)
-Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+This is BibTeX, Version 0.99d (TeX Live 2017/Debian)
+Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
 The top-level auxiliary file: biology.aux
 The style file: plainnat.bst
-Database file #1: biology.bib
-You've used 7 entries,
+Database file #1: General_biology.bib
+You've used 15 entries,
             2773 wiz_defined-function locations,
-            643 strings with 6405 characters,
-and the built_in function-call counts, 4233 in all, are:
-= -- 341
-> -- 364
-< -- 5
-+ -- 124
-- -- 117
-* -- 376
-:= -- 688
-add.period$ -- 21
-call.type$ -- 7
-change.case$ -- 56
-chr.to.int$ -- 7
-cite$ -- 14
-duplicate$ -- 155
-empty$ -- 264
-format.name$ -- 127
-if$ -- 856
+            738 strings with 12928 characters,
+and the built_in function-call counts, 18117 in all, are:
+= -- 1410
+> -- 2235
+< -- 7
++ -- 747
+- -- 732
+* -- 1972
+:= -- 3086
+add.period$ -- 88
+call.type$ -- 15
+change.case$ -- 290
+chr.to.int$ -- 15
+cite$ -- 30
+duplicate$ -- 303
+empty$ -- 603
+format.name$ -- 755
+if$ -- 3466
 int.to.chr$ -- 1
 int.to.str$ -- 1
-missing$ -- 7
-newline$ -- 43
-num.names$ -- 28
-pop$ -- 104
+missing$ -- 14
+newline$ -- 126
+num.names$ -- 60
+pop$ -- 507
 preamble$ -- 1
-purify$ -- 49
+purify$ -- 274
 quote$ -- 0
-skip$ -- 145
+skip$ -- 416
 stack$ -- 0
-substring$ -- 108
-swap$ -- 20
-text.length$ -- 1
+substring$ -- 409
+swap$ -- 29
+text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 77
+type$ -- 165
 warning$ -- 0
-while$ -- 28
+while$ -- 72
 width$ -- 0
-write$ -- 98
+write$ -- 288

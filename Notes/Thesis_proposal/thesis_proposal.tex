@@ -180,8 +180,7 @@
 	
 	%\keywords{Keyword1, Keyword2, Keyword3}
 	\begin{abstract}
-		Gene sets are constructed to identify genes linked by some common feature. This can be a function, the location of the gene product, the participation of the product in some metabolic or signalling pathway, the protein structure, the presence of transcription-factor-binding sites or other regulatory elements, the participation in multiprotein complexes, etc. \cite{szklarczyk_string_2019}\cite{subramanian_gene_2005}\cite{kanehisa_new_2019} \cite{ashburner_gene_2000}. However, all of these sets are tissue agnostic. Some attempts to include tissue-specific information has been proposed \cite{frost_computation_2018} \cite{greene_understanding_2015}, but this attempts have limitations. We propose to produce tissue specific gene sets by applying multiple dataset integration (MDI) \cite{kirk_bayesian_2012} (a Bayesian unsupervised clustering method) to the CEDAR cohort \cite{the_international_ibd_genetics_consortium_ibd_2018}, a dataset which includes gene expression data for nine tissue / cell types including six circulating immune cell types (CD4+ T lymphocytes, CD8+ T lymphocytes, CD19+ B lymphocytes, CD14+ monocytes, CD15+ granulocytes, platelets) as well as ileal, colonic, and rectal biopsies (IL, TR, RE datasets respectively).
-		
+		\emph{A priori} defined gene sets are key to gene set enrichment analysis (GSEA) \cite{subramanian_gene_2005}. Gene sets are constructed through linking genes by some common feature. This can be a function, the location of the gene product, the participation of the product in some metabolic or signalling pathway, the protein structure, the presence of transcription-factor-binding sites or other regulatory elements, the participation in multiprotein complexes, etc. \cite{szklarczyk_string_2019}\cite{subramanian_gene_2005}\cite{kanehisa_new_2019} \cite{ashburner_gene_2000}. However, all of these criteria are tissue agnostic. Some attempts to include tissue-specific information has been proposed \cite{frost_computation_2018} \cite{greene_understanding_2015}, but these attempts have limitations. We propose to produce tissue specific gene sets by applying multiple dataset integration (MDI) \cite{kirk_bayesian_2012} (a Bayesian unsupervised clustering method) to the CEDAR cohort \cite{the_international_ibd_genetics_consortium_ibd_2018}.
 	\end{abstract}
 
 
@@ -199,13 +198,126 @@
 	
 	Gene set analysis \cite{mooney_gene_2015} \cite{dudbridge_power_2013}
 
-	Better to look at set fo genes when perturbed diseases state \cite{wray_research_2014}\cite{nica_expression_2013}
+	Better to look at set of genes when perturbed diseases state \cite{wray_research_2014}\cite{nica_expression_2013}
 	
 	There exists an abundance of gene set databases . 
 	
-	Evidence for Tissue specific eQTLs \cite{the_multiple_tissue_human_expression_resource_muther_consortium_mapping_2012} 
+	Evidence for Tissue specific eQTLs \cite{grundberg_mapping_2012} 
 	
 	Genotype-Tissue Expression (GTEx) project \cite{lonsdale_genotype-tissue_2013}  \cite{burgess_gene_2017}
+
+	\section{Theory}
+	\subsection{Mixture models} \label{mixture_models}
+	Given some data $X = (x_1, \ldots, x_n)$, we assume a number of unobserved processes generate the data, and membership to a process for individual $i$ is represented using the latent variable $c_i$. It is assumed that each of the $K$ processes can be modelled by a parametric distribution, $f(\cdot)$ with associated parameters $\theta$ and that the full model density is then the weighted sum of these probability density functions where the weights are the component proportions, $\pi_k$:
+	
+	\begin{align}
+	p(x_i) = \sum_{k=1}^K \pi_k f(x_i | \theta_k)
+	\end{align}
+	We carry out Bayesian inference of this model using MCMC methods. Specifically we use a Gibbs sampler. We sample first the component parameters, $\theta_k$, and associated weights, $\pi_k$, from the associated distributions and then sample component membership.
+	
+	Basically:
+	\begin{enumerate}
+		\item For each of K clusters sample $\theta_k$ and $\pi_k$ from the associated distributions based on current memberships, $c_i$; and
+		\item For each of n individuals sample $c_i$ based on the new $\theta_k$ and $\pi_k$.
+	\end{enumerate}
+
+	\subsection{Bayesian inference}	
+	For the mixture model we update the parameters after we allocate each observation to a cluster. For a given cluster with associated data $X$ and parameter $\theta$, the distribution we sample $\theta$ from using Bayes' theorem:
+	
+	\begin{align} \label{Bayes_theorem}
+	p(\theta | X) = \frac{p(X | \theta) p(\theta)}{\int_\Theta p(X | \theta ') p(\theta ') d \theta '}
+	\end{align}
+	Here $\Theta$ is the entire sample space for $\theta$. 
+	\begin{itemize}
+		\item We refer to $p(\theta | X)$ as the \emph{posterior} distribution of $\theta$ as it is the distribution associated with $\theta$ \emph{after} observing $X$.
+		\item $p(\theta)$ is the \emph{prior} distribution of $\theta$ and captures our beliefs about $\theta$ before we observe $X$.
+		\item $p(X | \theta)$ is the \emph{likelihood} of $X$ given $\theta$, the probability of data $X$ being generated given our model is true. It is the criterion we focus on in our model if we would use a frequentist approach to the inference; maximising this quantity in our model generates the curve that best describes the observed data. 
+		\item $\int_\Theta p(X | \theta ') p(\theta ') d \theta '$ is the \emph{normalising constant}. This quantity is also referred to as the \emph{evidence} \cite{mackay_information_2003} or \emph{marginal likelihood} and is normally represented by $Z$. It is referred to as the marginal likelihood as we marginalise the parameter $\theta$ by integrating over its entire sample space.
+	\end{itemize}
+	
+	In terms of sampling the prior is very useful as it allows us to ensure that the posterior is always solvable, that we do not encounter singularities in our distribution.
+	
+	\subsection{Multiple dataset integration}
+	If we have observed paired datasets $X_1 = (x_{1,1},\ldots,x_{n,1}), X_2 = (x_{1,2},\ldots,x_{n,2})$, where observations in the $i$th row of each dataset represent information about the same individual. We would like to cluster using information common to both datasets. One could concatenate the datasets, adding additional covariates for each individual. However, if the two datasets have different clustering structures this would reduce the signal of both clusterings and probably have one dominate. If the two datasets have the same structure but different signal-to-noise ratios this would reduce the signal in the final clustering. In both these cases independent models on each dataset would be preferable. \citet{kirk_bayesian_2012} suggest a method to carry out clustering on both datasets where common information is used but two individual clusterings are outputted. This method is driven by the allocation prior:
+	\begin{align} \label{allocation_prior_l_2}
+	p(c_{i,1}, c_{i,2} | \phi ) \propto \pi_{i,1} \pi_{i,2} (1 + \phi \mathbb{I}(c_{i,1} = c_{i,2}))
+	\end{align}
+	Here $\phi \in \mathbb{R}_+$ controls the strength of association between datasets. \eqref{allocation_prior_l_2} states that the probability of allocating individual $i$ to component $c_{i,1}$ in dataset 1 and to component $c_{i,2}$ in dataset 2 is proportional to the proportion of these components within each dataset and up-weighted by $\phi$ if the individual has the same labelling in each dataset. Thus as $\phi$ grows the correlation between the clusterings grow and we are more likely to see the same clustering emerge from each dataset. Conversely if $\phi = 0$ we have independent mixture models. 
+	
+	The generalised case for $L$ datasets, $X_1 = (x_{1,1},\ldots,x_{n,1}),\ldots, X_L = (x_{1,l},\ldots,x_{n,l})$ for any $L \in \mathbb{N}$ is simply a matter of combinatorics. In this case, \eqref{allocation_prior_l_2} extends to:
+	\begin{align} \label{allocation_prior}
+	p(c_{i,1},\ldots,c_{i,L} | \boldsymbol{\phi}) \propto \prod_{l_1=1}^L\pi_{c_{il_1}l_1}\prod_{l_2=1}^{L-1}\prod_{l_3=l_2+1}^L\left(1+\phi_{l_2l_3}\mathbb{1}(c_{il_2} = c_{il_3}) \right)
+	\end{align}
+	Here $\boldsymbol{\phi}$ is the ${L \choose 2}$-vector of all $\phi_{ij}$ where $\phi_{12}$ is the variable $\phi$ in \eqref{allocation_prior_l_2}.
+	
+	Thus MDI is an extension of mixture models to multiple datasets where correlated clustering structure is used to ``upweigh'' similar clusters across datasets. MDI has been applied to precision medicine, specifically glioblastoma sub-typing \cite{savage_identifying_2013}, in the past showing its potential as a tool.
+	
+	\section{Expression quantitative trait loci}
+	The last two decades have seen a huge body of research focused on genome variability due to its 
+	relevance in the risk of disease experienced by individuals. Fundamental to this study is 
+	understanding the effect different genome variants have; i.e. understanding how this change 
+	in genome translates to a different phenotype. This means we must investigate the change a 
+	variant effects within the cell. Ideally this information allows biological insight into the 
+	aetiology and nature of disease or of the phenotype. Genome-wide association studies (GWAS) 
+	\cite{feero_genomewide_2010} have shown that the majority of these variants are located within 
+	the non-coding regions of the genome \cite{nica_expression_2013} implying that they are involved in gene regulation. These 
+	sites that explain some of the phenotypic variance are referred to as expression quantitative 
+	trait loci (eQTL).
+	
+	eQTLs have transformed the study of genetics. They provide a comprehensible, accessible and 
+	most importantly interpretable molecular link between genetic variation and phenotype. Standard 
+	eQTL analysis involves a direction association test between markers of genetic variation, 
+	typically using data collected from tens to hundreds of people.
+	
+	This analysis can be proximal or distal.
+	\begin{itemize}
+		\item Proximal: immediately responsible for causing some observed result;
+		\item Distal: (also \emph{ultimate}) higher-level than proximal. The true cause for an event or 
+		result.
+	\end{itemize}
+	Consider the example of a ship sinking. This could have a \emph{proximate} cause such as the ship 
+	being holed beneath the waterline leading to water entering the ship; this resulted in the ship 
+	becoming denser than water and it sank. However, the \emph{distal} cause could be the ship hit a 
+	rock tearing open the hull leading to the sinking.
+	
+	In terms of eQTLs, we designate proximal effects as \emph{cis-eQTL} and distal causes as 
+	\emph{trans-eQTL}. We normally consider an eQTL to be cis-regulating if it is within 1MB of the 
+	gene transcription start site (TSS) and trans-regulating if it is more than 5MB upstream or 
+	downstream of the TSS or if found on a different chromosome \cite{nica_expression_2013}.
+	
+	trans-eQTL are hard to find. They have weaker effects than cis-eQTL and thus require greater power 
+	in the experiment \cite{dixon_genome-wide_2007}. For some context, \citet{burgess_gene_2017} claims 
+	that 449 donors provide low power in terms of finding trans-eQTL. As the power of experiments increases 
+	more trans-eQTL are observed and cis-eQTL are shown to be generally tissue agnostic 
+	\cite{gtex_consortium_genetic_2017}. Previous results suggested cis-eQTL would be have tissue-specific effects, 
+	but the increase in experimental power revealed that this is not the case \cite{grundberg_mapping_2012}. 
+	The current power present in many genetic experiments is enough to observe trans-eQTLs and indicates 
+	these have tissue-specific properties \cite{grundberg_mapping_2012}\cite{gtex_consortium_genetic_2017}. It is possible that this result might be shown as an artefact of insufficient power, much as initial analysis suggested cis-eQTL had tissue-specific properties. However, for now we assume it is true and that trans-eQTL are more likely to display tissue-specific behaviour 
+	than cis-eQTL.
+	
+	\subsection{The importance of gene sets}
+	\citet{nica_expression_2013} recommend investigating groups of cis-eQTL affecting a gene network that 
+	when perturbed results in a disease state. They claim this is far higher powered than the classical 
+	approach. This claim is supported by the findings of \citet{vosa_unraveling_2018} who found that 
+	associations between \emph{polygenic risk scores} and gene expression (this association is referred 
+	to as ``expression quantitative trait score'' (eQTS) in \cite{vosa_unraveling_2018}) contained the 
+	most biological information about disease in a comparison of cis-eQTL, trans-EQTL and eQTS. More generally, gene set enrichment \cite{subramanian_gene_2005} relies upon pre-defined gene sets. Thus well-defined gene sets are required for informative, interpretable analysis of genomic information.
+	
+	\subsection{Tissue specificity}
+	Cell-type specific gene pathways are pivotal in differentiating tissue function, implicated in hereditary organ failure, and mediate acquired chronic disease \cite{ju_defining_2013}. More and more evidence is being accrued to highlight the cell-type specific level of gene expression \cite{grundberg_mapping_2012}\cite{ong_enhancer_2011}\cite{maniatis_regulation_1987}. As many gene set databases are summaries of multiple experiments across many different tissues, we attempt to create tissue specific gene sets. This seems particularly pertinent in the application of immunology where many diseases are tissue-specific and have strong associations to genetic pre-disposition \cite{vyse_genetic_1996}\cite{maas_cutting_2002}\cite{aune_co-localization_2004}\cite{botstein_discovering_2003}. Previous attempts to achieve this have used the Genotype Tissue Expression (GTEx) database \cite{gtex_consortium_genetic_2017}, but this is a database that has a heavy focus on brain tissues and is also exclusively from tissues of dead people. We suspect that the data derived from these cells may not contain the same information as that collected from living, active cells. 
+
+	\section{Data}
+	The data is from \href{http://139.165.108.18/srv/genmol/permanent/1be6993fe41c12a051c9244d67c91da2be49e5dd26a6cd79f442bc006971e2ef/crohn-index.html}
+	{the Correlated Expression and Disease Association Research} (CEDAR) cohort \cite{the_international_ibd_genetics_consortium_ibd_2018}. This is 
+	data collected from 323 healthy individuals of European descent visting the University of Li\`ege with 
+	samples across 9 tissue types. The cohort consists of 182 women and 141 men with an average age of 56 
+	years (the total range is 19-86). To ensure the integrity of the data all of the individuals are not 
+	suffering from any autoimmune or inflammatory disease and were not taking corticosteroids or non-steroid 
+	anti-inflammatory drugs (with the exception of aspirin). Samples for six circulating immune cells types
+	(CD4+ T lymphocytes, CD8+ T lymphocytes, CD14+ monocytes, CD15+ granulocytes, CD19+ B lymphocytes and 
+	platelets) and from intestinal biopsies from three distinct locations (the illeum, rectum and 
+	some other one) are present for each individual. We initially explored the gene expression data 
+	corrected for sex, age, smoking and batch effects.
 
 	%\bibliographystyle{abbrv}
 	\bibliographystyle{plainnat}

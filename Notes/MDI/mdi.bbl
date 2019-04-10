@@ -1,0 +1,43 @@
+\begin{thebibliography}{4}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Kirk et~al.(2012)Kirk, Griffin, Savage, Ghahramani, and
+  Wild]{kirk_bayesian_2012}
+Paul Kirk, Jim~E. Griffin, Richard~S. Savage, Zoubin Ghahramani, and David~L.
+  Wild.
+\newblock Bayesian correlated clustering to integrate multiple datasets.
+\newblock \emph{Bioinformatics}, 28\penalty0 (24):\penalty0 3290--3297,
+  December 2012.
+\newblock ISSN 1460-2059, 1367-4803.
+\newblock \doi{10.1093/bioinformatics/bts595}.
+\newblock URL
+  \url{https://academic.oup.com/bioinformatics/article-lookup/doi/10.1093/bioinformatics/bts595}.
+
+\bibitem[Liu(1994)]{liu_collapsed_1994}
+Jun~S Liu.
+\newblock The {Collapsed} {Gibbs} {Sampler} in {Bayesian} {Computations} with
+  {Applications} to a {Gene} {Regulation} {Problem}.
+\newblock \emph{Journal of the American Statistical Association}, 89\penalty0
+  (427):\penalty0 958--966, September 1994.
+
+\bibitem[MacKay(2003)]{mackay_information_2003}
+David J~C MacKay.
+\newblock \emph{Information {Theory}, {Inference}, and {Learning}
+  {Algorithms}}.
+\newblock September 2003.
+
+\bibitem[Savage et~al.(2013)Savage, Ghahramani, Griffin, Kirk, and
+  Wild]{savage_identifying_2013}
+Richard~S. Savage, Zoubin Ghahramani, Jim~E. Griffin, Paul Kirk, and David~L.
+  Wild.
+\newblock Identifying cancer subtypes in glioblastoma by combining genomic,
+  transcriptomic and epigenomic data.
+\newblock \emph{arXiv:1304.3577 [q-bio, stat]}, April 2013.
+\newblock URL \url{http://arxiv.org/abs/1304.3577}.
+\newblock arXiv: 1304.3577.
+
+\end{thebibliography}
