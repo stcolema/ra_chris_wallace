@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2019.4.9)  10 APR 2019 14:42
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2019.4.9)  10 APR 2019 17:02
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1731,47 +1731,46 @@ File: ot1phv.fd 2001/06/04 scalable font definitions for OT1/phv.
 LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <14.4> not available
 (Font)              Font shape `OT1/phv/b/n' tried instead on input line 193.
 LaTeX Font Info:    Font shape `OT1/ppl/bx/n' in size <12> not available
-(Font)              Font shape `OT1/ppl/b/n' tried instead on input line 210.
+(Font)              Font shape `OT1/ppl/b/n' tried instead on input line 194.
 LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <12> not available
-(Font)              Font shape `OT1/phv/b/n' tried instead on input line 210.
+(Font)              Font shape `OT1/phv/b/n' tried instead on input line 194.
  [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-LaTeX Font Info:    Try loading font information for OMS+ppl on input line 232.
+LaTeX Font Info:    Try loading font information for OMS+ppl on input line 216.
 
 
 (/usr/share/texlive/texmf-dist/tex/latex/psnfss/omsppl.fd
 File: omsppl.fd 
 )
 LaTeX Font Info:    Font shape `OMS/ppl/m/n' in size <10.95> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 232.
- [2]
-LaTeX Font Info:    Try loading font information for U+fplmbb on input line 244
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 216.
+LaTeX Font Info:    Try loading font information for U+fplmbb on input line 228
 .
 
 (/usr/share/texlive/texmf-dist/tex/latex/psnfss/ufplmbb.fd
 File: ufplmbb.fd 2003/10/30 Fontinst v1.914 font definitions for U/fplmbb.
-)
+) [2]
 
 Package amsmath Warning: Foreign command \atopwithdelims;
 (amsmath)                \frac or \genfrac should be used instead
-(amsmath)                 on input line 251.
+(amsmath)                 on input line 235.
 
-[3] [4] (./thesis_proposal.bbl [5] [6] [7] [8]) [9]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 326.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 326.
+[3] [4] (./thesis_proposal.bbl [5] [6] [7] [8] [9]) [10]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 325.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 325.
  (./thesis_proposal.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 326.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 326.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 325.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 325.
 Package rerunfilecheck Info: File `thesis_proposal.out' has not changed.
-(rerunfilecheck)             Checksum: 44608D66D347DCC7A925083970FABB8E;652.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 326.
+(rerunfilecheck)             Checksum: 60F7F8BED121C0D4B827AB8D39E82328;795.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 325.
  ) 
 Here is how much of TeX's memory you used:
- 42870 strings out of 494847
- 950763 string characters out of 6179081
- 1171804 words of memory out of 5000000
- 45511 multiletter control sequences out of 15000+600000
+ 42880 strings out of 494847
+ 950880 string characters out of 6179081
+ 1172804 words of memory out of 5000000
+ 45513 multiletter control sequences out of 15000+600000
  568650 words of font info for 114 fonts, out of 8000000 for 9000
  59 hyphenation exceptions out of 8191
  69i,12n,119p,10424b,609s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1786,10 +1785,10 @@ azo/fplmr.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/mathpazo/fplmri
 hare/texlive/texmf-dist/fonts/type1/urw/palatino/uplb8a.pfb></usr/share/texlive
 /texmf-dist/fonts/type1/urw/palatino/uplr8a.pfb></usr/share/texlive/texmf-dist/
 fonts/type1/urw/palatino/uplri8a.pfb>
-Output written on thesis_proposal.pdf (9 pages, 133534 bytes).
+Output written on thesis_proposal.pdf (10 pages, 136161 bytes).
 PDF statistics:
- 277 PDF objects out of 1000 (max. 8388607)
- 252 compressed objects within 3 object streams
- 55 named destinations out of 1000 (max. 500000)
- 101 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 298 PDF objects out of 1000 (max. 8388607)
+ 272 compressed objects within 3 object streams
+ 63 named destinations out of 1000 (max. 500000)
+ 117 words of extra memory for PDF output out of 10000 (max. 10000000)
 

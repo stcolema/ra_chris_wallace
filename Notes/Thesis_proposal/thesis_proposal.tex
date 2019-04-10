@@ -189,22 +189,6 @@
 	%\thispagestyle{fancy}
 	
 	%\vspace{-1.0cm}
-	
-	\section{Existing databases}
-	In some of the largest databases (such as the Gene Ontology (GO) Resource \cite{ashburner_gene_2000}, the Kyoto Encyclopedia of Genes and Genomes (KEGG) \cite{kanehisa_new_2019}, the Molecular Signatures Database (MSigDB) \cite{subramanian_gene_2005} or the STRING protein-protein interaction (PPI) database \cite{szklarczyk_string_2019})
-
-
-	\section{References to use}
-	
-	Gene set analysis \cite{mooney_gene_2015} \cite{dudbridge_power_2013}
-
-	Better to look at set of genes when perturbed diseases state \cite{wray_research_2014}\cite{nica_expression_2013}
-	
-	There exists an abundance of gene set databases . 
-	
-	Evidence for Tissue specific eQTLs \cite{grundberg_mapping_2012} 
-	
-	Genotype-Tissue Expression (GTEx) project \cite{lonsdale_genotype-tissue_2013}  \cite{burgess_gene_2017}
 
 	\section{Theory}
 	\subsection{Mixture models} \label{mixture_models}
@@ -240,7 +224,7 @@
 	\subsection{Multiple dataset integration}
 	If we have observed paired datasets $X_1 = (x_{1,1},\ldots,x_{n,1}), X_2 = (x_{1,2},\ldots,x_{n,2})$, where observations in the $i$th row of each dataset represent information about the same individual. We would like to cluster using information common to both datasets. One could concatenate the datasets, adding additional covariates for each individual. However, if the two datasets have different clustering structures this would reduce the signal of both clusterings and probably have one dominate. If the two datasets have the same structure but different signal-to-noise ratios this would reduce the signal in the final clustering. In both these cases independent models on each dataset would be preferable. \citet{kirk_bayesian_2012} suggest a method to carry out clustering on both datasets where common information is used but two individual clusterings are outputted. This method is driven by the allocation prior:
 	\begin{align} \label{allocation_prior_l_2}
-	p(c_{i,1}, c_{i,2} | \phi ) \propto \pi_{i,1} \pi_{i,2} (1 + \phi \mathbb{I}(c_{i,1} = c_{i,2}))
+	p(c_{i1}, c_{i2} | \phi ) \propto \pi_{i1} \pi_{i2} (1 + \phi \mathbb{I}(c_{i1} = c_{i2}))
 	\end{align}
 	Here $\phi \in \mathbb{R}_+$ controls the strength of association between datasets. \eqref{allocation_prior_l_2} states that the probability of allocating individual $i$ to component $c_{i,1}$ in dataset 1 and to component $c_{i,2}$ in dataset 2 is proportional to the proportion of these components within each dataset and up-weighted by $\phi$ if the individual has the same labelling in each dataset. Thus as $\phi$ grows the correlation between the clusterings grow and we are more likely to see the same clustering emerge from each dataset. Conversely if $\phi = 0$ we have independent mixture models. 
 	
@@ -252,7 +236,7 @@
 	
 	Thus MDI is an extension of mixture models to multiple datasets where correlated clustering structure is used to ``upweigh'' similar clusters across datasets. MDI has been applied to precision medicine, specifically glioblastoma sub-typing \cite{savage_identifying_2013}, in the past showing its potential as a tool.
 	
-	\section{Expression quantitative trait loci}
+	\subsection{Expression quantitative trait loci}
 	The last two decades have seen a huge body of research focused on genome variability due to its 
 	relevance in the risk of disease experienced by individuals. Fundamental to this study is 
 	understanding the effect different genome variants have; i.e. understanding how this change 
@@ -295,16 +279,19 @@
 	these have tissue-specific properties \cite{grundberg_mapping_2012}\cite{gtex_consortium_genetic_2017}. It is possible that this result might be shown as an artefact of insufficient power, much as initial analysis suggested cis-eQTL had tissue-specific properties. However, for now we assume it is true and that trans-eQTL are more likely to display tissue-specific behaviour 
 	than cis-eQTL.
 	
+	\subsection{Gene sets}
+	With the onset of microarrays and RNAseq, producing gene expression data in large quantities for a wide number of genes is increasingly enabled. Unfortunately the large amount of data gifted onto the genomics community by these methods is difficult to interpret and analyse. Clustering genes into groups known as ``gene sets'' increases both the interpretability and the power of an analysis \cite{nica_expression_2013}\cite{vosa_unraveling_2018}. A complete method of analysis known as Gene Set Enrichment Analysis (GSEA) is based upon this axiom \cite{subramanian_gene_2005} and well defined, meaningful gene sets are a prerequisite for GSEA \cite{mooney_gene_2015}. In analysing gene sets as a group, the degree of perturbation in the expression of the full gene set due to the disease state / alternative phenotype that is required to be considered significant is much less than that required in analysing each of its constituent members individually \cite{dudbridge_power_2013}\cite{wray_research_2014}. GSEA offers some insight into the biological meaning of a gene set; what gene products interact, the pathways and processes a gene is involved in. Thus gene sets offer a clearer connection between genotype and phenotype. they offer biological insight into a disease.
+	
 	\subsection{The importance of gene sets}
-	\citet{nica_expression_2013} recommend investigating groups of cis-eQTL affecting a gene network that 
-	when perturbed results in a disease state. They claim this is far higher powered than the classical 
-	approach. This claim is supported by the findings of \citet{vosa_unraveling_2018} who found that 
-	associations between \emph{polygenic risk scores} and gene expression (this association is referred 
-	to as ``expression quantitative trait score'' (eQTS) in \cite{vosa_unraveling_2018}) contained the 
-	most biological information about disease in a comparison of cis-eQTL, trans-EQTL and eQTS. More generally, gene set enrichment \cite{subramanian_gene_2005} relies upon pre-defined gene sets. Thus well-defined gene sets are required for informative, interpretable analysis of genomic information.
+	If we can cluster genes together it is possible that we can find deeper biological interpretation, understanding the context of the gene products and what they interact with. This can offer some insight into the connection between the gene and the expressed phenotype. Furthermore, \citet{nica_expression_2013} recommend investigating groups of cis-eQTL affecting a gene network that when perturbed results in a disease state. They claim this is far higher powered than the classical approach. This claim is supported by the findings of \citet{vosa_unraveling_2018} who found that associations between \emph{polygenic risk scores} and gene expression (this association is referred to as ``expression quantitative trait score'' (eQTS) in \cite{vosa_unraveling_2018}) contained the most biological information about disease in a comparison of cis-eQTL, trans-EQTL and eQTS. This finding is not unique to this paper \cite{dudbridge_power_2013}\cite{wray_research_2014}. More generally, gene set enrichment analysis (GSEA) \cite{subramanian_gene_2005}\cite{mooney_gene_2015} relies upon pre-defined gene sets. This method determines if gene sets have statistically significant, concordant differences between phenotypes and offers biological interpretation of the sets. Thus well-defined gene sets are required for informative, interpretable analysis of genomic information.
+	
+	
+	\subsection{Existing databases}
+	There exist many databases of gene sets \cite{ashburner_gene_2000}\cite{kanehisa_new_2019}\cite{szklarczyk_string_2019}. The Molecular Signature Database \cite{subramanian_gene_2005} (MSigDB) is one of the most popular resources for GSEA and encompasses many different gene sets defined under different criteria or generated from different resources. However, none of these definitions of a ``set'' incorporate tissue specific information. 
+%	(such as the Gene Ontology (GO) Resource \cite{ashburner_gene_2000}, the Kyoto Encyclopedia of Genes and Genomes (KEGG) \cite{kanehisa_new_2019}, the Molecular Signatures Database (MSigDB) \cite{subramanian_gene_2005} or the STRING protein-protein interaction (PPI) database \cite{szklarczyk_string_2019})
 	
 	\subsection{Tissue specificity}
-	Cell-type specific gene pathways are pivotal in differentiating tissue function, implicated in hereditary organ failure, and mediate acquired chronic disease \cite{ju_defining_2013}. More and more evidence is being accrued to highlight the cell-type specific level of gene expression \cite{grundberg_mapping_2012}\cite{ong_enhancer_2011}\cite{maniatis_regulation_1987}. As many gene set databases are summaries of multiple experiments across many different tissues, we attempt to create tissue specific gene sets. This seems particularly pertinent in the application of immunology where many diseases are tissue-specific and have strong associations to genetic pre-disposition \cite{vyse_genetic_1996}\cite{maas_cutting_2002}\cite{aune_co-localization_2004}\cite{botstein_discovering_2003}. Previous attempts to achieve this have used the Genotype Tissue Expression (GTEx) database \cite{gtex_consortium_genetic_2017}, but this is a database that has a heavy focus on brain tissues and is also exclusively from tissues of dead people. We suspect that the data derived from these cells may not contain the same information as that collected from living, active cells. 
+	Cell-type specific gene pathways are pivotal in differentiating tissue function, implicated in hereditary organ failure, and mediate acquired chronic disease \cite{ju_defining_2013}. More and more evidence is being accrued to highlight the cell-type specific level of gene expression \cite{grundberg_mapping_2012}\cite{ong_enhancer_2011}\cite{maniatis_regulation_1987}. As many gene set databases are summaries of multiple experiments across many different tissues, we attempt to create tissue specific gene sets. This seems particularly pertinent in the application of immunology where many diseases are tissue-specific and have strong associations to genetic pre-disposition \cite{vyse_genetic_1996}\cite{maas_cutting_2002}\cite{aune_co-localization_2004}\cite{botstein_discovering_2003}. Previous attempts to achieve this have used the Genotype Tissue Expression (GTEx) database \cite{gtex_consortium_genetic_2017}\cite{lonsdale_genotype-tissue_2013}, but this is a database that has a heavy focus on brain tissues and is also exclusively from tissues of dead people. We suspect that the data derived from these cells may not contain the same information as that collected from living, active cells. 
 
 	\section{Data}
 	The data is from \href{http://139.165.108.18/srv/genmol/permanent/1be6993fe41c12a051c9244d67c91da2be49e5dd26a6cd79f442bc006971e2ef/crohn-index.html}
@@ -318,6 +305,18 @@
 	platelets) and from intestinal biopsies from three distinct locations (the illeum, rectum and 
 	some other one) are present for each individual. We initially explored the gene expression data 
 	corrected for sex, age, smoking and batch effects.
+	
+	\section{Methods}
+	\subsection{Data preparation}
+	The first step is to acquire and prepare the data for MDI.
+	\begin{enumerate}
+		\item Download the data;
+		\item Transpose the data, remove NAs and apply vsn;
+		\item Inspect the data by PCA and remove outlier individuals for each dataset in each gene set;
+		\item To apply MDI we require that each dataset have the same row names in the same order, so we re-arrange our datasets to have common order of probes and include rows of 0’s for probes entirely missing from a given dataset; and
+		\item Apply MDI.
+	\end{enumerate}
+	
 
 	%\bibliographystyle{abbrv}
 	\bibliographystyle{plainnat}
