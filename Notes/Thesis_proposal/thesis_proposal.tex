@@ -4,7 +4,10 @@
 % This is a simple template for a LaTeX document using the "article" class.
 % See "book", "report", "letter" for other types of document.
 
-\documentclass[11pt]{article} % use larger type; default would be 10pt
+%\usepackage{extsizes}
+
+\documentclass[12pt]{article} % use larger type; default would be 10pt
+%\documentclass[14pt]{extarticle} % use larger type; default would be 10pt
 
 \usepackage[utf8]{inputenc} % set input encoding (not needed with XeLaTeX)
 
@@ -187,14 +190,14 @@
 		\begin{center}
 			\vspace*{1cm}
 			
-			\par{\LARGE \textbf{Defining tissue-specific gene sets using Bayesian unsupervised clustering}}
+			\par{\LARGE \textbf{Defining tissue specific gene sets using Bayesian unsupervised clustering}}
 			
 			\vspace{0.5cm}
 			GEN80436
 			
 			\vspace{1.5cm}
 			
-			\textbf{Stephen Coleman \\ 94030916050}
+			\textbf{Stephen Coleman \\ 940309160050}
 			
 			\vspace{0.8cm}
 			
@@ -210,7 +213,9 @@
 			\vspace{1.0cm}
 	
 			\begin{abstract}
-				\emph{A priori} defined gene sets are key to gene set enrichment analysis (GSEA) \cite{subramanian_gene_2005}. Gene sets are constructed through linking genes by some common feature. This can be a function, the location of the gene product, the participation of the product in some metabolic or signalling pathway, the protein structure, the presence of transcription-factor-binding sites or other regulatory elements, the participation in multiprotein complexes, etc. \cite{szklarczyk_string_2019}\cite{subramanian_gene_2005}\cite{kanehisa_new_2019} \cite{ashburner_gene_2000}. However, all of these criteria are tissue agnostic. Some attempts to include tissue-specific information has been proposed \cite{frost_computation_2018} \cite{greene_understanding_2015}, but these attempts have limitations. We propose to produce tissue specific gene sets by applying multiple dataset integration (MDI) \cite{kirk_bayesian_2012} (a Bayesian unsupervised clustering method) to the CEDAR cohort \cite{the_international_ibd_genetics_consortium_ibd_2018}.
+				\emph{A priori} defined gene sets are key to gene set enrichment analysis \cite{subramanian_gene_2005} a powerful tool in genetic analysis. Gene sets are constructed through linking genes by some common feature. This can be a function, the location of the gene product, the participation of the product in some metabolic or signalling pathway, the protein structure, the presence of transcription-factor-binding sites or other regulatory elements, the participation in multiprotein complexes, or any one of several other definitions \cite{szklarczyk_string_2019}\cite{subramanian_gene_2005}\cite{kanehisa_new_2019}\cite{ashburner_gene_2000}. However, all of these criteria are tissue agnostic.
+%				Some attempts to include tissue specific information has been proposed \cite{frost_computation_2018}\cite{greene_understanding_2015}, but these attempts have limitations.
+				We propose to produce tissue specific gene sets by applying multiple dataset integration \cite{kirk_bayesian_2012} (a Bayesian unsupervised clustering method) to the CEDAR cohort \cite{the_international_ibd_genetics_consortium_ibd_2018}, a dataset of 9 tissue / cell types.
 			\end{abstract}
 		
 			\vfill
@@ -233,7 +238,7 @@
 	
 	%\keywords{Keyword1, Keyword2, Keyword3}
 %	\begin{abstract}
-%		\emph{A priori} defined gene sets are key to gene set enrichment analysis (GSEA) \cite{subramanian_gene_2005}. Gene sets are constructed through linking genes by some common feature. This can be a function, the location of the gene product, the participation of the product in some metabolic or signalling pathway, the protein structure, the presence of transcription-factor-binding sites or other regulatory elements, the participation in multiprotein complexes, etc. \cite{szklarczyk_string_2019}\cite{subramanian_gene_2005}\cite{kanehisa_new_2019} \cite{ashburner_gene_2000}. However, all of these criteria are tissue agnostic. Some attempts to include tissue-specific information has been proposed \cite{frost_computation_2018} \cite{greene_understanding_2015}, but these attempts have limitations. We propose to produce tissue specific gene sets by applying multiple dataset integration (MDI) \cite{kirk_bayesian_2012} (a Bayesian unsupervised clustering method) to the CEDAR cohort \cite{the_international_ibd_genetics_consortium_ibd_2018}.
+%		\emph{A priori} defined gene sets are key to gene set enrichment analysis (GSEA) \cite{subramanian_gene_2005}. Gene sets are constructed through linking genes by some common feature. This can be a function, the location of the gene product, the participation of the product in some metabolic or signalling pathway, the protein structure, the presence of transcription-factor-binding sites or other regulatory elements, the participation in multiprotein complexes, etc. \cite{szklarczyk_string_2019}\cite{subramanian_gene_2005}\cite{kanehisa_new_2019} \cite{ashburner_gene_2000}. However, all of these criteria are tissue agnostic. Some attempts to include tissue specific information has been proposed \cite{frost_computation_2018} \cite{greene_understanding_2015}, but these attempts have limitations. We propose to produce tissue specific gene sets by applying multiple dataset integration (MDI) \cite{kirk_bayesian_2012} (a Bayesian unsupervised clustering method) to the CEDAR cohort \cite{the_international_ibd_genetics_consortium_ibd_2018}.
 %	\end{abstract}
 
 
@@ -243,10 +248,15 @@
 	
 	%\vspace{-1.0cm}
 	
+%	\section{Abstract}
+%	\emph{A priori} defined gene sets are key to gene set enrichment analysis \cite{subramanian_gene_2005} a powerful tool in genetic analysis. Gene sets are constructed through linking genes by some common feature. This can be a function, the location of the gene product, the participation of the product in some metabolic or signalling pathway, the protein structure, the presence of transcription-factor-binding sites or other regulatory elements, the participation in multiprotein complexes, or any one of several other definitions \cite{szklarczyk_string_2019}\cite{subramanian_gene_2005}\cite{kanehisa_new_2019}\cite{ashburner_gene_2000}. However, all of these criteria are tissue agnostic.
+%	%				Some attempts to include tissue specific information has been proposed \cite{frost_computation_2018}\cite{greene_understanding_2015}, but these attempts have limitations.
+%	We propose to produce tissue specific gene sets by applying multiple dataset integration \cite{kirk_bayesian_2012} (a Bayesian unsupervised clustering method) to the CEDAR cohort \cite{the_international_ibd_genetics_consortium_ibd_2018}, a dataset of 9 tissue / cell types.
+	
 	\section{Introduction}
 	This project, which consists of applying a Bayesian unsupervised clustering method across multiple datasets to define tissue specific gene sets, is interesting on a number of fronts. It provides a chance to learn relevant, topical biology in understanding gene sets, the role context plays in gene expression and to learn the basics of immunology. From an informatics / statistics perspective, Bayesian inference, unsupervised clustering and the use of multiple datasets are all interesting. These are relevant skills to both industry and research that I wish to develop.
 	
-	Beyond developing new skills, this project also offers the opportunity to be involved in relevant research; gene sets are commonly used. Thus if we can produce sets that are informed by the context of interest, it could be relevant to many researchers. Gene sets that are informed of tissue specific information should enable researchers investigating tissue specific diseases such as inflammatory bowel disease; this research is not solely of interest to the scientific community, but potentially has downstream significance for society at large.
+	Beyond developing new skills, this project also offers the opportunity to be involved in relevant research. Gene sets are commonly used in genetic analyses, thus if we can produce sets that are informed by the context of interest, it could be relevant to many researchers. Gene sets that are informed of tissue specific information should enable researchers investigating tissue specific diseases such as inflammatory bowel disease (IBD); this research is not solely of interest to the scientific community, but potentially has downstream significance for society at large with regards to deeper biological understanding of the genetic underpinnings of disease.
 	
 	In short, this project is exciting from the perspective of both personal development and research.
 	
@@ -258,7 +268,7 @@
 	\begin{align}
 	p(x_i) = \sum_{k=1}^K \pi_k f(x_i | \theta_k)
 	\end{align}
-	We carry out Bayesian inference of this model using MCMC methods. Specifically we use a Gibbs sampler. We sample first the component parameters, $\theta_k$, and associated weights, $\pi_k$, from the associated distributions and then sample component membership.
+	We carry out Bayesian inference of this model using Markov chain Monte Carlo methods. We sample first the component parameters, $\theta_k$, and associated weights, $\pi_k$, from the associated distributions and then sample component membership.
 	
 	Basically:
 	\begin{enumerate}
@@ -334,27 +344,30 @@
 %	in the experiment \cite{dixon_genome-wide_2007}. For some context, \citet{burgess_gene_2017} claims 
 %	that 449 donors provide low power in terms of finding trans-eQTL. As the power of experiments increases 
 %	more trans-eQTL are observed and cis-eQTL are shown to be generally tissue agnostic 
-%	\cite{gtex_consortium_genetic_2017}. Previous results suggested cis-eQTL would be have tissue-specific effects, 
+%	\cite{gtex_consortium_genetic_2017}. Previous results suggested cis-eQTL would be have tissue specific effects, 
 %	but the increase in experimental power revealed that this is not the case \cite{grundberg_mapping_2012}. 
 %	The current power present in many genetic experiments is enough to observe trans-eQTLs and indicates 
-%	these have tissue-specific properties \cite{grundberg_mapping_2012}\cite{gtex_consortium_genetic_2017}. It is possible that this result might be shown as an artefact of insufficient power, much as initial analysis suggested cis-eQTL had tissue-specific properties. However, for now we assume it is true and that trans-eQTL are more likely to display tissue-specific behaviour 
+%	these have tissue specific properties \cite{grundberg_mapping_2012}\cite{gtex_consortium_genetic_2017}. It is possible that this result might be shown as an artefact of insufficient power, much as initial analysis suggested cis-eQTL had tissue specific properties. However, for now we assume it is true and that trans-eQTL are more likely to display tissue specific behaviour 
 %	than cis-eQTL.
 	
 	\subsection{Tissue specificity} \label{sec:tissue_specificity}
 	Cell-type specific gene pathways are pivotal in differentiating tissue function, implicated in hereditary organ failure, and mediate acquired chronic disease \cite{ju_defining_2013}. More and more evidence is being accrued to highlight the cell-type specific level of gene expression \cite{grundberg_mapping_2012}\cite{ong_enhancer_2011}\cite{maniatis_regulation_1987}. 
 	
-%	Beyond healthy variation in gene expression across tissues, in the  area of immunology many diseases are tissue-specific and have strong associations to genetic pre-disposition
+%	Beyond healthy variation in gene expression across tissues, in the  area of immunology many diseases are tissue specific and have strong associations to genetic pre-disposition
 	
-	We also see that there are many auto-immune disease, normally associated with a specific tissue type, that have strong genetic associations. This implies tissue-specific metabolic pathways.  \cite{vyse_genetic_1996}\cite{maas_cutting_2002}\cite{aune_co-localization_2004}\cite{botstein_discovering_2003}.
+	We also see that there are many auto-immune disease, normally associated with a specific tissue type, that have strong genetic associations. This implies tissue specific metabolic pathways  \cite{vyse_genetic_1996}\cite{maas_cutting_2002}\cite{aune_co-localization_2004}\cite{botstein_discovering_2003}.
 	
 	This implies that genes have context-specific interactions that should be considered in analysis.
 	
 	\subsection{Gene sets}
-	With the onset of microarrays and RNAseq, producing gene expression data in large quantities for a wide number of genes is increasingly enabled. Unfortunately the large amount of data gifted onto the genomics community by these methods is difficult to interpret and analyse. Gene Set Enrichment Analysis (GSEA) attempts to overcome some of these issues by analysing pre-defined gene sets and changes in the expression of the full set rather than considering each constituent member on an individual basis \cite{mooney_gene_2015}. Furthermore, we know from Genome Wide Association Studies (GWAS) that many diseases are polygenic in nature \cite{mooney_gene_2015}. Thus clustering genes into groups known as ``gene sets'' is natural and useful from both a biological and statistical perspective - it can increase the interpretability and the power of an analysis \cite{nica_expression_2013}\cite{vosa_unraveling_2018}.
+	With the onset of microarrays and RNAseq, producing gene expression data in large quantities for a wide number of genes is increasingly enabled. Unfortunately the large amount of data gifted onto the genomics community by these methods is difficult to interpret and analyse. Gene Set Enrichment Analysis (GSEA) attempts to overcome some of these issues by analysing pre-defined gene sets and changes in the expression of the full set rather than considering each constituent member on an individual basis \cite{mooney_gene_2015}. Consider, that in analysing gene sets as a group, the degree of perturbation in the expression of the full gene set due to the disease state / alternative phenotype that is required to be considered significant is much less than that required in analysing each of its constituent members individually \cite{dudbridge_power_2013}\cite{wray_research_2014}. This use of gene sets can increase the power of the analysis.
 	
-	In analysing gene sets as a group, the degree of perturbation in the expression of the full gene set due to the disease state / alternative phenotype that is required to be considered significant is much less than that required in analysing each of its constituent members individually \cite{dudbridge_power_2013}\cite{wray_research_2014}. \citet{subramanian_gene_2005} claim that within a single metabolic pathway an increase of $20\%$ in all the associated gene products may be more important than a 20-fold increase in a single gene.
+	Furthermore, we know from Genome Wide Association Studies (GWAS) that many diseases are polygenic in nature \cite{mooney_gene_2015}. Furthermore, \citet{subramanian_gene_2005} highlight the importance of gene sets, claiming that within a single metabolic pathway an increase of $20\%$ in all the associated gene products may be more important than a 20-fold increase in a single gene.
 	
-	It is clear that well-defined gene sets are an integral part of analysing genomic data. However, the problem of defining gene sets is non-trivial with many variations in-use. There exist many databases of gene sets \cite{ashburner_gene_2000}\cite{kanehisa_new_2019}\cite{szklarczyk_string_2019}. The Molecular Signature Database \cite{subramanian_gene_2005} (MSigDB) is one of the most popular resources for GSEA and encompasses many different gene sets defined under various criteria or generated from separate resources. However, none of these definitions of a ``set'' incorporate tissue specific information. We believe that this is a grave oversight as there is evidence that some genes are involved in tissue-specific pathways (see section \ref{sec:tissue_specificity}). Thus we propose defining tissue-specific gene sets. Previous attempts to achieve this have used the Genotype Tissue Expression (GTEx) database \cite{gtex_consortium_genetic_2017}\cite{lonsdale_genotype-tissue_2013}, but the donors for this database are all deceased. We suspect that the data derived from these cells may not contain the same information as that collected from living, active cells.
+	Thus clustering genes into groups known as ``gene sets'' is natural and useful from both a biological and statistical perspective - it can increase the interpretability and the power of an analysis \cite{nica_expression_2013}\cite{vosa_unraveling_2018}.
+	
+	However, the problem of defining gene sets is non-trivial with many variations in-use. There exist many databases of gene sets \cite{ashburner_gene_2000}\cite{kanehisa_new_2019}\cite{szklarczyk_string_2019}. The Molecular Signature Database \cite{subramanian_gene_2005} (MSigDB) is one of the most popular resources for GSEA and encompasses many different gene sets defined under various criteria or generated from separate resources. However, none of these definitions of a ``set'' incorporate tissue specific information. We believe that this is a grave oversight as there is evidence that some genes are involved in tissue specific pathways (see section \ref{sec:tissue_specificity}). Thus we propose defining tissue specific gene sets. Previous attempts to achieve this have used the Genotype Tissue Expression (GTEx) \cite{gtex_consortium_genetic_2017} database \cite{lonsdale_genotype-tissue_2013}, but here the profiles are for human donors
+	post-mortem. We suspect that the data derived from these cells may not contain the same information as that collected from living, active cells. Furthermore, the GTEx data is across many different tissues (144 are used in \cite{lonsdale_genotype-tissue_2013}), but we focus on cell types relevant to autoimmune disease in general (i.e. blood cells) and IBD in particular (intestinal samples). This restricted focus should offer relevant gene sets.
 		
 %	\subsection{The importance of gene sets}
 %	If we can cluster genes together it is possible that we can find deeper biological interpretation, understanding the context of the gene products and what they interact with. This can offer some insight into the connection between the gene and the expressed phenotype. Furthermore, \citet{nica_expression_2013} recommend investigating groups of cis-eQTL affecting a gene network that when perturbed results in a disease state. They claim this is far higher powered than the classical approach. This claim is supported by the findings of \citet{vosa_unraveling_2018} who found that associations between \emph{polygenic risk scores} and gene expression (this association is referred to as ``expression quantitative trait score'' (eQTS) in \cite{vosa_unraveling_2018}) contained the most biological information about disease in a comparison of cis-eQTL, trans-EQTL and eQTS. This finding is not unique to this paper \cite{dudbridge_power_2013}\cite{wray_research_2014}. More generally, gene set enrichment analysis (GSEA) \cite{subramanian_gene_2005}\cite{mooney_gene_2015} relies upon pre-defined gene sets. This method determines if gene sets have statistically significant, concordant differences between phenotypes and offers biological interpretation of the sets. Thus well-defined gene sets are required for informative, interpretable analysis of genomic information.
@@ -389,7 +402,7 @@
 	\end{itemize} 
 	Not every individual is present in every dataset. However, as we are clustering genes this should not present a problem.
 	
-	Whole genome expression data were generated using HT-12 Expression Beadchips following the instructions of the manufacturer (Illumina). $29,464$ autosomal probes (corresponding to 19,731 genes) were included across the datasets, but further thinning under various criteria (such as call rate, deviation from Hardy-Weinberg equilibrium) reduced this further. Fluorescence intensities were $\log_2$ transformed and Robust Spline Normalized (RSN) with Lumi38.
+	Whole genome expression data were generated using HT-12 Expression Beadchips following the instructions of the manufacturer (Illumina). $29,464$ autosomal probes (corresponding to 19,731 genes) were included across the datasets, but further thinning under various criteria (such as call rate, deviation from Hardy-Weinberg equilibrium) reduced this further in each dataset. The fluorescence intensities were $\log_2$ transformed and Robust Spline Normalized with Lumi38.
 	
 	It should be noted that some datasets are less information rich than others (for instance the platelets dataset has only around 8 thousand probes present). 
 	

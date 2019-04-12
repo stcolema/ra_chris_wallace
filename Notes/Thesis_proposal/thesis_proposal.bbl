@@ -1,4 +1,4 @@
-\begin{thebibliography}{27}
+\begin{thebibliography}{24}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -50,31 +50,6 @@ Frank Dudbridge.
 \newblock \doi{10.1371/journal.pgen.1003348}.
 \newblock URL \url{https://dx.plos.org/10.1371/journal.pgen.1003348}.
 
-\bibitem[Frost(2018)]{frost_computation_2018}
-H~Robert Frost.
-\newblock Computation and application of tissue-specific gene set weights.
-\newblock \emph{Bioinformatics}, 34\penalty0 (17):\penalty0 2957--2964,
-  September 2018.
-\newblock ISSN 1367-4803, 1460-2059.
-\newblock \doi{10.1093/bioinformatics/bty217}.
-\newblock URL
-  \url{https://academic.oup.com/bioinformatics/article/34/17/2957/4962491}.
-
-\bibitem[Greene et~al.(2015)Greene, Krishnan, Wong, Ricciotti, Zelaya,
-  Himmelstein, Zhang, Hartmann, Zaslavsky, Sealfon, Chasman, FitzGerald,
-  Dolinski, Grosser, and Troyanskaya]{greene_understanding_2015}
-Casey~S Greene, Arjun Krishnan, Aaron~K Wong, Emanuela Ricciotti, Rene~A
-  Zelaya, Daniel~S Himmelstein, Ran Zhang, Boris~M Hartmann, Elena Zaslavsky,
-  Stuart~C Sealfon, Daniel~I Chasman, Garret~A FitzGerald, Kara Dolinski, Tilo
-  Grosser, and Olga~G Troyanskaya.
-\newblock Understanding multicellular function and disease with human
-  tissue-specific networks.
-\newblock \emph{Nature Genetics}, 47\penalty0 (6):\penalty0 569--576, June
-  2015.
-\newblock ISSN 1061-4036, 1546-1718.
-\newblock \doi{10.1038/ng.3259}.
-\newblock URL \url{http://www.nature.com/articles/ng.3259}.
-
 \bibitem[Grundberg et~al.(2012)Grundberg, Small, Hedman, Nica, Buil, Keildson,
   Bell, Yang, Meduri, Barrett, Nisbett, Sekowska, Wilk, Shin, Glass, Travers,
   Min, Ring, Ho, Thorleifsson, Kong, Thorsteindottir, Ainali, Dimas, Hassanali,
@@ -109,18 +84,6 @@ Elin Grundberg, Kerrin~S Small, Åsa~K Hedman, Alexandra~C Nica, Alfonso Buil,
 \newblock ISSN 0028-0836, 1476-4687.
 \newblock \doi{10.1038/nature24277}.
 \newblock URL \url{http://www.nature.com/articles/nature24277}.
-
-\bibitem[Huber et~al.(2002)Huber, von Heydebreck, Sultmann, Poustka, and
-  Vingron]{huber_variance_2002}
-W.~Huber, A.~von Heydebreck, H.~Sultmann, A.~Poustka, and M.~Vingron.
-\newblock Variance stabilization applied to microarray data calibration and to
-  the quantification of differential expression.
-\newblock \emph{Bioinformatics}, 18\penalty0 (Suppl 1):\penalty0 S96--S104,
-  July 2002.
-\newblock ISSN 1367-4803, 1460-2059.
-\newblock \doi{10.1093/bioinformatics/18.suppl_1.S96}.
-\newblock URL
-  \url{https://academic.oup.com/bioinformatics/article-lookup/doi/10.1093/bioinformatics/18.suppl_1.S96}.
 
 \bibitem[Ju et~al.(2013)Ju, Greene, Eichinger, Nair, Hodgin, Bitzer, Lee, Zhu,
   Kehata, Li, Jiang, Rastaldi, Cohen, Troyanskaya, and

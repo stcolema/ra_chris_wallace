@@ -4,45 +4,45 @@ The top-level auxiliary file: thesis_proposal.aux
 The style file: plainnat.bst
 Database file #1: proposal_zotero.bib
 Warning--empty publisher in mackay_information_2003
-You've used 27 entries,
+You've used 24 entries,
             2773 wiz_defined-function locations,
-            838 strings with 19552 characters,
-and the built_in function-call counts, 32951 in all, are:
-= -- 2534
-> -- 4123
-< -- 9
-+ -- 1377
-- -- 1350
-* -- 3607
-:= -- 5615
-add.period$ -- 156
-call.type$ -- 27
-change.case$ -- 531
-chr.to.int$ -- 27
-cite$ -- 55
-duplicate$ -- 551
-empty$ -- 1078
-format.name$ -- 1387
-if$ -- 6298
+            814 strings with 18464 characters,
+and the built_in function-call counts, 30692 in all, are:
+= -- 2332
+> -- 3927
+< -- 8
++ -- 1311
+- -- 1287
+* -- 3374
+:= -- 5246
+add.period$ -- 138
+call.type$ -- 24
+change.case$ -- 501
+chr.to.int$ -- 24
+cite$ -- 49
+duplicate$ -- 489
+empty$ -- 953
+format.name$ -- 1321
+if$ -- 5849
 int.to.chr$ -- 1
 int.to.str$ -- 1
-missing$ -- 27
-newline$ -- 218
-num.names$ -- 108
-pop$ -- 944
+missing$ -- 24
+newline$ -- 194
+num.names$ -- 96
+pop$ -- 898
 preamble$ -- 1
-purify$ -- 504
+purify$ -- 477
 quote$ -- 0
-skip$ -- 756
+skip$ -- 702
 stack$ -- 0
-substring$ -- 690
-swap$ -- 53
+substring$ -- 600
+swap$ -- 47
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 292
+type$ -- 259
 warning$ -- 1
-while$ -- 125
+while$ -- 110
 width$ -- 0
-write$ -- 505
+write$ -- 448
 (There was 1 warning)
