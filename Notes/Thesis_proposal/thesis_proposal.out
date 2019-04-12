@@ -1,13 +1,10 @@
-\BOOKMARK [1][-]{section.1}{Theory}{}% 1
-\BOOKMARK [2][-]{subsection.1.1}{Mixture models}{section.1}% 2
-\BOOKMARK [2][-]{subsection.1.2}{Bayesian inference}{section.1}% 3
-\BOOKMARK [2][-]{subsection.1.3}{Multiple dataset integration}{section.1}% 4
-\BOOKMARK [2][-]{subsection.1.4}{Expression quantitative trait loci}{section.1}% 5
-\BOOKMARK [2][-]{subsection.1.5}{Gene sets}{section.1}% 6
-\BOOKMARK [2][-]{subsection.1.6}{The importance of gene sets}{section.1}% 7
-\BOOKMARK [2][-]{subsection.1.7}{Existing databases}{section.1}% 8
-\BOOKMARK [2][-]{subsection.1.8}{Tissue specificity}{section.1}% 9
-\BOOKMARK [1][-]{section.2}{Data}{}% 10
-\BOOKMARK [1][-]{section.3}{Methods}{}% 11
-\BOOKMARK [2][-]{subsection.3.1}{Data preparation}{section.3}% 12
-\BOOKMARK [1][-]{section*.1}{References}{}% 13
+\BOOKMARK [1][-]{section.1}{Introduction}{}% 1
+\BOOKMARK [1][-]{section.2}{Theory}{}% 2
+\BOOKMARK [2][-]{subsection.2.1}{Mixture models}{section.2}% 3
+\BOOKMARK [2][-]{subsection.2.2}{Bayesian inference}{section.2}% 4
+\BOOKMARK [2][-]{subsection.2.3}{Multiple dataset integration}{section.2}% 5
+\BOOKMARK [2][-]{subsection.2.4}{Tissue specificity}{section.2}% 6
+\BOOKMARK [2][-]{subsection.2.5}{Gene sets}{section.2}% 7
+\BOOKMARK [1][-]{section.3}{Data}{}% 8
+\BOOKMARK [1][-]{section.4}{Methods}{}% 9
+\BOOKMARK [1][-]{section*.1}{References}{}% 10

@@ -1,4 +1,4 @@
-\begin{thebibliography}{28}
+\begin{thebibliography}{27}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -41,28 +41,6 @@ David Botstein and Neil Risch.
 \newblock ISSN 1061-4036, 1546-1718.
 \newblock \doi{10.1038/ng1090}.
 \newblock URL \url{http://www.nature.com/articles/ng1090z}.
-
-\bibitem[Burgess(2017)]{burgess_gene_2017}
-Darren~J. Burgess.
-\newblock Gene expression: {Principles} of gene regulation across tissues.
-\newblock \emph{Nature Reviews Genetics}, 18\penalty0 (12):\penalty0 701--701,
-  November 2017.
-\newblock ISSN 1471-0056, 1471-0064.
-\newblock \doi{10.1038/nrg.2017.94}.
-\newblock URL \url{http://www.nature.com/doifinder/10.1038/nrg.2017.94}.
-
-\bibitem[Dixon et~al.(2007)Dixon, Liang, Moffatt, Chen, Heath, Wong, Taylor,
-  Burnett, Gut, Farrall, Lathrop, Abecasis, and
-  Cookson]{dixon_genome-wide_2007}
-Anna~L Dixon, Liming Liang, Miriam~F Moffatt, Wei Chen, Simon Heath, Kenny C~C
-  Wong, Jenny Taylor, Edward Burnett, Ivo Gut, Martin Farrall, G~Mark Lathrop,
-  Gonçalo~R Abecasis, and William O~C Cookson.
-\newblock A genome-wide association study of global gene expression.
-\newblock \emph{Nature Genetics}, 39\penalty0 (10):\penalty0 1202--1207,
-  October 2007.
-\newblock ISSN 1061-4036, 1546-1718.
-\newblock \doi{10.1038/ng2109}.
-\newblock URL \url{http://www.nature.com/articles/ng2109}.
 
 \bibitem[Dudbridge(2013)]{dudbridge_power_2013}
 Frank Dudbridge.
@@ -131,6 +109,18 @@ Elin Grundberg, Kerrin~S Small, Åsa~K Hedman, Alexandra~C Nica, Alfonso Buil,
 \newblock ISSN 0028-0836, 1476-4687.
 \newblock \doi{10.1038/nature24277}.
 \newblock URL \url{http://www.nature.com/articles/nature24277}.
+
+\bibitem[Huber et~al.(2002)Huber, von Heydebreck, Sultmann, Poustka, and
+  Vingron]{huber_variance_2002}
+W.~Huber, A.~von Heydebreck, H.~Sultmann, A.~Poustka, and M.~Vingron.
+\newblock Variance stabilization applied to microarray data calibration and to
+  the quantification of differential expression.
+\newblock \emph{Bioinformatics}, 18\penalty0 (Suppl 1):\penalty0 S96--S104,
+  July 2002.
+\newblock ISSN 1367-4803, 1460-2059.
+\newblock \doi{10.1093/bioinformatics/18.suppl_1.S96}.
+\newblock URL
+  \url{https://academic.oup.com/bioinformatics/article-lookup/doi/10.1093/bioinformatics/18.suppl_1.S96}.
 
 \bibitem[Ju et~al.(2013)Ju, Greene, Eichinger, Nair, Hodgin, Bitzer, Lee, Zhu,
   Kehata, Li, Jiang, Rastaldi, Cohen, Troyanskaya, and
@@ -245,15 +235,17 @@ T~Maniatis, S~Goodbourn, and J.~Fischer.
 \newblock \doi{10.1126/science.3296191}.
 \newblock URL \url{http://www.sciencemag.org/cgi/doi/10.1126/science.3296191}.
 
-\bibitem[Manolio(2010)]{feero_genomewide_2010}
-Teri~A. Manolio.
-\newblock Genomewide {Association} {Studies} and {Assessment} of the {Risk} of
-  {Disease}.
-\newblock \emph{New England Journal of Medicine}, 363\penalty0 (2):\penalty0
-  166--176, July 2010.
-\newblock ISSN 0028-4793, 1533-4406.
-\newblock \doi{10.1056/NEJMra0905980}.
-\newblock URL \url{http://www.nejm.org/doi/10.1056/NEJMra0905980}.
+\bibitem[Mason et~al.(2016)Mason, Sayyid, Kirk, Starr, and
+  Wild]{mason_mdi-gpu:_2016}
+Samuel~A. Mason, Faiz Sayyid, Paul~D.W. Kirk, Colin Starr, and David~L. Wild.
+\newblock {MDI}-{GPU}: accelerating integrative modelling for genomic-scale
+  data using {GP}-{GPU} computing.
+\newblock \emph{Statistical Applications in Genetics and Molecular Biology},
+  15\penalty0 (1), January 2016.
+\newblock ISSN 1544-6115, 2194-6302.
+\newblock \doi{10.1515/sagmb-2015-0055}.
+\newblock URL
+  \url{https://www.degruyter.com/view/j/sagmb.2016.15.issue-1/sagmb-2015-0055/sagmb-2015-0055.xml}.
 
 \bibitem[Mooney and Wilmot(2015)]{mooney_gene_2015}
 Michael~A. Mooney and Beth Wilmot.
