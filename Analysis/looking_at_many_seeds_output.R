@@ -64,7 +64,7 @@ probes_present_dt <- fread("Analysis/probes_present_per_dataset.csv")
 probe_key <- fread("Analysis/probe_key.csv")
 
 # Read in the MDI output file
-file_path <- "/home/MINTS/sdc56/Desktop/matlab_output/"
+file_path <- "/home/MINTS/sdc56/Desktop/Many_seeds_output/"
 # file_path <- "Analysis/MDI_runs/vsn_many_seeds/"
 
 # Create the common save path
@@ -80,7 +80,7 @@ mdi_output_files <- list.files(path = file_path, full.names = T, include.dirs = 
   grep("csv", ., value = TRUE)
 
 # mdi_output_files_2 <- "/home/MINTS/sdc56/Desktop/subset_data/Small/Filled_data/output/out_seed_3.csv"
-mdi_output_files <- "/home/MINTS/sdc56/Desktop/matlab_output/CD14_sma_mat_CD19_sma_mat_CD4_sma_mat_CD8_sma_mat_IL_sma_mat_RE_sma_mat_TR_sma_mat_4_mcmcSamples.csv"
+# mdi_output_files <- "/home/MINTS/sdc56/Desktop/matlab_output/CD14_sma_mat_CD19_sma_mat_CD4_sma_mat_CD8_sma_mat_IL_sma_mat_RE_sma_mat_TR_sma_mat_4_mcmcSamples.csv"
 # mdi_output_files <- "/home/MINTS/sdc56/Desktop/CD14_small_text_CD4_small_text_2_mcmcSamples.csv"
 
 num_files <- length(mdi_output_files)
@@ -103,7 +103,7 @@ col_names <- paste0("D", 1:num_datasets)
 
 # The number of genes is the number of columns in the mcmc_output
 # exclusing the columns containing information on the phi and mass parameters
-n_genes <- NA # SPECIFIC TO CURRENT RUN
+n_genes <- 18524 # SPECIFIC TO CURRENT RUN
 
 
 # The actual names of the datasets are
@@ -146,7 +146,7 @@ if (!data_written) {
   # mcmc_output <- readMdiMcmcOutput(mdi_output_file)
   
   # clust_occ <- mcmc_out_lst %>%
-    # lapply(getClustersOccupied)
+  # lapply(getClustersOccupied)
   
   # clust_occ <- getClustersOccupied(mcmc_output)
   # head(clust_occ)
@@ -225,6 +225,10 @@ if (!data_written) {
       mdi_allocation[[i]] <- .mdi_alloc <- mcmc_out_lst[[j]] %>% 
         dplyr::select(contains(dataset_name))
       
+      # mdi_pos_sim_mat[[i]][[1]] <- .sim_mat <- similarity_mat(t(.mdi_alloc[,1:1000]))
+      mdi_pos_sim_mat[[i]] <- .sim_mat <- similarity_mat(as.matrix(.mdi_alloc))
+      pheatmap(.sim_mat)
+      
       if(i == 1){
         probe_names <- colnames(.mdi_alloc) %>% 
           stringr::str_remove_all(paste0(dataset_name, "_")) %>% 
@@ -234,6 +238,7 @@ if (!data_written) {
       colnames(.mdi_alloc) <- probe_names
       
       compare_tibble$mdi_allocation[i + (j - 1) * num_files][[1]] <- .mdi_alloc
+      
       
       # sams_pos_sim <- genPosteriourSimilarityMatrix(.mdi_alloc)
       #
@@ -278,7 +283,7 @@ if (do_heatplot_clusterings) {
   
   # Define the type of file to save
   # plot_type <- ".pdf" # ".png" or ".pdf"
-
+  
   for (j in 1:num_files) {
     curr_save_path <- paste0(save_path, "seed_", j)
     # Iterate over datasets
@@ -332,49 +337,49 @@ if (do_rand_plot) {
   rand <- list()
   rand_plots <- list()
   
-
-  for (j in 1:num_files) {
   
-  # Loop over the datasets
-  for (i in 1:num_datasets) {
-    # The current dataset name
-    dataset <- dataset_names[[i]]
+  for (j in 1:num_files) {
     
-    # Append this to the generic title to create the specific title
-    curr_title <- paste(generic_title, dataset)
-    
-    # Similarly for the name of the save file
-    curr_save_file <- paste0(generic_save_name, "rand_index_plot_", dataset, plot_type)
-    
-    # Create a vector of the adjusted rand index comparing the modal cluster
-    # to the clustering at each iteration
-    rand[[i + (j - 1) * num_files]] <- apply(
-      compare_tibble$mdi_allocation[i + (j - 1) * num_files][[1]],
-      # mdi_allocation[[i]],
-      1,
-      mclust::adjustedRandIndex,
-      compare_tibble$pred_allocation[i + (j - 1) * num_files][[1]]
-      # compare_df[, i]
-    )
-    
-    # As we use ggplot2, put this in a dataframe
-    plot_data <- data.frame(Rand_index = rand[[i]], Iteration = 1:length(rand[[i]]))
-    
-    # Plot the Rand index against iteration number
-    rand_plots[[i]] <- ggplot2::ggplot(data = plot_data) +
-      ggplot2::geom_point(ggplot2::aes(x = Iteration, y = Rand_index)) +
-      ggplot2::labs(
-        title = curr_title,
-        subtitle = "Comparing modal clustering to clustering at each iteration",
-        x = "Index",
-        y = "Adjusted Rand Index"
+    # Loop over the datasets
+    for (i in 1:num_datasets) {
+      # The current dataset name
+      dataset <- dataset_names[[i]]
+      
+      # Append this to the generic title to create the specific title
+      curr_title <- paste(generic_title, dataset)
+      
+      # Similarly for the name of the save file
+      curr_save_file <- paste0(generic_save_name, "rand_index_plot_", dataset, plot_type)
+      
+      # Create a vector of the adjusted rand index comparing the modal cluster
+      # to the clustering at each iteration
+      rand[[i + (j - 1) * num_files]] <- apply(
+        compare_tibble$mdi_allocation[i + (j - 1) * num_files][[1]],
+        # mdi_allocation[[i]],
+        1,
+        mclust::adjustedRandIndex,
+        compare_tibble$pred_allocation[i + (j - 1) * num_files][[1]]
+        # compare_df[, i]
       )
-    
-    if (save_plots) {
-      # Save the plot
-      ggplot2::ggsave(curr_save_file, plot = rand_plots[[i]])
+      
+      # As we use ggplot2, put this in a dataframe
+      plot_data <- data.frame(Rand_index = rand[[i]], Iteration = 1:length(rand[[i]]))
+      
+      # Plot the Rand index against iteration number
+      rand_plots[[i]] <- ggplot2::ggplot(data = plot_data) +
+        ggplot2::geom_point(ggplot2::aes(x = Iteration, y = Rand_index)) +
+        ggplot2::labs(
+          title = curr_title,
+          subtitle = "Comparing modal clustering to clustering at each iteration",
+          x = "Index",
+          y = "Adjusted Rand Index"
+        )
+      
+      if (save_plots) {
+        # Save the plot
+        ggplot2::ggsave(curr_save_file, plot = rand_plots[[i]])
+      }
     }
-  }
   }
 }
 
@@ -478,47 +483,20 @@ if (do_individual_comparison) {
 # === Some EDA =================================================================
 
 # Possibly need to rearrange based on call order
-compare_df <- data.frame(matrix(ncol = num_datasets, nrow = n_genes))
-
-colnames(compare_df) <- dataset_names
-row.names(compare_df) <- probe_names
-
-for (set in dataset_names){
-  compare_df[[set]] <- compare_tibble$pred_allocation[compare_tibble$dataset == set][[1]]
-}
+# compare_df <- compare_df[, c(4,5,1,2,6,7,3,8,9)]
 
 # Check the number and vlaues of clusters present
 clusters_present <- apply(compare_df, 2, unique)
 
-# Find which probes are relevant from the full set
-probes_actually_present_ind <- probes_present_dt %>% 
-  magrittr::use_series("V1") %>% 
-  magrittr::is_in(probe_names)
-
-# Select these
-probes_actually_present <- probes_present_dt[probes_actually_present_ind, ]
-
-# Find the appropriate order
-probes_order <- match(probe_names, probes_actually_present$V1)
-
-# Order the probes so comparable to allocation data frame
-probes_present_ordered <- probes_actually_present[probes_order, ] %>% 
-  as.data.frame()
-
-# Remove the irrelevant columns and set row names
-probes_present_final <- probes_present_ordered %>% 
-  magrittr::set_rownames(probes_actually_present$V1) %>% 
-  magrittr::extract( , -c(1, 3, 8))
-
 # Set the row names
-# row.names(probes_present_dt) <- probes_present_dt$V1
+row.names(probes_present_dt) <- probes_present_dt$V1
 
 # Remove the ID column
-# probes_present_dt_no_V1 <- probes_present_dt[, -1]
+probes_present_dt_no_V1 <- probes_present_dt[, -1]
 
 # Create a new dataframe with 0's for the probes not present in that dataframe
 # and the allocation label otherwise
-compare_df_2 <- as.matrix(compare_df) * as.matrix(probes_present_final)
+compare_df_2 <- as.matrix(compare_df) * as.matrix(probes_present_dt_no_V1)
 
 # compare_df_2[compare_df_2 == 0] <- NA
 
@@ -536,8 +514,8 @@ head(compare_df_2)
 
 n_clust <- length(unique(c(compare_df_2)))
 old_labels <- sort(unique(c(compare_df_2)))
-new_labels <- 0:(n_clust - 1)
-# new_labels[1] <- -1
+new_labels <- 1:n_clust
+new_labels[1] <- -1
 key <- data.frame(old = old_labels, new = new_labels)
 
 # Create a dataframe with the new labels
@@ -550,8 +528,8 @@ compare_df_old_labels[] <- key$new[match(unlist(compare_df), key$old)]
 
 # col_pal <- sort(brewer.pal(15, "Blues"), T)
 
-col_pal_old <- c("#DDDDDD", rev(brewer.pal(n = 6, "RdYlBu"))) # name = "RdYlBu")))
-col_pal <- c(rev(brewer.pal(n = 6, "RdYlBu"))) # name = "RdYlBu")))
+col_pal_old <- c("#DDDDDD", rev(brewer.pal(n = 11, "RdYlBu"))) # name = "RdYlBu")))
+col_pal <- c(rev(brewer.pal(n = 11, "RdYlBu"))) # name = "RdYlBu")))
 
 
 ph_full <- pheatmap(compare_df_new_labels,
@@ -586,7 +564,7 @@ cluster_ph <- rep(cluster_ph_int, num_files)
 col_pal <- col_pal_old
 
 # Create the common save path
-# save_path <- "Analysis/MDI_runs/vsn_many_seeds/"
+save_path <- "Analysis/MDI_runs/vsn_many_seeds/"
 
 # lie <- matrix(unlist(compare_tibble$Pred_allocation), nrow = 18524, ncol= 7)
 # 
@@ -595,70 +573,68 @@ col_pal <- col_pal_old
 #          main = title,
 #          filename = file_name)
 
-# for(i in 1:num_files){
-#   for(j in 1:num_datasets){
-#     
-#     curr_save_path <- paste0(save_path, "seed_", j)
-#     
-#     # Find the dataset name
-#     dataset <- dataset_names[[i]]
-#     
-#     # Create the save location and file name
-#     file_name <- paste0(curr_save_path, "predicted_clustering_", dataset, plot_type)
-#     
-#     # Create the title of the plot
-#     title <- paste0(dataset, ": predicted clustering")
-#     
-#     # If saving plots, save them
-#     if (save_plots) {
-#       
-#       # Take row order from first seed to compare across seeds
-#       if(j == 1){
-#         cluster_ph[[i]][[j]] <- pheatmap(compare_tibble$Pred_allocation[[j]],
-#                                          color = col_pal,
-#                                          main = title,
-#                                          filename = file_name
-#         )
-#         
-#         row_order[[i]] <- cluster_ph[[i]][[j]]$tree_row$order
-#         
-#       } else {
-#         cluster_ph[[i]][[j]] <- pheatmap(compare_tibble$Pred_allocation[[j]][row_order[[i]], ],
-#                                          color = col_pal,
-#                                          cluster_rows = F,
-#                                          main = title,
-#                                          filename = file_name
-#         )
-#       }
-#     } else {
-#       if(j == 1){
-#         cluster_ph[[i]][[j]] <- pheatmap(compare_tibble$Pred_allocation,
-#                                          color = col_pal
-#         )
-#         
-#         row_order[[i]] <- cluster_ph[[i]][[j]]$tree_row$order
-#       } else {
-#         cluster_ph[[i]][[j]] <- pheatmap(compare_tibble$Pred_allocation[row_order[[i]], ],
-#                                          color = col_pal,
-#                                          cluster_rows = F
-#         )
-#       }
-#     }
-#     
-#     
-#   }
-# }
+for(i in 1:num_files){
+  for(j in 1:num_datasets){
+    
+    curr_save_path <- paste0(save_path, "seed_", j)
+    
+    # Find the dataset name
+    dataset <- dataset_names[[i]]
+    
+    # Create the save location and file name
+    file_name <- paste0(curr_save_path, "predicted_clustering_", dataset, plot_type)
+    
+    # Create the title of the plot
+    title <- paste0(dataset, ": predicted clustering")
+    
+    # If saving plots, save them
+    if (save_plots) {
+      
+      # Take row order from first seed to compare across seeds
+      if(j == 1){
+        cluster_ph[[i]][[j]] <- pheatmap(compare_tibble$Pred_allocation[[j]],
+                                         color = col_pal,
+                                         main = title,
+                                         filename = file_name
+        )
+        
+        row_order[[i]] <- cluster_ph[[i]][[j]]$tree_row$order
+        
+      } else {
+        cluster_ph[[i]][[j]] <- pheatmap(compare_tibble$Pred_allocation[[j]][row_order[[i]], ],
+                                         color = col_pal,
+                                         cluster_rows = F,
+                                         main = title,
+                                         filename = file_name
+        )
+      }
+    } else {
+      if(j == 1){
+        cluster_ph[[i]][[j]] <- pheatmap(compare_tibble$Pred_allocation,
+                                         color = col_pal
+        )
+        
+        row_order[[i]] <- cluster_ph[[i]][[j]]$tree_row$order
+      } else {
+        cluster_ph[[i]][[j]] <- pheatmap(compare_tibble$Pred_allocation[row_order[[i]], ],
+                                         color = col_pal,
+                                         cluster_rows = F
+        )
+      }
+    }
+    
+    
+  }
+}
 
 # === Heatmapping ==============================================================
 
 col_pal <- col_pal_old
 
-probe_key_rel <- probe_key[probe_key$ProbeID %in% probe_names,]
-
 # Pull out the Gene IDs in the correct order
-gene_id <- probe_key_rel %>%
-  .[match(row.names(compare_df_new_labels), .$ProbeID)] %>%
-  .$Gene 
+gene_id <- probe_key %>%
+  .[match(.$ProbeID, row.names(compare_df_new_labels))] %>%
+  .$Gene
 
 # Move from Probe ID to Gene ID
 row.names(compare_df_new_labels) <- gene_id
@@ -735,58 +711,45 @@ ph_full <- pheatmap(compare_df_new_labels,
 )
 row_order <- ph_full$tree_row[["order"]]
 
-# pheatmap(compare_df_new_labels[, c(1, 3, 4)], color = col_pal)
-
-pheatmap(compare_df_new_labels[, c(1, 4)], color = col_pal)
-pheatmap(compare_df_new_labels[, c(2, 3)], color = col_pal)
-pheatmap(compare_df_new_labels[, c(1:4)], color = col_pal)
-pheatmap(compare_df_new_labels[, c(5:7)], color = col_pal)
-# pheatmap(compare_df_new_labels[, c(1, 3, 4, 5)], color = col_pal)
+pheatmap(compare_df_new_labels[, c(1, 3, 4)], color = col_pal)
+pheatmap(compare_df_new_labels[, c(1, 3, 4, 5)], color = col_pal)
 pheatmap(compare_df_new_labels[, c(6, 8, 9)], color = col_pal)
-
-# Based on some investigation by hand
-genes_of_interest <- c("CD27", "CCR7", "SELL", "STAT4", "PRKCQ")
-
-pheatmap(compare_df_new_labels[row.names(compare_df_new_labels) %in% genes_of_interest, ],
-         cluster_cols = T,
-         color = col_pal
-)
 
 df_ph_order <- compare_df_new_labels[row_order, ]
 
 # Inspect this in more manageable section, keeping the same order
-# # contains(row.names(df_ph_order))
-# pheatmap(df_ph_order[1:2500, ],
-#          cluster_rows = F,
-#          cluster_cols = F,
-#          color = col_pal
-# )
-# 
-# pheatmap(df_ph_order[2501:5000, ],
-#          cluster_rows = F,
-#          cluster_cols = F,
-#          color = col_pal
-# )
-# 
-# # There's very little information here
-# pheatmap(df_ph_order[5001:10000, ],
-#          cluster_rows = F,
-#          cluster_cols = F,
-#          color = col_pal
-# )
-# 
-# pheatmap(df_ph_order[10001:15000, ],
-#          cluster_rows = F,
-#          cluster_cols = F,
-#          color = col_pal
-# )
-# 
-# # Here it quite similar
-# pheatmap(df_ph_order[15001:18517, ],
-#          cluster_rows = F,
-#          cluster_cols = F,
-#          color = col_pal
-# )
+# contains(row.names(df_ph_order))
+pheatmap(df_ph_order[1:2500, ],
+         cluster_rows = F,
+         cluster_cols = F,
+         color = col_pal
+)
+
+pheatmap(df_ph_order[2501:5000, ],
+         cluster_rows = F,
+         cluster_cols = F,
+         color = col_pal
+)
+
+# There's very little information here
+pheatmap(df_ph_order[5001:10000, ],
+         cluster_rows = F,
+         cluster_cols = F,
+         color = col_pal
+)
+
+pheatmap(df_ph_order[10001:15000, ],
+         cluster_rows = F,
+         cluster_cols = F,
+         color = col_pal
+)
+
+# Here it quite similar
+pheatmap(df_ph_order[15001:18517, ],
+         cluster_rows = F,
+         cluster_cols = F,
+         color = col_pal
+)
 
 
 pheatmap(compare_df_2, cluster_cols = F)
@@ -798,11 +761,11 @@ row_order <- ph_full$tree_row[["order"]]
 col_order <- ph_full$tree_col[["order"]]
 
 df_ph_order <- compare_df[row_order, ]
-# pheatmap(df_ph_order[1:2500, ], cluster_rows = F, cluster_cols = F)
-# pheatmap(df_ph_order[2501:5000, ], cluster_rows = F, cluster_cols = F)
-# pheatmap(df_ph_order[5001:10000, ], cluster_rows = F, cluster_cols = F)
-# pheatmap(df_ph_order[10001:15000, ], cluster_rows = F, cluster_cols = F)
-# pheatmap(df_ph_order[15001:18517, ], cluster_rows = F, cluster_cols = F)
+pheatmap(df_ph_order[1:2500, ], cluster_rows = F, cluster_cols = F)
+pheatmap(df_ph_order[2501:5000, ], cluster_rows = F, cluster_cols = F)
+pheatmap(df_ph_order[5001:10000, ], cluster_rows = F, cluster_cols = F)
+pheatmap(df_ph_order[10001:15000, ], cluster_rows = F, cluster_cols = F)
+pheatmap(df_ph_order[15001:18517, ], cluster_rows = F, cluster_cols = F)
 
 # comparison_sets_1 <- comparison_sets_2 <- dataset_names
 #
