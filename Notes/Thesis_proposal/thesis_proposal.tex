@@ -215,7 +215,7 @@
 			\begin{abstract}
 				\emph{A priori} defined gene sets are key to gene set enrichment analysis \cite{subramanian_gene_2005} a powerful tool in genetic analysis. Gene sets are constructed through linking genes by some common feature. This can be a function, the location of the gene product, the participation of the product in some metabolic or signalling pathway, the protein structure, the presence of transcription-factor-binding sites or other regulatory elements, the participation in multiprotein complexes, or any one of several other definitions \cite{szklarczyk_string_2019}\cite{subramanian_gene_2005}\cite{kanehisa_new_2019}\cite{ashburner_gene_2000}. However, all of these criteria are tissue agnostic.
 %				Some attempts to include tissue specific information has been proposed \cite{frost_computation_2018}\cite{greene_understanding_2015}, but these attempts have limitations.
-				We propose to produce tissue specific gene sets by applying multiple dataset integration \cite{kirk_bayesian_2012} (a Bayesian unsupervised clustering method) to the CEDAR cohort \cite{the_international_ibd_genetics_consortium_ibd_2018}, a dataset of 9 tissue / cell types.
+				We propose to produce tissue specific gene sets by applying multiple dataset integration \cite{kirk_bayesian_2012} (a Bayesian unsupervised clustering method) to the gene expression data from the CEDAR cohort \cite{the_international_ibd_genetics_consortium_ibd_2018}, a dataset of 9 tissue / cell types.
 			\end{abstract}
 		
 			\vfill
@@ -256,10 +256,7 @@
 	\section{Introduction}
 	This project, which consists of applying a Bayesian unsupervised clustering method across multiple datasets to define tissue specific gene sets, is interesting on a number of fronts. It provides a chance to learn relevant, topical biology in understanding gene sets, the role context plays in gene expression and to learn the basics of immunology. From an informatics / statistics perspective, Bayesian inference, unsupervised clustering and the use of multiple datasets are all interesting. These are relevant skills to both industry and research that I wish to develop.
 	
-	Beyond developing new skills, this project also offers the opportunity to be involved in relevant research. Gene sets are commonly used in genetic analyses, thus if we can produce sets that are informed by the context of interest, it could be relevant to many researchers. Gene sets that are informed of tissue specific information should enable researchers investigating tissue specific diseases such as inflammatory bowel disease (IBD); this research is not solely of interest to the scientific community, but potentially has downstream significance for society at large with regards to deeper biological understanding of the genetic underpinnings of disease.
-	
-	In short, this project is exciting from the perspective of both personal development and research.
-	
+	Beyond developing new skills, this project also offers the opportunity to be involved in relevant research. Gene sets are commonly used in genetic analyses, thus if we can produce sets that are informed by the context of interest, it could be relevant to many researchers. Hopefully by producing more informative gene sets we can help narrow the gap between biology and disease.	
 
 	\section{Theory}
 	\subsection{Mixture models} \label{mixture_models}
@@ -268,6 +265,8 @@
 	\begin{align}
 	p(x_i) = \sum_{k=1}^K \pi_k f(x_i | \theta_k)
 	\end{align}
+	
+	\subsection{Bayesian inference}	
 	We carry out Bayesian inference of this model using Markov chain Monte Carlo methods. We sample first the component parameters, $\theta_k$, and associated weights, $\pi_k$, from the associated distributions and then sample component membership.
 	
 	Basically:
@@ -275,9 +274,8 @@
 		\item For each of K clusters sample $\theta_k$ and $\pi_k$ from the associated distributions based on current memberships, $c_i$; and
 		\item For each of n individuals sample $c_i$ based on the new $\theta_k$ and $\pi_k$.
 	\end{enumerate}
-
-	\subsection{Bayesian inference}	
-	For the mixture model we update the parameters after we allocate each observation to a cluster. For a given cluster with associated data $X$ and parameter $\theta$, the distribution we sample $\theta$ from using Bayes' theorem:
+	
+	For the mixture model we update the parameters after we allocate each observation to a cluster. For a given cluster with associated data $X$ and parameter $\theta$, we sample $\theta$ using Bayes' theorem from the distribution:
 	
 	\begin{align} \label{Bayes_theorem}
 	p(\theta | X) = \frac{p(X | \theta) p(\theta)}{\int_\Theta p(X | \theta ') p(\theta ') d \theta '}
@@ -290,10 +288,10 @@
 		\item $\int_\Theta p(X | \theta ') p(\theta ') d \theta '$ is the \emph{normalising constant}. This quantity is also referred to as the \emph{evidence} \cite{mackay_information_2003} or \emph{marginal likelihood} and is normally represented by $Z$. It is referred to as the marginal likelihood as we marginalise the parameter $\theta$ by integrating over its entire sample space.
 	\end{itemize}
 	
-	In terms of sampling the prior is very useful as it allows us to ensure that the posterior is always solvable, that we do not encounter singularities in our distribution.
+	In terms of sampling, the prior is very useful as a clever choice of prior can ensure that the posterior is always solvable, that we do not encounter singularities in our distribution.
 	
 	\subsection{Multiple dataset integration}
-	If we have observed paired datasets $X_1 = (x_{1,1},\ldots,x_{n,1}), X_2 = (x_{1,2},\ldots,x_{n,2})$, where observations in the $i$th row of each dataset represent information about the same individual. We would like to cluster using information common to both datasets. One could concatenate the datasets, adding additional covariates for each individual. However, if the two datasets have different clustering structures this would reduce the signal of both clusterings and probably have one dominate. If the two datasets have the same structure but different signal-to-noise ratios this would reduce the signal in the final clustering. In both these cases independent models on each dataset would be preferable. \citet{kirk_bayesian_2012} suggest a method to carry out clustering on both datasets where common information is used but two individual clusterings are outputted. This method is driven by the allocation prior:
+	Consider the case when we have observed paired datasets $X_1 = (x_{1,1},\ldots,x_{n,1}), X_2 = (x_{1,2},\ldots,x_{n,2})$, where observations in the $i$th row of each dataset represent information about the same individual. We would like to cluster individuals using information common to both datasets. One could concatenate the datasets, adding additional covariates for each individual. However, if the two datasets have different clustering structures this would reduce the signal of both clusterings and probably have one dominate. If the two datasets have the same structure but different signal-to-noise ratios this would reduce the signal in the final clustering. In both these cases independent models on each dataset would be preferable. \citet{kirk_bayesian_2012} suggest a method to carry out clustering on both datasets where common information is used but two individual clusterings are outputted. This method is driven by the allocation prior:
 	\begin{align} \label{allocation_prior_l_2}
 	p(c_{i1}, c_{i2} | \phi ) \propto \pi_{i1} \pi_{i2} (1 + \phi \mathbb{I}(c_{i1} = c_{i2}))
 	\end{align}
@@ -301,7 +299,7 @@
 	
 	The generalised case for $L$ datasets, $X_1 = (x_{1,1},\ldots,x_{n,1}),\ldots, X_L = (x_{1,l},\ldots,x_{n,l})$ for any $L \in \mathbb{N}$ is simply a matter of combinatorics. In this case, \eqref{allocation_prior_l_2} extends to:
 	\begin{align} \label{allocation_prior}
-	p(c_{i,1},\ldots,c_{i,L} | \boldsymbol{\phi}) \propto \prod_{l_1=1}^L\pi_{c_{il_1}l_1}\prod_{l_2=1}^{L-1}\prod_{l_3=l_2+1}^L\left(1+\phi_{l_2l_3}\mathbb{1}(c_{il_2} = c_{il_3}) \right)
+	p(c_{i1},\ldots,c_{iL} | \boldsymbol{\phi}) \propto \left[\prod_{l_1=1}^L\pi_{c_{il_1}l_1} \right]\left[\prod_{l_2=1}^{L-1}\prod_{l_3=l_2+1}^L\left(1+\phi_{l_2l_3}\mathbb{1}(c_{il_2} = c_{il_3}) \right)\right]
 	\end{align}
 	Here $\boldsymbol{\phi}$ is the ${L \choose 2}$-vector of all $\phi_{ij}$ where $\phi_{12}$ is the variable $\phi$ in \eqref{allocation_prior_l_2}.
 	
@@ -355,9 +353,7 @@
 	
 %	Beyond healthy variation in gene expression across tissues, in the  area of immunology many diseases are tissue specific and have strong associations to genetic pre-disposition
 	
-	We also see that there are many auto-immune disease, normally associated with a specific tissue type, that have strong genetic associations. This implies tissue specific metabolic pathways  \cite{vyse_genetic_1996}\cite{maas_cutting_2002}\cite{aune_co-localization_2004}\cite{botstein_discovering_2003}.
-	
-	This implies that genes have context-specific interactions that should be considered in analysis.
+	We also see that there are many auto-immune disease, normally associated with a specific tissue type, that have strong genetic associations. Tissue specific isoforms and expression have also been observed \cite{wang_alternative_2008}. This shows that genes have context-specific interactions that should be considered in analysis.
 	
 	\subsection{Gene sets}
 	With the onset of microarrays and RNAseq, producing gene expression data in large quantities for a wide number of genes is increasingly enabled. Unfortunately the large amount of data gifted onto the genomics community by these methods is difficult to interpret and analyse. Gene Set Enrichment Analysis (GSEA) attempts to overcome some of these issues by analysing pre-defined gene sets and changes in the expression of the full set rather than considering each constituent member on an individual basis \cite{mooney_gene_2015}. Consider, that in analysing gene sets as a group, the degree of perturbation in the expression of the full gene set due to the disease state / alternative phenotype that is required to be considered significant is much less than that required in analysing each of its constituent members individually \cite{dudbridge_power_2013}\cite{wray_research_2014}. This use of gene sets can increase the power of the analysis.
@@ -366,7 +362,7 @@
 	
 	Thus clustering genes into groups known as ``gene sets'' is natural and useful from both a biological and statistical perspective - it can increase the interpretability and the power of an analysis \cite{nica_expression_2013}\cite{vosa_unraveling_2018}.
 	
-	However, the problem of defining gene sets is non-trivial with many variations in-use. There exist many databases of gene sets \cite{ashburner_gene_2000}\cite{kanehisa_new_2019}\cite{szklarczyk_string_2019}. The Molecular Signature Database \cite{subramanian_gene_2005} (MSigDB) is one of the most popular resources for GSEA and encompasses many different gene sets defined under various criteria or generated from separate resources. However, none of these definitions of a ``set'' incorporate tissue specific information. We believe that this is a grave oversight as there is evidence that some genes are involved in tissue specific pathways (see section \ref{sec:tissue_specificity}). Thus we propose defining tissue specific gene sets. Previous attempts to achieve this have used the Genotype Tissue Expression (GTEx) \cite{gtex_consortium_genetic_2017} database \cite{lonsdale_genotype-tissue_2013}, but here the profiles are for human donors
+	However, the problem of defining gene sets is non-trivial with many variations in-use. There exist many databases of gene sets \cite{ashburner_gene_2000}\cite{kanehisa_new_2019}\cite{szklarczyk_string_2019}. The Molecular Signature Database \cite{subramanian_gene_2005} (MSigDB) is one of the most popular resources for GSEA and encompasses many different gene sets defined under various criteria or generated from separate resources. However, none of these definitions of a ``set'' incorporate tissue specific information. We believe that this is an oversight as there is evidence that some genes are involved in tissue specific pathways (see section \ref{sec:tissue_specificity}). Thus we propose defining tissue specific gene sets. Previous attempts to achieve this have used the Genotype Tissue Expression (GTEx) \cite{gtex_consortium_genetic_2017} database \cite{lonsdale_genotype-tissue_2013}, but here the profiles are for human donors
 	post-mortem. We suspect that the data derived from these cells may not contain the same information as that collected from living, active cells. Furthermore, the GTEx data is across many different tissues (144 are used in \cite{lonsdale_genotype-tissue_2013}), but we focus on cell types relevant to autoimmune disease in general (i.e. blood cells) and IBD in particular (intestinal samples). This restricted focus should offer relevant gene sets.
 		
 %	\subsection{The importance of gene sets}
@@ -402,7 +398,7 @@
 	\end{itemize} 
 	Not every individual is present in every dataset. However, as we are clustering genes this should not present a problem.
 	
-	Whole genome expression data were generated using HT-12 Expression Beadchips following the instructions of the manufacturer (Illumina). $29,464$ autosomal probes (corresponding to 19,731 genes) were included across the datasets, but further thinning under various criteria (such as call rate, deviation from Hardy-Weinberg equilibrium) reduced this further in each dataset. The fluorescence intensities were $\log_2$ transformed and Robust Spline Normalized with Lumi38.
+	Whole genome expression data were generated using HT-12 Expression Beadchips following the instructions of the manufacturer (Illumina). $29,464$ autosomal probes (corresponding to 19,731 genes) were included across the datasets, but further thinning under various criteria reduced this further in each dataset. The fluorescence intensities were $\log_2$ transformed and Robust Spline Normalized with Lumi38.
 	
 	It should be noted that some datasets are less information rich than others (for instance the platelets dataset has only around 8 thousand probes present). 
 	
@@ -431,7 +427,7 @@
 		\item To apply MDI we require that each dataset have the same row names in the same order, so we re-arrange our datasets to have common order of probes and include rows of 0’s for probes entirely missing from a given dataset; and
 		\item Apply MDI \cite{mason_mdi-gpu:_2016}.
 	\end{enumerate}
-	To validate our clusters we intend to check if some well-annotated gene sets (such as the HOX genes) cluster appropriately.
+	To validate our clusters we intend to check if some well-annotated gene sets (such as the interleukin pathways) cluster appropriately.
 	
 	\newpage
 

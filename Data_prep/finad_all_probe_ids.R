@@ -79,6 +79,8 @@ vsn_data <- args$vsn_applied # F
 
 name_ind <- args$index # 2 + vsn_data
 
+# print(dir_of_interest)
+
 # Read in data
 # files_present <- list.files(path = args$dir)
 # file_name <- grep(args$extension, files_present, value = TRUE) %>%
@@ -88,6 +90,7 @@ name_ind <- args$index # 2 + vsn_data
 setwd(dir_of_interest)
 # setwd("~/Desktop/Na_filled_data/")
 files_present <- list.files(path = dir_of_interest, pattern=".csv")
+
 
 # files_present <- list.files(path = "~/Desktop/Na_filled_data/")
 if(vsn_data){
@@ -127,7 +130,7 @@ for (f in file_name) {
 
 
 
-print(names(data_lst))
+# print(names(data_lst))
 
 files_to_write <- names(data_lst) %>%
   tools::file_path_sans_ext() %>%
@@ -138,7 +141,7 @@ files_to_write <- names(data_lst) %>%
   # lapply("[[", name_ind) %>%
   # unlist()
 
-print(files_to_write)
+# print(files_to_write)
 
 num_datasets <- length(data_lst)
 

@@ -64,23 +64,24 @@ probes_present_dt <- fread("Analysis/probes_present_per_dataset.csv")
 probe_key <- fread("Analysis/probe_key.csv")
 
 # Read in the MDI output file
-file_path <- "Analysis/MDI_runs/vsn_many_seeds/"
+file_path <- "/home/MINTS/sdc56/Desktop/matlab_output/"
+# file_path <- "Analysis/MDI_runs/vsn_many_seeds/"
 
 # Create the common save path
-save_path <- "Analysis/MDI_runs/vsn_many_seeds/"
+save_path <- file_path
 
 # For Rand index plots
 # Save the common part of each title
 generic_title <- "MDI: Adjusted Rand index for"
-generic_save_name <- "Analysis/MDI_runs/Full_sets_with_NAs_dropped_if_above_0.1/"
+generic_save_name <- file_path
 
 
 mdi_output_files <- list.files(path = file_path, full.names = T, include.dirs = F) %>%
   grep("csv", ., value = TRUE)
 
 # mdi_output_files_2 <- "/home/MINTS/sdc56/Desktop/subset_data/Small/Filled_data/output/out_seed_3.csv"
-
-mdi_output_files <- "/home/MINTS/sdc56/Desktop/CD14_small_text_CD4_small_text_2_mcmcSamples.csv"
+mdi_output_files <- "/home/MINTS/sdc56/Desktop/matlab_output/CD14_sma_mat_CD19_sma_mat_CD4_sma_mat_CD8_sma_mat_IL_sma_mat_RE_sma_mat_TR_sma_mat_4_mcmcSamples.csv"
+# mdi_output_files <- "/home/MINTS/sdc56/Desktop/CD14_small_text_CD4_small_text_2_mcmcSamples.csv"
 
 num_files <- length(mdi_output_files)
 file_names <- basename(tools::file_path_sans_ext(mdi_output_files))
@@ -91,8 +92,8 @@ mdi_allocation <- list()
 allocation_list <- list()
 
 # MDI call specific values
-n_iter <- 500
-thin <- 20
+n_iter <- 1163
+thin <- 1
 burn <- 0
 
 eff_n_iter <- n_iter / thin # - burn
@@ -110,7 +111,12 @@ n_genes <- NA # SPECIFIC TO CURRENT RUN
 # grep(".csv", ., value = TRUE)
 files_present <- c(
   "CD14.csv",
-  "CD4.csv"
+  "CD19.csv",
+  "CD4.csv",
+  "CD8.csv",
+  "IL.csv",
+  "RE.csv",
+  "TR.csv"
 )
 num_datasets <- length(files_present)
 
