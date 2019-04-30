@@ -224,6 +224,9 @@ if (!data_written) {
   
   # === MDI output ===============================================================
   
+  # Global similarity between datasets
+  phis <- list()
+  
   # x4 <- sample(1:eff_iter, 50, replace=F)
   
   for (j in 1:num_files) {
@@ -236,6 +239,9 @@ if (!data_written) {
     # Capture the allocation information in the named lists and the predicted
     # allocation in the dataframe
     
+    phis[[j]] <- mcmc_out_lst[[j]] %>% 
+      dplyr::select(contains("Phi")) 
+    
     
     for (i in 1:num_datasets) {
       dataset_name <- paste0("Dataset", i)
@@ -247,6 +253,8 @@ if (!data_written) {
       
       mdi_allocation[[i]] <- .mdi_alloc <- mcmc_out_lst[[j]] %>% 
         dplyr::select(contains(dataset_name))
+      
+      
       
       # mdi_pos_sim_mat[[i]][[1]] <- .sim_mat <- similarity_mat(t(.mdi_alloc[,1:1000]))
       mdi_pos_sim_mat[[i]] <- .sim_mat <- similarity_mat(t(.mdi_alloc))
@@ -347,9 +355,40 @@ probes_present_final <- probes_present_ordered %>%
 
 colnames(probes_present_final) <- dataset_names
 
+# === Phi plots ================================================================
+
+for(i in 1 : length(phis)){
+  for(j in 1 : ncol(phis[[i]])){
+    
+    curr_phi <- colnames(phis[[i]])[j]
+    plot_name <- paste0(save_path, curr_phi, "_plot.png")
+    png(plot_name)
+    
+    phis[[i]][, ..j] %>% 
+      unlist() %>% 
+      plot()
+    
+    dev.off()
+    
+    density_plot_name <- paste0(save_path, curr_phi, "_density_pot.png")
+    
+    density_title <- paste(curr_phi, ": density plot")
+    
+    ggplot(data = phis[[1]], aes_string(x = curr_phi)) +
+      geom_density() +
+      labs(
+        title = density_title
+      )
+    
+    ggsave(density_plot_name)
+  }
+}
+
+ggplot(data = phis[[1]], aes(x = Phi_12)) +
+  geom_density()
+
+
 # === Check clustering ocnvergence =============================================
-
-
 
 
 # If making heatplots of the clusterings across iterations
