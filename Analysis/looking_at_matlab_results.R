@@ -64,7 +64,7 @@ probes_present_dt <- fread("Analysis/probes_present_per_dataset.csv")
 probe_key <- fread("Analysis/probe_key.csv")
 
 # Read in the MDI output file
-file_path <- "/home/MINTS/sdc56/Desktop/matlab_output/"
+file_path <- "/home/MINTS/sdc56/Desktop/MDI_small_geneset_outputs/matlab_output/"
 # file_path <- "Analysis/MDI_runs/vsn_many_seeds/"
 
 # Create the common save path
@@ -80,7 +80,7 @@ mdi_output_files <- list.files(path = file_path, full.names = T, include.dirs = 
   grep("csv", ., value = TRUE)
 
 # mdi_output_files_2 <- "/home/MINTS/sdc56/Desktop/subset_data/Small/Filled_data/output/out_seed_3.csv"
-mdi_output_files <- "/home/MINTS/sdc56/Desktop/matlab_output/CD14_sma_mat_CD19_sma_mat_CD4_sma_mat_CD8_sma_mat_IL_sma_mat_RE_sma_mat_TR_sma_mat_4_mcmcSamples.csv"
+mdi_output_files <- "/home/MINTS/sdc56/Desktop/MDI_small_geneset_outputs/matlab_output/CD14_sma_mat_CD19_sma_mat_CD4_sma_mat_CD8_sma_mat_IL_sma_mat_RE_sma_mat_TR_sma_mat_4_mcmcSamples.csv"
 # mdi_output_files <- "/home/MINTS/sdc56/Desktop/CD14_small_text_CD4_small_text_2_mcmcSamples.csv"
 
 num_files <- length(mdi_output_files)
@@ -266,10 +266,10 @@ if (!data_written) {
     # compare_tibble$Pred_allocation[j] <- compare_df
   }
   
-  # saveRDS(
-  #   compare_tibble,
-  #   "~/Desktop/ra_chris_wallace/Analysis/MDI_runs/vsn_many_seeds/compare_tibble.rds"
-  # )
+  saveRDS(
+    compare_tibble,
+    paste0(save_path, "compare_tibble.rds")
+  )
 }
 # === Check clustering ocnvergence =============================================
 
