@@ -125,9 +125,6 @@ phis <- list()
 count <- 0
 start_index <- 100 # Consider letting this equal "burn"
 
-# Create a dataframe to hold the output
-col_names <- paste0("D", 1:num_datasets)
-
 # The number of genes is the number of columns in the mcmc_output
 # exclusing the columns containing information on the phi and mass parameters
 n_genes <- 102 # NA # SPECIFIC TO CURRENT RUN
@@ -145,10 +142,14 @@ files_present <- c(
   "RE.csv",
   "TR.csv"
 )
+
 num_datasets <- length(files_present)
 
 # Remove the file extension
 dataset_names <- tools::file_path_sans_ext(files_present)
+
+# Create a dataframe to hold the output
+col_names <- paste0("D", 1:num_datasets)
 
 # mdi_output_file <- "Analysis/MDI_runs/vsn_many_seeds/out_seed_1.csv"
 # If already found allocations and written to file, re-load
