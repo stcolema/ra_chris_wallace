@@ -13,10 +13,10 @@
 # === Libraries ================================================================
 
 # MDI specific codes (not sure if still used)
-source("~/Desktop/MDI/mdipp-1.0.1/scripts/analysis.R") # install.packages("mcclust", dep = T)
+source("/home/MINTS/sdc56/Desktop/MDI/mdipp-1.0.1/scripts/analysis.R") # install.packages("mcclust", dep = T)
 
 # For posterioir similarity matrices
-Rcpp::sourceCpp("Analysis/posterior_sim_mat.cpp") # install.packages("Rcpp", dep = T)
+Rcpp::sourceCpp("/home/MINTS/sdc56/Desktop/ra_chris_wallace/Analysis/posterior_sim_mat.cpp") # install.packages("Rcpp", dep = T)
 
 # For tibbles
 library(tibble) # for dataframe of lists
