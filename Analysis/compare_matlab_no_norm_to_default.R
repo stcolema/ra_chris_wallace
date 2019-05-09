@@ -77,7 +77,7 @@ probes_present_dt <- fread("/home/MINTS/sdc56/Desktop/MDI_small_geneset_outputs/
 probe_key <- fread("Analysis/probe_key.csv")
 
 # Read in the MDI output file
-matlab_file_path <- "/home/MINTS/sdc56/Desktop/MDI_small_geneset_outputs/matlab_output/"
+matlab_file_path <- "/home/MINTS/sdc56/Desktop/MDI_small_geneset_outputs/matlab_output_no_vsn_no_norm/"
 mdi_file_path <- "/home/MINTS/sdc56/Desktop/MDI_small_geneset_outputs/Many_seeds_small_7_output/"
 # file_path <- "Analysis/MDI_runs/vsn_many_seeds/"
 
@@ -221,11 +221,11 @@ mdi_compare_df_genes <- as.matrix(mdi_compare_df_2) %>%
 
 # We check if the NA rows (filled with 0's) are all in the same cluster and alone in this cluster
 ph_matlab_no_zeros <- pheatmap(matlab_compare_df,
-                      cluster_cols = T,
-                      color = col_pal,
-                      cellheight = 3,
-                      cellwidth = 60,
-                      main = "MATLAB output with normalisation"
+                               cluster_cols = T,
+                               color = col_pal,
+                               cellheight = 3,
+                               cellwidth = 60,
+                               main = "MATLAB output with normalisation"
 )
 
 zerod_row_order <- ph_matlab_no_zeros$tree_row[["order"]]
@@ -234,20 +234,20 @@ zerod_col_order <- ph_matlab_no_zeros$tree_col[["order"]]
 matlab_zero_comparison <- matlab_compare_df_genes[zerod_row_order, zerod_col_order]
 
 ph_matlab_zerod <- pheatmap(matlab_zero_comparison,
-                      cluster_cols = F,
-                      cluster_rows = F,
-                      color = col_pal,
-                      cellheight = 3,
-                      cellwidth = 60,
-                      main = "MATLAB output with normalisation - NAs in 0th cluster"
+                            cluster_cols = F,
+                            cluster_rows = F,
+                            color = col_pal,
+                            cellheight = 3,
+                            cellwidth = 60,
+                            main = "MATLAB output with normalisation - NAs in 0th cluster"
 )
 # They are very much not
 
 ph_matlab <- pheatmap(matlab_compare_df_genes,
-                    cluster_cols = T,
-                    color = col_pal,
-                    cellheight = 3.2,
-                    cellwidth = 60
+                      cluster_cols = T,
+                      color = col_pal,
+                      cellheight = 3.2,
+                      cellwidth = 60
 )
 
 row_order <- ph_matlab$tree_row[["order"]]
