@@ -697,5 +697,5 @@ if (do_rand_plot) {
 }
 
 if (args$time) {
-  print(Sys.time() - stm_i)
+  print((Sys.time() - stm_i))
 }
