@@ -173,7 +173,23 @@ input_arguments <- function() {
     optparse::make_option(c("--plot_heatmap_clusterings"),
       type = "logical",
       default = TRUE,
-      help = "Instruction to plot adjusted rand index comparing clusterings [default= %default]",
+      help = "Instruction to plot heatmaps of the clustering over iterations [default= %default]",
+      metavar = "logical"
+    ),
+
+    # Instruction to plot phi scatter plots
+    optparse::make_option(c("--plot_phi_series"),
+      type = "logical",
+      default = TRUE,
+      help = "Instruction to plot phi parameters over MCMC iterations for each dataset [default= %default]",
+      metavar = "logical"
+    ),
+
+    # Instruction to plot phi densities
+    optparse::make_option(c("--plot_phi_densities"),
+      type = "logical",
+      default = TRUE,
+      help = "Instruction to plot density of phi parameters for each dataset [default= %default]",
       metavar = "logical"
     ),
 
@@ -232,6 +248,8 @@ dataset_names <- tools::file_path_sans_ext(files_present)
 do_dendrograms_ie_trees <- args$plot_trees
 do_rand_plot <- args$plot_rand_index
 do_heatplot_clusterings <- args$plot_heatmap_clusterings
+do_phis_series <- args$plot_phi_series
+do_phis_densities <- args$plot_phi_densities
 
 # Plto type
 plot_type <- args$plot_type
@@ -297,90 +315,94 @@ if (is.na(n_genes)) {
 
 # === Plotting phis ==========================================================
 
-# Iterate over the files and then the combinations of phis
-for (i in 1:num_files) {
+if (do_phis_series) {
+  # Iterate over the files and then the combinations of phis
+  for (i in 1:num_files) {
 
-  # For heatmapping the phis across datasets
-  phi_comparison_df <- as.data.frame(matrix(
-    nrow = num_datasets,
-    ncol = num_datasets,
-    0
-  )) %>%
-    magrittr::set_colnames(dataset_names) %>%
-    magrittr::set_rownames(dataset_names)
+    # For heatmapping the phis across datasets
+    phi_comparison_df <- as.data.frame(matrix(
+      nrow = num_datasets,
+      ncol = num_datasets,
+      0
+    )) %>%
+      magrittr::set_colnames(dataset_names) %>%
+      magrittr::set_rownames(dataset_names)
 
-  for (j in 1:(num_datasets - 1)) {
-    for (k in (j + 1):num_datasets) {
+    for (j in 1:(num_datasets - 1)) {
+      for (k in (j + 1):num_datasets) {
 
-      # Count for the index of the list object where phis are stored
-      count <- count + 1
+        # Count for the index of the list object where phis are stored
+        count <- count + 1
 
-      col_name <- paste0("Phi_", j, k)
+        col_name <- paste0("Phi_", j, k)
 
-      # Pull out the column for the relevant phi
-      phis[[count]] <- mcmc_out_lst[[i]] %>%
-        select(contains(col_name))
+        # Pull out the column for the relevant phi
+        phis[[count]] <- mcmc_out_lst[[i]] %>%
+          select(contains(col_name))
 
-      # Which tissues
-      dataset_j <- dataset_names[[j]]
-      dataset_k <- dataset_names[[k]]
+        # Which tissues
+        dataset_j <- dataset_names[[j]]
+        dataset_k <- dataset_names[[k]]
 
-      # Create plot labels
-      plot_title <- bquote(Phi ~ "for" ~ .(dataset_j) ~ "and" ~ .(dataset_k))
-      y_axis_title <- substitute(Phi[ind1], list(ind1 = paste0(j, k)))
-      sub_title <- paste("Iterations", start_index, "through", n_iter)
+        # Create plot labels
+        plot_title <- bquote(Phi ~ "for" ~ .(dataset_j) ~ "and" ~ .(dataset_k))
+        y_axis_title <- substitute(Phi[ind1], list(ind1 = paste0(j, k)))
+        sub_title <- paste("Iterations", start_index, "through", n_iter)
 
-      # The save file name
-      save_title <- paste0(file_path, "file_", i, "_Phi_", j, k, plot_type)
+        # The save file name
+        save_title <- paste0(file_path, "file_", i, "_Phi_", j, k, plot_type)
 
-      if (save_plots) {
-        # Open graphic to save plot to
-        if (plot_type == ".pdf") {
-          pdf(save_title)
-        } else {
-          png(save_title)
+        if (save_plots) {
+          # Open graphic to save plot to
+          if (plot_type == ".pdf") {
+            pdf(save_title)
+          } else {
+            png(save_title)
+          }
         }
-      }
 
-      # Plot Phi vs index (ignore initial values as misleading)
-      plot(start_index:n_iter, phis[[count]][[1]][start_index:n_iter],
-        main = plot_title,
-        col.main = "black",
-        sub = sub_title,
-        col.sub = "blue",
-        ylab = y_axis_title,
-        xlab = "Index"
+        # Plot Phi vs index (ignore initial values as misleading)
+        plot(start_index:n_iter, phis[[count]][[1]][start_index:n_iter],
+          main = plot_title,
+          col.main = "black",
+          sub = sub_title,
+          col.sub = "blue",
+          ylab = y_axis_title,
+          xlab = "Index"
+        )
+
+        # Close graphic
+        if (save_plots) {
+          dev.off()
+        }
+
+        mean_phi <- phis[[count]][[1]][start_index:n_iter] %>% mean()
+
+        phi_comparison_df[j, k] <- phi_comparison_df[k, j] <- mean_phi
+      }
+    }
+
+    # Heatmap the average phi (after some burn in)
+    phi_pheatmap_title <- "Heatmap comparing phis across datasets"
+    phi_pheatmap_file_name <- paste0(save_path, "Phi_heatmap_", i, plot_type)
+
+    if (save_plots) {
+      pheatmap(phi_comparison_df,
+        main = phi_pheatmap_title,
+        filename = phi_pheatmap_file_name
       )
 
-      # Close graphic
-      if (save_plots) {
-        dev.off()
-      }
-
-      mean_phi <- phis[[count]][[1]][start_index:n_iter] %>% mean()
-
-      phi_comparison_df[j, k] <- phi_comparison_df[k, j] <- mean_phi
+      # dev.off()
+    } else {
+      pheatmap(phi_comparison_df,
+        main = phi_pheatmap_title,
+        filename = phi_pheatmap_file_name
+      )
     }
   }
-
-  # Heatmap the average phi (after some burn in)
-  phi_pheatmap_title <- "Heatmap comparing phis across datasets"
-  phi_pheatmap_file_name <- paste0(save_path, "Phi_heatmap_", i, plot_type)
-
-  if (save_plots) {
-    pheatmap(phi_comparison_df,
-      main = phi_pheatmap_title,
-      filename = phi_pheatmap_file_name
-    )
-
-    # dev.off()
-  } else {
-    pheatmap(phi_comparison_df,
-      main = phi_pheatmap_title,
-      filename = phi_pheatmap_file_name
-    )
-  }
 }
+
+# === Prepare the tibble =======================================================
 
 # Create an empty dataframe with column names corresponding to dataset numbers
 compare_df <- data.frame(matrix(ncol = num_datasets, nrow = n_genes))
@@ -547,57 +569,59 @@ probes_present_final <- probes_present_ordered %>%
 
 colnames(probes_present_final) <- dataset_names
 
-# === Phi plots ================================================================
+# === Phi denisty plots ================================================================
 
-for (i in 1:length(phis)) {
-  for (j in 1:ncol(phis[[i]])) {
-    curr_phi <- colnames(phis[[i]])[j]
-    plot_name <- paste0(save_path, curr_phi, "_plot", plot_type)
+if (do_phis_densities) {
+  for (i in 1:length(phis)) {
+    for (j in 1:ncol(phis[[i]])) {
+      curr_phi <- colnames(phis[[i]])[j]
+      plot_name <- paste0(save_path, curr_phi, "_plot", plot_type)
 
-    # png(plot_name)
-    #
-    # phis[[i]][, ..j] %>%
-    #   unlist() %>%
-    #   plot()
-    #
-    # dev.off()
+      # png(plot_name)
+      #
+      # phis[[i]][, ..j] %>%
+      #   unlist() %>%
+      #   plot()
+      #
+      # dev.off()
 
-    density_plot_name <- paste0(save_path, curr_phi, "_density_plot", plot_type)
+      density_plot_name <- paste0(save_path, curr_phi, "_density_plot", plot_type)
 
-    density_title <- paste(curr_phi, ": density plot")
+      density_title <- paste(curr_phi, ": density plot")
 
-    # Find which datasets are used here
-    dataset_indices <- readr::parse_number(curr_phi)
-    
-    # The following steps do not work if we have more than 9 datasets (which is not relevant to me)
-    # This extracts the first dataset index (i.e. from 67 takes 6)
-    dataset_index_1 <- dataset_indices[1] %>% '/'(10) %>% floor(.)
-    
-    # This extracts the secodn dataset index
-    dataset_index_2 <- dataset_indices[1] %>% '%%'(10)
-    
-    dataset_1 <- dataset_names[dataset_index_1]
-    dataset_2 <- dataset_names[dataset_index_2]
+      # Find which datasets are used here
+      dataset_indices <- readr::parse_number(curr_phi)
 
-    density_subtitle <- paste(
-      "Iterations",
-      start_index,
-      "through",
-      n_iter,
-      "for",
-      dataset_1,
-      "and",
-      dataset_2
-    )
+      # The following steps do not work if we have more than 9 datasets (which is not relevant to me)
+      # This extracts the first dataset index (i.e. from 67 takes 6)
+      dataset_index_1 <- dataset_indices[1] %>% "/"(10) %>% floor(.)
 
-    ggplot(data = phis[[1]][start_index:n_iter, ], aes_string(x = curr_phi)) +
-      geom_density() +
-      labs(
-        title = density_title,
-        subtitle = density_subtitle
+      # This extracts the secodn dataset index
+      dataset_index_2 <- dataset_indices[1] %>% "%%"(10)
+
+      dataset_1 <- dataset_names[dataset_index_1]
+      dataset_2 <- dataset_names[dataset_index_2]
+
+      density_subtitle <- paste(
+        "Iterations",
+        start_index,
+        "through",
+        n_iter,
+        "for",
+        dataset_1,
+        "and",
+        dataset_2
       )
 
-    ggsave(density_plot_name)
+      ggplot(data = phis[[1]][start_index:n_iter, ], aes_string(x = curr_phi)) +
+        geom_density() +
+        labs(
+          title = density_title,
+          subtitle = density_subtitle
+        )
+
+      ggsave(density_plot_name)
+    }
   }
 }
 
