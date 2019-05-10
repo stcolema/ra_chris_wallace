@@ -192,7 +192,24 @@ input_arguments <- function() {
       help = "Instruction to plot density of phi parameters for each dataset [default= %default]",
       metavar = "logical"
     ),
-
+    
+    # Location for expression data
+    optparse::make_option(c("--expression_dir"),
+                          type = "character",
+                          default = "/home/MINTS/sdc56/Desktop/Matlab_input_small_names",
+                          help = "Path to the directory containing the expression data .csv files [default= %default]",
+                          metavar = "character"
+    ),
+    
+    
+    # Location for expression data
+    optparse::make_option(c("--plot_expression_data"),
+                          type = "logical",
+                          default = TRUE,
+                          help = "Instruction to plot heatmaps of the expression data [default= %default]",
+                          metavar = "logical"
+    ),
+    
     # Instruction to time programme
     optparse::make_option(c("--time"),
       type = "logical",
@@ -204,6 +221,7 @@ input_arguments <- function() {
   opt_parser <- optparse::OptionParser(option_list = option_list)
   opt <- optparse::parse_args(opt_parser)
 }
+
 
 # === Main script ==============================================================
 
@@ -250,6 +268,7 @@ do_rand_plot <- args$plot_rand_index
 do_heatplot_clusterings <- args$plot_heatmap_clusterings
 do_phis_series <- args$plot_phi_series
 do_phis_densities <- args$plot_phi_densities
+do_expression_heatmap <- args$plot_expression_data
 
 # Plto type
 plot_type <- args$plot_type
@@ -311,6 +330,67 @@ if (is.na(n_genes)) {
     ncol()
 
   # n_genes <- mcmc_out_lst[[1]]$nitems
+}
+
+# === Heatmap expression data ==================================================
+
+
+if(do_expression_heatmap){
+  # Directory holding the expression data files
+  data_dir <- args$expression_dir
+  
+  # Generic title and filename for pheatmap
+  gen_ph_title <- ": heatmap of expression data"
+  gen_ph_file_name <- paste0(file_path, "pheatmap_")
+  
+  # Find the expression data files
+  mdi_input_files <- list.files(path = data_dir, full.names = T, include.dirs = F) %>%
+    grep("csv", ., value = TRUE)
+  
+  input_file_names <- basename(tools::file_path_sans_ext(mdi_input_files))
+  
+  expression_datasets <- input_file_names %>%
+    gsub("([^\\_]+)\\_.*", "\\1", .)
+  # stringr::str_replace("_sma_mat_nv", "")
+  
+  datasets_relevant_indices <- files_present %>% 
+    tools::file_path_sans_ext() %>% 
+    match(expression_datasets)
+  
+  datasets_relevant <- expression_datasets[datasets_relevant_indices]
+  relevant_input_files <- mdi_input_files[datasets_relevant_indices]
+  
+  mega_df <- data.frame(matrix(nrow = n_genes, ncol = 0)) 
+  
+  data_files <- list()
+  for(i in 1 : num_datasets){
+    
+    file_name <- gen_ph_file_name %>% 
+      paste0(datasets_relevant[[i]], plot_type)
+    
+    ph_title <- datasets_relevant[[i]] %>% 
+      paste0(gen_ph_title)
+    
+    f <- relevant_input_files[[i]]
+    data_files[[i]] <- fread(f)
+    data_files[[i]][is.na(data_files[[i]])] <- 0
+    data_files[[i]][, -1] %>% 
+      pheatmap(filename = file_name, main = ph_title)
+    
+    mega_df <- mega_df %>% 
+      dplyr::bind_cols(data_files[[i]][, -1])
+    
+  }
+  
+  row.names(mega_df) <- data_files[[1]][,1] %>% unlist()
+  
+  big_file_name <- gen_ph_file_name %>% 
+    paste0("All_datasets", plot_type)
+  
+  big_ph_title <- "All datasets" %>% 
+    paste0(gen_ph_title)
+  
+  pheatmap(mega_df, filename = big_file_name, main = big_ph_title)
 }
 
 # === Plotting phis ==========================================================
