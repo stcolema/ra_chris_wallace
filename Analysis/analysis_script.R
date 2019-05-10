@@ -488,9 +488,10 @@ for (j in 1:num_files) {
 
 
     allocation_list[[i]] <- .pred_alloc <- .sim_mat %>%
-      dist() %>%
-      hclust() %>%
-      cutree(h = 3.2) # abritrary number here based on pheatmap of .sim_mat
+      mcclust::Simtocl()
+    # dist() %>%
+    # hclust() %>%
+    # cutree(h = 3.2) # abritrary number here based on pheatmap of .sim_mat
 
     # allocation_list[[i]] <- .pred_alloc <- apply(.mdi_alloc[-(1:burn), ], 2, getmode)
     # compare_df[[dataset_names[i]]] <- .pred_alloc
@@ -565,10 +566,35 @@ for (i in 1:length(phis)) {
 
     density_title <- paste(curr_phi, ": density plot")
 
-    ggplot(data = phis[[1]], aes_string(x = curr_phi)) +
+    # Find which datasets are used here
+    dataset_indices <- readr::parse_number(curr_phi)
+    
+    # The following steps do not work if we have more than 9 datasets (which is not relevant to me)
+    # This extracts the first dataset index (i.e. from 67 takes 6)
+    dataset_index_1 <- dataset_indices[1] %>% '/'(10) %>% floor(.)
+    
+    # This extracts the secodn dataset index
+    dataset_index_2 <- dataset_indices[1] %>% '%%'(10)
+    
+    dataset_1 <- dataset_names[dataset_index_1]
+    dataset_2 <- dataset_names[dataset_index_2]
+
+    density_subtitle <- paste(
+      "Iterations",
+      start_index,
+      "through",
+      n_iter,
+      "for",
+      dataset_1,
+      "and",
+      dataset_2
+    )
+
+    ggplot(data = phis[[1]][start_index:n_iter, ], aes_string(x = curr_phi)) +
       geom_density() +
       labs(
-        title = density_title
+        title = density_title,
+        subtitle = density_subtitle
       )
 
     ggsave(density_plot_name)
@@ -670,7 +696,8 @@ if (do_rand_plot) {
         compare_tibble$mdi_allocation[i + (j - 1) * num_files][[1]],
         # mdi_allocation[[i]],
         1,
-        mclust::adjustedRandIndex,
+        mcclust::arandi,
+        # mclust::adjustedRandIndex,
         compare_tibble$mdi_allocation[i][[1]][eff_n_iter, ]
         # compare_df[, i]
       )
