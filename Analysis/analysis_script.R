@@ -219,6 +219,14 @@ input_arguments <- function() {
     ),
 
     # Instruction to time programme
+    optparse::make_option(c("--seed"),
+                          type = "integer",
+                          default = 1,
+                          help = "Random seed for script [default= %default]",
+                          metavar = "integer"
+    ),
+    
+    # Instruction to time programme
     optparse::make_option(c("--time"),
       type = "logical",
       default = FALSE,
@@ -236,6 +244,9 @@ input_arguments <- function() {
 args <- input_arguments()
 save_plots <- T
 stm_i <- Sys.time()
+
+seed <- args$seed
+set.seed(seed)
 
 # Read in the probes present - this is a matrix of bools with the first column
 # as the probe IDs and the remaining columns corrresponding to the cell types
@@ -907,6 +918,8 @@ if (do_expression_heatmap) {
     magrittr::set_rownames(probe_names) %>%
     magrittr::set_colnames(datasets_relevant)
 
+  n_total_clusters <- 0
+
   data_files <- list()
   for (i in 1:num_datasets) {
     curr_dataset <- datasets_relevant[[i]]
@@ -944,19 +957,33 @@ if (do_expression_heatmap) {
     cluster_labels <- levels(pred_clustering$Cluster)
     n_clusters <- length(cluster_labels)
 
-    col_pal <- sample(col_vector, n_clusters) %>%
-      magrittr::set_names(cluster_labels)
+    n_total_clusters <- max(n_clusters, n_total_clusters)
 
-    annotation_colors <- list(Cluster = col_pal)
+    if (n_clusters > 20) {
+      
+      print("Too many clusters. Cannot include annotation row.")
+      
+      # Pheatmap
+      expression_data_tidy %>%
+        pheatmap(
+          filename = file_name,
+          main = ph_title
+        )
+    } else {
+      col_pal <- sample(col_vector, n_clusters) %>%
+        magrittr::set_names(cluster_labels)
 
-    # Pheatmap
-    expression_data_tidy %>%
-      pheatmap(
-        filename = file_name,
-        main = ph_title,
-        annotation_row = pred_clustering,
-        annotation_colors = annotation_colors
-      )
+      annotation_colors <- list(Cluster = col_pal)
+
+      # Pheatmap
+      expression_data_tidy %>%
+        pheatmap(
+          filename = file_name,
+          main = ph_title,
+          annotation_row = pred_clustering,
+          annotation_colors = annotation_colors
+        )
+    }
 
     # Record the clustering for the current dataset for annotation purposes
     big_annotation[[curr_dataset]] <- as.factor(pred_clustering$Cluster)
@@ -978,11 +1005,25 @@ if (do_expression_heatmap) {
     as.matrix() %>%
     magrittr::set_rownames(probe_names)
 
-  pheatmap(mega_matrix,
-    filename = big_file_name,
-    main = big_ph_title,
-    annotation_row = big_annotation
-  )
+  if (n_total_clusters > 20) {
+    pheatmap(mega_matrix,
+      filename = big_file_name,
+      main = big_ph_title
+    )
+  } else {
+    col_pal <- sample(col_vector, n_total_clusters) %>%
+      magrittr::set_names(cluster_labels)
+    
+    annotation_colors <- list(Cluster = col_pal)
+    
+    
+    pheatmap(mega_matrix,
+      filename = big_file_name,
+      main = big_ph_title,
+      annotation_row = big_annotation,
+      annotation_colors = annotation_colors
+    )
+  }
 }
 
 # === Timing ===================================================================
