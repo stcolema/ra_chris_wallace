@@ -192,24 +192,32 @@ input_arguments <- function() {
       help = "Instruction to plot density of phi parameters for each dataset [default= %default]",
       metavar = "logical"
     ),
-    
+
+    # Instruction to plot phi densities
+    optparse::make_option(c("--plot_phi_histograms"),
+      type = "logical",
+      default = TRUE,
+      help = "Instruction to plot histogram of phi parameters for each dataset [default= %default]",
+      metavar = "logical"
+    ),
+
     # Location for expression data
     optparse::make_option(c("--expression_dir"),
-                          type = "character",
-                          default = "/home/MINTS/sdc56/Desktop/Matlab_input_small_names",
-                          help = "Path to the directory containing the expression data .csv files [default= %default]",
-                          metavar = "character"
+      type = "character",
+      default = "/home/MINTS/sdc56/Desktop/Matlab_input_small_names",
+      help = "Path to the directory containing the expression data .csv files [default= %default]",
+      metavar = "character"
     ),
-    
-    
+
+
     # Location for expression data
     optparse::make_option(c("--plot_expression_data"),
-                          type = "logical",
-                          default = TRUE,
-                          help = "Instruction to plot heatmaps of the expression data [default= %default]",
-                          metavar = "logical"
+      type = "logical",
+      default = TRUE,
+      help = "Instruction to plot heatmaps of the expression data [default= %default]",
+      metavar = "logical"
     ),
-    
+
     # Instruction to time programme
     optparse::make_option(c("--time"),
       type = "logical",
@@ -269,6 +277,7 @@ do_heatplot_clusterings <- args$plot_heatmap_clusterings
 do_phis_series <- args$plot_phi_series
 do_phis_densities <- args$plot_phi_densities
 do_expression_heatmap <- args$plot_expression_data
+do_phis_histograms <- args$plot_phi_histograms
 
 # Plto type
 plot_type <- args$plot_type
@@ -297,10 +306,15 @@ eff_n_iter <- n_iter / thin # - burn
 # For plotting phis
 phis <- list()
 count <- 0
-start_index <- burn + 1 # Consider letting this equal "burn"
+start_index <- ceiling(burn / thin) + 1 # Consider letting this equal "burn"
 
 # Convert this into useable output using functions provided by Sam Mason
 mcmc_out_lst <- list() # vector("list", num_files)
+
+# Large palette of qualitative colours
+# (see https://stackoverflow.com/questions/15282580/how-to-generate-a-number-of-most-distinctive-colors-in-r)
+qual_col_pals <- brewer.pal.info[brewer.pal.info$category == "qual", ]
+col_vector <- unlist(mapply(brewer.pal, qual_col_pals$maxcolors, rownames(qual_col_pals)))
 
 for (i in 1:num_files) {
   curr_name <- file_names[[i]]
@@ -332,70 +346,11 @@ if (is.na(n_genes)) {
   # n_genes <- mcmc_out_lst[[1]]$nitems
 }
 
-# === Heatmap expression data ==================================================
-
-
-if(do_expression_heatmap){
-  # Directory holding the expression data files
-  data_dir <- args$expression_dir
-  
-  # Generic title and filename for pheatmap
-  gen_ph_title <- ": heatmap of expression data"
-  gen_ph_file_name <- paste0(file_path, "pheatmap_")
-  
-  # Find the expression data files
-  mdi_input_files <- list.files(path = data_dir, full.names = T, include.dirs = F) %>%
-    grep("csv", ., value = TRUE)
-  
-  input_file_names <- basename(tools::file_path_sans_ext(mdi_input_files))
-  
-  expression_datasets <- input_file_names %>%
-    gsub("([^\\_]+)\\_.*", "\\1", .)
-  # stringr::str_replace("_sma_mat_nv", "")
-  
-  datasets_relevant_indices <- files_present %>% 
-    tools::file_path_sans_ext() %>% 
-    match(expression_datasets)
-  
-  datasets_relevant <- expression_datasets[datasets_relevant_indices]
-  relevant_input_files <- mdi_input_files[datasets_relevant_indices]
-  
-  mega_df <- data.frame(matrix(nrow = n_genes, ncol = 0)) 
-  
-  data_files <- list()
-  for(i in 1 : num_datasets){
-    
-    file_name <- gen_ph_file_name %>% 
-      paste0(datasets_relevant[[i]], plot_type)
-    
-    ph_title <- datasets_relevant[[i]] %>% 
-      paste0(gen_ph_title)
-    
-    f <- relevant_input_files[[i]]
-    data_files[[i]] <- fread(f)
-    data_files[[i]][is.na(data_files[[i]])] <- 0
-    data_files[[i]][, -1] %>% 
-      pheatmap(filename = file_name, main = ph_title)
-    
-    mega_df <- mega_df %>% 
-      dplyr::bind_cols(data_files[[i]][, -1])
-    
-  }
-  
-  row.names(mega_df) <- data_files[[1]][,1] %>% unlist()
-  
-  big_file_name <- gen_ph_file_name %>% 
-    paste0("All_datasets", plot_type)
-  
-  big_ph_title <- "All datasets" %>% 
-    paste0(gen_ph_title)
-  
-  pheatmap(mega_df, filename = big_file_name, main = big_ph_title)
-}
-
 # === Plotting phis ==========================================================
 
 if (do_phis_series) {
+  print("Saving plots of phi as a time series.")
+
   # Iterate over the files and then the combinations of phis
   for (i in 1:num_files) {
 
@@ -427,7 +382,7 @@ if (do_phis_series) {
         # Create plot labels
         plot_title <- bquote(Phi ~ "for" ~ .(dataset_j) ~ "and" ~ .(dataset_k))
         y_axis_title <- substitute(Phi[ind1], list(ind1 = paste0(j, k)))
-        sub_title <- paste("Iterations", start_index, "through", n_iter)
+        sub_title <- paste("Iterations", (burn + thin), "through", n_iter)
 
         # The save file name
         save_title <- paste0(file_path, "file_", i, "_Phi_", j, k, plot_type)
@@ -441,8 +396,22 @@ if (do_phis_series) {
           }
         }
 
+        # cat("Start index:" )
+        # print(start_index)
+        # cat("Number of iterations:")
+        # print(n_iter)
+        #
+        # cat("Effective number of iterations:")
+        # print(eff_n_iter)
+        #
+        # print("Description of phi parameter")
+        # print(str(phis[[count]][[1]]))
+        #
+        # print("That's phi")
+        # print("")
+
         # Plot Phi vs index (ignore initial values as misleading)
-        plot(start_index:n_iter, phis[[count]][[1]][start_index:n_iter],
+        plot(start_index:eff_n_iter, phis[[count]][[1]][start_index:eff_n_iter],
           main = plot_title,
           col.main = "black",
           sub = sub_title,
@@ -456,7 +425,7 @@ if (do_phis_series) {
           dev.off()
         }
 
-        mean_phi <- phis[[count]][[1]][start_index:n_iter] %>% mean()
+        mean_phi <- phis[[count]][[1]][start_index:eff_n_iter] %>% mean()
 
         phi_comparison_df[j, k] <- phi_comparison_df[k, j] <- mean_phi
       }
@@ -508,6 +477,8 @@ compare_df <- data.frame(matrix(ncol = num_datasets, nrow = n_genes))
 # Set the cell type to the column names (make sure order is as per MDI call)
 colnames(compare_df) <- dataset_names
 
+print("Constructing tibble.")
+
 # Now put everything in a tibble
 compare_tibble <- tibble(
   mdi = rep(file_names, num_datasets),
@@ -548,11 +519,18 @@ for (j in 1:num_files) {
     # mdi_alloc2 <- getMdiAllocations(comp_mcmc_out, i)
 
     mdi_allocation[[i]] <- .mdi_alloc <- mcmc_out_lst[[j]] %>%
-      dplyr::select(contains(dataset_name))
+      dplyr::select(contains(dataset_name)) %>%
+      magrittr::extract(start_index:eff_n_iter, )
 
     # mdi_pos_sim_mat[[i]][[1]] <- .sim_mat <- similarity_mat(t(.mdi_alloc[,1:1000]))
+
+    # print(str(.mdi_alloc))
+    # print(start_index)
+    # print(eff_n_iter)
+
     mdi_pos_sim_mat[[i]] <- .sim_mat <- similarity_mat(t(.mdi_alloc))
 
+    # print("This point.")
 
     if (i == 1) {
       probe_names <- colnames(.mdi_alloc) %>%
@@ -561,6 +539,8 @@ for (j in 1:num_files) {
     }
 
     row.names(.sim_mat) <- colnames(.sim_mat) <- probe_names
+
+    # print("Now over here")
 
     colnames(.mdi_alloc) <- probe_names
 
@@ -598,6 +578,8 @@ for (j in 1:num_files) {
     # allocation_list[[i]] <- .pred_alloc <- apply(.mdi_alloc[-(1:burn), ], 2, getmode)
     # compare_df[[dataset_names[i]]] <- .pred_alloc
 
+    # print(.pred_alloc)
+
     compare_tibble$pred_allocation[i + (j - 1) * num_files][[1]] <- .pred_alloc
 
 
@@ -616,6 +598,8 @@ saveRDS(
 
 # === Plot PSM trees ===========================================================
 if (do_dendrograms_ie_trees) {
+  print("Saving dendrogram plots.")
+
   # Plot the dendrograms for the PSM
   for (i in 1:nrow(compare_tibble)) {
     dataset <- dataset_names[[i]]
@@ -652,6 +636,8 @@ colnames(probes_present_final) <- dataset_names
 # === Phi denisty plots ================================================================
 
 if (do_phis_densities) {
+  print("Saving phi density plots.")
+
   for (i in 1:length(phis)) {
     for (j in 1:ncol(phis[[i]])) {
       curr_phi <- colnames(phis[[i]])[j]
@@ -674,7 +660,9 @@ if (do_phis_densities) {
 
       # The following steps do not work if we have more than 9 datasets (which is not relevant to me)
       # This extracts the first dataset index (i.e. from 67 takes 6)
-      dataset_index_1 <- dataset_indices[1] %>% "/"(10) %>% floor(.)
+      dataset_index_1 <- dataset_indices[1] %>%
+        "/"(10) %>%
+        floor(.)
 
       # This extracts the secodn dataset index
       dataset_index_2 <- dataset_indices[1] %>% "%%"(10)
@@ -684,7 +672,7 @@ if (do_phis_densities) {
 
       density_subtitle <- paste(
         "Iterations",
-        start_index,
+        (burn + thin),
         "through",
         n_iter,
         "for",
@@ -704,6 +692,58 @@ if (do_phis_densities) {
     }
   }
 }
+
+# === Phi histograms ===========================================================
+
+if (do_phis_histograms) {
+  for (i in 1:length(phis)) {
+    for (j in 1:ncol(phis[[i]])) {
+      curr_phi <- colnames(phis[[i]])[j]
+      plot_name <- paste0(save_path, curr_phi, "_plot", plot_type)
+
+
+      # Find which datasets are used here
+      dataset_indices <- readr::parse_number(curr_phi)
+
+      # The following steps do not work if we have more than 9 datasets (which is not relevant to me)
+      # This extracts the first dataset index (i.e. from 67 takes 6)
+      dataset_index_1 <- dataset_indices[1] %>%
+        "/"(10) %>%
+        floor(.)
+
+      # This extracts the secodn dataset index
+      dataset_index_2 <- dataset_indices[1] %>% "%%"(10)
+
+      dataset_1 <- dataset_names[dataset_index_1]
+      dataset_2 <- dataset_names[dataset_index_2]
+
+      histogram_plot_name <- paste0(save_path, curr_phi, "_histogram_plot", plot_type)
+
+      histogram_title <- paste(curr_phi, ": histogram plot")
+
+      histogram_subtitle <- paste(
+        "Iterations",
+        (burn + thin),
+        "through",
+        n_iter,
+        "for",
+        dataset_1,
+        "and",
+        dataset_2
+      )
+
+      ggplot(data = phis[[1]][start_index:n_iter, ], aes_string(x = curr_phi)) +
+        geom_histogram() +
+        labs(
+          title = histogram_title,
+          subtitle = histogram_subtitle
+        )
+
+      ggsave(histogram_plot_name)
+    }
+  }
+}
+
 
 # ggplot(data = phis[[1]], aes(x = Phi_12)) +
 #   geom_density()
@@ -744,6 +784,10 @@ if (do_heatplot_clusterings) {
 
       # Make the heatmap (note that we do not cluster rows).
       # We use a sample of the iterations as otherwise it becomes too heavy
+
+      # print(mcclust::Simtocl(compare_tibble$similarity_matrix[i + (j - 1) * num_files][[1]][1:4, 1:4]))
+      # print(compare_tibble$similarity_matrix[i + (j - 1) * num_files][[1]][1:4, 1:4])
+
       if (save_plots) {
         ph <- pheatmap(compare_tibble$similarity_matrix[i + (j - 1) * num_files][[1]],
           main = title,
@@ -769,7 +813,7 @@ if (do_heatplot_clusterings) {
 # pheatmap::pheatmap(check_median_makes_sense_map[[8]], cluster_rows = F, cluster_cols = T)
 # pheatmap::pheatmap(check_median_makes_sense_map[[9]], cluster_rows = F, cluster_cols = T)
 
-# === rand indexing =============================================================
+# === Plot adjusted rand index==================================================
 # If instructed to make Rand index plots
 if (do_rand_plot) {
 
@@ -800,8 +844,8 @@ if (do_rand_plot) {
         compare_tibble$mdi_allocation[i + (j - 1) * num_files][[1]],
         # mdi_allocation[[i]],
         1,
-        mcclust::arandi,
-        # mclust::adjustedRandIndex,
+        # mcclust::arandi,
+        mclust::adjustedRandIndex,
         compare_tibble$mdi_allocation[i][[1]][eff_n_iter, ]
         # compare_df[, i]
       )
@@ -814,7 +858,7 @@ if (do_rand_plot) {
         ggplot2::geom_point(ggplot2::aes(x = Iteration, y = Rand_index)) +
         ggplot2::labs(
           title = curr_title,
-          subtitle = "Comparing modal clustering to clustering at each iteration",
+          subtitle = "Comparing clustering in last iteration to clustering at each iteration",
           x = "Index",
           y = "Adjusted Rand Index"
         )
@@ -826,6 +870,122 @@ if (do_rand_plot) {
     }
   }
 }
+
+# === Heatmap expression data ==================================================
+
+if (do_expression_heatmap) {
+  print("Saving gene expression heatmaps.")
+
+  # Directory holding the expression data files
+  data_dir <- args$expression_dir
+
+  # Generic title and filename for pheatmap
+  gen_ph_title <- ": heatmap of expression data"
+  gen_ph_file_name <- paste0(file_path, "pheatmap_")
+
+  # Find the expression data files
+  mdi_input_files <- list.files(path = data_dir, full.names = T, include.dirs = F) %>%
+    grep("csv", ., value = TRUE)
+
+  input_file_names <- basename(tools::file_path_sans_ext(mdi_input_files))
+
+  expression_datasets <- input_file_names %>%
+    gsub("([^\\_]+)\\_.*", "\\1", .)
+  # stringr::str_replace("_sma_mat_nv", "")
+
+  datasets_relevant_indices <- files_present %>%
+    tools::file_path_sans_ext() %>%
+    match(expression_datasets)
+
+  datasets_relevant <- expression_datasets[datasets_relevant_indices]
+  relevant_input_files <- mdi_input_files[datasets_relevant_indices]
+
+  mega_df <- data.frame(matrix(nrow = n_genes, ncol = 0)) %>%
+    magrittr::set_rownames(probe_names)
+
+  big_annotation <- data.frame(matrix(nrow = n_genes, ncol = num_datasets)) %>%
+    magrittr::set_rownames(probe_names) %>%
+    magrittr::set_colnames(datasets_relevant)
+
+  data_files <- list()
+  for (i in 1:num_datasets) {
+    curr_dataset <- datasets_relevant[[i]]
+
+    file_name <- gen_ph_file_name %>%
+      paste0(datasets_relevant[[i]], plot_type)
+
+    ph_title <- datasets_relevant[[i]] %>%
+      paste0(gen_ph_title)
+
+    # Prepare the clustering information as an annotation row for pheatmap
+    pred_clustering <- compare_tibble$pred_allocation[compare_tibble$dataset == curr_dataset][[1]] %>%
+      as.factor() %>%
+      as.data.frame() %>%
+      magrittr::set_rownames(probe_names) %>%
+      magrittr::set_colnames(c("Cluster"))
+
+
+    # Read in the expression data
+    f <- relevant_input_files[[i]]
+    expression_data <- fread(f)
+
+    # Tidy (remove NAs and row name column) and convert to the appropriate format
+    # for pheatmap
+    expression_data_tidy <- expression_data %>%
+      magrittr::extract(, -1) %>%
+      as.matrix() %>%
+      magrittr::set_rownames(probe_names)
+
+    expression_data_tidy[is.na(expression_data_tidy)] <- 0
+
+    data_files[[i]] <- expression_data
+
+    # Specify colors based on cluster labels
+    cluster_labels <- levels(pred_clustering$Cluster)
+    n_clusters <- length(cluster_labels)
+
+    col_pal <- sample(col_vector, n_clusters) %>%
+      magrittr::set_names(cluster_labels)
+
+    annotation_colors <- list(Cluster = col_pal)
+
+    # Pheatmap
+    expression_data_tidy %>%
+      pheatmap(
+        filename = file_name,
+        main = ph_title,
+        annotation_row = pred_clustering,
+        annotation_colors = annotation_colors
+      )
+
+    # Record the clustering for the current dataset for annotation purposes
+    big_annotation[[curr_dataset]] <- as.factor(pred_clustering$Cluster)
+
+    # Record the expression data from the current dataset in the compound dataset
+    mega_df <- mega_df %>%
+      dplyr::bind_cols(as.data.frame(expression_data_tidy))
+  }
+
+  # row.names(mega_df) <- probe_names
+
+  big_file_name <- gen_ph_file_name %>%
+    paste0("all_datasets", plot_type)
+
+  big_ph_title <- "All datasets" %>%
+    paste0(gen_ph_title)
+
+  mega_matrix <- mega_df %>%
+    as.matrix() %>%
+    magrittr::set_rownames(probe_names)
+
+  pheatmap(mega_matrix,
+    filename = big_file_name,
+    main = big_ph_title,
+    annotation_row = big_annotation
+  )
+}
+
+# === Timing ===================================================================
 
 if (args$time) {
   print((Sys.time() - stm_i))
