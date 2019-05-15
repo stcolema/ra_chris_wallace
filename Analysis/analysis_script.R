@@ -220,12 +220,12 @@ input_arguments <- function() {
 
     # Instruction to time programme
     optparse::make_option(c("--seed"),
-                          type = "integer",
-                          default = 1,
-                          help = "Random seed for script [default= %default]",
-                          metavar = "integer"
+      type = "integer",
+      default = 1,
+      help = "Random seed for script [default= %default]",
+      metavar = "integer"
     ),
-    
+
     # Instruction to time programme
     optparse::make_option(c("--time"),
       type = "logical",
@@ -254,7 +254,7 @@ set.seed(seed)
 # manually with an imputed value) and FALSE indicates we added it in.
 probes_present_dt <- fread(args$probe_present)
 
-# Read in the file relating the probe IDs to  the related gene
+# Read in the file relating the probe IDs to the related gene
 probe_key <- fread(args$probe_key)
 
 # Read in the MDI output file
@@ -497,7 +497,8 @@ compare_tibble <- tibble(
   seed = unlist(lapply(1:num_files, rep, num_datasets)), # rep(1:num_files, num_datasets),
   pred_allocation = list(compare_df),
   mdi_allocation = rep(vector("list", num_files), num_datasets),
-  similarity_matrix = list(data.frame(matrix(ncol = n_genes, nrow = n_genes)))
+  similarity_matrix = list(data.frame(matrix(ncol = n_genes, nrow = n_genes))),
+  expression_data = rep(vector("list", num_files), num_datasets),
 )
 
 # === MDI output ===============================================================
@@ -602,10 +603,10 @@ for (j in 1:num_files) {
   # compare_tibble$Pred_allocation[j] <- compare_df
 }
 
-saveRDS(
-  compare_tibble,
-  paste0(save_path, "compare_tibble.rds")
-)
+# saveRDS(
+#   compare_tibble,
+#   paste0(save_path, "compare_tibble.rds")
+# )
 
 # === Plot PSM trees ===========================================================
 if (do_dendrograms_ie_trees) {
@@ -857,7 +858,7 @@ if (do_rand_plot) {
         1,
         # mcclust::arandi,
         mclust::adjustedRandIndex,
-        compare_tibble$mdi_allocation[i][[1]][eff_n_iter, ]
+        compare_tibble$mdi_allocation[i][[1]][eff_n_iter - burn, ]
         # compare_df[, i]
       )
 
@@ -886,83 +887,91 @@ if (do_rand_plot) {
 
 if (do_expression_heatmap) {
   print("Saving gene expression heatmaps.")
+}
+# Directory holding the expression data files
+data_dir <- args$expression_dir
 
-  # Directory holding the expression data files
-  data_dir <- args$expression_dir
+# Generic title and filename for pheatmap
+gen_ph_title <- ": heatmap of expression data"
+gen_ph_file_name <- paste0(file_path, "pheatmap_")
 
-  # Generic title and filename for pheatmap
-  gen_ph_title <- ": heatmap of expression data"
-  gen_ph_file_name <- paste0(file_path, "pheatmap_")
+# Find the expression data files
+mdi_input_files <- list.files(path = data_dir, full.names = T, include.dirs = F) %>%
+  grep("csv", ., value = TRUE)
 
-  # Find the expression data files
-  mdi_input_files <- list.files(path = data_dir, full.names = T, include.dirs = F) %>%
-    grep("csv", ., value = TRUE)
+input_file_names <- basename(tools::file_path_sans_ext(mdi_input_files))
 
-  input_file_names <- basename(tools::file_path_sans_ext(mdi_input_files))
+expression_datasets <- input_file_names %>%
+  gsub("([^\\_]+)\\_.*", "\\1", .)
+# stringr::str_replace("_sma_mat_nv", "")
 
-  expression_datasets <- input_file_names %>%
-    gsub("([^\\_]+)\\_.*", "\\1", .)
-  # stringr::str_replace("_sma_mat_nv", "")
+datasets_relevant_indices <- files_present %>%
+  tools::file_path_sans_ext() %>%
+  match(expression_datasets)
 
-  datasets_relevant_indices <- files_present %>%
-    tools::file_path_sans_ext() %>%
-    match(expression_datasets)
+datasets_relevant <- expression_datasets[datasets_relevant_indices]
+relevant_input_files <- mdi_input_files[datasets_relevant_indices]
 
-  datasets_relevant <- expression_datasets[datasets_relevant_indices]
-  relevant_input_files <- mdi_input_files[datasets_relevant_indices]
+mega_df <- data.frame(matrix(nrow = n_genes, ncol = 0)) %>%
+  magrittr::set_rownames(probe_names)
 
-  mega_df <- data.frame(matrix(nrow = n_genes, ncol = 0)) %>%
+big_annotation <- data.frame(matrix(nrow = n_genes, ncol = num_datasets)) %>%
+  magrittr::set_rownames(probe_names) %>%
+  magrittr::set_colnames(datasets_relevant)
+
+n_total_clusters <- 0
+
+data_files <- list()
+for (i in 1:num_datasets) {
+  curr_dataset <- datasets_relevant[[i]]
+
+  file_name <- gen_ph_file_name %>%
+    paste0(datasets_relevant[[i]], plot_type)
+
+  ph_title <- datasets_relevant[[i]] %>%
+    paste0(gen_ph_title)
+
+  # Prepare the clustering information as an annotation row for pheatmap
+  pred_clustering <- compare_tibble$pred_allocation[compare_tibble$dataset == curr_dataset][[1]] %>%
+    as.factor() %>%
+    as.data.frame() %>%
+    magrittr::set_rownames(probe_names) %>%
+    magrittr::set_colnames(c("Cluster"))
+
+
+  # Read in the expression data
+  f <- relevant_input_files[[i]]
+  expression_data <- fread(f)
+
+  # Tidy (remove NAs and row name column) and convert to the appropriate format
+  # for pheatmap
+  expression_data_tidy <- expression_data %>%
+    magrittr::extract(, -1) %>%
+    as.matrix() %>%
     magrittr::set_rownames(probe_names)
 
-  big_annotation <- data.frame(matrix(nrow = n_genes, ncol = num_datasets)) %>%
-    magrittr::set_rownames(probe_names) %>%
-    magrittr::set_colnames(datasets_relevant)
+  expression_data_tidy[is.na(expression_data_tidy)] <- 0
 
-  n_total_clusters <- 0
+  print(str(compare_tibble$expression_data[compare_tibble$dataset == curr_dataset]))
+  
+  # Add the expression data to our tibble 
+  num_occurences_dataset <- length(compare_tibble$expression_data[compare_tibble$dataset == curr_dataset])
+  for(k in 1 : num_occurences_dataset){
+    compare_tibble$expression_data[compare_tibble$dataset == curr_dataset][[k]] <- expression_data_tidy
+  }
 
-  data_files <- list()
-  for (i in 1:num_datasets) {
-    curr_dataset <- datasets_relevant[[i]]
+  data_files[[i]] <- expression_data
 
-    file_name <- gen_ph_file_name %>%
-      paste0(datasets_relevant[[i]], plot_type)
+  # Specify colors based on cluster labels
+  cluster_labels <- levels(pred_clustering$Cluster)
+  n_clusters <- length(cluster_labels)
 
-    ph_title <- datasets_relevant[[i]] %>%
-      paste0(gen_ph_title)
+  n_total_clusters <- max(n_clusters, n_total_clusters)
 
-    # Prepare the clustering information as an annotation row for pheatmap
-    pred_clustering <- compare_tibble$pred_allocation[compare_tibble$dataset == curr_dataset][[1]] %>%
-      as.factor() %>%
-      as.data.frame() %>%
-      magrittr::set_rownames(probe_names) %>%
-      magrittr::set_colnames(c("Cluster"))
-
-
-    # Read in the expression data
-    f <- relevant_input_files[[i]]
-    expression_data <- fread(f)
-
-    # Tidy (remove NAs and row name column) and convert to the appropriate format
-    # for pheatmap
-    expression_data_tidy <- expression_data %>%
-      magrittr::extract(, -1) %>%
-      as.matrix() %>%
-      magrittr::set_rownames(probe_names)
-
-    expression_data_tidy[is.na(expression_data_tidy)] <- 0
-
-    data_files[[i]] <- expression_data
-
-    # Specify colors based on cluster labels
-    cluster_labels <- levels(pred_clustering$Cluster)
-    n_clusters <- length(cluster_labels)
-
-    n_total_clusters <- max(n_clusters, n_total_clusters)
-
+  if (do_expression_heatmap) {
     if (n_clusters > 20) {
-      
       print("Too many clusters. Cannot include annotation row.")
-      
+
       # Pheatmap
       expression_data_tidy %>%
         pheatmap(
@@ -984,27 +993,29 @@ if (do_expression_heatmap) {
           annotation_colors = annotation_colors
         )
     }
-
-    # Record the clustering for the current dataset for annotation purposes
-    big_annotation[[curr_dataset]] <- as.factor(pred_clustering$Cluster)
-
-    # Record the expression data from the current dataset in the compound dataset
-    mega_df <- mega_df %>%
-      dplyr::bind_cols(as.data.frame(expression_data_tidy))
   }
 
-  # row.names(mega_df) <- probe_names
+  # Record the clustering for the current dataset for annotation purposes
+  big_annotation[[curr_dataset]] <- as.factor(pred_clustering$Cluster)
 
-  big_file_name <- gen_ph_file_name %>%
-    paste0("all_datasets", plot_type)
+  # Record the expression data from the current dataset in the compound dataset
+  mega_df <- mega_df %>%
+    dplyr::bind_cols(as.data.frame(expression_data_tidy))
+}
 
-  big_ph_title <- "All datasets" %>%
-    paste0(gen_ph_title)
+# row.names(mega_df) <- probe_names
 
-  mega_matrix <- mega_df %>%
-    as.matrix() %>%
-    magrittr::set_rownames(probe_names)
+big_file_name <- gen_ph_file_name %>%
+  paste0("all_datasets", plot_type)
 
+big_ph_title <- "All datasets" %>%
+  paste0(gen_ph_title)
+
+mega_matrix <- mega_df %>%
+  as.matrix() %>%
+  magrittr::set_rownames(probe_names)
+
+if (do_expression_heatmap) {
   if (n_total_clusters > 20) {
     pheatmap(mega_matrix,
       filename = big_file_name,
@@ -1013,10 +1024,10 @@ if (do_expression_heatmap) {
   } else {
     col_pal <- sample(col_vector, n_total_clusters) %>%
       magrittr::set_names(cluster_labels)
-    
+
     annotation_colors <- list(Cluster = col_pal)
-    
-    
+
+
     pheatmap(mega_matrix,
       filename = big_file_name,
       main = big_ph_title,
@@ -1027,6 +1038,11 @@ if (do_expression_heatmap) {
 }
 
 # === Timing ===================================================================
+
+saveRDS(
+  compare_tibble,
+  paste0(save_path, "compare_tibble.rds")
+)
 
 if (args$time) {
   print((Sys.time() - stm_i))
