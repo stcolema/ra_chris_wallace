@@ -170,7 +170,7 @@ input_arguments <- function() {
     ),
 
     # Instruction to plot trees
-    optparse::make_option(c("--plot_heatmap_clusterings"),
+    optparse::make_option(c("--plot_similarity_matrices"),
       type = "logical",
       default = TRUE,
       help = "Instruction to plot heatmaps of the clustering over iterations [default= %default]",
@@ -224,6 +224,16 @@ input_arguments <- function() {
       default = 1,
       help = "Random seed for script [default= %default]",
       metavar = "integer"
+    ),
+
+
+    # Threshold for proportion of iterations we reuiqre probes to have the same
+    # label to be considered ''fused''
+    optparse::make_option(c("--fusion_threshold"),
+      type = "double",
+      default = 0.5,
+      help = "Threshold for proportion of iterations we reuiqre probes to have the same label to be considered ''fused'' [default= %default]",
+      metavar = "double"
     ),
 
     # Instruction to time programme
@@ -284,7 +294,7 @@ dataset_names <- tools::file_path_sans_ext(files_present)
 
 do_dendrograms_ie_trees <- args$plot_trees
 do_rand_plot <- args$plot_rand_index
-do_heatplot_clusterings <- args$plot_heatmap_clusterings
+do_similarity_matrices_plot <- args$plot_similarity_matrices
 do_phis_series <- args$plot_phi_series
 do_phis_densities <- args$plot_phi_densities
 do_expression_heatmap <- args$plot_expression_data
@@ -292,6 +302,9 @@ do_phis_histograms <- args$plot_phi_histograms
 
 # Plto type
 plot_type <- args$plot_type
+
+# Fusion threshold
+fusion_threshold <- args$fusion_threshold
 
 # Create the common save path
 save_path <- file_path
@@ -362,6 +375,10 @@ if (is.na(n_genes)) {
 if (do_phis_series) {
   print("Saving plots of phi as a time series.")
 
+  # Create directory to save this output in
+  loc_dir <- paste0(file_path, "Phi_series_plots/")
+  dir.create(loc_dir, showWarnings = FALSE)
+
   # Iterate over the files and then the combinations of phis
   for (i in 1:num_files) {
 
@@ -396,7 +413,7 @@ if (do_phis_series) {
         sub_title <- paste("Iterations", (burn + thin), "through", n_iter)
 
         # The save file name
-        save_title <- paste0(file_path, "file_", i, "_Phi_", j, k, plot_type)
+        save_title <- paste0(loc_dir, "file_", i, "_Phi_", j, k, plot_type)
 
         if (save_plots) {
           # Open graphic to save plot to
@@ -499,6 +516,10 @@ compare_tibble <- tibble(
   mdi_allocation = rep(vector("list", num_files), num_datasets),
   similarity_matrix = list(data.frame(matrix(ncol = n_genes, nrow = n_genes))),
   expression_data = rep(vector("list", num_files), num_datasets),
+  non_zero_probes_ind = rep(vector("list", num_files), num_datasets),
+  non_zero_probes = rep(vector("list", num_files), num_datasets),
+  fused_probes = rep(vector("list", num_files), num_datasets),
+  fused_non_zero_probes = rep(vector("list", num_files), num_datasets)
 )
 
 # === MDI output ===============================================================
@@ -612,6 +633,9 @@ for (j in 1:num_files) {
 if (do_dendrograms_ie_trees) {
   print("Saving dendrogram plots.")
 
+  loc_dir <- paste0(file_path, "Tree_plots/")
+  dir.create(loc_dir, showWarnings = FALSE)
+
   # Plot the dendrograms for the PSM
   for (i in 1:nrow(compare_tibble)) {
     dataset <- dataset_names[[i]]
@@ -650,10 +674,14 @@ colnames(probes_present_final) <- dataset_names
 if (do_phis_densities) {
   print("Saving phi density plots.")
 
+
+  loc_dir <- paste0(save_path, "Phi_density_plots/")
+  dir.create(loc_dir, showWarnings = FALSE)
+
   for (i in 1:length(phis)) {
     for (j in 1:ncol(phis[[i]])) {
       curr_phi <- colnames(phis[[i]])[j]
-      plot_name <- paste0(save_path, curr_phi, "_plot", plot_type)
+      # plot_name <- paste0(loc_dir, curr_phi, "_plot", plot_type)
 
       # png(plot_name)
       #
@@ -663,7 +691,7 @@ if (do_phis_densities) {
       #
       # dev.off()
 
-      density_plot_name <- paste0(save_path, curr_phi, "_density_plot", plot_type)
+      density_plot_name <- paste0(loc_dir, curr_phi, "_density_plot", plot_type)
 
       density_title <- paste(curr_phi, ": density plot")
 
@@ -708,10 +736,13 @@ if (do_phis_densities) {
 # === Phi histograms ===========================================================
 
 if (do_phis_histograms) {
+  loc_dir <- paste0(save_path, "Phi_histograms/")
+  dir.create(loc_dir, showWarnings = FALSE)
+
   for (i in 1:length(phis)) {
     for (j in 1:ncol(phis[[i]])) {
       curr_phi <- colnames(phis[[i]])[j]
-      plot_name <- paste0(save_path, curr_phi, "_plot", plot_type)
+      plot_name <- paste0(loc_dir, curr_phi, "_plot", plot_type)
 
 
       # Find which datasets are used here
@@ -729,7 +760,7 @@ if (do_phis_histograms) {
       dataset_1 <- dataset_names[dataset_index_1]
       dataset_2 <- dataset_names[dataset_index_2]
 
-      histogram_plot_name <- paste0(save_path, curr_phi, "_histogram_plot", plot_type)
+      histogram_plot_name <- paste0(loc_dir, curr_phi, "_histogram_plot", plot_type)
 
       histogram_title <- paste(curr_phi, ": histogram plot")
 
@@ -761,10 +792,12 @@ if (do_phis_histograms) {
 #   geom_density()
 
 
-# === Check clustering ocnvergence =============================================
+# === Plot posterior similarity matrices========================================
 
 # If making heatplots of the clusterings across iterations
-if (do_heatplot_clusterings) {
+if (do_similarity_matrices_plot) {
+  loc_dir <- paste0(save_path, "Similarity_matrices/")
+  dir.create(loc_dir, showWarnings = FALSE)
 
   # Define the type of file to save
   # plot_type <- ".pdf" # ".png" or ".pdf"
@@ -777,7 +810,7 @@ if (do_heatplot_clusterings) {
       dataset <- dataset_names[[i]]
 
       # Create the save location and file name
-      file_name <- paste0(save_path, "similarity_matrix_", dataset, plot_type)
+      file_name <- paste0(loc_dir, "similarity_matrix_", dataset, plot_type)
 
       # Create the title of the plot
       title <- paste("Similarity matrix for", dataset)
@@ -828,6 +861,8 @@ if (do_heatplot_clusterings) {
 # === Plot adjusted rand index==================================================
 # If instructed to make Rand index plots
 if (do_rand_plot) {
+  loc_dir <- paste0(save_path, "Adjusted_rand_index_plots/")
+  dir.create(loc_dir, showWarnings = FALSE)
 
   # Define the plot type
   # plot_type <- ".pdf" # ".png" or ".pdf"
@@ -848,7 +883,7 @@ if (do_rand_plot) {
       curr_title <- paste(generic_title, dataset)
 
       # Similarly for the name of the save file
-      curr_save_file <- paste0(generic_save_name, "rand_index_plot_", dataset, plot_type)
+      curr_save_file <- paste0(loc_dir, "rand_index_plot_", dataset, plot_type)
 
       # Create a vector of the adjusted rand index comparing the modal cluster
       # to the clustering at each iteration
@@ -884,16 +919,22 @@ if (do_rand_plot) {
 }
 
 # === Heatmap expression data ==================================================
+loc_dir <- paste0(save_path, "Expression_heatmaps/")
 
 if (do_expression_heatmap) {
   print("Saving gene expression heatmaps.")
+
+  
+  dir.create(loc_dir, showWarnings = FALSE)
 }
+
+
 # Directory holding the expression data files
 data_dir <- args$expression_dir
 
 # Generic title and filename for pheatmap
 gen_ph_title <- ": heatmap of expression data"
-gen_ph_file_name <- paste0(file_path, "pheatmap_")
+gen_ph_file_name <- paste0(loc_dir, "pheatmap_")
 
 # Find the expression data files
 mdi_input_files <- list.files(path = data_dir, full.names = T, include.dirs = F) %>%
@@ -952,12 +993,16 @@ for (i in 1:num_datasets) {
 
   expression_data_tidy[is.na(expression_data_tidy)] <- 0
 
-  print(str(compare_tibble$expression_data[compare_tibble$dataset == curr_dataset]))
-  
-  # Add the expression data to our tibble 
+  # print(str(compare_tibble$expression_data[compare_tibble$dataset == curr_dataset]))
+
+  # print(compare_tibble$non_zero_probes_ind) <- .non_zero_probes <- rowSums(expression_data_tidy) != 0)
+
+  # Add the expression data to our tibble
   num_occurences_dataset <- length(compare_tibble$expression_data[compare_tibble$dataset == curr_dataset])
-  for(k in 1 : num_occurences_dataset){
+  for (k in 1:num_occurences_dataset) {
     compare_tibble$expression_data[compare_tibble$dataset == curr_dataset][[k]] <- expression_data_tidy
+    compare_tibble$non_zero_probes_ind[compare_tibble$dataset == curr_dataset][[k]] <- .non_zero_probes <- rowSums(expression_data_tidy) != 0
+    compare_tibble$non_zero_probes[compare_tibble$dataset == curr_dataset][[k]] <- names(.non_zero_probes)[.non_zero_probes]
   }
 
   data_files[[i]] <- expression_data
@@ -1016,7 +1061,7 @@ mega_matrix <- mega_df %>%
   magrittr::set_rownames(probe_names)
 
 if (do_expression_heatmap) {
-  if (n_total_clusters > 20) {
+  if (TRUE) { # n_total_clusters > 20) {
     pheatmap(mega_matrix,
       filename = big_file_name,
       main = big_ph_title
@@ -1027,13 +1072,82 @@ if (do_expression_heatmap) {
 
     annotation_colors <- list(Cluster = col_pal)
 
-
     pheatmap(mega_matrix,
       filename = big_file_name,
       main = big_ph_title,
       annotation_row = big_annotation,
       annotation_colors = annotation_colors
     )
+  }
+}
+
+# === Fused probes =============================================================
+
+# Find which probes are ''fused'' across datasets
+# We save this as a named list to the tibble. Each entry in the list corresponds
+# to a dataset and records the fused probes between the current dataset and the 
+# entry name
+print("Finding ''fused'' probes.")
+for (k in 1:num_files) {
+  for (i in 1:num_datasets) {
+    
+    dataset_i <- dataset_names[i]
+    
+    fused_probes_curr <- vector("list", num_datasets) %>% 
+      magrittr::set_names(dataset_names)
+    
+    fused_non_zero_probes_curr <- vector("list", num_datasets) %>% 
+      magrittr::set_names(dataset_names)
+    
+    # fused_probes_curr[dataset_i] <- 1.0
+    
+    for (j in i:num_datasets) {
+      dataset_j <- dataset_names[j]
+      
+      count <- count + 1
+
+      # Find the unnormalised count for the numebr of times each probe has the same label across iterations
+      .fusion_count <- compare_tibble$mdi_allocation[compare_tibble$dataset == dataset_i][[k]] %>%
+        magrittr::equals(compare_tibble$mdi_allocation[compare_tibble$dataset == dataset_j][[k]])
+
+      # convert this to a propotion
+      .fusion_prob <- (1 / nrow(.fusion_count)) * colSums(.fusion_count)
+
+      # Record as ''fused'' those probes for which the proportion of times they 
+      # have a common labelling exceeds some user-defined threshold (defualt of 0.5)
+      
+      # compare_tibble$fused_probes[
+      #   compare_tibble$dataset == dataset_i
+      # ][[k]] <- 
+      
+      # This is rather ugly - we are recording a named list associating each 
+      # dataset with each other one
+      fused_probes_curr[[dataset_j]] <- .fused_probes_ind_i <- .fusion_prob > fusion_threshold
+
+      # compare_tibble$fused_probes[
+      #   compare_tibble$dataset == dataset_j
+      #   ][[k]] <- .fused_probes_ind_j <- .fusion_prob > fusion_threshold
+      
+      # Now record the "fused" probes excluding those which have a value of 0 across the dataset
+      # compare_tibble$fused_non_zero_probes[
+      #   compare_tibble$dataset == dataset_i
+      # ][[k]]
+      
+      fused_non_zero_probes_curr[[dataset_j]] <- .fused_probes_ind_i & compare_tibble$non_zero_probes_ind[compare_tibble$dataset == dataset_i][[k]]
+
+      # compare_tibble$fused_non_zero_probes[
+      #   compare_tibble$dataset == dataset_j
+      # ][[k]] <- .fused_probes_ind_j & compare_tibble$non_zero_probes_ind[compare_tibble$dataset == dataset_j][[k]]
+    }
+    
+    # Record the named lists within the tibble
+    compare_tibble$fused_probes[
+      compare_tibble$dataset == dataset_i
+    ][[k]] <- fused_probes_curr
+    
+    compare_tibble$fused_non_zero_probes[
+        compare_tibble$dataset == dataset_i
+      ][[k]] <- fused_non_zero_probes_curr
   }
 }
 

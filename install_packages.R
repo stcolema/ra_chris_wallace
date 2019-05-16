@@ -13,7 +13,9 @@ required_packages <- c(
   "data.table",
   "optparse",
   "magrittr",
-  "RColorBrewer"
+  "RColorBrewer",
+  "png",
+  "gridExtra"
 )
 
 for (package in required_packages) {
