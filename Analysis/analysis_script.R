@@ -338,7 +338,7 @@ mcmc_out_lst <- list() # vector("list", num_files)
 # Large palette of qualitative colours
 # (see https://stackoverflow.com/questions/15282580/how-to-generate-a-number-of-most-distinctive-colors-in-r)
 qual_col_pals <- brewer.pal.info[brewer.pal.info$category == "qual", ]
-col_vector <- unlist(mapply(brewer.pal, qual_col_pals$maxcolors, rownames(qual_col_pals)))
+col_vector <- brewer.pal(n = 12, name = "Paired") # unlist(mapply(brewer.pal, qual_col_pals$maxcolors, rownames(qual_col_pals)))
 
 for (i in 1:num_files) {
   curr_name <- file_names[[i]]
@@ -1014,7 +1014,7 @@ for (i in 1:num_datasets) {
   n_total_clusters <- max(n_clusters, n_total_clusters)
 
   if (do_expression_heatmap) {
-    if (n_clusters > 20) {
+    if (n_clusters > 12) {
       print("Too many clusters. Cannot include annotation row.")
 
       # Pheatmap
@@ -1024,16 +1024,20 @@ for (i in 1:num_datasets) {
           main = ph_title
         )
     } else {
-      col_pal <- sample(col_vector, n_clusters) %>%
+      col_pal <- col_vector[1:n_clusters] %>% 
+        # sample(col_vector, n_clusters) %>%
         magrittr::set_names(cluster_labels)
 
       annotation_colors <- list(Cluster = col_pal)
-
+      
+      row_order <- pred_clustering$Cluster %>% order()
+      
       # Pheatmap
-      expression_data_tidy %>%
+      expression_data_tidy[row_order, ] %>%
         pheatmap(
           filename = file_name,
           main = ph_title,
+          cluster_rows = F,
           annotation_row = pred_clustering,
           annotation_colors = annotation_colors
         )
@@ -1101,7 +1105,7 @@ for (k in 1:num_files) {
     
     # fused_probes_curr[dataset_i] <- 1.0
     
-    for (j in i:num_datasets) {
+    for (j in 1:num_datasets) {
       dataset_j <- dataset_names[j]
       
       count <- count + 1
