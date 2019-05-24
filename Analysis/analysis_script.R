@@ -181,7 +181,7 @@ input_arguments <- function() {
     # .csv connecting probe IDs to genes
     optparse::make_option(c("--probe_key"),
       type = "character",
-      default = "/home/MINTS/sdc56/Desktop/ra_chris_wallace/Analysis/probe_key.csv",
+      default = "/home/MINTS/sdc56/Desktop/ra_chris_wallace/Analysis/probe_key_unique_names.csv",
       help = "Name of .csv files describing which probes are associated with which gene [default= %default]",
       metavar = "character"
     ),
@@ -624,6 +624,24 @@ for (j in 1:num_files) {
     mdi_allocation[[i]] <- .mdi_alloc <- mcmc_out_lst[[j]] %>%
       dplyr::select(contains(dataset_name)) %>%
       magrittr::extract(start_index:eff_n_iter, )
+    
+    if (i == 1) {
+      
+      # Find the Probe IDs
+      probe_names <- colnames(.mdi_alloc) %>%
+        stringr::str_remove_all(paste0(dataset_name, "_")) %>%
+        stringr::str_remove_all("X")
+      
+      # Find the relevant part of the key
+      probe_key_rel <- probe_key[probe_key$ProbeID %in% probe_names, ]
+      
+      # Pull out the Gene IDs in the correct order
+      gene_id <- probe_key_rel %>%
+        .[match(probe_names, .$ProbeID)] %>%
+        .$Unique_gene_name
+      
+      unique_gene_id <- gene_id
+    }
 
     # mdi_pos_sim_mat[[i]][[1]] <- .sim_mat <- similarity_mat(t(.mdi_alloc[,1:1000]))
 
@@ -635,13 +653,9 @@ for (j in 1:num_files) {
 
     # print("This point.")
 
-    if (i == 1) {
-      probe_names <- colnames(.mdi_alloc) %>%
-        stringr::str_remove_all(paste0(dataset_name, "_")) %>%
-        stringr::str_remove_all("X")
-    }
+    
 
-    row.names(.sim_mat) <- colnames(.sim_mat) <- probe_names
+    row.names(.sim_mat) <- colnames(.sim_mat) <- gene_id
 
     # print("Now over here")
 
@@ -700,16 +714,16 @@ for (j in 1:num_files) {
 # )
 
 # === Find GENE names ==========================================================
-
-probe_key_rel <- probe_key[probe_key$ProbeID %in% probe_names, ]
-
-# Pull out the Gene IDs in the correct order
-gene_id <- probe_key_rel %>%
-  .[match(probe_names, .$ProbeID)] %>%
-  .$Gene
-
-unique_gene_id <- gene_id %>%
-  unique_names_from_recurring()
+# 
+# probe_key_rel <- probe_key[probe_key$ProbeID %in% probe_names, ]
+# 
+# # Pull out the Gene IDs in the correct order
+# gene_id <- probe_key_rel %>%
+#   .[match(probe_names, .$ProbeID)] %>%
+#   .$Unique_gene_name
+# 
+# unique_gene_id <- gene_id  # %>%
+#   unique_names_from_recurring()
 
 # === Plot PSM trees ===========================================================
 if (do_dendrograms_ie_trees) {
@@ -1064,10 +1078,10 @@ datasets_relevant <- expression_datasets[datasets_relevant_indices]
 relevant_input_files <- mdi_input_files[datasets_relevant_indices]
 
 mega_df <- data.frame(matrix(nrow = n_genes, ncol = 0)) %>%
-  magrittr::set_rownames(probe_names)
+  magrittr::set_rownames(gene_id)
 
 big_annotation <- data.frame(matrix(nrow = n_genes, ncol = num_datasets)) %>%
-  magrittr::set_rownames(probe_names) %>%
+  magrittr::set_rownames(gene_id) %>%
   magrittr::set_colnames(datasets_relevant)
 
 n_total_clusters <- 0
@@ -1086,7 +1100,7 @@ for (i in 1:num_datasets) {
   pred_clustering <- compare_tibble$pred_allocation[compare_tibble$dataset == curr_dataset][[1]] %>%
     as.factor() %>%
     as.data.frame() %>%
-    magrittr::set_rownames(probe_names) %>%
+    magrittr::set_rownames(gene_id) %>%
     magrittr::set_colnames(c("Cluster"))
 
 
@@ -1099,7 +1113,7 @@ for (i in 1:num_datasets) {
   expression_data_tidy <- expression_data %>%
     magrittr::extract(, -1) %>%
     as.matrix() %>%
-    magrittr::set_rownames(probe_names)
+    magrittr::set_rownames(gene_id)
 
   expression_data_tidy[is.na(expression_data_tidy)] <- 0
 
@@ -1273,7 +1287,7 @@ if (do_fused_gene_expression) {
   fused_gene_heatmaps(
     compare_tibble$expression_data,
     compare_tibble$fused_probes,
-    unique_gene_id,
+    gene_id,
     dataset_names,
     file_path,
     num_datasets,
