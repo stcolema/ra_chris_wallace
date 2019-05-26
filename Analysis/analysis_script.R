@@ -332,6 +332,12 @@ burn <- args$burn
 n_genes <- args$n_genes
 
 # The files / tissues used in the MDI
+# Have to have the order from the call
+# CD4, CD8, CVD19, CD14, CD15, platelets, ileonic, colonic and rectal biopsies
+# transcriptome data for six circulating immune cell types (CD4+ T lymphocytes,
+# CD8+ T lymphocytes, CD19+ B lymphocytes, CD14+ monocytes, CD15+ granulocytes,
+# platelets) as well as ileal, colonic, and rectal biopsies (IL, TR, RE)
+# 323 healthy Europeans
 files_present <- args$datasets %>%
   strsplit(., " ") %>%
   unlist()
@@ -372,10 +378,7 @@ mdi_output_files <- list.files(path = file_path, full.names = T, include.dirs = 
 num_files <- length(mdi_output_files)
 file_names <- basename(tools::file_path_sans_ext(mdi_output_files))
 
-# Declare empty variable to capture information
-mdi_allocation <- list()
-allocation_list <- list()
-
+# The effective number of iterations saved
 eff_n_iter <- n_iter / thin # - burn
 
 # For plotting phis
@@ -393,26 +396,10 @@ col_vector <- brewer.pal(n = 12, name = "Paired") # unlist(mapply(brewer.pal, qu
 
 for (i in 1:num_files) {
   curr_name <- file_names[[i]]
-  # comp_mcmc_out <- readMdiMcmcOutput(mdi_output_files_2)
-  # mcmc_out_lst[[curr_name]] <- readMdiMcmcOutput(mdi_output_files[[i]])
-  # my_mcmc_out <-  readMdiMcmcOutput(mdi_output_files[[i]])
   mcmc_out_lst[[curr_name]] <- fread(mdi_output_files[[i]])
 }
 
-
-# mcmc_output <- readMdiMcmcOutput(mdi_output_file)
-
-# clust_occ <- mcmc_out_lst %>%
-# lapply(getClustersOccupied)
-
-# clust_occ <- getClustersOccupied(mcmc_output)
-# head(clust_occ)
-
-# By the 8 x 25 = 200 iteration we have reached stationarity in the number of
-# clusters occupied
-# summary(clust_occ[8:800, ])
-
-# NOte that as each mdi output is on the same data, we only need to count one dataset
+# Note that as each mdi output is on the same data, we only need to count one dataset
 if (is.na(n_genes)) {
   n_genes <- mcmc_out_lst[[1]] %>%
     select(contains("Dataset1")) %>%
@@ -423,6 +410,7 @@ if (is.na(n_genes)) {
 
 # === Plotting phis ==========================================================
 
+# Plot phi value between each dataset combination across iterations
 if (do_phis_series) {
   plot_phi_series(mcmc_out_lst,
     file_path,
@@ -432,145 +420,12 @@ if (do_phis_series) {
     eff_n_iter,
     save_plots = T
   )
-
-  # print("Saving plots of phi as a time series.")
-  #
-  # plot_phi_series(
-  #   mcmc_out_lst,
-  #   file_path,
-  #   num_files,
-  #   num_datasets,
-  #   start_index,
-  #   eff_n_iter,
-  #   save_plots
-  # )
-  #
-  # # Create directory to save this output in
-  # loc_dir <- paste0(file_path, "Phi_series_plots/")
-  # dir.create(loc_dir, showWarnings = FALSE)
-  #
-  # # Iterate over the files and then the combinations of phis
-  # for (i in 1:num_files) {
-  #
-  #   # For heatmapping the phis across datasets
-  #   phi_comparison_df <- as.data.frame(matrix(
-  #     nrow = num_datasets,
-  #     ncol = num_datasets,
-  #     0
-  #   )) %>%
-  #     magrittr::set_colnames(dataset_names) %>%
-  #     magrittr::set_rownames(dataset_names)
-  #
-  #   for (j in 1:(num_datasets - 1)) {
-  #     for (k in (j + 1):num_datasets) {
-  #
-  #       # Count for the index of the list object where phis are stored
-  #       count <- count + 1
-  #
-  #       col_name <- paste0("Phi_", j, k)
-  #
-  #       # Pull out the column for the relevant phi
-  #       phis[[count]] <- mcmc_out_lst[[i]] %>%
-  #         select(contains(col_name))
-  #
-  #       # Which tissues
-  #       dataset_j <- dataset_names[[j]]
-  #       dataset_k <- dataset_names[[k]]
-  #
-  #       # Create plot labels
-  #       plot_title <- bquote(Phi ~ "for" ~ .(dataset_j) ~ "and" ~ .(dataset_k))
-  #       y_axis_title <- substitute(Phi[ind1], list(ind1 = paste0(j, k)))
-  #       sub_title <- paste("Iterations", (burn + thin), "through", n_iter)
-  #
-  #       # The save file name
-  #       save_title <- paste0(loc_dir, "file_", i, "_Phi_", j, k, plot_type)
-  #
-  #       if (save_plots) {
-  #         # Open graphic to save plot to
-  #         if (plot_type == ".pdf") {
-  #           pdf(save_title)
-  #         } else {
-  #           png(save_title)
-  #         }
-  #       }
-  #
-  #       # cat("Start index:" )
-  #       # print(start_index)
-  #       # cat("Number of iterations:")
-  #       # print(n_iter)
-  #       #
-  #       # cat("Effective number of iterations:")
-  #       # print(eff_n_iter)
-  #       #
-  #       # print("Description of phi parameter")
-  #       # print(str(phis[[count]][[1]]))
-  #       #
-  #       # print("That's phi")
-  #       # print("")
-  #
-  #       # Plot Phi vs index (ignore initial values as misleading)
-  #       plot(start_index:eff_n_iter, phis[[count]][[1]][start_index:eff_n_iter],
-  #         main = plot_title,
-  #         col.main = "black",
-  #         sub = sub_title,
-  #         col.sub = "blue",
-  #         ylab = y_axis_title,
-  #         xlab = "Index"
-  #       )
-  #
-  #       # Close graphic
-  #       if (save_plots) {
-  #         dev.off()
-  #       }
-  #
-  #       mean_phi <- phis[[count]][[1]][start_index:eff_n_iter] %>% mean()
-  #
-  #       phi_comparison_df[j, k] <- phi_comparison_df[k, j] <- mean_phi
-  #     }
-  #   }
-  #
-  #   # Heatmap the average phi (after some burn in)
-  #   phi_pheatmap_title <- "Heatmap comparing phis across datasets"
-  #   phi_pheatmap_file_name <- paste0(save_path, "Phi_heatmap_", i, plot_type)
-  #
-  #   if (save_plots) {
-  #     pheatmap(phi_comparison_df,
-  #       main = phi_pheatmap_title,
-  #       filename = phi_pheatmap_file_name
-  #     )
-  #
-  #     # dev.off()
-  #   } else {
-  #     pheatmap(phi_comparison_df,
-  #       main = phi_pheatmap_title,
-  #       filename = phi_pheatmap_file_name
-  #     )
-  #   }
-  # }
 }
 
 # === Prepare the tibble =======================================================
 
 # Create an empty dataframe with column names corresponding to dataset numbers
 compare_df <- data.frame(matrix(ncol = num_datasets, nrow = n_genes))
-# colnames(compare_df) <- col_names
-
-# Remove the output file from this list if you saved it in the same location as
-# the data files
-# if (mdi_output_file %in% files_present) {
-#   index_to_empty <- files_present == mdi_output_file
-#   files_present %<>%
-#     list.remove(index_to_empty)
-# }
-
-# Have to have the order from the call
-# CD4, CD8, CVD19, CD14, CD15, platelets, ileonic, colonic and rectal biopsies
-# transcriptome data for six circulating immune cell types (CD4+ T lymphocytes,
-# CD8+ T lymphocytes, CD19+ B lymphocytes, CD14+ monocytes, CD15+ granulocytes,
-# platelets) as well as ileal, colonic, and rectal biopsies (IL, TR, RE)
-# 323 healthy Europeans
-# files_present <- c("CD14.csv", "CD15.csv", "IL.csv", "CD4.csv", "CD8.csv", "CD19.csv", "PLA.csv", "RE.csv", "TR.csv")
-# dataset_names <- tools::file_path_sans_ext(files_present)
 
 # Set the cell type to the column names (make sure order is as per MDI call)
 colnames(compare_df) <- dataset_names
@@ -597,14 +452,10 @@ compare_tibble <- tibble(
 # Global similarity between datasets
 phis <- list()
 
-# x4 <- sample(1:eff_iter, 50, replace=F)
 
 for (j in 1:num_files) {
-  # compare_tibble$MDI_allocation[j] <- list()
-  # compare_tibble$Pred_allocation[j] <- list()
 
-  mdi_pos_sim_mat <- list()
-  check_median_makes_sense_map <- list()
+  # mdi_pos_sim_mat <- list()
 
   # Capture the allocation information in the named lists and the predicted
   # allocation in the dataframe
@@ -617,11 +468,7 @@ for (j in 1:num_files) {
     dataset_name <- paste0("Dataset", i)
 
     # Get the allocation and drop the burn in
-    # mdi_allocation[[i]] <- .mdi_alloc <- getMdiAllocations(mcmc_out_lst[[j]], i)
-
-    # mdi_alloc2 <- getMdiAllocations(comp_mcmc_out, i)
-
-    mdi_allocation[[i]] <- .mdi_alloc <- mcmc_out_lst[[j]] %>%
+    .mdi_alloc <- mcmc_out_lst[[j]] %>%
       dplyr::select(contains(dataset_name)) %>%
       magrittr::extract(start_index:eff_n_iter, )
     
@@ -640,90 +487,35 @@ for (j in 1:num_files) {
         .[match(probe_names, .$ProbeID)] %>%
         .$Unique_gene_name
       
-      unique_gene_id <- gene_id
+      # unique_gene_id <- gene_id
     }
 
-    # mdi_pos_sim_mat[[i]][[1]] <- .sim_mat <- similarity_mat(t(.mdi_alloc[,1:1000]))
 
-    # print(str(.mdi_alloc))
-    # print(start_index)
-    # print(eff_n_iter)
+    # Create and save the posterior similarity matrix (PSM) for the current 
+    # allocation
+    # We transpose as we are interested in how the genes cluster rahter than the 
+    # people
+    .sim_mat <- similarity_mat(t(.mdi_alloc))
 
-    mdi_pos_sim_mat[[i]] <- .sim_mat <- similarity_mat(t(.mdi_alloc))
-
-    # print("This point.")
-
-    
-
+    # Set the row nad column names of the PSM
     row.names(.sim_mat) <- colnames(.sim_mat) <- gene_id
 
-    # print("Now over here")
-
+    # Set the column names of the MDI to the Probe IDs (consider using gene IDs)
     colnames(.mdi_alloc) <- probe_names
 
+    
+    # Save these objects to the tibble
     compare_tibble$mdi_allocation[i + (j - 1) * num_files][[1]] <- .mdi_alloc
-
     compare_tibble$similarity_matrix[i + (j - 1) * num_files][[1]] <- .sim_mat
 
-    # sams_pos_sim <- genPosteriourSimilarityMatrix(.mdi_alloc)
-    #
-    # # Individuals are columns rather than rows (henc transpose)
-    # mdi_pos_sim_mat[[i]] <- list()
-    # mdi_pos_sim_mat[[i]][[1]] <- .sim_mat <- similarity_mat(t(.mdi_alloc[,1:1000]))
-    # mdi_pos_sim_mat[[i]][[2]] <- .sim_mat <- similarity_mat(t(.mdi_alloc[,5000:6000]))
-    # mdi_pos_sim_mat[[i]][[3]] <- .sim_mat <- similarity_mat(t(.mdi_alloc[,11000:12000 ]))
-    # # break
-    # # By checking the imilarity of each row we can decide if the median is an
-    # # accurate method to allocate class (if all rows are highly similar label
-    # # flipping did not occur)
-    # check_median_makes_sense_map[[i]] <- .sense_check <- similarity_mat(.mdi_alloc[c(seq(1, eff_n_iter, 25), eff_n_iter), ])
-    # break
-    # }
-
-    # pheatmap(mdi_pos_sim_mat[[1]])
-    # pheatmap(.sim_mat)
-    # x1 <- hclust(dist(.sim_mat), method = "complete", members = NULL)
-    # plot(x1)
-
-
-    allocation_list[[i]] <- .pred_alloc <- .sim_mat %>%
+    # Use the Simtocl() function from mcclust to interpret the PSM as a clustering
+    .pred_alloc <- .sim_mat %>%
       mcclust::Simtocl()
-    # dist() %>%
-    # hclust() %>%
-    # cutree(h = 3.2) # abritrary number here based on pheatmap of .sim_mat
 
-    # allocation_list[[i]] <- .pred_alloc <- apply(.mdi_alloc[-(1:burn), ], 2, getmode)
-    # compare_df[[dataset_names[i]]] <- .pred_alloc
-
-    # print(.pred_alloc)
-
+    # Record this in the tibble
     compare_tibble$pred_allocation[i + (j - 1) * num_files][[1]] <- .pred_alloc
-
-
-    # if (i == 1) {
-    # row.names(compare_df) <- names(.pred_alloc)
-    # }
   }
-  # compare_tibble$MDI_allocation[j] <- mdi_allocation
-  # compare_tibble$Pred_allocation[j] <- compare_df
 }
-
-# saveRDS(
-#   compare_tibble,
-#   paste0(save_path, "compare_tibble.rds")
-# )
-
-# === Find GENE names ==========================================================
-# 
-# probe_key_rel <- probe_key[probe_key$ProbeID %in% probe_names, ]
-# 
-# # Pull out the Gene IDs in the correct order
-# gene_id <- probe_key_rel %>%
-#   .[match(probe_names, .$ProbeID)] %>%
-#   .$Unique_gene_name
-# 
-# unique_gene_id <- gene_id  # %>%
-#   unique_names_from_recurring()
 
 # === Plot PSM trees ===========================================================
 if (do_dendrograms_ie_trees) {
@@ -769,127 +561,17 @@ colnames(probes_present_final) <- dataset_names
 
 if (do_phis_densities) {
   print("Saving phi density plots.")
-  plot_phi_densities(phis, file_path)
+  plot_phi_densities(phis, file_path, start_index, eff_n_iter)
 
-  # loc_dir <- paste0(save_path, "Phi_density_plots/")
-  # dir.create(loc_dir, showWarnings = FALSE)
-  #
-  # for (i in 1:length(phis)) {
-  #   for (j in 1:ncol(phis[[i]])) {
-  #     curr_phi <- colnames(phis[[i]])[j]
-  #     # plot_name <- paste0(loc_dir, curr_phi, "_plot", plot_type)
-  #
-  #     # png(plot_name)
-  #     #
-  #     # phis[[i]][, ..j] %>%
-  #     #   unlist() %>%
-  #     #   plot()
-  #     #
-  #     # dev.off()
-  #
-  #     density_plot_name <- paste0(loc_dir, curr_phi, "_density_plot", plot_type)
-  #
-  #     density_title <- paste(curr_phi, ": density plot")
-  #
-  #     # Find which datasets are used here
-  #     dataset_indices <- readr::parse_number(curr_phi)
-  #
-  #     # The following steps do not work if we have more than 9 datasets (which is not relevant to me)
-  #     # This extracts the first dataset index (i.e. from 67 takes 6)
-  #     dataset_index_1 <- dataset_indices[1] %>%
-  #       "/"(10) %>%
-  #       floor(.)
-  #
-  #     # This extracts the secodn dataset index
-  #     dataset_index_2 <- dataset_indices[1] %>% "%%"(10)
-  #
-  #     dataset_1 <- dataset_names[dataset_index_1]
-  #     dataset_2 <- dataset_names[dataset_index_2]
-  #
-  #     density_subtitle <- paste(
-  #       "Iterations",
-  #       (burn + thin),
-  #       "through",
-  #       n_iter,
-  #       "for",
-  #       dataset_1,
-  #       "and",
-  #       dataset_2
-  #     )
-  #
-  #     ggplot(data = phis[[1]][start_index:n_iter, ], aes_string(x = curr_phi)) +
-  #       geom_density() +
-  #       labs(
-  #         title = density_title,
-  #         subtitle = density_subtitle
-  #       )
-  #
-  #     ggsave(density_plot_name)
-  #   }
-  # }
 }
 
 # === Phi histograms ===========================================================
 
 if (do_phis_histograms) {
   print("Saving phi histogram plots.")
-  plot_phi_histograms(phis, file_path)
+  plot_phi_histograms(phis, file_path, start_index, eff_n_iter)
 
-  # loc_dir <- paste0(save_path, "Phi_histograms/")
-  # dir.create(loc_dir, showWarnings = FALSE)
-  #
-  # for (i in 1:length(phis)) {
-  #   for (j in 1:ncol(phis[[i]])) {
-  #     curr_phi <- colnames(phis[[i]])[j]
-  #     plot_name <- paste0(loc_dir, curr_phi, "_plot", plot_type)
-  #
-  #
-  #     # Find which datasets are used here
-  #     dataset_indices <- readr::parse_number(curr_phi)
-  #
-  #     # The following steps do not work if we have more than 9 datasets (which is not relevant to me)
-  #     # This extracts the first dataset index (i.e. from 67 takes 6)
-  #     dataset_index_1 <- dataset_indices[1] %>%
-  #       "/"(10) %>%
-  #       floor(.)
-  #
-  #     # This extracts the secodn dataset index
-  #     dataset_index_2 <- dataset_indices[1] %>% "%%"(10)
-  #
-  #     dataset_1 <- dataset_names[dataset_index_1]
-  #     dataset_2 <- dataset_names[dataset_index_2]
-  #
-  #     histogram_plot_name <- paste0(loc_dir, curr_phi, "_histogram_plot", plot_type)
-  #
-  #     histogram_title <- paste(curr_phi, ": histogram plot")
-  #
-  #     histogram_subtitle <- paste(
-  #       "Iterations",
-  #       (burn + thin),
-  #       "through",
-  #       n_iter,
-  #       "for",
-  #       dataset_1,
-  #       "and",
-  #       dataset_2
-  #     )
-  #
-  #     ggplot(data = phis[[1]][start_index:n_iter, ], aes_string(x = curr_phi)) +
-  #       geom_histogram() +
-  #       labs(
-  #         title = histogram_title,
-  #         subtitle = histogram_subtitle
-  #       )
-  #
-  #     ggsave(histogram_plot_name)
-  #   }
-  # }
 }
-
-
-# ggplot(data = phis[[1]], aes(x = Phi_12)) +
-#   geom_density()
-
 
 # === Plot posterior similarity matrices =======================================
 
@@ -905,69 +587,7 @@ if (do_similarity_matrices_plot) {
     num_datasets,
     file_path
   )
-
-
-  # loc_dir <- paste0(save_path, "Similarity_matrices/")
-  # dir.create(loc_dir, showWarnings = FALSE)
-  #
-  # # Define the type of file to save
-  # # plot_type <- ".pdf" # ".png" or ".pdf"
-  #
-  # for (j in 1:num_files) {
-  #   # curr_save_path <- paste0(save_path, "seed_", j)
-  #   # Iterate over datasets
-  #   for (i in 1:num_datasets) {
-  #     # Find the dataset name
-  #     dataset <- dataset_names[[i]]
-  #
-  #     # Create the save location and file name
-  #     file_name <- paste0(loc_dir, "similarity_matrix_", dataset, plot_type)
-  #
-  #     # Create the title of the plot
-  #     title <- paste("Similarity matrix for", dataset)
-  #
-  #     rel_rows <- probes_present_final[, i]
-  #
-  #     # re_mat <- .sim_mat
-  #     # re_mat[! rel_rows, ! rel_rows] <- 100
-  #     #
-  #     # ph1 <- pheatmap(re_mat)
-  #     # ord1 <- ph1$tree_col[["order"]]
-  #     # pheatmap(.sim_mat[ord1, ord1], cluster_cols = F, cluster_rows = F)
-  #     #
-  #     # rel_sim_mat <- compare_tibble$similarity_matrix[i + (j - 1) * num_files][[1]] %>%
-  #     #   magrittr::extract(., rel_rows, )
-  #
-  #     # Make the heatmap (note that we do not cluster rows).
-  #     # We use a sample of the iterations as otherwise it becomes too heavy
-  #
-  #     # print(mcclust::Simtocl(compare_tibble$similarity_matrix[i + (j - 1) * num_files][[1]][1:4, 1:4]))
-  #     # print(compare_tibble$similarity_matrix[i + (j - 1) * num_files][[1]][1:4, 1:4])
-  #
-  #     if (save_plots) {
-  #       ph <- pheatmap(compare_tibble$similarity_matrix[i + (j - 1) * num_files][[1]],
-  #         main = title,
-  #         cluster_rows = T,
-  #         filename = file_name
-  #       )
-  #     } else {
-  #       ph <- pheatmap(compare_tibble$similarity_matrix[i + (j - 1) * num_files][[1]],
-  #         main = title,
-  #         cluster_rows = T
-  #       )
-  #     }
-  #   }
-  # }
 }
-# pheatmap::pheatmap(check_median_makes_sense_map[[1]], cluster_rows = F, cluster_cols = T)
-# pheatmap::pheatmap(check_median_makes_sense_map[[2]], cluster_rows = F, cluster_cols = T)
-# pheatmap::pheatmap(check_median_makes_sense_map[[3]], cluster_rows = F, cluster_cols = T)
-# pheatmap::pheatmap(check_median_makes_sense_map[[4]], cluster_rows = F, cluster_cols = T)
-# pheatmap::pheatmap(check_median_makes_sense_map[[5]], cluster_rows = F, cluster_cols = T)
-# pheatmap::pheatmap(check_median_makes_sense_map[[6]], cluster_rows = F, cluster_cols = T)
-# pheatmap::pheatmap(check_median_makes_sense_map[[7]], cluster_rows = F, cluster_cols = T)
-# pheatmap::pheatmap(check_median_makes_sense_map[[8]], cluster_rows = F, cluster_cols = T)
-# pheatmap::pheatmap(check_median_makes_sense_map[[9]], cluster_rows = F, cluster_cols = T)
 
 # === Plot adjusted rand index==================================================
 # If instructed to make Rand index plots
@@ -983,63 +603,6 @@ if (do_rand_plot) {
     eff_n_iter,
     burn
   )
-
-
-  # loc_dir <- paste0(save_path, "Adjusted_rand_index_plots/")
-  # dir.create(loc_dir, showWarnings = FALSE)
-  #
-  # # Define the plot type
-  # # plot_type <- ".pdf" # ".png" or ".pdf"
-  #
-  # # Create the lists to hold the dataset specific results
-  # rand <- list()
-  # rand_plots <- list()
-  #
-  #
-  # for (j in 1:num_files) {
-  #
-  #   # Loop over the datasets
-  #   for (i in 1:num_datasets) {
-  #     # The current dataset name
-  #     dataset <- dataset_names[[i]]
-  #
-  #     # Append this to the generic title to create the specific title
-  #     curr_title <- paste(generic_title, dataset)
-  #
-  #     # Similarly for the name of the save file
-  #     curr_save_file <- paste0(loc_dir, "rand_index_plot_", dataset, plot_type)
-  #
-  #     # Create a vector of the adjusted rand index comparing the modal cluster
-  #     # to the clustering at each iteration
-  #     rand[[i + (j - 1) * num_files]] <- apply(
-  #       compare_tibble$mdi_allocation[i + (j - 1) * num_files][[1]],
-  #       # mdi_allocation[[i]],
-  #       1,
-  #       # mcclust::arandi,
-  #       mclust::adjustedRandIndex,
-  #       compare_tibble$mdi_allocation[i][[1]][eff_n_iter - burn, ]
-  #       # compare_df[, i]
-  #     )
-  #
-  #     # As we use ggplot2, put this in a dataframe
-  #     plot_data <- data.frame(Rand_index = rand[[i]], Iteration = 1:length(rand[[i]]))
-  #
-  #     # Plot the Rand index against iteration number
-  #     rand_plots[[i]] <- ggplot2::ggplot(data = plot_data) +
-  #       ggplot2::geom_point(ggplot2::aes(x = Iteration, y = Rand_index)) +
-  #       ggplot2::labs(
-  #         title = curr_title,
-  #         subtitle = "Comparing clustering in last iteration to clustering at each iteration",
-  #         x = "Index",
-  #         y = "Adjusted Rand Index"
-  #       )
-  #
-  #     if (save_plots) {
-  #       # Save the plot
-  #       ggplot2::ggsave(curr_save_file, plot = rand_plots[[i]])
-  #     }
-  #   }
-  # }
 }
 
 # === Heatmap expression data ==================================================

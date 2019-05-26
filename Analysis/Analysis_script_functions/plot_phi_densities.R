@@ -2,7 +2,7 @@
 
 # Function to save density plot of phi parameter from MDI over MCMC iterations
 
-plot_phi_densities <- function(phis, file_path) {
+plot_phi_densities <- function(phis, file_path, start_index, eff_n_iter) {
   loc_dir <- paste0(file_path, "Phi_density_plots/")
   dir.create(loc_dir, showWarnings = FALSE)
 
@@ -40,7 +40,7 @@ plot_phi_densities <- function(phis, file_path) {
         dataset_2
       )
 
-      ggplot(data = phis[[1]][start_index:n_iter, ], aes_string(x = curr_phi)) +
+      ggplot(data = phis[[1]][start_index:eff_n_iter, ], aes_string(x = curr_phi)) +
         geom_density() +
         labs(
           title = density_title,

@@ -2,7 +2,7 @@
 
 # Function to save histogram of phi parameter from MDI over MCMC iterations
 
-plot_phi_histograms <- function(phis, file_path) {
+plot_phi_histograms <- function(phis, file_path, start_index, eff_n_iter) {
   loc_dir <- paste0(file_path, "Phi_histograms/")
   dir.create(loc_dir, showWarnings = FALSE)
 
@@ -41,7 +41,7 @@ plot_phi_histograms <- function(phis, file_path) {
         dataset_2
       )
 
-      ggplot(data = phis[[1]][start_index:n_iter, ], aes_string(x = curr_phi)) +
+      ggplot(data = phis[[1]][start_index:eff_n_iter, ], aes_string(x = curr_phi)) +
         geom_histogram() +
         labs(
           title = histogram_title,
