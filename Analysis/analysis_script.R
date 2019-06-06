@@ -27,7 +27,8 @@ function_scripts <- c(
   "plot_similarity_matrices.R",
   "plot_rand_index.R",
   "plot_fused_genes.R",
-  "plot_comparison_expression_clustering.R"
+  "plot_comparison_expression_clustering.R",
+  "plot_mass_parameters.R"
 )
 
 for (f in paste0(function_dir, function_scripts)) {
@@ -246,6 +247,14 @@ input_arguments <- function() {
       metavar = "logical"
     ),
 
+
+    # Instruction to plot phi densities
+    optparse::make_option(c("--plot_mass_parameters"),
+      type = "logical",
+      default = TRUE,
+      help = "Instruction to plot mass parameter values across iterations for each dataset [default= %default]",
+      metavar = "logical"
+    ),
     # Location for expression data
     optparse::make_option(c("--expression_dir"),
       type = "character",
@@ -323,10 +332,10 @@ set.seed(seed)
 # Colour palette for PSMs
 col_pal <- colorRampPalette(brewer.pal(n = 7, name = "Blues"))(100)
 
-col_pal_sim = colorRampPalette(c("#FF9900", "white", "#146EB4"))(100)
-col_pal_expr = colorRampPalette(c("#146EB4", "white", "#FF9900"))(100)
+col_pal_sim <- colorRampPalette(c("#FF9900", "white", "#146EB4"))(100)
+col_pal_expr <- colorRampPalette(c("#146EB4", "white", "#FF9900"))(100)
 palette_length_expr <- length(col_pal_expr)
-  
+
 my_breaks <- c(
   seq(-1, 0, length.out = ceiling(palette_length_expr / 2) + 1),
   seq(1 / palette_length_expr, 1, length.out = floor(palette_length_expr / 2))
@@ -355,7 +364,7 @@ probe_key <- fread(args$probe_key)
 # as the probe IDs and the remaining columns corrresponding to the cell types
 # with TRUE indicating the probe is present in this cell type (i.e. not added
 # manually with an imputed value) and FALSE indicates we added it in.
-probes_present_dt <- fread(args$probe_present) %>% 
+probes_present_dt <- fread(args$probe_present) %>%
   set_colnames(c("V1", all_datasets))
 
 # Read in the MDI output file
@@ -401,7 +410,7 @@ do_expression_heatmap <- args$plot_expression_data
 do_phis_histograms <- args$plot_phi_histograms
 do_fused_gene_expression <- args$plot_fused_genes
 do_comparison_plots <- args$plot_comparison
-
+do_mass_parameter_plots <- args$plot_mass_parameters
 # Plto type
 plot_type <- args$plot_type
 
@@ -489,7 +498,8 @@ compare_tibble <- tibble(
   non_zero_probes_ind = rep(vector("list", num_files), num_datasets),
   non_zero_probes = rep(vector("list", num_files), num_datasets),
   fused_probes = rep(vector("list", num_files), num_datasets),
-  fused_non_zero_probes = rep(vector("list", num_files), num_datasets)
+  fused_non_zero_probes = rep(vector("list", num_files), num_datasets),
+  mass_parameter = rep(vector("list", num_files), num_datasets)
 )
 
 # === MDI output ===============================================================
@@ -509,8 +519,11 @@ for (j in 1:num_files) {
 
 
   for (i in 1:num_datasets) {
-
     dataset_name <- paste0("Dataset", i)
+
+    # Extract mass parameters
+    curr_mass_parameter <- "MassParameter_" %>% paste0(i)
+    .mass_parameters <- mcmc_out_lst[[j]][[curr_mass_parameter]]
 
     # Get the allocation and drop the burn in
     .mdi_alloc <- mcmc_out_lst[[j]] %>%
@@ -533,45 +546,45 @@ for (j in 1:num_files) {
         .$Unique_gene_name
 
       probes_present_dt <- probes_present_dt[probes_present_dt$V1 %in% probe_names, ]
-      
+
       # Add the gene names to the probes_present dataframe
       probes_present_dt$Gene_names <- gene_id # [match(probe_key_rel$ProbeID, probes_present_dt$V1)]
-      
+
       # Make sure the order is as in the MDI data
       # probes_present_dt <- probes_present_dt[match(probe_names, probes_present_dt$V1)]
-      
+
       # unique_gene_id <- gene_id
     }
 
     curr_dataset <- dataset_names[[i]]
-    
+
     # extract the empty genes
-    rel_empty_genes <- probes_present_dt %>% 
+    rel_empty_genes <- probes_present_dt %>%
       dplyr::select(dplyr::one_of(c(curr_dataset, "Gene_names")))
-    
+
     # Create a diagonal matrix of genes x genes with -2 on the diagonal entries
     # corresponding to empty genes and 0's elsewhere
-    empty_gene_mat <- diag(! rel_empty_genes[[curr_dataset]]) * (-2)
-    
+    empty_gene_mat <- diag(!rel_empty_genes[[curr_dataset]]) * (-2)
+
     # Create and save the posterior similarity matrix (PSM) for the current
     # allocation
     # We transpose as we are interested in how the genes cluster rahter than the
     # people
-    .sim_mat <- similarity_mat(t(.mdi_alloc)) %>% 
-      set_colnames(gene_id) %>% 
-      set_rownames(gene_id) 
-    
+    .sim_mat <- similarity_mat(t(.mdi_alloc)) %>%
+      set_colnames(gene_id) %>%
+      set_rownames(gene_id)
+
     # Use the maxpear() function from mcclust to interpret the PSM as a clustering
     .pred_alloc <- .sim_mat %>%
       mcclust::maxpear()
-    
+
     # Now highlight the empty probes by setting their diagonal to -1 in the PSM
-    .sim_mat <- .sim_mat %>% 
+    .sim_mat <- .sim_mat %>%
       add(empty_gene_mat)
 
     # Set the row nad column names of the PSM
     # row.names(.sim_mat) <- colnames(.sim_mat) <- gene_id
-    
+
     # Set the column names of the MDI to the Probe IDs (consider using gene IDs)
     colnames(.mdi_alloc) <- probe_names
 
@@ -581,6 +594,9 @@ for (j in 1:num_files) {
 
     # Record this in the tibble
     compare_tibble$pred_allocation[i + (j - 1) * num_files][[1]] <- .pred_alloc$cl
+
+    # Record mass parameters
+    compare_tibble$mass_parameter[i + (j - 1) * num_files][[1]] <- .mass_parameters
   }
 }
 
@@ -608,23 +624,23 @@ if (do_dendrograms_ie_trees) {
 # probes_actually_present_ind <- probes_present_dt %>%
 #   magrittr::use_series("V1") %>%
 #   magrittr::is_in(probe_names)
-# 
+#
 # # Select these
 # probes_actually_present <- probes_present_dt[probes_actually_present_ind, ]
-# 
+#
 # # Find the appropriate order
 # probes_order <- match(probe_names, probes_actually_present$V1)
-# 
+#
 # # Order the probes so comparable to allocation data frame
 # probes_present_ordered <- probes_actually_present[probes_order, ] %>%
 #   as.data.frame() %>%
 #   set_colnames(all_datasets)
-# 
+#
 # # Remove the irrelevant columns and set row names
 # probes_present_final <- probes_present_ordered %>%
 #   magrittr::set_rownames(probes_actually_present$V1) %>%
 #   magrittr::extract(, cols_to_keep)
-# 
+#
 # colnames(probes_present_final) <- dataset_names
 
 # === Phi denisty plots ================================================================
@@ -675,6 +691,17 @@ if (do_rand_plot) {
   )
 }
 
+# === Plot mass parameters =====================================================
+
+if (do_mass_parameter_plots) {
+  print("Plotting mass parameters over iterations.")
+  plot_mass_parameters(compare_tibble,
+    thin = thin,
+    file_path = file_path,
+    plot_type = plot_type
+  )
+}
+
 # === Heatmap expression data ==================================================
 loc_dir <- paste0(save_path, "Expression_heatmaps/")
 
@@ -719,7 +746,6 @@ n_total_clusters <- 0
 
 data_files <- list()
 for (i in 1:num_datasets) {
-  
   curr_dataset <- datasets_relevant[[i]]
 
   file_name <- gen_ph_file_name %>%
@@ -766,15 +792,15 @@ for (i in 1:num_datasets) {
 
   expr_min <- min(expression_data_tidy)
   expr_max <- max(expression_data_tidy)
-  
+
   expr_breaks <- define_breaks(col_pal_expr, lb = expr_min, ub = expr_max)
-  
-  
+
+
   if (do_expression_heatmap) {
     if (n_clusters > 12) {
       print("Too many clusters. Cannot include annotation row.")
 
-      
+
       # Pheatmap
       expression_data_tidy %>%
         pheatmap(
@@ -955,7 +981,7 @@ if (do_comparison_plots) {
     plot_type,
     col_pal_sim = col_pal_sim
   )
-  
+
   plot_comparison_corr_sim_expr(
     compare_tibble,
     dataset_names,
@@ -965,8 +991,6 @@ if (do_comparison_plots) {
     col_pal_sim = col_pal_sim
   )
 }
-
-
 
 # === Timing ===================================================================
 
