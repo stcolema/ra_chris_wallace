@@ -54,29 +54,48 @@ plot_phi_series <- function(mcmc_out_lst,
         # The save file name
         save_title <- paste0(loc_dir, "file_", i, "_Phi_", j, k, plot_type)
 
-        if (save_plots) {
-          # Open graphic to save plot to
-          if (plot_type == ".pdf") {
-            pdf(save_title)
-          } else {
-            png(save_title)
-          }
-        }
-
-        # Plot Phi vs index (ignore initial values as misleading)
-        plot(start_index:eff_n_iter, phis[[count]][[1]][start_index:eff_n_iter],
-          main = plot_title,
-          col.main = "black",
-          sub = sub_title,
-          col.sub = "blue",
-          ylab = y_axis_title,
-          xlab = "Index"
+        # Put things in a data frame to use ggplot
+        my_data_frame <- data.frame(
+          Index = start_index:eff_n_iter * thin,
+          Phi = phis[[count]][[1]][start_index:eff_n_iter]
         )
 
+        # Plot
+        ggplot(data = my_data_frame, aes(x = Index, y = Phi)) +
+          geom_point() +
+          labs(
+            title = plot_title,
+            # subtitle = sub_title,
+            y = y_axis_title,
+            x = "Iteration"
+          )
+
+        # Save
+        ggsave(save_title)
+
+        # if (save_plots) {
+        #   # Open graphic to save plot to
+        #   if (plot_type == ".pdf") {
+        #     pdf(save_title)
+        #   } else {
+        #     png(save_title)
+        #   }
+        # }
+
+        # Plot Phi vs index (ignore initial values as misleading)
+        # plot(start_index:eff_n_iter * thin, phis[[count]][[1]][start_index:eff_n_iter],
+        #   main = plot_title,
+        #   col.main = "black",
+        #   sub = sub_title,
+        #   col.sub = "blue",
+        #   ylab = y_axis_title,
+        #   xlab = "Index"
+        # )
+
         # Close graphic
-        if (save_plots) {
-          dev.off()
-        }
+        # if (save_plots) {
+        #   dev.off()
+        # }
 
         mean_phi <- phis[[count]][[1]][start_index:eff_n_iter] %>% mean()
 
