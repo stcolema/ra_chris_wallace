@@ -13,7 +13,7 @@
 # === Libraries ================================================================
 
 # MDI specific codes (not sure if still used)
-source("/home/MINTS/sdc56/Desktop/MDI/mdipp-1.0.1/scripts/analysis.R") # install.packages("mcclust", dep = T)
+# source("/home/MINTS/sdc56/Desktop/MDI/mdipp-1.0.1/scripts/analysis.R") # install.packages("mcclust", dep = T)
 
 # For posterioir similarity matrices
 Rcpp::sourceCpp("/home/MINTS/sdc56/Desktop/ra_chris_wallace/Analysis/posterior_sim_mat.cpp") # install.packages("Rcpp", dep = T)
@@ -26,7 +26,8 @@ function_scripts <- c(
   "plot_phi_histograms.R",
   "plot_similarity_matrices.R",
   "plot_rand_index.R",
-  "plot_fused_genes.R"
+  "plot_fused_genes.R",
+  "plot_comparison_expression_clustering.R"
 )
 
 for (f in paste0(function_dir, function_scripts)) {
@@ -62,6 +63,9 @@ library(magrittr)
 
 # For defensive programming in plot_fused_genes
 library(attempt)
+
+# For having several plots on the same grid
+library(cowplot)
 
 # === Functions ================================================================
 
@@ -286,6 +290,14 @@ input_arguments <- function() {
       metavar = "logical"
     ),
 
+    # Instruction to plot heatmaps of the expression data side-by-side with the similarity matrix
+    optparse::make_option(c("--plot_comparison"),
+      type = "logical",
+      default = TRUE,
+      help = "Instruction to plot heatmaps of the expression data side-by-side with the similarity matrix [default= %default]",
+      metavar = "logical"
+    ),
+
     # Instruction to time programme
     optparse::make_option(c("--time"),
       type = "logical",
@@ -308,14 +320,43 @@ stm_i <- Sys.time()
 seed <- args$seed
 set.seed(seed)
 
+# Colour palette for PSMs
+col_pal <- colorRampPalette(brewer.pal(n = 7, name = "Blues"))(100)
+
+col_pal_sim = colorRampPalette(c("#FF9900", "white", "#146EB4"))(100)
+col_pal_expr = colorRampPalette(c("#146EB4", "white", "#FF9900"))(100)
+palette_length_expr <- length(col_pal_expr)
+  
+my_breaks <- c(
+  seq(-1, 0, length.out = ceiling(palette_length_expr / 2) + 1),
+  seq(1 / palette_length_expr, 1, length.out = floor(palette_length_expr / 2))
+)
+
+# All possible datasets (and the names of the probes present columns)
+all_datasets <- c(
+  "CD14",
+  "CD15",
+  "CD19",
+  "CD4",
+  "CD8",
+  "IL",
+  "PLA",
+  "RE",
+  "TR"
+)
+
+# Directory holding the expression data files
+data_dir <- args$expression_dir
+
+# Read in the file relating the probe IDs to the related gene
+probe_key <- fread(args$probe_key)
+
 # Read in the probes present - this is a matrix of bools with the first column
 # as the probe IDs and the remaining columns corrresponding to the cell types
 # with TRUE indicating the probe is present in this cell type (i.e. not added
 # manually with an imputed value) and FALSE indicates we added it in.
-probes_present_dt <- fread(args$probe_present)
-
-# Read in the file relating the probe IDs to the related gene
-probe_key <- fread(args$probe_key)
+probes_present_dt <- fread(args$probe_present) %>% 
+  set_colnames(c("V1", all_datasets))
 
 # Read in the MDI output file
 file_path <- args$dir
@@ -348,6 +389,9 @@ col_names <- paste0("D", 1:num_datasets)
 # Remove the file extension
 dataset_names <- tools::file_path_sans_ext(files_present)
 
+# From the probes present file keep only the columns that are in the dataset names
+cols_to_keep <- all_datasets %in% dataset_names
+
 do_dendrograms_ie_trees <- args$plot_trees
 do_rand_plot <- args$plot_rand_index
 do_similarity_matrices_plot <- args$plot_similarity_matrices
@@ -356,6 +400,7 @@ do_phis_densities <- args$plot_phi_densities
 do_expression_heatmap <- args$plot_expression_data
 do_phis_histograms <- args$plot_phi_histograms
 do_fused_gene_expression <- args$plot_fused_genes
+do_comparison_plots <- args$plot_comparison
 
 # Plto type
 plot_type <- args$plot_type
@@ -452,7 +497,6 @@ compare_tibble <- tibble(
 # Global similarity between datasets
 phis <- list()
 
-
 for (j in 1:num_files) {
 
   # mdi_pos_sim_mat <- list()
@@ -465,55 +509,78 @@ for (j in 1:num_files) {
 
 
   for (i in 1:num_datasets) {
+
     dataset_name <- paste0("Dataset", i)
 
     # Get the allocation and drop the burn in
     .mdi_alloc <- mcmc_out_lst[[j]] %>%
       dplyr::select(contains(dataset_name)) %>%
       magrittr::extract(start_index:eff_n_iter, )
-    
+
     if (i == 1) {
-      
+
       # Find the Probe IDs
       probe_names <- colnames(.mdi_alloc) %>%
         stringr::str_remove_all(paste0(dataset_name, "_")) %>%
         stringr::str_remove_all("X")
-      
+
       # Find the relevant part of the key
       probe_key_rel <- probe_key[probe_key$ProbeID %in% probe_names, ]
-      
+
       # Pull out the Gene IDs in the correct order
       gene_id <- probe_key_rel %>%
         .[match(probe_names, .$ProbeID)] %>%
         .$Unique_gene_name
+
+      probes_present_dt <- probes_present_dt[probes_present_dt$V1 %in% probe_names, ]
+      
+      # Add the gene names to the probes_present dataframe
+      probes_present_dt$Gene_names <- gene_id # [match(probe_key_rel$ProbeID, probes_present_dt$V1)]
+      
+      # Make sure the order is as in the MDI data
+      # probes_present_dt <- probes_present_dt[match(probe_names, probes_present_dt$V1)]
       
       # unique_gene_id <- gene_id
     }
 
-
-    # Create and save the posterior similarity matrix (PSM) for the current 
+    curr_dataset <- dataset_names[[i]]
+    
+    # extract the empty genes
+    rel_empty_genes <- probes_present_dt %>% 
+      dplyr::select(dplyr::one_of(c(curr_dataset, "Gene_names")))
+    
+    # Create a diagonal matrix of genes x genes with -2 on the diagonal entries
+    # corresponding to empty genes and 0's elsewhere
+    empty_gene_mat <- diag(! rel_empty_genes[[curr_dataset]]) * (-2)
+    
+    # Create and save the posterior similarity matrix (PSM) for the current
     # allocation
-    # We transpose as we are interested in how the genes cluster rahter than the 
+    # We transpose as we are interested in how the genes cluster rahter than the
     # people
-    .sim_mat <- similarity_mat(t(.mdi_alloc))
+    .sim_mat <- similarity_mat(t(.mdi_alloc)) %>% 
+      set_colnames(gene_id) %>% 
+      set_rownames(gene_id) 
+    
+    # Use the maxpear() function from mcclust to interpret the PSM as a clustering
+    .pred_alloc <- .sim_mat %>%
+      mcclust::maxpear()
+    
+    # Now highlight the empty probes by setting their diagonal to -1 in the PSM
+    .sim_mat <- .sim_mat %>% 
+      add(empty_gene_mat)
 
     # Set the row nad column names of the PSM
-    row.names(.sim_mat) <- colnames(.sim_mat) <- gene_id
-
+    # row.names(.sim_mat) <- colnames(.sim_mat) <- gene_id
+    
     # Set the column names of the MDI to the Probe IDs (consider using gene IDs)
     colnames(.mdi_alloc) <- probe_names
 
-    
     # Save these objects to the tibble
     compare_tibble$mdi_allocation[i + (j - 1) * num_files][[1]] <- .mdi_alloc
     compare_tibble$similarity_matrix[i + (j - 1) * num_files][[1]] <- .sim_mat
 
-    # Use the Simtocl() function from mcclust to interpret the PSM as a clustering
-    .pred_alloc <- .sim_mat %>%
-      mcclust::Simtocl()
-
     # Record this in the tibble
-    compare_tibble$pred_allocation[i + (j - 1) * num_files][[1]] <- .pred_alloc
+    compare_tibble$pred_allocation[i + (j - 1) * num_files][[1]] <- .pred_alloc$cl
   }
 }
 
@@ -535,34 +602,36 @@ if (do_dendrograms_ie_trees) {
 
 # === Probes present ===========================================================
 
-# Find which probes are relevant from the full set
-probes_actually_present_ind <- probes_present_dt %>%
-  magrittr::use_series("V1") %>%
-  magrittr::is_in(probe_names)
+# print("Finding probes present.")
 
-# Select these
-probes_actually_present <- probes_present_dt[probes_actually_present_ind, ]
-
-# Find the appropriate order
-probes_order <- match(probe_names, probes_actually_present$V1)
-
-# Order the probes so comparable to allocation data frame
-probes_present_ordered <- probes_actually_present[probes_order, ] %>%
-  as.data.frame()
-
-# Remove the irrelevant columns and set row names
-probes_present_final <- probes_present_ordered %>%
-  magrittr::set_rownames(probes_actually_present$V1) %>%
-  magrittr::extract(, -c(1, 3, 8))
-
-colnames(probes_present_final) <- dataset_names
+# # Find which probes are relevant from the full set
+# probes_actually_present_ind <- probes_present_dt %>%
+#   magrittr::use_series("V1") %>%
+#   magrittr::is_in(probe_names)
+# 
+# # Select these
+# probes_actually_present <- probes_present_dt[probes_actually_present_ind, ]
+# 
+# # Find the appropriate order
+# probes_order <- match(probe_names, probes_actually_present$V1)
+# 
+# # Order the probes so comparable to allocation data frame
+# probes_present_ordered <- probes_actually_present[probes_order, ] %>%
+#   as.data.frame() %>%
+#   set_colnames(all_datasets)
+# 
+# # Remove the irrelevant columns and set row names
+# probes_present_final <- probes_present_ordered %>%
+#   magrittr::set_rownames(probes_actually_present$V1) %>%
+#   magrittr::extract(, cols_to_keep)
+# 
+# colnames(probes_present_final) <- dataset_names
 
 # === Phi denisty plots ================================================================
 
 if (do_phis_densities) {
   print("Saving phi density plots.")
   plot_phi_densities(phis, file_path, start_index, eff_n_iter)
-
 }
 
 # === Phi histograms ===========================================================
@@ -570,7 +639,6 @@ if (do_phis_densities) {
 if (do_phis_histograms) {
   print("Saving phi histogram plots.")
   plot_phi_histograms(phis, file_path, start_index, eff_n_iter)
-
 }
 
 # === Plot posterior similarity matrices =======================================
@@ -581,11 +649,13 @@ if (do_similarity_matrices_plot) {
 
   plot_similarity_matrices(
     compare_tibble$similarity_matrix,
-    probes_present_final,
+    # probes_present_final,
     dataset_names,
     num_files,
     num_datasets,
-    file_path
+    file_path,
+    col_pal = col_pal_sim,
+    breaks = my_breaks
   )
 }
 
@@ -615,10 +685,6 @@ if (do_expression_heatmap) {
   dir.create(loc_dir, showWarnings = FALSE)
 }
 
-
-# Directory holding the expression data files
-data_dir <- args$expression_dir
-
 # Generic title and filename for pheatmap
 gen_ph_title <- ": heatmap of expression data"
 gen_ph_file_name <- paste0(loc_dir, "pheatmap_")
@@ -637,6 +703,8 @@ datasets_relevant_indices <- files_present %>%
   tools::file_path_sans_ext() %>%
   match(expression_datasets)
 
+datasets_relevant_indices %>% print()
+
 datasets_relevant <- expression_datasets[datasets_relevant_indices]
 relevant_input_files <- mdi_input_files[datasets_relevant_indices]
 
@@ -651,6 +719,7 @@ n_total_clusters <- 0
 
 data_files <- list()
 for (i in 1:num_datasets) {
+  
   curr_dataset <- datasets_relevant[[i]]
 
   file_name <- gen_ph_file_name %>%
@@ -666,7 +735,6 @@ for (i in 1:num_datasets) {
     magrittr::set_rownames(gene_id) %>%
     magrittr::set_colnames(c("Cluster"))
 
-
   # Read in the expression data
   f <- relevant_input_files[[i]]
   expression_data <- fread(f)
@@ -679,10 +747,6 @@ for (i in 1:num_datasets) {
     magrittr::set_rownames(gene_id)
 
   expression_data_tidy[is.na(expression_data_tidy)] <- 0
-
-  # print(str(compare_tibble$expression_data[compare_tibble$dataset == curr_dataset]))
-
-  # print(compare_tibble$non_zero_probes_ind) <- .non_zero_probes <- rowSums(expression_data_tidy) != 0)
 
   # Add the expression data to our tibble
   num_occurences_dataset <- length(compare_tibble$expression_data[compare_tibble$dataset == curr_dataset])
@@ -700,15 +764,24 @@ for (i in 1:num_datasets) {
 
   n_total_clusters <- max(n_clusters, n_total_clusters)
 
+  expr_min <- min(expression_data_tidy)
+  expr_max <- max(expression_data_tidy)
+  
+  expr_breaks <- define_breaks(col_pal_expr, lb = expr_min, ub = expr_max)
+  
+  
   if (do_expression_heatmap) {
     if (n_clusters > 12) {
       print("Too many clusters. Cannot include annotation row.")
 
+      
       # Pheatmap
       expression_data_tidy %>%
         pheatmap(
           filename = file_name,
-          main = ph_title
+          main = ph_title,
+          color = col_pal_expr,
+          breaks = expr_breaks
         )
     } else {
       col_pal <- col_vector[1:n_clusters] %>%
@@ -726,7 +799,9 @@ for (i in 1:num_datasets) {
           main = ph_title,
           cluster_rows = F,
           annotation_row = pred_clustering,
-          annotation_colors = annotation_colors
+          annotation_colors = annotation_colors,
+          color = col_pal_expr,
+          breaks = expr_breaks
         )
     }
   }
@@ -749,13 +824,21 @@ big_ph_title <- "All datasets" %>%
 
 mega_matrix <- mega_df %>%
   as.matrix() %>%
-  magrittr::set_rownames(probe_names)
+  magrittr::set_rownames(gene_id)
+
+expr_min <- min(mega_matrix)
+expr_max <- max(mega_matrix)
+
+expr_breaks <- define_breaks(col_pal_expr, lb = expr_min, ub = expr_max)
+
 
 if (do_expression_heatmap) {
   if (TRUE) { # n_total_clusters > 20) {
     pheatmap(mega_matrix,
       filename = big_file_name,
-      main = big_ph_title
+      main = big_ph_title,
+      color = col_pal_expr,
+      breaks = expr_breaks
     )
   } else {
     col_pal <- sample(col_vector, n_total_clusters) %>%
@@ -767,7 +850,9 @@ if (do_expression_heatmap) {
       filename = big_file_name,
       main = big_ph_title,
       annotation_row = big_annotation,
-      annotation_colors = annotation_colors
+      annotation_colors = annotation_colors,
+      color = col_pal_expr,
+      breaks = expr_breaks
     )
   }
 }
@@ -844,9 +929,8 @@ for (k in 1:num_files) {
 # === Gene expression for fused and unfused genes ==============================
 
 if (do_fused_gene_expression) {
-  
   print("Saving heatmaps of pairwise fused gene expression across datasets.")
-  
+
   fused_gene_heatmaps(
     compare_tibble$expression_data,
     compare_tibble$fused_probes,
@@ -854,9 +938,35 @@ if (do_fused_gene_expression) {
     dataset_names,
     file_path,
     num_datasets,
-    plot_type
+    plot_type,
+    probes_present_dt
   )
 }
+
+# === Compare similarity and gene expression ===================================
+
+if (do_comparison_plots) {
+  print("Saving comparison of similarity matrix and expression data.")
+  plot_comparison_expression_to_clustering(
+    compare_tibble,
+    dataset_names,
+    num_datasets,
+    file_path,
+    plot_type,
+    col_pal_sim = col_pal_sim
+  )
+  
+  plot_comparison_corr_sim_expr(
+    compare_tibble,
+    dataset_names,
+    num_datasets,
+    file_path,
+    plot_type,
+    col_pal_sim = col_pal_sim
+  )
+}
+
+
 
 # === Timing ===================================================================
 
