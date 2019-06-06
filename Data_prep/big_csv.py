@@ -28,8 +28,9 @@ def find_ext_files(dir_path:str = ".",
 
 
 def big_csv(input_dir: str,
-                        out_file_name: str,
-                        extension: str = ".csv"):
+            out_file_name: str,
+            line_to_keep: int = 2,
+            extension: str = ".csv"):
     """Replaces all sep with itself twice (for matlab version of MDI)
     """
 
@@ -52,18 +53,26 @@ def big_csv(input_dir: str,
                     
                         continue
 
-                    # Else find the first entry and add the appendage
-                    out_f.write(line)
+                    if j == line_to_keep:
+                        # Else find the first entry and add the appendage
+                        out_f.write(line)
+
+                    if j != line_to_keep:
+                        continue
 
 if __name__ == "__main__":
     dir_path = argv[1]
     out_file_name = argv[2]
     ext = ".csv"
+    line_to_keep = 2
 
     if(len(argv) > 3):
-        ext = argv[3]
+        line_to_keep = argv[3]
+
+    if(len(argv) > 4):
+        ext = argv[4]
 
     # print(dir_path)
 
     # find_ext_files(dir_path, ext)
-    big_csv(dir_path, out_file_name, ext)
+    big_csv(dir_path, out_file_name, line_to_keep, ext)
