@@ -28,6 +28,9 @@ args <- input_arguments()
 
 save_dir <- args$dir
 
+# Create the directroy if it's does not already exist
+dir.create(save_dir, showWarnings = FALSE)
+
 # Website for probe expression data for CEDAR cohort
 data_url <- paste0(
   "http://139.165.108.18/srv/genmol/permanent/",

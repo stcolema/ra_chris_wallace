@@ -172,6 +172,15 @@ write_data <- function(file_name,
 
   networks <- create_gene_set(gene_set, gene_sets)
 
+  n_sets <- length(networks)
+  
+  # Create the sub directories to write to
+  write_sub_dir <- paste0(write_dir, networks, "/")
+  
+  for(sub_dir in write_sub_dir){
+    dir.create(sub_dir, showWarnings = FALSE)
+  }
+  
   # Iterate over the files - use index as can then access the read files and
   # write files both
   for (i in 1:num_files) {
@@ -189,7 +198,12 @@ write_data <- function(file_name,
     # the probe key file) (this is not necessary with data.table's fread)
     probes <- stringr::str_remove(colnames(dt[, -c(1, 2)]), "X")
 
-    for (set in networks) {
+    for(i in 1:n_sets){
+      
+      set <- networks[[i]]
+      curr_dir <- write_sub_dir[[i]]
+      
+    # for (set in networks) {
       # curr_write_file <- paste0(write_file, "_", set)
 
       # Extract the relevant subset
@@ -213,7 +227,7 @@ write_data <- function(file_name,
       dt_out <- cbind(people_id_cols, gene_set_dt)
 
       # Write to a csv file
-      curr_write_file <- paste0(write_dir, "/", write_file, "_", set, ".csv")
+      curr_write_file <- paste0(curr_dir, "/", write_file, "_", set, ".csv")
       data.table::fwrite(dt_out, file = curr_write_file)
     }
   }
@@ -227,6 +241,9 @@ stm_i <- Sys.time()
 
 # Read in expression data files
 files <- read_in_data(args)
+
+# Create the directroy if it's does not already exist
+dir.create(args$write_dir, showWarnings = FALSE)
 
 # Write files
 write_data(

@@ -3,11 +3,13 @@
 # Function to save heatmap of PSMs
 
 plot_similarity_matrices <- function(similarity_matrices_lst,
-                                     probes_present_final,
+                                     # probes_present_final,
                                      dataset_names,
                                      n_files,
                                      n_datasets,
-                                     file_path) {
+                                     file_path,
+                                     col_pal = colorRampPalette(brewer.pal(n = 7, name = "Blues"))(100),
+                                     breaks = NA) {
   loc_dir <- paste0(file_path, "Similarity_matrices/")
   dir.create(loc_dir, showWarnings = FALSE)
 
@@ -27,7 +29,7 @@ plot_similarity_matrices <- function(similarity_matrices_lst,
       # Create the title of the plot
       title <- paste("Similarity matrix for", dataset)
 
-      rel_rows <- probes_present_final[, i]
+      # rel_rows <- probes_present_final[, i]
 
       # Make the heatmap (note that we do not cluster rows).
       # We use a sample of the iterations as otherwise it becomes too heavy
@@ -36,12 +38,16 @@ plot_similarity_matrices <- function(similarity_matrices_lst,
         ph <- pheatmap(similarity_matrices_lst[i + (j - 1) * n_files][[1]],
           main = title,
           cluster_rows = T,
-          filename = file_name
+          filename = file_name,
+          color =  col_pal,
+          breaks = breaks
         )
       } else {
         ph <- pheatmap(similarity_matrices_lst[i + (j - 1) * n_files][[1]],
           main = title,
-          cluster_rows = T
+          cluster_rows = T,
+          color =  col_pal,
+          breaks = breaks
         )
       }
     }

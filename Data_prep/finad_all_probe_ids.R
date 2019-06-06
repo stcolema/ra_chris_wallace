@@ -23,19 +23,19 @@ prep_data <- function(dt) {
     select(-V1)
 }
 
-# Used in initial idea for removing points from PCA that failed to meet some 
+# Used in initial idea for removing points from PCA that failed to meet some
 # criterion
-contrib_cut <- function(pca_res, cut = 1.5, dims = 1:3, criterion = "contrib"){
+contrib_cut <- function(pca_res, cut = 1.5, dims = 1:3, criterion = "contrib") {
   contrib <- get_pca_ind(pca_res)[[criterion]]
-  ind_to_remove <-  apply(contrib[,dims], 1, function(r) any(r > cut))
+  ind_to_remove <- apply(contrib[, dims], 1, function(r) any(r > cut))
 }
 
-get_cut_data <- function(pca_lst, threshold = c(1.0, 1.5, 2.0), criterion = "contrib"){
+get_cut_data <- function(pca_lst, threshold = c(1.0, 1.5, 2.0), criterion = "contrib") {
   cut_data <- list()
-  for(cut in threshold){
-    cut_data[[as.character(cut)]] <- pca_lst %>% 
-      lapply(., contrib_cut, cut = cut, criterion = criterion) %>% 
-      lapply(., sum) %>% 
+  for (cut in threshold) {
+    cut_data[[as.character(cut)]] <- pca_lst %>%
+      lapply(., contrib_cut, cut = cut, criterion = criterion) %>%
+      lapply(., sum) %>%
       unlist()
     # unlist(lapply(lapply(pca_lst, contrib_cut), sum))
   }
@@ -44,29 +44,53 @@ get_cut_data <- function(pca_lst, threshold = c(1.0, 1.5, 2.0), criterion = "con
 
 input_arguments <- function() {
   option_list <- list(
-    
+
     # Directory to read from
     optparse::make_option(c("-d", "--dir"),
-                          type = "character",
-                          default = ".",
-                          help = "directory to read files from (used if all set to TRUE) [default= %default]",
-                          metavar = "character"
+      type = "character",
+      default = ".",
+      help = "directory to read files from (used if all set to TRUE) [default= %default]",
+      metavar = "character"
+    ),
+
+    # File extension to be accepting
+    optparse::make_option(c("-v", "--vsn_applied"),
+      type = "logical",
+      default = FALSE,
+      help = "logical indicating if vsn has been applied to data [default= %default]",
+      metavar = "logical"
+    ),
+
+    # File extension to be accepting
+    optparse::make_option(c("-m", "--use_min"),
+                          type = "logical",
+                          default = FALSE,
+                          help = "logical indicating if fill value should be minimum expressed value in expression data [default= %default]",
+                          metavar = "logical"
     ),
     
     # File extension to be accepting
-    optparse::make_option(c("-v", "--vsn_applied"),
+    optparse::make_option(c("-z", "--use_zero"),
                           type = "logical",
                           default = FALSE,
-                          help = "logical indicating if vsn has been applied to data [default= %default]",
+                          help = "logical indicating if fill value should be 0 [default= %default]",
+                          metavar = "logical"
+    ),
+    
+    # File extension to be accepting
+    optparse::make_option(c("-r", "--use_random"),
+                          type = "logical",
+                          default = FALSE,
+                          help = "logical indicating if fill value should be draws from a standard normal [default= %default]",
                           metavar = "logical"
     ),
     
     # File extension to be accepting
     optparse::make_option(c("-i", "--index"),
-                          type = "integer",
-                          default = 2,
-                          help = "integer indicating section of string to use [default= %default]",
-                          metavar = "integer"
+      type = "integer",
+      default = 2,
+      help = "integer indicating section of string to use [default= %default]",
+      metavar = "integer"
     )
   )
   opt_parser <- optparse::OptionParser(option_list = option_list)
@@ -74,26 +98,25 @@ input_arguments <- function() {
 }
 
 args <- input_arguments()
-dir_of_interest <- args$dir # "~/Desktop/subset_data/Small/" #  
+dir_of_interest <- args$dir # "~/Desktop/subset_data/Small/" #
 vsn_data <- args$vsn_applied # F
+
+use_min <- args$use_min
+use_zero <- args$use_zero
+use_random <- args$use_random
+
+if(sum(use_min, use_zero, use_random) > 1){
+  stop("Only one of 'use_min', 'use_zero' or 'use_random' may be set to TRUE.")
+}
 
 name_ind <- args$index # 2 + vsn_data
 
-# print(dir_of_interest)
-
 # Read in data
-# files_present <- list.files(path = args$dir)
-# file_name <- grep(args$extension, files_present, value = TRUE) %>%
-#   paste0(args$dir, "/", .)
-# dir_of_interest <- "~/Desktop/Transposed_data_na_0.1/"
-# vsn_data <- T
 setwd(dir_of_interest)
-# setwd("~/Desktop/Na_filled_data/")
-files_present <- list.files(path = dir_of_interest, pattern=".csv")
+files_present <- list.files(path = dir_of_interest, pattern = ".csv")
 
-
-# files_present <- list.files(path = "~/Desktop/Na_filled_data/")
-if(vsn_data){
+# We should never be doing this anymore
+if (vsn_data) {
   file_name <- grep("vsn_*", files_present, value = TRUE)
 } else {
   file_name <- grep("*.csv", files_present, value = TRUE)
@@ -101,15 +124,12 @@ if(vsn_data){
 
 eda <- F
 
-# file_name <-  file_name[-7]
 data_lst <- list()
-# setwd("~/Desktop/My_end")
 
 genes_present <- c()
 
 mean_lst <- list()
 sd_lst <- list()
-
 
 # Put all the data in a list of data tables
 for (f in file_name) {
@@ -125,71 +145,57 @@ for (f in file_name) {
 }
 
 # Acquire the relevant file names
-# files_to_write <- basename(tools::file_path_sans_ext(names(data_lst)))
-
-
-
-
-# print(names(data_lst))
-
 files_to_write <- names(data_lst) %>%
   tools::file_path_sans_ext() %>%
-  basename() %>% 
+  basename() %>%
   paste0(., "_filled")
-  
-# files_to_write <- strsplit(names(data_lst), "_?_(.*?)_?") %>%
-  # lapply("[[", name_ind) %>%
-  # unlist()
 
-# print(files_to_write)
 
 num_datasets <- length(data_lst)
-
-if (eda) {
-  hist(mean_lst$transposed_CD14_GE_Corrected4_Covars.csv)
-  hist(mean_lst$transposed_CD15_GE_Corrected4_Covars.csv)
-  hist(mean_lst$transposed_CD19_GE_Corrected4_Covars.csv)
-  hist(mean_lst$transposed_CD4_GE_Corrected4_Covars.csv)
-  hist(mean_lst$transposed_CD8_GE_Corrected4_Covars.csv)
-  hist(mean_lst$transposed_PLA_GE_Corrected4_Covars.csv)
-  hist(mean_lst$transposed_IL_GE_Corrected4_Covars.csv)
-  hist(mean_lst$transposed_RE_GE_Corrected4_Covars.csv)
-  hist(mean_lst$transposed_TR_GE_Corrected4_Covars.csv)
-
-  hist(sd_lst$transposed_CD14_GE_Corrected4_Covars.csv)
-  hist(sd_lst$transposed_CD15_GE_Corrected4_Covars.csv)
-  hist(sd_lst$transposed_CD19_GE_Corrected4_Covars.csv)
-  hist(sd_lst$transposed_CD4_GE_Corrected4_Covars.csv)
-  hist(sd_lst$transposed_CD8_GE_Corrected4_Covars.csv)
-  hist(sd_lst$transposed_PLA_GE_Corrected4_Covars.csv)
-  hist(sd_lst$transposed_IL_GE_Corrected4_Covars.csv)
-  hist(sd_lst$transposed_RE_GE_Corrected4_Covars.csv)
-  hist(sd_lst$transposed_TR_GE_Corrected4_Covars.csv)
-}
 
 # Move the genes present to a list
 genes_present %<>% unname() %>% unlist()
 
 empty_probes_dt <- data.table(matrix(NA,
-                  nrow = length(genes_present),
-                  ncol = length(file_name) + 1
+  nrow = length(genes_present),
+  ncol = length(file_name) + 1
 ))
 
 
 colnames(empty_probes_dt) <- c("V1", files_to_write)
-empty_probes_dt$V1 <-  genes_present
+empty_probes_dt$V1 <- genes_present
+
+# === Fill missing genes =======================================================
 
 # For each dataset filter by genes present in all and write to file
 for (i in 1:num_datasets) {
-  f <-  names(data_lst)[[i]]
+  f <- names(data_lst)[[i]]
   genes_to_add <- genes_present[!genes_present %in% data_lst[[f]]$V1]
 
   col_names <- colnames(data_lst[[f]])
 
-  additional_rows <- data.frame(matrix(0,
-    nrow = length(genes_to_add),
-    ncol = length(col_names)
+  n_rows <- length(genes_to_add)
+  n_cols <- length(col_names)
+  
+  # Fill the added rows with requested values
+  if(use_min) {
+    fill_vlaue <- min(data_lst[[f]]) - sd(as.matrix(data_lst[[f]]))
+  }
+  if(use_zero) {
+    fill_value <- 0
+  }
+  
+  if(use_min | use_zero) {
+  additional_rows <- data.frame(matrix(fill_value,
+    nrow = n_rows,
+    ncol = n_cols
   ))
+  }
+  else {
+  additional_rows <- matrix( rnorm(n_rows * n_cols,mean=0,sd=1), n_rows, n_cols) %>% 
+    as.data.frame()
+  }
+  
   colnames(additional_rows) <- col_names
   additional_rows$V1 <- genes_to_add
 
@@ -197,18 +203,18 @@ for (i in 1:num_datasets) {
   dt_out <- data_lst[[f]] %>%
     bind_rows(additional_rows) %>%
     .[match(genes_present, .$V1), ]
-  
+
   if (any(dt_out$V1 != genes_present)) {
     stop("Check order is correct")
   }
 
-  
-  
-  file_write <- files_to_write[[i]] %>% 
+
+
+  file_write <- files_to_write[[i]] %>%
     paste0(., ".csv")
-  empty_probes <- ! dt_out$V1 %in% genes_to_add
+  empty_probes <- !dt_out$V1 %in% genes_to_add
   empty_probes_dt[[files_to_write[[i]]]] <- empty_probes
-  
+
   # file_write %<>% paste0(., ".csv")
 
   fwrite(dt_out, file = file_write, row.names = F)

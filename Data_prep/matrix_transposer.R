@@ -1,8 +1,8 @@
 #!/usr/bin/env Rscript
 
 # Example of a call:
-# Rscript ra_chris_wallace/Data_prep/matrix_transposer.R -a TRUE 
-# -d ./MDI/Data/Original\ data/ -w ./VSN_NA_min_data/ -n TRUE 
+# Rscript ra_chris_wallace/Data_prep/matrix_transposer.R -a TRUE
+# -d ./MDI/Data/Original\ data/ -w ./VSN_NA_min_data/ -n TRUE
 # --na_people_threshold 0.1 --na_probe_threshold 0.1 -t TRUE -v TRUE
 
 
@@ -33,13 +33,13 @@ input_arguments <- function() {
     optparse::make_option(c("-f", "--file"),
       type = "character",
       default = NA,
-      help = "dataset file name", 
+      help = "dataset file name",
       metavar = "character"
     ),
 
     # Convert all files in target destination (default is FALSE)
     optparse::make_option(c("-a", "--all"),
-      type = "logical", 
+      type = "logical",
       default = FALSE,
       help = "command to transpose all [EXT] files in currect directory [default= %default]",
       metavar = "logical"
@@ -47,7 +47,7 @@ input_arguments <- function() {
 
     # Directory to read from
     optparse::make_option(c("-d", "--dir"),
-      type = "character", 
+      type = "character",
       default = ".",
       help = "directory to read files from (used if all set to TRUE) [default= %default]",
       metavar = "character"
@@ -55,7 +55,7 @@ input_arguments <- function() {
 
     # File extension to be accepting
     optparse::make_option(c("-e", "--extension"),
-      type = "character", 
+      type = "character",
       default = ".txt",
       help = "file extension of target files (only used if --all set to TRUE) [default= %default]",
       metavar = "character"
@@ -68,10 +68,10 @@ input_arguments <- function() {
       help = "directory to write files to [default= %default]",
       metavar = "character"
     ),
-    
+
     # # Instruction to transpose data
     # optparse::make_option(c("-t", "--transpose"),
-    #   type = "logical", 
+    #   type = "logical",
     #   default = TRUE,
     #   help = "instruciton to transpose data [default= %default]",
     #   metavar = "logical"
@@ -105,6 +105,20 @@ input_arguments <- function() {
       metavar = "logical"
     ),
 
+    # Instruction to apply variance stabilisation to the data
+    optparse::make_option(c("-c", "--centre"),
+      type = "logical", default = FALSE,
+      help = "instruction to centre the data [default= %default]",
+      metavar = "logical"
+    ),
+
+    # Instruction to apply variance stabilisation to the data
+    optparse::make_option(c("-s", "--scale"),
+      type = "logical", default = FALSE,
+      help = "instruction to scale the data [default= %default]",
+      metavar = "logical"
+    ),
+
     # Instruction to time programme
     optparse::make_option(c("-t", "--time"),
       type = "logical", default = FALSE,
@@ -126,11 +140,11 @@ input_arguments <- function() {
 read_in_data <- function(args) {
   # If instructed to process all files, find all suitable files (i.e. ending in file_ext)
   if (args$all) {
-    files_present <- list.files(path = args$dir)
+    files_present <- list.files(path = args$dir) #, pattern = paste0("*", args$extension))
     
     file_name <- grep(args$extension, files_present, value = TRUE) %>%
       paste0(args$dir, "/", .)
-    
+
     return(file_name)
   }
   # If not transforming all files check if the user supplied a filename and
@@ -332,9 +346,9 @@ write_data <- function(file_name, extension, write_dir,
                        na_people_threshold = 0.0,
                        na_probe_threshold = 0.0,
                        dir = 2,
-                       do_vsn = FALSE) {
-
-
+                       do_vsn = FALSE,
+                       scale = FALSE,
+                       centre = FALSE) {
 
   # Strip the files (do here as can utilise vectorised functions)
   files_to_write <- strsplit(paste0("/", file_name), "/([^/]*).") %>%
@@ -349,6 +363,8 @@ write_data <- function(file_name, extension, write_dir,
     N_people_lost = rep(0, num_files)
   )
 
+  print(file_name)
+  
   # Iterate over the files - use index as can then access the read files and
   # write files both
   for (i in 1:num_files) {
@@ -361,7 +377,7 @@ write_data <- function(file_name, extension, write_dir,
     # Remove the first two columns (the ID and its duplicate) and transpose the data
     col_classes <- sapply(dt, class)
     cols_to_drop <- col_classes != "numeric"
-    
+
     names_to_drop <- names(cols_to_drop) [unname(cols_to_drop)]
 
     # Drop the ID variables and transpose the data
@@ -397,7 +413,7 @@ write_data <- function(file_name, extension, write_dir,
           dir = dir
         )
     }
-
+    
     # Dimensionality post-cleaning
     n_col_o <- ncol(conv_dt)
     n_row_o <- nrow(conv_dt)
@@ -409,26 +425,46 @@ write_data <- function(file_name, extension, write_dir,
     # Convert to data.table to use fwrite
     dt_out <- data.table::as.data.table(conv_dt)
 
+    if(scale | centre){
 
+      # Record the current probes actually present
+      final_probes_present <- dt_out$V1
+
+      # Scale and centre if instructed
+      dt_scaled <- dt_out %>% 
+        extract(, V1:=NULL) %>% # Remove non-numerical column (data.table grammar)
+        t() %>% # Transpose as wish to standardise genes
+        scale(scale = scale, center = centre) %>% 
+        t() %>% # Return to orientation of interest
+        as.data.table() # Revert to a data.table
+      
+      # Add back in the probes
+      dt_scaled$V1 <- final_probes_present
+      
+      # Return to the same object name as if the IF statement is passed
+      dt_out <- dt_scaled
+    }
+    
     if (do_vsn) {
       # Variance stabilisation
       keep_names <- names(dt_out) != "V1"
-      
+
       # don't normalise the probe ids - remove them (note data.table's odd format)
-      vsn_dt <- vsn_data_table(dt_out[, ..keep_names]) 
-      
+      vsn_dt <- vsn_data_table(dt_out[, ..keep_names])
+
       # Add back in the probe ids
       vsn_dt$V1 <- dt_out$V1
-      
+
       # move back to an object not unique to this if statement
       dt_out <- vsn_dt
     }
-    
+
     # Rearragne order with V1 (the probe ids) in the first position
     col_order <- names(dt_out) %>%
       .[. != "V1"] %>%
       c("V1", .)
-    
+
+    # Set the column order and scale that data
     dt_out <- data.table::setcolorder(dt_out, col_order)
 
     # Write to a csv file
@@ -448,13 +484,19 @@ write_data <- function(file_name, extension, write_dir,
 args <- input_arguments()
 stm_i <- Sys.time()
 files <- read_in_data(args)
+
+# Create the directroy if it's does not already exist
+dir.create(args$write_dir, showWarnings = FALSE)
+
 write_data(files, args$extension, args$write_dir,
   remove.na = args$na,
   na_people_threshold = args$na_people_threshold,
   na_probe_threshold = args$na_probe_threshold,
-  do_vsn = args$vsn
+  do_vsn = args$vsn,
+  scale = args$scale,
+  centre = args$centre
 )
 
-if(args$time){
+if (args$time) {
   print(Sys.time() - stm_i)
 }
