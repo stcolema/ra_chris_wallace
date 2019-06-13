@@ -1,0 +1,48 @@
+This is BibTeX, Version 0.99d (TeX Live 2017/Debian)
+Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
+The top-level auxiliary file: thesis.aux
+The style file: plainnat.bst
+Database file #1: thesis.bib
+Warning--empty publisher in mackay_information_2003
+You've used 23 entries,
+            2773 wiz_defined-function locations,
+            796 strings with 17931 characters,
+and the built_in function-call counts, 29717 in all, are:
+= -- 2230
+> -- 3866
+< -- 8
++ -- 1292
+- -- 1269
+* -- 3264
+:= -- 5099
+add.period$ -- 128
+call.type$ -- 23
+change.case$ -- 490
+chr.to.int$ -- 23
+cite$ -- 47
+duplicate$ -- 462
+empty$ -- 886
+format.name$ -- 1298
+if$ -- 5643
+int.to.chr$ -- 1
+int.to.str$ -- 1
+missing$ -- 21
+newline$ -- 182
+num.names$ -- 92
+pop$ -- 891
+preamble$ -- 1
+purify$ -- 469
+quote$ -- 0
+skip$ -- 681
+stack$ -- 0
+substring$ -- 535
+swap$ -- 45
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 248
+warning$ -- 1
+while$ -- 101
+width$ -- 0
+write$ -- 420
+(There was 1 warning)
