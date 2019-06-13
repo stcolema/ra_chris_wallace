@@ -26,6 +26,7 @@ mv Transposed_data/Observations_lost.csv Meta_data/
 cd Transposed_data
 
 # Fill empty probes with draws from a standard normal
+# I have added an option to order the data (set -o T)
 Rscript /home/MINTS/sdc56/Desktop/ra_chris_wallace/Data_prep/finad_all_probe_ids.R -d . -r T
 
 # Move back up a level and create a directory for this rearranged and filled data to it
@@ -39,4 +40,4 @@ mkdir Original_data
 mv *.csv Original_data
 
 # Rename final form of files and move to new directory
-Rscript /home/MINTS/sdc56/Desktop/ra_chris_wallace/Data_prep/rename_files.R -d ./Filled_random_data/ -w ./Final_random_data/
+Rscript ../ra_chris_wallace/Data_prep/rename_files.R -d ./Filled_random_data/ -w ./Final_random_data/

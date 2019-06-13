@@ -63,28 +63,37 @@ input_arguments <- function() {
 
     # File extension to be accepting
     optparse::make_option(c("-m", "--use_min"),
-                          type = "logical",
-                          default = FALSE,
-                          help = "logical indicating if fill value should be minimum expressed value in expression data [default= %default]",
-                          metavar = "logical"
+      type = "logical",
+      default = FALSE,
+      help = "logical indicating if fill value should be minimum expressed value in expression data [default= %default]",
+      metavar = "logical"
     ),
-    
+
     # File extension to be accepting
     optparse::make_option(c("-z", "--use_zero"),
-                          type = "logical",
-                          default = FALSE,
-                          help = "logical indicating if fill value should be 0 [default= %default]",
-                          metavar = "logical"
+      type = "logical",
+      default = FALSE,
+      help = "logical indicating if fill value should be 0 [default= %default]",
+      metavar = "logical"
     ),
-    
+
     # File extension to be accepting
     optparse::make_option(c("-r", "--use_random"),
-                          type = "logical",
-                          default = FALSE,
-                          help = "logical indicating if fill value should be draws from a standard normal [default= %default]",
-                          metavar = "logical"
+      type = "logical",
+      default = FALSE,
+      help = "logical indicating if fill value should be draws from a standard normal [default= %default]",
+      metavar = "logical"
     ),
-    
+
+    # File extension to be accepting
+    optparse::make_option(c("-o", "--order_data"),
+      type = "logical",
+      default = FALSE,
+      help = "logical indicating if data should be ordered by Probe ID [default= %default]",
+      metavar = "logical"
+    ),
+
+
     # File extension to be accepting
     optparse::make_option(c("-i", "--index"),
       type = "integer",
@@ -101,12 +110,20 @@ args <- input_arguments()
 dir_of_interest <- args$dir # "~/Desktop/subset_data/Small/" #
 vsn_data <- args$vsn_applied # F
 
+# Which fill to use
 use_min <- args$use_min
 use_zero <- args$use_zero
 use_random <- args$use_random
 
-if(sum(use_min, use_zero, use_random) > 1){
+# Order data by Probe ID
+order_data <- args$order_data
+
+if (sum(use_min, use_zero, use_random) > 1) {
   stop("Only one of 'use_min', 'use_zero' or 'use_random' may be set to TRUE.")
+}
+
+if (sum(use_min, use_zero, use_random) != 1) {
+  stop("Please set one of 'use_min', 'use_zero' or 'use_random' to TRUE.")
 }
 
 name_ind <- args$index # 2 + vsn_data
@@ -134,6 +151,12 @@ sd_lst <- list()
 # Put all the data in a list of data tables
 for (f in file_name) {
   data_lst[[f]] <- fread(f, header = T)
+
+  if (order_data) {
+    data_lst[[f]] <- data_lst[[f]] %>%
+      .[order(.$V1), ]
+  }
+
 
   # Record the genes present in all datasets
   genes_present <- unique(c(genes_present, data_lst[[f]]$V1))
@@ -176,26 +199,26 @@ for (i in 1:num_datasets) {
 
   n_rows <- length(genes_to_add)
   n_cols <- length(col_names)
-  
+
   # Fill the added rows with requested values
-  if(use_min) {
+  if (use_min) {
     fill_vlaue <- min(data_lst[[f]]) - sd(as.matrix(data_lst[[f]]))
   }
-  if(use_zero) {
+  if (use_zero) {
     fill_value <- 0
   }
-  
-  if(use_min | use_zero) {
-  additional_rows <- data.frame(matrix(fill_value,
-    nrow = n_rows,
-    ncol = n_cols
-  ))
+
+  if (use_min | use_zero) {
+    additional_rows <- data.frame(matrix(fill_value,
+      nrow = n_rows,
+      ncol = n_cols
+    ))
   }
   else {
-  additional_rows <- matrix( rnorm(n_rows * n_cols,mean=0,sd=1), n_rows, n_cols) %>% 
-    as.data.frame()
+    additional_rows <- matrix(rnorm(n_rows * n_cols, mean = 0, sd = 1), n_rows, n_cols) %>%
+      as.data.frame()
   }
-  
+
   colnames(additional_rows) <- col_names
   additional_rows$V1 <- genes_to_add
 
