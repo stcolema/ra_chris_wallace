@@ -1,7 +1,9 @@
 #!/usr/bin/env Rscript
 
 # Functions to save comparison of heatmaps
-
+library(cowplot)
+library(pheatmap)
+library(ggplot2)
 
 define_breaks <- function(col_pal, lb = -1, ub = 1){
   palette_length <- length(col_pal)
@@ -15,7 +17,8 @@ define_breaks <- function(col_pal, lb = -1, ub = 1){
 
 combine_pheatmaps <- function(ph_list,
                               save_name = "joint_heatmaps.png",
-                              main = "heatmap_comparison") {
+                              main = "heatmap_comparison",
+                              font_size = 20) {
 
   # Find the number of heatmaps to be combined
   n_ph <- length(ph_list)
@@ -36,7 +39,7 @@ combine_pheatmaps <- function(ph_list,
       cowplot::draw_label(main,
         x = 0.5,
         y = 0.95,
-        size = 20,
+        size = font_size,
         fontface = "bold"
       )
 
@@ -55,7 +58,7 @@ combine_pheatmaps <- function(ph_list,
       cowplot::draw_label(main,
         x = 0.5,
         y = 0.95,
-        size = 20,
+        size = font_size,
         fontface = "bold"
       )
     if (is.null(save_name)) {
@@ -206,10 +209,14 @@ plot_comparison_expression_to_clustering <- function(compare_tibble,
 
     # Extract the order from the pheatmap
     row_order <- ph_sim$tree_row$order
-
+    
+    # Find the column order for the expression data
+    ph_expr <- pheatmap(curr_expr, cluster_rows = F)
+    expr_col_order <- ph_expr$tree_col$order
+    
     # Re order the matrices to have a common row order
     curr_sim <- curr_sim[row_order, row_order]
-    curr_expr <- curr_expr[row_order, ]
+    curr_expr <- curr_expr[row_order, expr_col_order]
 
     colnames(curr_sim) <- NULL
     colnames(curr_expr) <- NULL
@@ -239,39 +246,11 @@ plot_comparison_corr_sim_expr <- function(compare_tibble,
   
   if (is.null(expr_breaks)) {
     expr_breaks <- define_breaks(col_pal_expr)
-    
-    # palette_length_expr <- length(col_pal_expr)
-    # 
-    # expr_breaks <- c(
-    #   seq(-1, 0, length.out = ceiling(palette_length_expr / 2) + 1),
-    #   seq(1 / palette_length_expr, 1, length.out = floor(palette_length_expr / 2))
-    # )
   }
   
   if (is.null(sim_breaks)){
     sim_breaks <- define_breaks(col_pal_sim)
-    
-    # palette_length_sim <- length(col_pal_sim)
-    # 
-    # sim_breaks <- c(
-    #   seq(-1, 0, length.out = ceiling(palette_length_expr / 2) + 1),
-    #   seq(1 / palette_length_expr, 1, length.out = floor(palette_length_expr / 2))
-    # )
   }
-  
-  # palette_length_expr <- length(col_pal_expr)
-  # 
-  # expr_breaks <- c(
-  #   seq(-1, 0, length.out = ceiling(palette_length_expr / 2) + 1),
-  #   seq(1 / palette_length_expr, 1, length.out = floor(palette_length_expr / 2))
-  # )
-  # 
-  # palette_length_sim <- length(col_pal_sim)
-  # 
-  # sim_breaks <- c(
-  #   seq(-1, 0, length.out = ceiling(palette_length_expr / 2) + 1),
-  #   seq(1 / palette_length_expr, 1, length.out = floor(palette_length_expr / 2))
-  # )
 
   # The directory we will save the plots to
   loc_dir <- paste0(file_path, "Comparison_expression_clustering_correlation/")
@@ -295,10 +274,11 @@ plot_comparison_corr_sim_expr <- function(compare_tibble,
     # Extract the relevant parts of the tibble
     curr_sim <- compare_tibble$similarity_matrix[compare_tibble$dataset == curr_dataset][[1]]
     curr_expr <- compare_tibble$expression_data[compare_tibble$dataset == curr_dataset][[1]]
-    curr_corr <- curr_expr %>%
-      t() %>%
-      cor()
-
+    curr_corr <- compare_tibble$correlation_matrix[compare_tibble$dataset == curr_dataset][[1]] 
+    # curr_corr <- curr_expr %>%
+    #   t() %>%
+    #   cor()
+    
     heatmap_wrapper_sim_expr_corr(curr_sim,
       curr_expr,
       curr_corr,
@@ -320,7 +300,9 @@ heatmap_wrapper_sim_expr_corr <- function(sim_mat,
                                           col_pal_sim = colorRampPalette(c("#FF9900", "white", "#146EB4"))(100),
                                           col_pal_expr = colorRampPalette(c("#146EB4", "white", "#FF9900"))(100),
                                           expr_breaks = NULL,
-                                          sim_breaks = NULL) {
+                                          sim_breaks = NULL,
+                                          font_size = 20,
+                                          expr_col_order = T) {
   if (is.null(expr_breaks)) {
     expr_breaks <- define_breaks(col_pal_expr)
     
@@ -349,9 +331,17 @@ heatmap_wrapper_sim_expr_corr <- function(sim_mat,
   # Extract the order from the pheatmap
   row_order <- ph_sim$tree_row$order
 
+  if(expr_col_order){
+  # Extract column order for expression data
+  ph_expr <- pheatmap(expr_mat, cluster_rows = F)
+  expr_col_order <- ph_expr$tree_col$order
+  } else {
+    expr_col_order <- ph_sim$tree_col$order
+  }
+  
   # Re order the matrices to have a common row order
   sim_mat <- sim_mat[row_order, row_order]
-  expr_mat <- expr_mat[row_order, ]
+  expr_mat <- expr_mat[row_order, expr_col_order]
   corr_mat <- corr_mat[row_order, row_order]
 
   colnames(sim_mat) <- NULL
@@ -365,7 +355,8 @@ heatmap_wrapper_sim_expr_corr <- function(sim_mat,
     col_pal_sim = col_pal_sim,
     col_pal_expr = col_pal_expr,
     expr_breaks = expr_breaks,
-    sim_breaks = sim_breaks
+    sim_breaks = sim_breaks,
+    font_size = font_size
     
   )
 }
@@ -382,7 +373,8 @@ heatmap_comparison_sim_expr_cor <- function(...,
                                             col_pal_sim = colorRampPalette(c("#FF9900", "white", "#146EB4"))(100),
                                             col_pal_expr = colorRampPalette(c("#146EB4", "white", "#FF9900"))(100),
                                             expr_breaks = NULL,
-                                            sim_breaks = NULL) {
+                                            sim_breaks = NULL,
+                                            font_size = 20) {
   if (is.null(expr_breaks)) {
     expr_breaks <- define_breaks(col_pal_expr)
     
@@ -433,5 +425,5 @@ heatmap_comparison_sim_expr_cor <- function(...,
   )$gtable
 
   # Combine these in a grid and save
-  combine_pheatmaps(ph_list, save_name = save_name, main = main)
+  combine_pheatmaps(ph_list, save_name = save_name, main = main, font_size = font_size)
 }

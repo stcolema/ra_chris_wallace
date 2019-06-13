@@ -48,5 +48,5 @@ plot_mass_parameters <- function(my_tibble, thin = 1L, file_path = "./", plot_ty
     ggsave(save_name)
   }
 
-  out_plots
+  # out_plots
 }

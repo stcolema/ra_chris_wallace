@@ -8,7 +8,8 @@ plot_phi_series <- function(mcmc_out_lst,
                             num_datasets,
                             start_index,
                             eff_n_iter,
-                            save_plots = F) {
+                            save_plots = F,
+                            col_pal = colorRampPalette(c("white", "#146EB4"))(100)) {
   phis <- list()
   count <- 0
 
@@ -73,30 +74,6 @@ plot_phi_series <- function(mcmc_out_lst,
         # Save
         ggsave(save_title)
 
-        # if (save_plots) {
-        #   # Open graphic to save plot to
-        #   if (plot_type == ".pdf") {
-        #     pdf(save_title)
-        #   } else {
-        #     png(save_title)
-        #   }
-        # }
-
-        # Plot Phi vs index (ignore initial values as misleading)
-        # plot(start_index:eff_n_iter * thin, phis[[count]][[1]][start_index:eff_n_iter],
-        #   main = plot_title,
-        #   col.main = "black",
-        #   sub = sub_title,
-        #   col.sub = "blue",
-        #   ylab = y_axis_title,
-        #   xlab = "Index"
-        # )
-
-        # Close graphic
-        # if (save_plots) {
-        #   dev.off()
-        # }
-
         mean_phi <- phis[[count]][[1]][start_index:eff_n_iter] %>% mean()
 
         phi_comparison_df[j, k] <- phi_comparison_df[k, j] <- mean_phi
@@ -110,15 +87,22 @@ plot_phi_series <- function(mcmc_out_lst,
     if (save_plots) {
       pheatmap(phi_comparison_df,
         main = phi_pheatmap_title,
-        filename = phi_pheatmap_file_name
+        cluster_rows = F,
+        cluster_cols = F,
+        filename = phi_pheatmap_file_name,
+        color = col_pal
       )
 
       # dev.off()
     } else {
       pheatmap(phi_comparison_df,
         main = phi_pheatmap_title,
-        filename = phi_pheatmap_file_name
+        cluster_rows = F,
+        cluster_cols = F,
+        color = col_pal
+        # filename = phi_pheatmap_file_name
       )
     }
   }
+  # phis
 }

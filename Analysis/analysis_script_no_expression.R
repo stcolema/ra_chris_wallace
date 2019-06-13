@@ -308,7 +308,7 @@ input_arguments <- function() {
       help = "Instruction to plot heatmaps of the expression data side-by-side with the similarity matrix [default= %default]",
       metavar = "logical"
     ),
-
+    
     # Instruction to plot heatmap of the average adjusted rand index between datasets
     optparse::make_option(c("--plot_arandi_matrix"),
       type = "logical",
@@ -342,8 +342,11 @@ stm_i <- Sys.time()
 seed <- args$seed
 set.seed(seed)
 
+expression_data_available <- T
+
 # Colour palette for PSMs
-col_pal <- colorRampPalette(brewer.pal(n = 7, name = "Blues"))(100)
+# col_pal <- colorRampPalette(brewer.pal(n = 7, name = "Blues"))(100)
+col_pal <- colorRampPalette(c("white", "#146EB4"))(100)
 
 col_pal_sim <- colorRampPalette(c("#FF9900", "white", "#146EB4"))(100)
 col_pal_expr <- colorRampPalette(c("#146EB4", "white", "#FF9900"))(100)
@@ -355,16 +358,27 @@ my_breaks <- c(
 )
 
 # All possible datasets (and the names of the probes present columns)
+# all_datasets <- c(
+#   "CD14",
+#   "CD15",
+#   "CD19",
+#   "CD4",
+#   "CD8",
+#   "IL",
+#   "PLA",
+#   "RE",
+#   "TR"
+# )
+
+# all_datasets <- paste0("D", 1:6)
+
 all_datasets <- c(
-  "CD14",
-  "CD15",
-  "CD19",
-  "CD4",
-  "CD8",
-  "IL",
-  "PLA",
-  "RE",
-  "TR"
+  "MDItestdata1",
+  "MDItestdata2",
+  "MDItestdata3",
+  "MDItestdata4",
+  "MDItestdata5",
+  "MDItestdata6"
 )
 
 # Directory holding the expression data files
@@ -496,7 +510,6 @@ if (do_phis_series) {
   )
 }
 
-
 # === Prepare the tibble =======================================================
 
 # Create an empty dataframe with column names corresponding to dataset numbers
@@ -524,8 +537,6 @@ compare_tibble <- tibble(
   fused_non_zero_probes = rep(vector("list", num_files), num_datasets),
   mass_parameter = rep(vector("list", num_files), num_datasets)
 )
-
-compare_tibble$phis <- phis
 
 # === MDI output ===============================================================
 
@@ -595,39 +606,11 @@ for (j in 1:num_files) {
     # allocation
     # We transpose as we are interested in how the genes cluster rahter than the
     # people
-    
-    # t_s1_on <- Sys.time()
-    
-    # .sim_mat <- similarity_mat(t(.mdi_alloc)) %>%
-    #   set_colnames(gene_id) %>%
-    #   set_rownames(gene_id)
-    
-    # t_s1_off <- Sys.time()
-    # 
-    # t_s2_on <- Sys.time()
-    
+
     .sim_mat <- make_psm(.mdi_alloc) %>%
       set_colnames(gene_id) %>%
       set_rownames(gene_id)
     
-    # t_s2_off <- Sys.time()
-    # 
-    # cat("C++ method: ")
-    # print(t_s1_off - t_s1_on)
-    # 
-    # cat("data.table method: ")
-    # print(t_s2_off - t_s2_on)
-    # 
-    # if(sum(.sim_mat_2 - .sim_mat) > 1e-5){
-    #   print(ncol(.sim_mat))
-    #   print(ncol(.sim_mat_2))
-    #   
-    #   print(nrow(.sim_mat))
-    #   print(nrow(.sim_mat_2))
-    #   
-    #   stop("Oh no")
-    # }
-
     # Use the maxpear() function from mcclust to interpret the PSM as a clustering
     .pred_alloc <- .sim_mat %>%
       mcclust::maxpear()
@@ -683,6 +666,8 @@ for (j in 1:num_files) {
 
 # === Phi denisty plots ================================================================
 
+# print(str(phis))
+
 if (do_phis_densities) {
   print("Saving phi density plots.")
   plot_phi_densities(phis, file_path, start_index, eff_n_iter)
@@ -694,6 +679,7 @@ if (do_phis_histograms) {
   print("Saving phi histogram plots.")
   plot_phi_histograms(phis, file_path, start_index, eff_n_iter)
 }
+
 
 # === Plot posterior similarity matrices =======================================
 
@@ -717,6 +703,7 @@ if (do_similarity_matrices_plot) {
 # If instructed to make Rand index plots
 if (do_rand_plot) {
   print("Saving scatter plots of adjusted rand index comparing final clustering to clustering at each iteration.")
+
   plot_rand_index(
     compare_tibble$mdi_allocation,
     file_path,
@@ -742,11 +729,12 @@ if(do_arandi_matrices){
   arandi_pheatmap_file_name <- paste0(save_path, "Arandi_heatmap", plot_type)
   
   pheatmap(avg_arandi_matrix,
-     cluster_rows = F, 
-     cluster_cols = F,
-     main = arandi_pheatmap_title, 
-     filename = arandi_pheatmap_file_name
-   )
+   cluster_rows = F, 
+   cluster_cols = F,
+   color = col_pal,
+   main = arandi_pheatmap_title, 
+   filename = arandi_pheatmap_file_name
+  )
   
 }
 
@@ -762,6 +750,9 @@ if (do_mass_parameter_plots) {
 }
 
 # === Heatmap expression data ==================================================
+
+if(expression_data_available){
+
 loc_dir <- paste0(save_path, "Expression_heatmaps/")
 
 if (do_expression_heatmap) {
@@ -821,7 +812,7 @@ for (i in 1:num_datasets) {
 
   # Read in the expression data
   f <- relevant_input_files[[i]]
-  expression_data <- fread(f)
+  expression_data <- fread(f, header = T)
 
   # Tidy (remove NAs and row name column) and convert to the appropriate format
   # for pheatmap
@@ -838,10 +829,10 @@ for (i in 1:num_datasets) {
     compare_tibble$expression_data[compare_tibble$dataset == curr_dataset][[k]] <- expression_data_tidy
     compare_tibble$non_zero_probes_ind[compare_tibble$dataset == curr_dataset][[k]] <- .non_zero_probes <- rowSums(expression_data_tidy) != 0
     compare_tibble$non_zero_probes[compare_tibble$dataset == curr_dataset][[k]] <- names(.non_zero_probes)[.non_zero_probes]
+    
     compare_tibble$correlation_matrix[compare_tibble$dataset == curr_dataset][[k]] <- expression_data_tidy %>%
       t() %>%
       cor()
-    
   }
 
   data_files[[i]] <- expression_data
@@ -1053,7 +1044,7 @@ if (do_comparison_plots) {
     col_pal_sim = col_pal_sim
   )
 }
-
+}
 # === Timing ===================================================================
 
 saveRDS(

@@ -28,7 +28,7 @@ fused_gene_heatmaps <- function(expression_data_lst,
   
   # The generic heatmap file name
   generic_ph_title <- paste0(dir_name, "heatmap_")
-
+  
   # Do the various combinations of datasets
   for (i in 1:(n_datasets - 1)) {
     d_i <- datasets[[i]]
@@ -37,12 +37,12 @@ fused_gene_heatmaps <- function(expression_data_lst,
     for (j in (i + 1):n_datasets) {
       d_j <- datasets[[j]]
       expression_data_j <- expression_data_lst[[j]]
-
+      
       # Extract the indices for the "fused" and "unfused" genes
       fused_ind <- fused_probes_lst[[i]][[j]] # fused_non_zero_probes[[1]][[2]]
       non_fused_ind <- !fused_ind
-
-
+      
+      
       # Find a nice ordering of the columns. This is superfluous and inefficient
       # ph1 <- pheatmap(expression_data_i, cluster_rows = F)
       # ph2 <- pheatmap(expression_data_j, cluster_rows = F)
@@ -55,7 +55,7 @@ fused_gene_heatmaps <- function(expression_data_lst,
       #   expression_data_j[, col_order_2]
       # ) %>%
       #   magrittr::set_rownames(gene_id)
-
+      
       # We ignore the above and instead have data unordered
       col_order_1 <- colnames(expression_data_i) # to allow no edits and to uncomment above for seamless integration
 
