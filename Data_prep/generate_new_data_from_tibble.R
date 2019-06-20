@@ -74,30 +74,30 @@ input_arguments <- function() {
       help = "Number of data point sto generate [default= %default]",
       metavar = "integer"
     ),
-    
-    
+
+
     # Range of weights to use for generating data
     optparse::make_option(c("-w", "--weight_range"),
-      type = "integer",
-      default = 1:5,
+      type = "double",
+      default = c(0:5 / 5),
       help = "Range of weights to use for generating data [default= %default]",
-      metavar = "integer"
+      metavar = "double"
     ),
-    
+
     # Label of first cluster to use
     optparse::make_option(c("--cluster_label_1"),
-                          type = "integer",
-                          default = NA,
-                          help = "Label of first cluster to use [default= %default]",
-                          metavar = "integer"
+      type = "integer",
+      default = NA,
+      help = "Label of first cluster to use [default= %default]",
+      metavar = "integer"
     ),
-    
+
     # Label of second cluster to use
     optparse::make_option(c("--cluster_label_2"),
-                          type = "integer",
-                          default = NA,
-                          help = "Label of second cluster to use [default= %default]",
-                          metavar = "integer"
+      type = "integer",
+      default = NA,
+      help = "Label of second cluster to use [default= %default]",
+      metavar = "integer"
     )
   )
   opt_parser <- optparse::OptionParser(option_list = option_list)
@@ -120,7 +120,7 @@ find_sub_cluster_indices <- function(all_names, names_1, names_2) {
 
 find_sub_clusters <- function(cl_alloc, expr_data, cl_label_1, cl_label_2) {
   all_names <- names(cl_alloc)
-  
+
   names_1 <- all_names[which(cl_alloc == cl_label_1)]
   names_2 <- all_names[which(cl_alloc == cl_label_2)]
 
@@ -143,9 +143,8 @@ generate_data <- function(cl_alloc, expr_data, cl_label_1, cl_label_2,
                           w_2 = 1,
                           n_gen = 20,
                           new_names = NULL) {
-  
   sub_cl <- find_sub_clusters(cl_alloc, expr_data, cl_label_1, cl_label_2)
-  
+
   gen_data <- generate_clusters(sub_cl$cl_1, sub_cl$cl_2, sub_cl$cl_new,
     w_1 = w_1,
     w_2 = w_2,
@@ -288,9 +287,9 @@ create_multiple_datasets <- function(expr_data_list,
       gen_data <- rbind(new_data_1, new_data_2)
 
       new_expr_dataset <- rbind(expr_data, gen_data)
-      
+
       # Write the new data to .csv
-      write.table(new_expr_dataset, f_name, row.names = TRUE, sep = ",")
+      write.csv(new_expr_dataset, f_name, row.names = TRUE)
     }
   }
 }

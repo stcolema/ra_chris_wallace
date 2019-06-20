@@ -29,6 +29,7 @@ function_scripts <- c(
   "plot_fused_genes.R",
   "plot_comparison_expression_clustering.R",
   "plot_mass_parameters.R",
+  "plot_clusters_series.R",
   "create_psm.R",
   "arandi_matrices.R"
 )
@@ -180,7 +181,7 @@ input_arguments <- function() {
     # .csv file describing which probes are not present in which datasets
     optparse::make_option(c("--probes_present"),
       type = "character",
-      default = "/home/MINTS/sdc56/Desktop/MDI_small_geneset_outputs/Meta_data/probes_present_per_dataset.csv",
+      default = "/home/MINTS/sdc56/Desktop/ra_chris_wallace/Analysis/probes_present_per_dataset.csv",
       help = "Name of .csv files describing which probes are empty in which dataset [default= %default]",
       metavar = "character"
     ),
@@ -317,6 +318,14 @@ input_arguments <- function() {
       metavar = "logical"
     ),
     
+    # Instruction to plot the number of clusters present per iteration
+    optparse::make_option(c("--plot_clusters"),
+      type = "logical",
+      default = TRUE,
+      help = "Instruction to plot the number of clusters present per iteration [default= %default]",
+      metavar = "logical"
+    ),
+    
     # Instruction to time programme
     optparse::make_option(c("--time"),
       type = "logical",
@@ -343,7 +352,10 @@ seed <- args$seed
 set.seed(seed)
 
 # Colour palette for PSMs
-col_pal <- colorRampPalette(brewer.pal(n = 7, name = "Blues"))(100)
+col_pal <- colorRampPalette(c("white", "#146EB4"))(100)
+breaks_0_1 <- c(
+  seq(0, 1, length.out = ceiling(length(col_pal)) + 1)
+)
 
 col_pal_sim <- colorRampPalette(c("#FF9900", "white", "#146EB4"))(100)
 col_pal_expr <- colorRampPalette(c("#146EB4", "white", "#FF9900"))(100)
@@ -377,8 +389,48 @@ probe_key <- fread(args$probe_key)
 # as the probe IDs and the remaining columns corrresponding to the cell types
 # with TRUE indicating the probe is present in this cell type (i.e. not added
 # manually with an imputed value) and FALSE indicates we added it in.
-probes_present_dt <- fread(args$probes_present) %>%
-  set_colnames(c("V1", all_datasets))
+probes_present_dt <- fread(args$probes_present) 
+all_datasets <- colnames(probes_present_dt)[2: ncol(probes_present_dt)]
+
+curr_viable_datasets <- list(
+  c(
+    "CD14",
+    "CD15",
+    "CD19",
+    "CD4",
+    "CD8",
+    "IL",
+    "PLA",
+    "RE",
+    "TR"
+  ),
+  c(
+    "MDItestdata1",
+    "MDItestdata2",
+    "MDItestdata3",
+    "MDItestdata4",
+    "MDItestdata5",
+    "MDItestdata6"
+  )
+)
+
+# print(all_datasets)
+
+# Check columns are as expected.
+if(length(all_datasets) == length(curr_viable_datasets[[1]])){
+  if(! all.equal(all_datasets[match(curr_viable_datasets[[1]], all_datasets)], curr_viable_datasets[[1]])){
+    cat("\nDatasets appears to be CEDAR (based on probes_present_per_dataset.csv), but datasets in columns do not match expected.")
+    stop(paste("Expected", curr_viable_datasets[[1]]))
+  
+  }
+}
+
+if(length(all_datasets) == length(curr_viable_datasets[[2]])){
+  if(! all.equal(all_datasets[match(curr_viable_datasets[[2]], all_datasets)], curr_viable_datasets[[2]])){
+    cat("\nDatasets appears to be Yeast (based on probes_present_per_dataset.csv), but datasets in columns do not match expected.")
+    stop(paste("Expected", curr_viable_datasets[[2]]))
+  }
+}
 
 # Read in the MDI output file
 file_path <- args$dir
@@ -425,6 +477,7 @@ do_fused_gene_expression <- args$plot_fused_genes
 do_comparison_plots <- args$plot_comparison
 do_mass_parameter_plots <- args$plot_mass_parameters
 do_arandi_matrices <- args$plot_arandi_matrix
+do_clusters_series <- args$plot_clusters
 
 # Plto type
 plot_type <- args$plot_type
@@ -485,7 +538,7 @@ if (is.na(n_genes)) {
 
 # Plot phi value between each dataset combination across iterations
 if (do_phis_series) {
-  print("Plotting phi values across iterations.")
+  cat("\nPlotting phi values across iterations.\n")
   plot_phi_series(mcmc_out_lst,
     file_path,
     num_files,
@@ -505,7 +558,7 @@ compare_df <- data.frame(matrix(ncol = num_datasets, nrow = n_genes))
 # Set the cell type to the column names (make sure order is as per MDI call)
 colnames(compare_df) <- dataset_names
 
-print("Constructing tibble.")
+cat("\nConstructing tibble.\n")
 
 # Now put everything in a tibble
 compare_tibble <- tibble(
@@ -515,6 +568,7 @@ compare_tibble <- tibble(
   phis = rep(vector("list", num_files), num_datasets),
   pred_allocation = list(compare_df),
   mdi_allocation = rep(vector("list", num_files), num_datasets),
+  n_clust = rep(vector("list", num_files), num_datasets),
   similarity_matrix = list(data.frame(matrix(ncol = n_genes, nrow = n_genes))),
   correlation_matrix = list(data.frame(matrix(ncol = n_genes, nrow = n_genes))),
   expression_data = rep(vector("list", num_files), num_datasets),
@@ -525,12 +579,15 @@ compare_tibble <- tibble(
   mass_parameter = rep(vector("list", num_files), num_datasets)
 )
 
-compare_tibble$phis <- phis
+# compare_tibble$phis <- phis
 
 # === MDI output ===============================================================
 
 # Global similarity between datasets
 phis <- list()
+
+# Collect the number of clusters present in each iteration
+n_clust_list <- list()
 
 for (j in 1:num_files) {
 
@@ -555,6 +612,26 @@ for (j in 1:num_files) {
       dplyr::select(contains(dataset_name)) %>%
       magrittr::extract(start_index:eff_n_iter, )
 
+    # If there is the same number of clusters in each iteration apply(., 1, unique)
+    # retrns a matrix rather than a list with each column representing the unique
+    # entries in one iteration (or in a given row of .mdi_alloc).
+    # Due to this we must check if we have a list or not and treat the object
+    # appropriately.
+    unique_labels <- .mdi_alloc %>% 
+      apply(1, unique)
+    
+    # Find the number of clusters in each iteration
+    if(typeof(unique_labels) == "list"){
+      n_clust_list[[i]] <- unique_labels %>% 
+        lapply(length) %>% 
+        unlist()
+    } else {
+
+      n_clust_list[[i]] <- unique_labels %>%
+        nrow() %>% 
+        rep((eff_n_iter - (start_index - 1))) # as we include start_index
+    }
+    
     if (i == 1) {
 
       # Find the Probe IDs
@@ -595,38 +672,15 @@ for (j in 1:num_files) {
     # allocation
     # We transpose as we are interested in how the genes cluster rahter than the
     # people
-    
-    # t_s1_on <- Sys.time()
-    
+ 
     # .sim_mat <- similarity_mat(t(.mdi_alloc)) %>%
     #   set_colnames(gene_id) %>%
     #   set_rownames(gene_id)
     
-    # t_s1_off <- Sys.time()
-    # 
-    # t_s2_on <- Sys.time()
-    
     .sim_mat <- make_psm(.mdi_alloc) %>%
       set_colnames(gene_id) %>%
       set_rownames(gene_id)
-    
-    # t_s2_off <- Sys.time()
-    # 
-    # cat("C++ method: ")
-    # print(t_s1_off - t_s1_on)
-    # 
-    # cat("data.table method: ")
-    # print(t_s2_off - t_s2_on)
-    # 
-    # if(sum(.sim_mat_2 - .sim_mat) > 1e-5){
-    #   print(ncol(.sim_mat))
-    #   print(ncol(.sim_mat_2))
-    #   
-    #   print(nrow(.sim_mat))
-    #   print(nrow(.sim_mat_2))
-    #   
-    #   stop("Oh no")
-    # }
+
 
     # Use the maxpear() function from mcclust to interpret the PSM as a clustering
     .pred_alloc <- .sim_mat %>%
@@ -645,6 +699,9 @@ for (j in 1:num_files) {
     # Save these objects to the tibble
     compare_tibble$mdi_allocation[i + (j - 1) * num_files][[1]] <- .mdi_alloc
     compare_tibble$similarity_matrix[i + (j - 1) * num_files][[1]] <- .sim_mat
+    
+    # Record the numebr of clusters per iteration
+    compare_tibble$n_clust[i + (j - 1) * num_files][[1]] <- n_clust_list[[i]]
 
     # Record this in the tibble
     compare_tibble$pred_allocation[i + (j - 1) * num_files][[1]] <- .pred_alloc$cl
@@ -684,14 +741,14 @@ for (j in 1:num_files) {
 # === Phi denisty plots ================================================================
 
 if (do_phis_densities) {
-  print("Saving phi density plots.")
+  cat("\nSaving phi density plots.\n")
   plot_phi_densities(phis, file_path, start_index, eff_n_iter)
 }
 
 # === Phi histograms ===========================================================
 
 if (do_phis_histograms) {
-  print("Saving phi histogram plots.")
+  cat("\nSaving phi histogram plots.\n")
   plot_phi_histograms(phis, file_path, start_index, eff_n_iter)
 }
 
@@ -699,7 +756,7 @@ if (do_phis_histograms) {
 
 # If making heatplots of the clusterings across iterations
 if (do_similarity_matrices_plot) {
-  print("Saving heatmaps of PSMs.")
+  cat("\nSaving heatmaps of PSMs.\n")
 
   plot_similarity_matrices(
     compare_tibble$similarity_matrix,
@@ -713,10 +770,33 @@ if (do_similarity_matrices_plot) {
   )
 }
 
+# === Plot clusters per iteration ==============================================
+
+# Plot the number of clusters present per iteration
+if(do_clusters_series){
+  
+  cat("\nPlotting the number of clusters present per iteration\n")
+  
+  # n_clust_list <- compare_tibble$n_clust
+  
+  plot_clusters_present(n_clust_list,
+    dataset_names, 
+    num_datasets, 
+    start_index,
+    eff_n_iter,
+    thin,
+    file_path,
+    # gen_main_title = "Number of clusters present per iteration",
+    # gen_save_name = NULL,
+    plot_type = plot_type
+    )
+}
+
+
 # === Plot adjusted rand index==================================================
 # If instructed to make Rand index plots
 if (do_rand_plot) {
-  print("Saving scatter plots of adjusted rand index comparing final clustering to clustering at each iteration.")
+  cat("\nSaving scatter plots of adjusted rand index comparing final clustering to clustering at each iteration.\n")
   plot_rand_index(
     compare_tibble$mdi_allocation,
     file_path,
@@ -745,7 +825,9 @@ if(do_arandi_matrices){
      cluster_rows = F, 
      cluster_cols = F,
      main = arandi_pheatmap_title, 
-     filename = arandi_pheatmap_file_name
+     filename = arandi_pheatmap_file_name,
+     color = col_pal #,
+     # breaks = breaks_0_1
    )
   
 }
@@ -753,7 +835,7 @@ if(do_arandi_matrices){
 # === Plot mass parameters =====================================================
 
 if (do_mass_parameter_plots) {
-  print("Plotting mass parameters over iterations.")
+  cat("\nPlotting mass parameters over iterations.\n")
   plot_mass_parameters(compare_tibble,
     thin = thin,
     file_path = file_path,
@@ -765,7 +847,7 @@ if (do_mass_parameter_plots) {
 loc_dir <- paste0(save_path, "Expression_heatmaps/")
 
 if (do_expression_heatmap) {
-  print("Saving gene expression heatmaps.")
+  cat("\nSaving gene expression heatmaps.\n")
 
 
   dir.create(loc_dir, showWarnings = FALSE)
@@ -821,8 +903,12 @@ for (i in 1:num_datasets) {
 
   # Read in the expression data
   f <- relevant_input_files[[i]]
-  expression_data <- fread(f)
+  expression_data <- fread(f, header = T)
 
+  if(! all.equal(unname(unlist(expression_data[,1])), gene_id)){
+    stop("Gene ids not matching in expression data.")
+  }
+  
   # Tidy (remove NAs and row name column) and convert to the appropriate format
   # for pheatmap
   expression_data_tidy <- expression_data %>%
@@ -856,11 +942,10 @@ for (i in 1:num_datasets) {
   expr_max <- max(expression_data_tidy)
 
   expr_breaks <- define_breaks(col_pal_expr, lb = expr_min, ub = expr_max)
-
-
+  
   if (do_expression_heatmap) {
     if (n_clusters > 12) {
-      print("Too many clusters. Cannot include annotation row.")
+      cat("\nToo many clusters. Cannot include annotation row.\n")
 
 
       # Pheatmap
@@ -951,7 +1036,7 @@ if (do_expression_heatmap) {
 # We save this as a named list to the tibble. Each entry in the list corresponds
 # to a dataset and records the fused probes between the current dataset and the
 # entry name
-print("Finding ''fused'' probes.")
+cat("\nFinding ''fused'' probes.\n")
 for (k in 1:num_files) {
   for (i in 1:num_datasets) {
     dataset_i <- dataset_names[i]
@@ -1017,7 +1102,7 @@ for (k in 1:num_files) {
 # === Gene expression for fused and unfused genes ==============================
 
 if (do_fused_gene_expression) {
-  print("Saving heatmaps of pairwise fused gene expression across datasets.")
+  cat("\nSaving heatmaps of pairwise fused gene expression across datasets.\n")
 
   fused_gene_heatmaps(
     compare_tibble$expression_data,
@@ -1034,7 +1119,7 @@ if (do_fused_gene_expression) {
 # === Compare similarity and gene expression ===================================
 
 if (do_comparison_plots) {
-  print("Saving comparison of similarity matrix and expression data.")
+  cat("\nSaving comparison of similarity matrix and expression data.\n")
   plot_comparison_expression_to_clustering(
     compare_tibble,
     dataset_names,
@@ -1062,5 +1147,7 @@ saveRDS(
 )
 
 if (args$time) {
-  print((Sys.time() - stm_i))
+  cat("\n")
+  cat((Sys.time() - stm_i))
+  cat("\n")
 }

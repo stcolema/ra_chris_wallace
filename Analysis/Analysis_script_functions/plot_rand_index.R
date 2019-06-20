@@ -26,6 +26,8 @@ plot_rand_index <- function(mdi_allocation_lst,
                             thin = 1) {
   generic_title <- "MDI: Adjusted Rand index for"
 
+  start_index <- ceiling(burn / thin) + 1
+  
   loc_dir <- paste0(file_path, "Adjusted_rand_index_plots/")
   dir.create(loc_dir, showWarnings = FALSE)
 
@@ -58,7 +60,7 @@ plot_rand_index <- function(mdi_allocation_lst,
         # mcclust::arandi,
         unlist_arandi,
         # mclust::adjustedRandIndex,
-        mdi_allocation_lst[i][[1]][eff_n_iter - burn, ]
+        mdi_allocation_lst[i][[1]][eff_n_iter - start_index, ]
         # compare_df[, i]
       )
       
