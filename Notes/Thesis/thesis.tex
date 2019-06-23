@@ -87,6 +87,9 @@
 %%% AMS math
 \usepackage{amsmath}
 
+% % % AMS symbols
+\usepackage{amssymb}
+
 %%% For differential notation
 %\usepackage{physics}
 
@@ -213,9 +216,9 @@
 			\vspace{1.0cm}
 	
 			\begin{abstract}
-				\emph{A priori} defined gene sets are key to gene set enrichment analysis \cite{subramanian_gene_2005} a powerful tool in genetic analysis. Gene sets are constructed through linking genes by some common feature. This can be a function, the location of the gene product, the participation of the product in some metabolic or signalling pathway, the protein structure, the presence of transcription-factor-binding sites or other regulatory elements, the participation in multiprotein complexes, or any one of several other definitions \cite{szklarczyk_string_2019}\cite{subramanian_gene_2005}\cite{kanehisa_new_2019}\cite{ashburner_gene_2000}. However, all of these criteria are tissue agnostic.
+				\emph{A priori} defined gene sets are key to gene set enrichment analysis \cite{SubramanianGenesetenrichment2005a} a powerful tool in genetic analysis. Gene sets are constructed through linking genes by some common feature. This can be a function, the location of the gene product, the participation of the product in some metabolic or signalling pathway, the protein structure, the presence of transcription-factor-binding sites or other regulatory elements, the participation in multiprotein complexes, or any one of several other definitions \cite{SzklarczykSTRINGv11protein2019}\cite{SubramanianGenesetenrichment2005a}\cite{KanehisaNewapproachunderstanding2019}\cite{AshburnerGeneOntologytool2000a}. However, all of these criteria are tissue agnostic.
 %				Some attempts to include tissue specific information has been proposed \cite{frost_computation_2018}\cite{greene_understanding_2015}, but these attempts have limitations.
-				We propose to produce tissue specific gene sets by applying multiple dataset integration \cite{kirk_bayesian_2012} (a Bayesian unsupervised clustering method) to the gene expression data from the CEDAR cohort \cite{the_international_ibd_genetics_consortium_ibd_2018}, a dataset of 9 tissue / cell types.
+				We propose to produce tissue specific gene sets by applying multiple dataset integration \cite{KirkBayesiancorrelatedclustering2012} (a Bayesian unsupervised clustering method) to the gene expression data from the CEDAR cohort \cite{TheInternationalIBDGeneticsConsortiumIBDriskloci2018}, a dataset of 9 tissue / cell types.
 			\end{abstract}
 		
 			\vfill
@@ -238,7 +241,7 @@
 	
 	%\keywords{Keyword1, Keyword2, Keyword3}
 %	\begin{abstract}
-%		\emph{A priori} defined gene sets are key to gene set enrichment analysis (GSEA) \cite{subramanian_gene_2005}. Gene sets are constructed through linking genes by some common feature. This can be a function, the location of the gene product, the participation of the product in some metabolic or signalling pathway, the protein structure, the presence of transcription-factor-binding sites or other regulatory elements, the participation in multiprotein complexes, etc. \cite{szklarczyk_string_2019}\cite{subramanian_gene_2005}\cite{kanehisa_new_2019} \cite{ashburner_gene_2000}. However, all of these criteria are tissue agnostic. Some attempts to include tissue specific information has been proposed \cite{frost_computation_2018} \cite{greene_understanding_2015}, but these attempts have limitations. We propose to produce tissue specific gene sets by applying multiple dataset integration (MDI) \cite{kirk_bayesian_2012} (a Bayesian unsupervised clustering method) to the CEDAR cohort \cite{the_international_ibd_genetics_consortium_ibd_2018}.
+%		\emph{A priori} defined gene sets are key to gene set enrichment analysis (GSEA) \cite{SubramanianGenesetenrichment2005a}. Gene sets are constructed through linking genes by some common feature. This can be a function, the location of the gene product, the participation of the product in some metabolic or signalling pathway, the protein structure, the presence of transcription-factor-binding sites or other regulatory elements, the participation in multiprotein complexes, etc. \cite{SzklarczykSTRINGv11protein2019}\cite{SubramanianGenesetenrichment2005a}\cite{KanehisaNewapproachunderstanding2019} \cite{AshburnerGeneOntologytool2000a}. However, all of these criteria are tissue agnostic. Some attempts to include tissue specific information has been proposed \cite{frost_computation_2018} \cite{greene_understanding_2015}, but these attempts have limitations. We propose to produce tissue specific gene sets by applying multiple dataset integration (MDI) \cite{KirkBayesiancorrelatedclustering2012} (a Bayesian unsupervised clustering method) to the CEDAR cohort \cite{TheInternationalIBDGeneticsConsortiumIBDriskloci2018}.
 %	\end{abstract}
 
 
@@ -249,9 +252,9 @@
 	%\vspace{-1.0cm}
 	
 %	\section{Abstract}
-%	\emph{A priori} defined gene sets are key to gene set enrichment analysis \cite{subramanian_gene_2005} a powerful tool in genetic analysis. Gene sets are constructed through linking genes by some common feature. This can be a function, the location of the gene product, the participation of the product in some metabolic or signalling pathway, the protein structure, the presence of transcription-factor-binding sites or other regulatory elements, the participation in multiprotein complexes, or any one of several other definitions \cite{szklarczyk_string_2019}\cite{subramanian_gene_2005}\cite{kanehisa_new_2019}\cite{ashburner_gene_2000}. However, all of these criteria are tissue agnostic.
+%	\emph{A priori} defined gene sets are key to gene set enrichment analysis \cite{SubramanianGenesetenrichment2005a} a powerful tool in genetic analysis. Gene sets are constructed through linking genes by some common feature. This can be a function, the location of the gene product, the participation of the product in some metabolic or signalling pathway, the protein structure, the presence of transcription-factor-binding sites or other regulatory elements, the participation in multiprotein complexes, or any one of several other definitions \cite{SzklarczykSTRINGv11protein2019}\cite{SubramanianGenesetenrichment2005a}\cite{KanehisaNewapproachunderstanding2019}\cite{AshburnerGeneOntologytool2000a}. However, all of these criteria are tissue agnostic.
 %	%				Some attempts to include tissue specific information has been proposed \cite{frost_computation_2018}\cite{greene_understanding_2015}, but these attempts have limitations.
-%	We propose to produce tissue specific gene sets by applying multiple dataset integration \cite{kirk_bayesian_2012} (a Bayesian unsupervised clustering method) to the CEDAR cohort \cite{the_international_ibd_genetics_consortium_ibd_2018}, a dataset of 9 tissue / cell types.
+%	We propose to produce tissue specific gene sets by applying multiple dataset integration \cite{KirkBayesiancorrelatedclustering2012} (a Bayesian unsupervised clustering method) to the CEDAR cohort \cite{TheInternationalIBDGeneticsConsortiumIBDriskloci2018}, a dataset of 9 tissue / cell types.
 	
 	\section{Introduction}
 	This project, which consists of applying a Bayesian unsupervised clustering method across multiple datasets to define tissue specific gene sets, is interesting on a number of fronts. It provides a chance to learn relevant, topical biology in understanding gene sets, the role context plays in gene expression and to learn the basics of immunology. From an informatics / statistics perspective, Bayesian inference, unsupervised clustering and the use of multiple datasets are all interesting. These are relevant skills to both industry and research that I wish to develop.
@@ -259,6 +262,19 @@
 	Beyond developing new skills, this project also offers the opportunity to be involved in relevant research. Gene sets are commonly used in genetic analyses, thus if we can produce sets that are informed by the context of interest, it could be relevant to many researchers. Hopefully by producing more informative gene sets we can help narrow the gap between biology and disease.	
 
 	\section{Theory}
+	\subsection{Clustering} \label{sec:clustering}
+	Given data $X=\left(x_1,\ldots,x_n\right)$, we define a \emph{clustering} or partition of the data by:
+	
+	\begin{eqnarray}
+	Y &=& \left\{Y_1,\ldots,Y_K\right\} \\
+	Y_k &=& \left\{x_{1_k},\ldots, x_{n_k}\right\}  \\
+	Y_i \cap Y_j &=& \emptyset \enskip \forall \enskip i,j \in \{1,K\}, i \neq j \\
+	n_k & \geq & 1 \enskip \forall \enskip k \in \{1,K\} \\
+	\sum_{k=1}^Kn_k &=& n
+	\end{eqnarray}
+	
+	In short we have $K$ nonempty disjoint sets of data, each of which is referred to as a \emph{cluster}, the set of which form a \emph{clustering}. We define a \emph{label} $c=(c_1,\ldots,c_n)$ as denoting the membership of each point. A label $c_i=k$ states that point $x_i$ is assigned to cluster $Y_k$.
+	
 	\subsection{Mixture models} \label{mixture_models}
 	Given some data $X = (x_1, \ldots, x_n)$, we assume a number of unobserved processes generate the data, and membership to a process for individual $i$ is represented using the latent variable $c_i$. It is assumed that each of the $K$ processes can be modelled by a parametric distribution, $f(\cdot)$ with associated parameters $\theta$ and that the full model density is then the weighted sum of these probability density functions where the weights are the component proportions, $\pi_k$:
 	
@@ -285,13 +301,13 @@
 		\item We refer to $p(\theta | X)$ as the \emph{posterior} distribution of $\theta$ as it is the distribution associated with $\theta$ \emph{after} observing $X$.
 		\item $p(\theta)$ is the \emph{prior} distribution of $\theta$ and captures our beliefs about $\theta$ before we observe $X$.
 		\item $p(X | \theta)$ is the \emph{likelihood} of $X$ given $\theta$, the probability of data $X$ being generated given our model is true. It is the criterion we focus on in our model if we would use a frequentist approach to the inference; maximising this quantity in our model generates the curve that best describes the observed data. 
-		\item $\int_\Theta p(X | \theta ') p(\theta ') d \theta '$ is the \emph{normalising constant}. This quantity is also referred to as the \emph{evidence} \cite{mackay_information_2003} or \emph{marginal likelihood} and is normally represented by $Z$. It is referred to as the marginal likelihood as we marginalise the parameter $\theta$ by integrating over its entire sample space.
+		\item $\int_\Theta p(X | \theta ') p(\theta ') d \theta '$ is the \emph{normalising constant}. This quantity is also referred to as the \emph{evidence} \cite{MacKayInformationTheoryInference2003} or \emph{marginal likelihood} and is normally represented by $Z$. It is referred to as the marginal likelihood as we marginalise the parameter $\theta$ by integrating over its entire sample space.
 	\end{itemize}
 	
 	In terms of sampling, the prior is very useful as a clever choice of prior can ensure that the posterior is always solvable, that we do not encounter singularities in our distribution.
 	
 	\subsection{Multiple dataset integration}
-	Consider the case when we have observed paired datasets $X_1 = (x_{1,1},\ldots,x_{n,1}), X_2 = (x_{1,2},\ldots,x_{n,2})$, where observations in the $i$th row of each dataset represent information about the same individual. We would like to cluster individuals using information common to both datasets. One could concatenate the datasets, adding additional covariates for each individual. However, if the two datasets have different clustering structures this would reduce the signal of both clusterings and probably have one dominate. If the two datasets have the same structure but different signal-to-noise ratios this would reduce the signal in the final clustering. In both these cases independent models on each dataset would be preferable. \citet{kirk_bayesian_2012} suggest a method to carry out clustering on both datasets where common information is used but two individual clusterings are outputted. This method is driven by the allocation prior:
+	Consider the case when we have observed paired datasets $X_1 = (x_{1,1},\ldots,x_{n,1}), X_2 = (x_{1,2},\ldots,x_{n,2})$, where observations in the $i$th row of each dataset represent information about the same individual. We would like to cluster individuals using information common to both datasets. One could concatenate the datasets, adding additional covariates for each individual. However, if the two datasets have different clustering structures this would reduce the signal of both clusterings and probably have one dominate. If the two datasets have the same structure but different signal-to-noise ratios this would reduce the signal in the final clustering. In both these cases independent models on each dataset would be preferable. \citet{KirkBayesiancorrelatedclustering2012} suggest a method to carry out clustering on both datasets where common information is used but two individual clusterings are outputted. This method is driven by the allocation prior:
 	\begin{align} \label{allocation_prior_l_2}
 	p(c_{i1}, c_{i2} | \phi ) \propto \pi_{i1} \pi_{i2} (1 + \phi \mathbb{I}(c_{i1} = c_{i2}))
 	\end{align}
@@ -303,7 +319,81 @@
 	\end{align}
 	Here $\boldsymbol{\phi}$ is the ${L \choose 2}$-vector of all $\phi_{ij}$ where $\phi_{12}$ is the variable $\phi$ in \eqref{allocation_prior_l_2}.
 	
-	Thus MDI is an extension of mixture models to multiple datasets where correlated clustering structure is used to ``upweigh'' similar clusters across datasets. MDI has been applied to precision medicine, specifically glioblastoma sub-typing \cite{savage_identifying_2013}, in the past showing its potential as a tool.
+	Thus MDI is an extension of mixture models to multiple datasets where correlated clustering structure is used to ``upweigh'' similar clusters across datasets. MDI has been applied to precision medicine, specifically glioblastoma sub-typing \cite{SavageIdentifyingcancersubtypes2013a}, in the past showing its potential as a tool.
+	
+	\subsection{Rand index}
+	A popular metric for comparing the similarity of two clusterings of the data is the \emph{Rand index} \cite{RandObjectiveCriteriaEvaluation1971}. 	If one assumes that all points are of equal importance in determining clusterings, then in combination with the discrete nature of clusters and the fact that a cluster is defined as much by what it does not contain as that which it does, \citet{RandObjectiveCriteriaEvaluation1971} proposes a metric to measure similarity between clusterings. Between clusterings $Y$ and $Y'$ for any two points $x_i$ and $x_j$ there can exist one of a number of scenarios regarding their labeling. Let $\gamma_{ij}$ be a measure between the two points $x_i$ and $x_j$. For the two points, they can have:
+	\begin{enumerate} \label{list:labelling_scenarios}
+	\item the same label in both clusterings ($c_i = c_j \land c'_i = c'_j$) ($\gamma_{ij}=1$); \label{list:sub:same_label_1}
+	\item different labels in both ($c_i \neq c_j \land c'_i \neq c'_j$) ($\gamma_{ij}=1$); or \label{list:sub:same_label_2}
+	\item the same label in one but not in the other ($c_i \neq c_j \land c'_i = c'_j \lor c_i = c_j \land c'_i \neq c'_j$) ($\gamma_{ij}=0$). \label{list:sub:different_label}
+	\end{enumerate}
+	Thus \citet{RandObjectiveCriteriaEvaluation1971} propose counting the number of times any two points have one of \ref{list:sub:same_label_1} or \ref{list:sub:same_label_2} from list \ref{list:labelling_scenarios} and finding the proportion of these compared to the number of all possible point combinations. More formally, this is:
+	
+	\begin{eqnarray} \label{eqn:rand_index}
+	c(Y, Y') & = & \frac{1}{\binom{n}{2} } \sum_{i=1}^{n-1}\sum_{j=i + 1}^n\gamma_{ij} 
+	\end{eqnarray}
+	
+	This can be envisioned as a $K \times K'$ contingency table of the count of overlapping points, as shown in table \ref{table:rand_contingency}. Table \ref{table:rand_contingency} uses the following notation:
+	\begin{itemize}
+	\item $n_{ij}$ is the number of points that have membership in $Y_i$ in clustering $Y$ and $Y'_j$ in clustering $Y'$;
+	\item $n_{\cdot j}$ is the number of points in cluster $Y'_j$ in clustering $Y'$;
+	\item $n_{i \cdot}$ is the number of points in cluster $Y_i$ in clustering $Y$; and
+	\item $n_{\cdot \cdot} = n$ is the number of points in clusterings $Y$ and $Y'$.
+	\end{itemize}
+	\begin{table}[] 
+	\centering
+	\begin{tabular}{c|cccc|c} 
+	$ {{} \atop Y}  \!\diagdown\! ^{Y'}$	& $Y'_1$	& $Y'_2$	& $\cdots$	& $Y'_{K'}$	& Sums	\\ 
+	\hline
+	$Y_1$		& $n_{11}$	& $n_{12}$	& $\cdots$	& $n_{1K'}$	& $n_{1 \cdot}$	\\
+	$Y_2$		& $n_{21}$	& $n_{22}$	& $\cdots$	& $n_{2K'}$	& $n_{2 \cdot}$	\\
+	$\vdots$	& $\vdots$	& $\vdots$	& $\ddots$	& $\vdots$	& $\vdots$		 \\
+	$Y_{K}$	& $n_{K1}$	& $n_{K2}$	& $\cdots$	& $n_{KK'}$	& $n_{K \cdot}$	\\ 
+	\hline
+	 Sums	& $n_{\cdot 1}$	&  $n_{\cdot 2}$	& $\cdots$	& $n_{\cdot K'}$	& $n_{\cdot \cdot} = n$         
+	\end{tabular}
+	\caption{Contingency table used by \citet{RandObjectiveCriteriaEvaluation1971} to calculate a measure of similarity between clusterings $Y$ and $Y'$.}
+	\label{table:rand_contingency}
+	\end{table}
+	Using the notation from table \ref{table:rand_contingency} one can restate equation \ref{eqn:rand_index}:
+	\begin{eqnarray} \label{eqn:rand_index_alternative}
+	c(Y, Y') = \left[\binom{n}{2} + \sum_{i=1}^K\sum_{j=1}^{K'}n_{ij}^2 - \frac{1}{2}\left(\sum_{i=1}^Kn_{i\cdot}^2 + \sum_{j=1}^{K'}n_{\cdot j}^2  \right) \right]  \binom{n}{2} ^{-1}
+	\end{eqnarray}
+	Thie measure, $c$ has three properties.
+	\begin{itemize}
+	\item $c(\cdot, \cdot) \in [0,1]$ (0 for no similarity, 1 high similarity);
+	\item $1 - c$ is a distance measure;
+	\item if one assumes a distribution to describe $X$, then $c$ is a random variable.
+	\end{itemize}
+	\citet{HubertComparingpartitions1985} extend the Rand index to account for chance. They include a null hypothesis and allow that there is a probability of some points have a $\gamma$ of 1 by chance. Consider the scenario where a point $x_i$ has the same label as another point $x_j$ under clustering $Y$. For another clustering $Y'$, there a non-zero is a probability $c'_i=c'_j$ purely by chance and does not represent a similarity between $Y$ and $Y'$. If one generates two clusterings $Y$ and $Y'$ by sampling from the integers in the closed interval $[1,K]$ (i.e. by sampling from discrete unfirom distribution $\mathcal{U}\left\{1,K\right\}$), then the contingency table generated is constructed from the generalised hyper-geometric distribution \cite{HubertComparingpartitions1985}. It can be shown that the expected number of points with common membership in both clusters is non-zero. Specifically:
+	
+	\begin{eqnarray}
+	\mathbb{E}\left(\sum_{i=1}^K \sum_{j=1}^K\binom{n_{ij}}{2}\right) = \frac{\sum_{i=1}^K \binom{n_{i\cdot}}{2} \sum_{j=1}^K \binom{n_{\cdot j}}{2}}{\binom{n}{2}}
+	\end{eqnarray}
+	
+	\subsection{Standardisation} \label{sec:standardisation}
+	For a $p$-vector of observations, $X_i=(x_{i1},\ldots,x_{1p})$, we define \emph{standardisation} of $X_i$ as the mapping from $X_i$ to $X'_i=(x'_{i1},\ldots,x'_{ip})$ defined by the \emph{sample mean}, $\bar{x}_i$, and \emph{sample standard deviation}, $s_i$:
+	\begin{eqnarray} \label{eqn:standardisation}
+	\bar{x}_i &=& \frac{1}{p}\sum_{j=1}^p x_{ij} \\
+	s_i^2 &=& \frac{1}{p - 1}\sum_{j=1}^p \left( x_{ij} - \bar{x}_i \right) ^2 \\
+	x'_{ij} &=& \frac{x_{ij}- \bar{x}_i}{s_i} \quad \forall \quad j \in (1,\ldots,p)
+	\end{eqnarray}
+	We refer to $X'_i$ as the standardised form of $X$. If we are given a dataset $X=(X_1,\ldots,X_n)$ where each $X_i$ is a $p$-vector of observations of the form referred to above, then in referring to the standardised form of $X$, we mean the dataset $X'=(X'_1,\ldots,X'_n)$ where each $X'_i$ is the standardised form of $X_i$.
+	
+	Standardisation moves the values observed for each $X_i$ to a common scale where each vector has an observed mean and standard deviation of 0 and 1 respectively.
+
+%	$\delta_{ij}$ here is the Kronecker delta and is defined:
+%	
+%	\begin{eqnarray}
+%	\delta_{ij} =
+%	    \begin{cases}
+%	            1, &         \text{if } i=j,\\
+%           	 0, &         \text{if } i\neq j.
+%	    \end{cases}
+%    	\end{eqnarray}
+	
+	%and $Y'=\left\{Y'_1,\ldots,Y'_{K'}\right\}$
 	
 %	\subsection{Expression quantitative trait loci}
 %	The last two decades have seen a huge body of research focused on genome variability due to its 
@@ -313,7 +403,7 @@
 %	variant effects within the cell. Ideally this information allows biological insight into the 
 %	aetiology and nature of disease or of the phenotype. Genome-wide association studies (GWAS) 
 %	\cite{feero_genomewide_2010} have shown that the majority of these variants are located within 
-%	the non-coding regions of the genome \cite{nica_expression_2013} implying that they are involved in gene regulation. These 
+%	the non-coding regions of the genome \cite{NicaExpressionquantitativetrait2013} implying that they are involved in gene regulation. These 
 %	sites that explain some of the phenotypic variance are referred to as expression quantitative 
 %	trait loci (eQTL).
 %	
@@ -336,42 +426,93 @@
 %	In terms of eQTLs, we designate proximal effects as \emph{cis-eQTL} and distal causes as 
 %	\emph{trans-eQTL}. We normally consider an eQTL to be cis-regulating if it is within 1MB of the 
 %	gene transcription start site (TSS) and trans-regulating if it is more than 5MB upstream or 
-%	downstream of the TSS or if found on a different chromosome \cite{nica_expression_2013}.
+%	downstream of the TSS or if found on a different chromosome \cite{NicaExpressionquantitativetrait2013}.
 %	
 %	trans-eQTL are hard to find. They have weaker effects than cis-eQTL and thus require greater power 
 %	in the experiment \cite{dixon_genome-wide_2007}. For some context, \citet{burgess_gene_2017} claims 
 %	that 449 donors provide low power in terms of finding trans-eQTL. As the power of experiments increases 
 %	more trans-eQTL are observed and cis-eQTL are shown to be generally tissue agnostic 
-%	\cite{gtex_consortium_genetic_2017}. Previous results suggested cis-eQTL would be have tissue specific effects, 
-%	but the increase in experimental power revealed that this is not the case \cite{grundberg_mapping_2012}. 
+%	\cite{GTExConsortiumGeneticeffectsgene2017}. Previous results suggested cis-eQTL would be have tissue specific effects, 
+%	but the increase in experimental power revealed that this is not the case \cite{GrundbergMappingcistransregulatory2012}. 
 %	The current power present in many genetic experiments is enough to observe trans-eQTLs and indicates 
-%	these have tissue specific properties \cite{grundberg_mapping_2012}\cite{gtex_consortium_genetic_2017}. It is possible that this result might be shown as an artefact of insufficient power, much as initial analysis suggested cis-eQTL had tissue specific properties. However, for now we assume it is true and that trans-eQTL are more likely to display tissue specific behaviour 
+%	these have tissue specific properties \cite{GrundbergMappingcistransregulatory2012}\cite{GTExConsortiumGeneticeffectsgene2017}. It is possible that this result might be shown as an artefact of insufficient power, much as initial analysis suggested cis-eQTL had tissue specific properties. However, for now we assume it is true and that trans-eQTL are more likely to display tissue specific behaviour 
 %	than cis-eQTL.
 	
 	\subsection{Tissue specificity} \label{sec:tissue_specificity}
-	Cell-type specific gene pathways are pivotal in differentiating tissue function, implicated in hereditary organ failure, and mediate acquired chronic disease \cite{ju_defining_2013}. More and more evidence is being accrued to highlight the cell-type specific level of gene expression \cite{grundberg_mapping_2012}\cite{ong_enhancer_2011}\cite{maniatis_regulation_1987}. 
+	Cell-type specific gene pathways are pivotal in differentiating tissue function, implicated in hereditary organ failure, and mediate acquired chronic disease \cite{JuDefiningcelltypespecificity2013a}. More and more evidence is being accrued to highlight the cell-type specific level of gene expression \cite{GrundbergMappingcistransregulatory2012}\cite{OngEnhancerfunctionnew2011}\cite{ManiatisRegulationinducibletissuespecific1987}. 
 	
 %	Beyond healthy variation in gene expression across tissues, in the  area of immunology many diseases are tissue specific and have strong associations to genetic pre-disposition
 	
-	We also see that there are many auto-immune disease, normally associated with a specific tissue type, that have strong genetic associations. Tissue specific isoforms and expression have also been observed \cite{wang_alternative_2008}. This shows that genes have context-specific interactions that should be considered in analysis.
+	We also see that there are many auto-immune disease, normally associated with a specific tissue type, that have strong genetic associations. Tissue specific isoforms and expression have also been observed \cite{WangAlternativeisoformregulation2008a}. This shows that genes have context-specific interactions that should be considered in analysis.
 	
 	\subsection{Gene sets}
-	With the onset of microarrays and RNAseq, producing gene expression data in large quantities for a wide number of genes is increasingly enabled. Unfortunately the large amount of data gifted onto the genomics community by these methods is difficult to interpret and analyse. Gene Set Enrichment Analysis (GSEA) attempts to overcome some of these issues by analysing pre-defined gene sets and changes in the expression of the full set rather than considering each constituent member on an individual basis \cite{mooney_gene_2015}. Consider, that in analysing gene sets as a group, the degree of perturbation in the expression of the full gene set due to the disease state / alternative phenotype that is required to be considered significant is much less than that required in analysing each of its constituent members individually \cite{dudbridge_power_2013}\cite{wray_research_2014}. This use of gene sets can increase the power of the analysis.
+	With the onset of microarrays and RNAseq, producing gene expression data in large quantities for a wide number of genes is increasingly enabled. Unfortunately the large amount of data gifted onto the genomics community by these methods is difficult to interpret and analyse. Gene Set Enrichment Analysis (GSEA) attempts to overcome some of these issues by analysing pre-defined gene sets and changes in the expression of the full set rather than considering each constituent member on an individual basis \cite{MooneyGenesetanalysis2015}. Consider, that in analysing gene sets as a group, the degree of perturbation in the expression of the full gene set due to the disease state / alternative phenotype that is required to be considered significant is much less than that required in analysing each of its constituent members individually \cite{DudbridgePowerPredictiveAccuracy2013}\cite{WrayResearchReviewPolygenic2014}. This use of gene sets can increase the power of the analysis.
 	
-	Furthermore, we know from Genome Wide Association Studies (GWAS) that many diseases are polygenic in nature \cite{mooney_gene_2015}. Furthermore, \citet{subramanian_gene_2005} highlight the importance of gene sets, claiming that within a single metabolic pathway an increase of $20\%$ in all the associated gene products may be more important than a 20-fold increase in a single gene.
+	Furthermore, we know from Genome Wide Association Studies (GWAS) that many diseases are polygenic in nature \cite{MooneyGenesetanalysis2015}. Furthermore, \citet{SubramanianGenesetenrichment2005a} highlight the importance of gene sets, claiming that within a single metabolic pathway an increase of $20\%$ in all the associated gene products may be more important than a 20-fold increase in a single gene.
 	
-	Thus clustering genes into groups known as ``gene sets'' is natural and useful from both a biological and statistical perspective - it can increase the interpretability and the power of an analysis \cite{nica_expression_2013}\cite{vosa_unraveling_2018}.
+	Thus clustering genes into groups known as ``gene sets'' is natural and useful from both a biological and statistical perspective - it can increase the interpretability and the power of an analysis \cite{NicaExpressionquantitativetrait2013}\cite{VosaUnravelingpolygenicarchitecture2018}.
 	
-	However, the problem of defining gene sets is non-trivial with many variations in-use. There exist many databases of gene sets \cite{ashburner_gene_2000}\cite{kanehisa_new_2019}\cite{szklarczyk_string_2019}. The Molecular Signature Database \cite{subramanian_gene_2005} (MSigDB) is one of the most popular resources for GSEA and encompasses many different gene sets defined under various criteria or generated from separate resources. However, none of these definitions of a ``set'' incorporate tissue specific information. We believe that this is an oversight as there is evidence that some genes are involved in tissue specific pathways (see section \ref{sec:tissue_specificity}). Thus we propose defining tissue specific gene sets. Previous attempts to achieve this have used the Genotype Tissue Expression (GTEx) \cite{gtex_consortium_genetic_2017} database \cite{lonsdale_genotype-tissue_2013}, but here the profiles are for human donors
-	post-mortem. We suspect that the data derived from these cells may not contain the same information as that collected from living, active cells. Furthermore, the GTEx data is across many different tissues (144 are used in \cite{lonsdale_genotype-tissue_2013}), but we focus on cell types relevant to autoimmune disease in general (i.e. blood cells) and IBD in particular (intestinal samples). This restricted focus should offer relevant gene sets.
+	However, the problem of defining gene sets is non-trivial with many variations in-use. There exist many databases of gene sets \cite{AshburnerGeneOntologytool2000a}\cite{KanehisaNewapproachunderstanding2019}\cite{SzklarczykSTRINGv11protein2019}. The Molecular Signature Database \cite{SubramanianGenesetenrichment2005a} (MSigDB) is one of the most popular resources for GSEA and encompasses many different gene sets defined under various criteria or generated from separate resources. However, none of these definitions of a ``set'' incorporate tissue specific information. We believe that this is an oversight as there is evidence that some genes are involved in tissue specific pathways (see section \ref{sec:tissue_specificity}). Thus we propose defining tissue specific gene sets. Previous attempts to achieve this have used the Genotype Tissue Expression (GTEx) \cite{GTExConsortiumGeneticeffectsgene2017} database \cite{LonsdaleGenotypeTissueExpressionGTEx2013}, but here the profiles are for human donors
+	post-mortem. We suspect that the data derived from these cells may not contain the same information as that collected from living, active cells. Furthermore, the GTEx data is across many different tissues (144 are used in \cite{LonsdaleGenotypeTissueExpressionGTEx2013}), but we focus on cell types relevant to autoimmune disease in general (i.e. blood cells) and IBD in particular (intestinal samples). This restricted focus should offer relevant gene sets.
+	
+	Gene sets should contain sets of genes that have correlated expression. If this is the case, it is often assumed that the genes are common members of some metabolic pathway and that their products interact. As this correlated expression is represented by a common variation across people rather than in the magnitude of expression, we will standardise the expression data. We describe a small example to explain our reasoning.
+	
+	\subsubsection{Example: Standardising gene expression}
+	If one considers table \ref{table:example_gene_expression_data} which contains an example of expression data for some genes A, B, C, D and E across people 1 to 4.
+	
+	\begin{table}[] 
+	\centering
+	\begin{tabular}{c|cccc} 
+	Genes 	& Person 1	& Person 2	& Person 3	& Person 4	\\ 
+	\hline
+	A 		& 5.1		& 5.2 		& 4.9		& 5.0		\\
+	B 		& 5.1		& 4.9		& 5.2		& 5.4		\\
+	C 		& 1.4		& 1.5		& 1.2		& 1.3		\\
+	D 		& 1.4		& 1.2		& 1.5		& 1.7		\\
+	E 		& 1.4		& 1.5		& 1.4		& 1.5		
+	\end{tabular}
+	\caption{Example gene expression data.}
+	\label{table:example_gene_expression_data}
+	\end{table}
+	
+	\begin{figure}[h]
+	\centering
+		\includegraphics[scale=0.6]{Images/Examples/example_expression_data.png}
+		\caption{Heatmap of expression data in table \ref{table:example_gene_expression_data} showing the clusters based upon magnitude of expression.}
+		\label{fig:example_expression_data}
+	\end{figure}
+	
+	One can see that genes A and C have similar patters in variation across the people, as do genes B and D. Gene E is not consistent with any other gene here. However, as this relative variation is of interest rather than the magnitude of expression, one can see that standardising the data is required. If one were to cluster the data as represented in table \ref{table:example_gene_expression_data}, one would place genes A and B in one cluster and genes C, D and E in another as their absolute expression levels are similar (as can be seen in figure \ref{fig:example_expression_data}). However, if the expression level of each gene is standardised as per section \ref{sec:standardisation}, the data is then as represented in table \ref{table:example_standardised_gene_expression_data}. As the data are now on the same scale the characteristic that will determine a clustering is the variation of expression across people. As we want genes with similar patterns of variation (i.e. that are co-expressed) this enables us to cluster under our objective of defining gene sets. In this case genes A and C are one cluster, genes B and D another with gene E in a cluster alone, as can be seen in figure \ref{fig:example_standardised_expression_data}. As this is the type of data we wish to cluster across, we therefore most standardise our expression data before clustering can be implemented.
+
+	\begin{table}[] 
+	\centering
+	\begin{tabular}{c|cccc} 
+	Genes 	& Person 1	& Person 2	& Person 3	& Person 4	\\ 
+	\hline
+	A 		& 0.39		& 1.16 		& -1.16		& -0.39		\\
+	B 		& -0.24		& -1.20		& 0.24		& 1.20		\\
+	C 		& 0.39		& 1.16		& -1.16		& -0.39		\\
+	D 		& -0.24		& -1.20		& 0.24		& 1.20		\\
+	E 		& -0.87		& 0.87		& -0.87		& 0.87		
+	\end{tabular}
+	\caption{Example standardised gene expression data.}
+	\label{table:example_standardised_gene_expression_data}
+	\end{table}
+	
+	\begin{figure}[h]
+	\centering
+		\includegraphics[scale=0.6]{Images/Examples/example_standardised_expression_data.png}
+		\caption{Heatmap of expression data in table \ref{table:example_standardised_gene_expression_data} showing the clusters based upon variation of expression across people.}
+		\label{fig:example_standardised_expression_data}
+	\end{figure}
 		
 %	\subsection{The importance of gene sets}
-%	If we can cluster genes together it is possible that we can find deeper biological interpretation, understanding the context of the gene products and what they interact with. This can offer some insight into the connection between the gene and the expressed phenotype. Furthermore, \citet{nica_expression_2013} recommend investigating groups of cis-eQTL affecting a gene network that when perturbed results in a disease state. They claim this is far higher powered than the classical approach. This claim is supported by the findings of \citet{vosa_unraveling_2018} who found that associations between \emph{polygenic risk scores} and gene expression (this association is referred to as ``expression quantitative trait score'' (eQTS) in \cite{vosa_unraveling_2018}) contained the most biological information about disease in a comparison of cis-eQTL, trans-EQTL and eQTS. This finding is not unique to this paper \cite{dudbridge_power_2013}\cite{wray_research_2014}. More generally, gene set enrichment analysis (GSEA) \cite{subramanian_gene_2005}\cite{mooney_gene_2015} relies upon pre-defined gene sets. This method determines if gene sets have statistically significant, concordant differences between phenotypes and offers biological interpretation of the sets. Thus well-defined gene sets are required for informative, interpretable analysis of genomic information.
+%	If we can cluster genes together it is possible that we can find deeper biological interpretation, understanding the context of the gene products and what they interact with. This can offer some insight into the connection between the gene and the expressed phenotype. Furthermore, \citet{NicaExpressionquantitativetrait2013} recommend investigating groups of cis-eQTL affecting a gene network that when perturbed results in a disease state. They claim this is far higher powered than the classical approach. This claim is supported by the findings of \citet{VosaUnravelingpolygenicarchitecture2018} who found that associations between \emph{polygenic risk scores} and gene expression (this association is referred to as ``expression quantitative trait score'' (eQTS) in \cite{VosaUnravelingpolygenicarchitecture2018}) contained the most biological information about disease in a comparison of cis-eQTL, trans-EQTL and eQTS. This finding is not unique to this paper \cite{DudbridgePowerPredictiveAccuracy2013}\cite{WrayResearchReviewPolygenic2014}. More generally, gene set enrichment analysis (GSEA) \cite{SubramanianGenesetenrichment2005a}\cite{MooneyGenesetanalysis2015} relies upon pre-defined gene sets. This method determines if gene sets have statistically significant, concordant differences between phenotypes and offers biological interpretation of the sets. Thus well-defined gene sets are required for informative, interpretable analysis of genomic information.
 	
 	
 %	\subsection{Existing databases}
-%	There exist many databases of gene sets \cite{ashburner_gene_2000}\cite{kanehisa_new_2019}\cite{szklarczyk_string_2019}. The Molecular Signature Database \cite{subramanian_gene_2005} (MSigDB) is one of the most popular resources for GSEA and encompasses many different gene sets defined under different criteria or generated from different resources. However, none of these definitions of a ``set'' incorporate tissue specific information. 
-%	(such as the Gene Ontology (GO) Resource \cite{ashburner_gene_2000}, the Kyoto Encyclopedia of Genes and Genomes (KEGG) \cite{kanehisa_new_2019}, the Molecular Signatures Database (MSigDB) \cite{subramanian_gene_2005} or the STRING protein-protein interaction (PPI) database \cite{szklarczyk_string_2019})
+%	There exist many databases of gene sets \cite{AshburnerGeneOntologytool2000a}\cite{KanehisaNewapproachunderstanding2019}\cite{SzklarczykSTRINGv11protein2019}. The Molecular Signature Database \cite{SubramanianGenesetenrichment2005a} (MSigDB) is one of the most popular resources for GSEA and encompasses many different gene sets defined under different criteria or generated from different resources. However, none of these definitions of a ``set'' incorporate tissue specific information. 
+%	(such as the Gene Ontology (GO) Resource \cite{AshburnerGeneOntologytool2000a}, the Kyoto Encyclopedia of Genes and Genomes (KEGG) \cite{KanehisaNewapproachunderstanding2019}, the Molecular Signatures Database (MSigDB) \cite{SubramanianGenesetenrichment2005a} or the STRING protein-protein interaction (PPI) database \cite{SzklarczykSTRINGv11protein2019})
 	
 	
 
@@ -379,7 +520,7 @@
 	
 
 	\section{Data}	
-	The data is from the Correlated Expression and Disease Association Research (CEDAR) cohort \cite{the_international_ibd_genetics_consortium_ibd_2018}. We have 9 .csv files, one for each tissue / cell type present of normalised gene expression data for 323 individuals. These are healthy individuals of European descent; the cohort consists of 182 women and 141 men with an average age of 56 years (but ranging from 19 to 86). None of the individuals are suffering from any autoimmune or inflammatory disease and were not taking corticosteroids or non-steroid anti-inflammatory drugs (with the exception of aspirin). 
+	The data is from the Correlated Expression and Disease Association Research (CEDAR) cohort \cite{TheInternationalIBDGeneticsConsortiumIBDriskloci2018}. We have 9 .csv files, one for each tissue / cell type present of normalised gene expression data for 323 individuals. These are healthy individuals of European descent; the cohort consists of 182 women and 141 men with an average age of 56 years (but ranging from 19 to 86). None of the individuals are suffering from any autoimmune or inflammatory disease and were not taking corticosteroids or non-steroid anti-inflammatory drugs (with the exception of aspirin). 
 	
 	With regards to tissue types, samples from six circulating immune cells types:
 	\begin{itemize}
@@ -425,9 +566,12 @@
 %		\item Apply variance stabilisation \cite{huber_variance_2002} to normalise the gene expression data;
 		\item Inspect the data by PCA and remove outlier individuals for each dataset in each gene set;
 		\item To apply MDI we require that each dataset have the same row names in the same order, so we re-arrange our datasets to have common order of probes and include rows of 0’s for probes entirely missing from a given dataset; and
-		\item Apply MDI \cite{mason_mdi-gpu:_2016}.
+		\item Apply MDI \cite{MasonMDIGPUacceleratingintegrative2016a}.
 	\end{enumerate}
 	To validate our clusters we intend to check if some well-annotated gene sets (such as the interleukin pathways) cluster appropriately.
+	
+	\subsection{Consesnsus clustering}
+	In the scenario that MDI struggles to explore the entire posterior distribution from any given initialisation for any realistic number of iterations of MCMC, we propose use of a ``consensus'' clustering \cite{MontiConsensusClusteringResamplingBased}. In this scenario we draw samples of clusterings from MCMC chains with different initialisations and use these clusterings to describe the posterior distribution. In practice this involves running $n_{seeds}$ different chains of MDI for a smaller number of iterations (some $n_{iter} \in [500, 1000]$), burning out the first $n_{iter} - 1$ iterations and saving the clustering from the final iteration. We then combine the clusterings from all $n_{seeds}$ within a posterior similarity matrix (PSM), a $N \times N$ matrix where the $(i,j)$ entry is the proportion of times genes $i$ and $j$ are in the same cluster. This means that the PSM is not affected by label-flipping and that it is a symmetric matrix with $1$'s along the diagonal and all entries in the unit interval. From this PSM a summary clustering may be calculated. The combination of different initialisations explores all the possible likelihood maixma and thus provides a more informed clustering. As the algorithm is not exploring the full space in any given iteration, we expect that the uncertainty quantification is optimistic, however we argue that an estimate made using insufficient data is better than one made using none at all and that this method is the best currently available to us for quantifying the uncertainty and exploring the posterior distribution.
 
 
 	\section{Results}
@@ -436,11 +580,11 @@
 	
 	The algorithm was capable of running for 10,000 iterations with a thinning factor of 25 over both these set of data.
 	
-	We used the modal clustering as the predicted clustering as the labels became fixed and did not vary for the majority of iterations. We did not use the clustering implied by the posterior similarity matrix (PSM) as the clusters were very defined and thus the uncertainty captured by the PSM was not necessary for the predicted clustering. Furthermore, the computational cost of calculating the PSM, particularly for the larger dataset, was quite high (the PSM is a $n \times n$ matrix).
+	We used the modal clustering as the predicted clustering as the labels became fixed and did not vary for the majority of iterations. We did not use the clustering implied by the PSM as the clusters were very defined and thus the uncertainty captured by the PSM was not necessary for the predicted clustering. Furthermore, the computational cost of calculating the PSM, particularly for the larger dataset, was quite high (the PSM is a $n \times n$ matrix).
 	
 	MDI begins with 50 clusters (as an approximation of a Dirichlet process - note that we can change the number of clusters present). In the 9 datasets the number of occupied clusters stabilised around 10 (ranging from 8 - 13).
 	
-	We inspected the resulting clusters using the \emph{pheatmap} package \cite{kolde2019pheatmap} in R \cite{R2019}.
+	We inspected the resulting clusters using the \emph{pheatmap} package \cite{KoldepheatmapPrettyHeatmaps2018} in R \cite{RCoreTeamLanguageEnvironmentStatistical2018}.
 	
 	\begin{figure}[h]
 	%	\centering
@@ -503,7 +647,8 @@
 
 	%\bibliographystyle{abbrv}
 	\bibliographystyle{plainnat}
-	\bibliography{thesis}
+%	\bibliography{thesis}
+	\bibliography{thesis_ref_better}
 	
 \end{document}
 

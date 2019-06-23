@@ -1,4 +1,4 @@
-\begin{thebibliography}{23}
+\begin{thebibliography}{26}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -6,27 +6,25 @@
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
 
 \bibitem[Ashburner et~al.(2000)Ashburner, Ball, Blake, Botstein, Butler,
-  Cherry, Davis, Dolinski, Dwight, Eppig, Harris, Hill, Issel-Tarver,
+  Cherry, Davis, Dolinski, Dwight, Eppig, Harris, Hill, {Issel-Tarver},
   Kasarskis, Lewis, Matese, Richardson, Ringwald, Rubin, and
-  Sherlock]{ashburner_gene_2000}
+  Sherlock]{AshburnerGeneOntologytool2000a}
 Michael Ashburner, Catherine~A. Ball, Judith~A. Blake, David Botstein, Heather
   Butler, J.~Michael Cherry, Allan~P. Davis, Kara Dolinski, Selina~S. Dwight,
-  Janan~T. Eppig, Midori~A. Harris, David~P. Hill, Laurie Issel-Tarver, Andrew
-  Kasarskis, Suzanna Lewis, John~C. Matese, Joel~E. Richardson, Martin
+  Janan~T. Eppig, Midori~A. Harris, David~P. Hill, Laurie {Issel-Tarver},
+  Andrew Kasarskis, Suzanna Lewis, John~C. Matese, Joel~E. Richardson, Martin
   Ringwald, Gerald~M. Rubin, and Gavin Sherlock.
-\newblock Gene {Ontology}: tool for the unification of biology.
+\newblock Gene {{Ontology}}: Tool for the unification of biology.
 \newblock \emph{Nature Genetics}, 25\penalty0 (1):\penalty0 25--29, May 2000.
 \newblock ISSN 1061-4036, 1546-1718.
 \newblock \doi{10.1038/75556}.
-\newblock URL \url{http://www.nature.com/articles/ng0500_25}.
 
-\bibitem[Dudbridge(2013)]{dudbridge_power_2013}
+\bibitem[Dudbridge(2013)]{DudbridgePowerPredictiveAccuracy2013}
 Frank Dudbridge.
-\newblock Power and {Predictive} {Accuracy} of {Polygenic} {Risk} {Scores}.
+\newblock Power and {{Predictive Accuracy}} of {{Polygenic Risk Scores}}.
 \newblock \emph{PLoS Genetics}, 9\penalty0 (3):\penalty0 e1003348, March 2013.
 \newblock ISSN 1553-7404.
 \newblock \doi{10.1371/journal.pgen.1003348}.
-\newblock URL \url{https://dx.plos.org/10.1371/journal.pgen.1003348}.
 
 \bibitem[Grundberg et~al.(2012)Grundberg, Small, Hedman, Nica, Buil, Keildson,
   Bell, Yang, Meduri, Barrett, Nisbett, Sekowska, Wilk, Shin, Glass, Travers,
@@ -34,11 +32,11 @@ Frank Dudbridge.
   Ingle, Knowles, Krestyaninova, Lowe, Di~Meglio, Montgomery, Parts, Potter,
   Surdulescu, Tsaprouni, Tsoka, Bataille, Durbin, Nestle, O'Rahilly, Soranzo,
   Lindgren, Zondervan, Ahmadi, Schadt, Stefansson, Smith, McCarthy, Deloukas,
-  Dermitzakis, and Spector]{grundberg_mapping_2012}
-Elin Grundberg, Kerrin~S Small, Åsa~K Hedman, Alexandra~C Nica, Alfonso Buil,
-  Sarah Keildson, Jordana~T Bell, Tsun-Po Yang, Eshwar Meduri, Amy Barrett,
-  James Nisbett, Magdalena Sekowska, Alicja Wilk, So-Youn Shin, Daniel Glass,
-  Mary Travers, Josine~L Min, Sue Ring, Karen Ho, Gudmar Thorleifsson,
+  Dermitzakis, and Spector]{GrundbergMappingcistransregulatory2012}
+Elin Grundberg, Kerrin~S Small, \AA{}sa~K Hedman, Alexandra~C Nica, Alfonso
+  Buil, Sarah Keildson, Jordana~T Bell, Tsun-Po Yang, Eshwar Meduri, Amy
+  Barrett, James Nisbett, Magdalena Sekowska, Alicja Wilk, So-Youn Shin, Daniel
+  Glass, Mary Travers, Josine~L Min, Sue Ring, Karen Ho, Gudmar Thorleifsson,
   Augustine Kong, Unnur Thorsteindottir, Chrysanthi Ainali, Antigone~S Dimas,
   Neelam Hassanali, Catherine Ingle, David Knowles, Maria Krestyaninova,
   Christopher~E Lowe, Paola Di~Meglio, Stephen~B Montgomery, Leopold Parts,
@@ -53,19 +51,25 @@ Elin Grundberg, Kerrin~S Small, Åsa~K Hedman, Alexandra~C Nica, Alfonso Buil,
   October 2012.
 \newblock ISSN 1061-4036, 1546-1718.
 \newblock \doi{10.1038/ng.2394}.
-\newblock URL \url{http://www.nature.com/articles/ng.2394}.
 
-\bibitem[{GTEx Consortium}(2017)]{gtex_consortium_genetic_2017}
+\bibitem[{GTEx Consortium}(2017)]{GTExConsortiumGeneticeffectsgene2017}
 {GTEx Consortium}.
 \newblock Genetic effects on gene expression across human tissues.
 \newblock \emph{Nature}, 550\penalty0 (7675):\penalty0 204--213, October 2017.
 \newblock ISSN 0028-0836, 1476-4687.
 \newblock \doi{10.1038/nature24277}.
-\newblock URL \url{http://www.nature.com/articles/nature24277}.
+
+\bibitem[Hubert and Arabie(1985)]{HubertComparingpartitions1985}
+Lawrence Hubert and Phipps Arabie.
+\newblock Comparing partitions.
+\newblock \emph{Journal of Classification}, 2\penalty0 (1):\penalty0 193--218,
+  December 1985.
+\newblock ISSN 0176-4268, 1432-1343.
+\newblock \doi{10.1007/BF01908075}.
 
 \bibitem[Ju et~al.(2013)Ju, Greene, Eichinger, Nair, Hodgin, Bitzer, Lee, Zhu,
   Kehata, Li, Jiang, Rastaldi, Cohen, Troyanskaya, and
-  Kretzler]{ju_defining_2013}
+  Kretzler]{JuDefiningcelltypespecificity2013a}
 Wenjun Ju, Casey~S. Greene, Felix Eichinger, Viji Nair, Jeffrey~B. Hodgin,
   Markus Bitzer, Young-suk Lee, Qian Zhu, Masami Kehata, Min Li, Song Jiang,
   Maria~Pia Rastaldi, Clemens~D. Cohen, Olga~G. Troyanskaya, and Matthias
@@ -76,20 +80,18 @@ Wenjun Ju, Casey~S. Greene, Felix Eichinger, Viji Nair, Jeffrey~B. Hodgin,
   November 2013.
 \newblock ISSN 1088-9051.
 \newblock \doi{10.1101/gr.155697.113}.
-\newblock URL \url{http://genome.cshlp.org/lookup/doi/10.1101/gr.155697.113}.
 
 \bibitem[Kanehisa et~al.(2019)Kanehisa, Sato, Furumichi, Morishima, and
-  Tanabe]{kanehisa_new_2019}
+  Tanabe]{KanehisaNewapproachunderstanding2019}
 Minoru Kanehisa, Yoko Sato, Miho Furumichi, Kanae Morishima, and Mao Tanabe.
-\newblock New approach for understanding genome variations in {KEGG}.
+\newblock New approach for understanding genome variations in {{KEGG}}.
 \newblock \emph{Nucleic Acids Research}, 47\penalty0 (D1):\penalty0 D590--D595,
   January 2019.
 \newblock ISSN 0305-1048, 1362-4962.
 \newblock \doi{10.1093/nar/gky962}.
-\newblock URL \url{https://academic.oup.com/nar/article/47/D1/D590/5128935}.
 
 \bibitem[Kirk et~al.(2012)Kirk, Griffin, Savage, Ghahramani, and
-  Wild]{kirk_bayesian_2012}
+  Wild]{KirkBayesiancorrelatedclustering2012}
 Paul Kirk, Jim~E. Griffin, Richard~S. Savage, Zoubin Ghahramani, and David~L.
   Wild.
 \newblock Bayesian correlated clustering to integrate multiple datasets.
@@ -97,14 +99,11 @@ Paul Kirk, Jim~E. Griffin, Richard~S. Savage, Zoubin Ghahramani, and David~L.
   December 2012.
 \newblock ISSN 1460-2059, 1367-4803.
 \newblock \doi{10.1093/bioinformatics/bts595}.
-\newblock URL
-  \url{https://academic.oup.com/bioinformatics/article-lookup/doi/10.1093/bioinformatics/bts595}.
 
-\bibitem[Kolde(2019)]{kolde2019pheatmap}
+\bibitem[Kolde(2018)]{KoldepheatmapPrettyHeatmaps2018}
 Raivo Kolde.
-\newblock \emph{pheatmap: Pretty Heatmaps}, 2019.
-\newblock URL \url{https://CRAN.R-project.org/package=pheatmap}.
-\newblock R package version 1.0.12.
+\newblock Pheatmap: {{Pretty Heatmaps}}, 2018.
+\newblock R package version 1.0.10.
 
 \bibitem[Lonsdale et~al.(2013)Lonsdale, Thomas, Salvatore, Phillips, Lo, Shad,
   Hasz, Walters, Garcia, Young, Foster, Moser, Karasik, Gillard, Ramsey,
@@ -112,7 +111,7 @@ Raivo Kolde.
   Barker, Jewell, Rohrer, Maxim, Filkins, Harbach, Cortadillo, Berghuis,
   Turner, Hudson, Feenstra, Sobin, Robb, Branton, Korzeniewski, Shive, Tabor,
   Qi, Groch, Nampally, Buia, Zimmerman, Smith, Burges, Robinson, Valentino,
-  Bradbury, Cosentino, Diaz-Mayoral, Kennedy, Engel, Williams, Erickson,
+  Bradbury, Cosentino, {Diaz-Mayoral}, Kennedy, Engel, Williams, Erickson,
   Ardlie, Winckler, Getz, DeLuca, MacArthur, Kellis, Thomson, Young, Gelfand,
   Donovan, Meng, Grant, Mash, Marcus, Basile, Liu, Zhu, Tu, Cox, Nicolae,
   Gamazon, Im, Konkashbaev, Pritchard, Stevens, Flutre, Wen, Dermitzakis,
@@ -121,7 +120,7 @@ Raivo Kolde.
   Paschal, Anderson, Wilder, Derr, Green, Struewing, Temple, Volpi, Boyer,
   Thomson, Guyer, Ng, Abdallah, Colantuoni, Insel, Koester, Little, Bender,
   Lehner, Yao, Compton, Vaught, Sawyer, Lockhart, Demchok, and
-  Moore]{lonsdale_genotype-tissue_2013}
+  Moore]{LonsdaleGenotypeTissueExpressionGTEx2013}
 John Lonsdale, Jeffrey Thomas, Mike Salvatore, Rebecca Phillips, Edmund Lo,
   Saboor Shad, Richard Hasz, Gary Walters, Fernando Garcia, Nancy Young,
   Barbara Foster, Mike Moser, Ellen Karasik, Bryan Gillard, Kimberley Ramsey,
@@ -132,13 +131,13 @@ John Lonsdale, Jeffrey Thomas, Mike Salvatore, Rebecca Phillips, Edmund Lo,
   Sobin, James Robb, Phillip Branton, Greg Korzeniewski, Charles Shive, David
   Tabor, Liqun Qi, Kevin Groch, Sreenath Nampally, Steve Buia, Angela
   Zimmerman, Anna Smith, Robin Burges, Karna Robinson, Kim Valentino, Deborah
-  Bradbury, Mark Cosentino, Norma Diaz-Mayoral, Mary Kennedy, Theresa Engel,
+  Bradbury, Mark Cosentino, Norma {Diaz-Mayoral}, Mary Kennedy, Theresa Engel,
   Penelope Williams, Kenyon Erickson, Kristin Ardlie, Wendy Winckler, Gad Getz,
   David DeLuca, Daniel MacArthur, Manolis Kellis, Alexander Thomson, Taylor
   Young, Ellen Gelfand, Molly Donovan, Yan Meng, George Grant, Deborah Mash,
   Yvonne Marcus, Margaret Basile, Jun Liu, Jun Zhu, Zhidong Tu, Nancy~J Cox,
   Dan~L Nicolae, Eric~R Gamazon, Hae~Kyung Im, Anuar Konkashbaev, Jonathan
-  Pritchard, Matthew Stevens, Timothèe Flutre, Xiaoquan Wen, Emmanouil~T
+  Pritchard, Matthew Stevens, Timoth\`ee Flutre, Xiaoquan Wen, Emmanouil~T
   Dermitzakis, Tuuli Lappalainen, Roderic Guigo, Jean Monlong, Michael Sammeth,
   Daphne Koller, Alexis Battle, Sara Mostafavi, Mark McCarthy, Manual Rivas,
   Julian Maller, Ivan Rusyn, Andrew Nobel, Fred Wright, Andrey Shabalin, Mike
@@ -149,184 +148,185 @@ John Lonsdale, Jeffrey Thomas, Mike Salvatore, Rebecca Phillips, Edmund Lo,
   A~Roger Little, Patrick~K Bender, Thomas Lehner, Yin Yao, Carolyn~C Compton,
   Jimmie~B Vaught, Sherilyn Sawyer, Nicole~C Lockhart, Joanne Demchok, and
   Helen~F Moore.
-\newblock The {Genotype}-{Tissue} {Expression} ({GTEx}) project.
+\newblock The {{Genotype}}-{{Tissue Expression}} ({{GTEx}}) project.
 \newblock \emph{Nature Genetics}, 45\penalty0 (6):\penalty0 580--585, June
   2013.
 \newblock ISSN 1061-4036, 1546-1718.
 \newblock \doi{10.1038/ng.2653}.
-\newblock URL \url{http://www.nature.com/articles/ng.2653}.
 
-\bibitem[MacKay(2003)]{mackay_information_2003}
+\bibitem[MacKay(2003)]{MacKayInformationTheoryInference2003}
 David J~C MacKay.
-\newblock \emph{Information {Theory}, {Inference}, and {Learning}
-  {Algorithms}}.
+\newblock \emph{Information {{Theory}}, {{Inference}}, and {{Learning
+  Algorithms}}}.
 \newblock September 2003.
 
 \bibitem[Maniatis et~al.(1987)Maniatis, Goodbourn, and
-  Fischer]{maniatis_regulation_1987}
+  Fischer]{ManiatisRegulationinducibletissuespecific1987}
 T~Maniatis, S~Goodbourn, and J.~Fischer.
 \newblock Regulation of inducible and tissue-specific gene expression.
 \newblock \emph{Science}, 236\penalty0 (4806):\penalty0 1237--1245, June 1987.
 \newblock ISSN 0036-8075, 1095-9203.
 \newblock \doi{10.1126/science.3296191}.
-\newblock URL \url{http://www.sciencemag.org/cgi/doi/10.1126/science.3296191}.
 
 \bibitem[Mason et~al.(2016)Mason, Sayyid, Kirk, Starr, and
-  Wild]{mason_mdi-gpu:_2016}
+  Wild]{MasonMDIGPUacceleratingintegrative2016a}
 Samuel~A. Mason, Faiz Sayyid, Paul~D.W. Kirk, Colin Starr, and David~L. Wild.
-\newblock {MDI}-{GPU}: accelerating integrative modelling for genomic-scale
-  data using {GP}-{GPU} computing.
+\newblock {{MDI}}-{{GPU}}: Accelerating integrative modelling for genomic-scale
+  data using {{GP}}-{{GPU}} computing.
 \newblock \emph{Statistical Applications in Genetics and Molecular Biology},
   15\penalty0 (1), January 2016.
 \newblock ISSN 1544-6115, 2194-6302.
 \newblock \doi{10.1515/sagmb-2015-0055}.
-\newblock URL
-  \url{https://www.degruyter.com/view/j/sagmb.2016.15.issue-1/sagmb-2015-0055/sagmb-2015-0055.xml}.
 
-\bibitem[Mooney and Wilmot(2015)]{mooney_gene_2015}
+\bibitem[Monti()]{MontiConsensusClusteringResamplingBased}
+Stefano Monti.
+\newblock Consensus {{Clustering}}: {{A Resampling}}-{{Based Method}} for
+  {{Class Discovery}} and {{Visualization}} of {{Gene Expression Microarray
+  Data}}.
+\newblock page~28.
+
+\bibitem[Mooney and Wilmot(2015)]{MooneyGenesetanalysis2015}
 Michael~A. Mooney and Beth Wilmot.
-\newblock Gene set analysis: {A} step-by-step guide.
+\newblock Gene set analysis: {{A}} step-by-step guide.
 \newblock \emph{American Journal of Medical Genetics Part B: Neuropsychiatric
   Genetics}, 168\penalty0 (7):\penalty0 517--527, October 2015.
 \newblock ISSN 15524841.
 \newblock \doi{10.1002/ajmg.b.32328}.
-\newblock URL \url{http://doi.wiley.com/10.1002/ajmg.b.32328}.
 
-\bibitem[Nica and Dermitzakis(2013)]{nica_expression_2013}
+\bibitem[Nica and Dermitzakis(2013)]{NicaExpressionquantitativetrait2013}
 A.~C. Nica and E.~T. Dermitzakis.
-\newblock Expression quantitative trait loci: present and future.
+\newblock Expression quantitative trait loci: Present and future.
 \newblock \emph{Philosophical Transactions of the Royal Society B: Biological
   Sciences}, 368\penalty0 (1620):\penalty0 20120362--20120362, May 2013.
 \newblock ISSN 0962-8436, 1471-2970.
 \newblock \doi{10.1098/rstb.2012.0362}.
-\newblock URL
-  \url{http://rstb.royalsocietypublishing.org/cgi/doi/10.1098/rstb.2012.0362}.
 
-\bibitem[Ong and Corces(2011)]{ong_enhancer_2011}
+\bibitem[Ong and Corces(2011)]{OngEnhancerfunctionnew2011}
 Chin-Tong Ong and Victor~G. Corces.
-\newblock Enhancer function: new insights into the regulation of
+\newblock Enhancer function: New insights into the regulation of
   tissue-specific gene expression.
 \newblock \emph{Nature Reviews Genetics}, 12\penalty0 (4):\penalty0 283--293,
   April 2011.
 \newblock ISSN 1471-0056, 1471-0064.
 \newblock \doi{10.1038/nrg2957}.
-\newblock URL \url{http://www.nature.com/articles/nrg2957}.
 
-\bibitem[{R Core Team}(2019)]{R2019}
-{R Core Team}.
-\newblock \emph{R: A Language and Environment for Statistical Computing}.
-\newblock R Foundation for Statistical Computing, Vienna, Austria, 2019.
-\newblock URL \url{https://www.R-project.org/}.
+\bibitem[Rand(1971)]{RandObjectiveCriteriaEvaluation1971}
+William~N. Rand.
+\newblock Objective {{Criteria}} for the {{Evaluation}} of {{Clustering
+  Methods}}.
+\newblock \emph{Journal of the American Statistical association}, 66\penalty0
+  (336):\penalty0 846--850, 1971.
 
 \bibitem[Savage et~al.(2013)Savage, Ghahramani, Griffin, Kirk, and
-  Wild]{savage_identifying_2013}
+  Wild]{SavageIdentifyingcancersubtypes2013a}
 Richard~S. Savage, Zoubin Ghahramani, Jim~E. Griffin, Paul Kirk, and David~L.
   Wild.
 \newblock Identifying cancer subtypes in glioblastoma by combining genomic,
   transcriptomic and epigenomic data.
 \newblock \emph{arXiv:1304.3577 [q-bio, stat]}, April 2013.
-\newblock URL \url{http://arxiv.org/abs/1304.3577}.
-\newblock arXiv: 1304.3577.
 
 \bibitem[Subramanian et~al.(2005)Subramanian, Tamayo, Mootha, Mukherjee, Ebert,
   Gillette, Paulovich, Pomeroy, Golub, Lander, and
-  Mesirov]{subramanian_gene_2005}
+  Mesirov]{SubramanianGenesetenrichment2005a}
 A.~Subramanian, P.~Tamayo, V.~K. Mootha, S.~Mukherjee, B.~L. Ebert, M.~A.
   Gillette, A.~Paulovich, S.~L. Pomeroy, T.~R. Golub, E.~S. Lander, and J.~P.
   Mesirov.
-\newblock Gene set enrichment analysis: {A} knowledge-based approach for
+\newblock Gene set enrichment analysis: {{A}} knowledge-based approach for
   interpreting genome-wide expression profiles.
 \newblock \emph{Proceedings of the National Academy of Sciences}, 102\penalty0
   (43):\penalty0 15545--15550, October 2005.
 \newblock ISSN 0027-8424, 1091-6490.
 \newblock \doi{10.1073/pnas.0506580102}.
-\newblock URL \url{http://www.pnas.org/cgi/doi/10.1073/pnas.0506580102}.
 
 \bibitem[Szklarczyk et~al.(2019)Szklarczyk, Gable, Lyon, Junge, Wyder,
-  Huerta-Cepas, Simonovic, Doncheva, Morris, Bork, Jensen, and
-  Mering]{szklarczyk_string_2019}
+  {Huerta-Cepas}, Simonovic, Doncheva, Morris, Bork, Jensen, and von
+  Mering]{SzklarczykSTRINGv11protein2019}
 Damian Szklarczyk, Annika~L Gable, David Lyon, Alexander Junge, Stefan Wyder,
-  Jaime Huerta-Cepas, Milan Simonovic, Nadezhda~T Doncheva, John~H Morris, Peer
-  Bork, Lars~J Jensen, and Christian von Mering.
-\newblock {STRING} v11: protein–protein association networks with increased
-  coverage, supporting functional discovery in genome-wide experimental
-  datasets.
+  Jaime {Huerta-Cepas}, Milan Simonovic, Nadezhda~T Doncheva, John~H Morris,
+  Peer Bork, Lars~J Jensen, and Christian von Mering.
+\newblock {{STRING}} v11: Protein\textendash{}protein association networks with
+  increased coverage, supporting functional discovery in genome-wide
+  experimental datasets.
 \newblock \emph{Nucleic Acids Research}, 47\penalty0 (D1):\penalty0 D607--D613,
   January 2019.
 \newblock ISSN 0305-1048, 1362-4962.
 \newblock \doi{10.1093/nar/gky1131}.
-\newblock URL \url{https://academic.oup.com/nar/article/47/D1/D607/5198476}.
+
+\bibitem[Team(2018)]{RCoreTeamLanguageEnvironmentStatistical2018}
+R~Core Team.
+\newblock R: {{A Language}} and {{Environment}} for {{Statistical Computing}}.
+\newblock R Foundation for Statistical Computing, 2018.
 
 \bibitem[{The International IBD Genetics Consortium} et~al.(2018){The
-  International IBD Genetics Consortium}, Momozawa, Dmitrieva, Théâtre,
+  International IBD Genetics Consortium}, Momozawa, Dmitrieva, Th\'e\^atre,
   Deffontaine, Rahmouni, Charloteaux, Crins, Docampo, Elansary, Gori, Lecut,
   Mariman, Mni, Oury, Altukhov, Alexeev, Aulchenko, Amininejad, Bouma,
-  Hoentjen, Löwenberg, Oldenburg, Pierik, vander Meulen-de Jong, Janneke
-  van~der Woude, Visschedijk, Lathrop, Hugot, Weersma, De~Vos, Franchimont,
+  Hoentjen, L\"owenberg, Oldenburg, Pierik, {vander Meulen-de Jong}, {Janneke
+  van der Woude}, Visschedijk, Lathrop, Hugot, Weersma, De~Vos, Franchimont,
   Vermeire, Kubo, Louis, and
-  Georges]{the_international_ibd_genetics_consortium_ibd_2018}
+  Georges]{TheInternationalIBDGeneticsConsortiumIBDriskloci2018}
 {The International IBD Genetics Consortium}, Yukihide Momozawa, Julia
-  Dmitrieva, Emilie Théâtre, Valérie Deffontaine, Souad Rahmouni, Benoît
-  Charloteaux, François Crins, Elisa Docampo, Mahmoud Elansary, Ann-Stephan
-  Gori, Christelle Lecut, Rob Mariman, Myriam Mni, Cécile Oury, Ilya Altukhov,
-  Dmitry Alexeev, Yuri Aulchenko, Leila Amininejad, Gerd Bouma, Frank Hoentjen,
-  Mark Löwenberg, Bas Oldenburg, Marieke~J. Pierik, Andrea~E. vander Meulen-de
-  Jong, C.~Janneke van~der Woude, Marijn~C. Visschedijk, Mark Lathrop,
-  Jean-Pierre Hugot, Rinse~K. Weersma, Martine De~Vos, Denis Franchimont,
-  Severine Vermeire, Michiaki Kubo, Edouard Louis, and Michel Georges.
-\newblock {IBD} risk loci are enriched in multigenic regulatory modules
+  Dmitrieva, Emilie Th\'e\^atre, Val\'erie Deffontaine, Souad Rahmouni,
+  Beno\^it Charloteaux, Fran{\c c}ois Crins, Elisa Docampo, Mahmoud Elansary,
+  Ann-Stephan Gori, Christelle Lecut, Rob Mariman, Myriam Mni, C\'ecile Oury,
+  Ilya Altukhov, Dmitry Alexeev, Yuri Aulchenko, Leila Amininejad, Gerd Bouma,
+  Frank Hoentjen, Mark L\"owenberg, Bas Oldenburg, Marieke~J. Pierik, Andrea~E.
+  {vander Meulen-de Jong}, C.~{Janneke van der Woude}, Marijn~C. Visschedijk,
+  Mark Lathrop, Jean-Pierre Hugot, Rinse~K. Weersma, Martine De~Vos, Denis
+  Franchimont, Severine Vermeire, Michiaki Kubo, Edouard Louis, and Michel
+  Georges.
+\newblock {{IBD}} risk loci are enriched in multigenic regulatory modules
   encompassing putative causative genes.
 \newblock \emph{Nature Communications}, 9\penalty0 (1):\penalty0 2427, December
   2018.
 \newblock ISSN 2041-1723.
 \newblock \doi{10.1038/s41467-018-04365-8}.
-\newblock URL \url{http://www.nature.com/articles/s41467-018-04365-8}.
 
-\bibitem[Võsa et~al.(2018)Võsa, Claringbould, Westra, Bonder, Deelen, Zeng,
+\bibitem[V\~osa et~al.(2018)V\~osa, Claringbould, Westra, Bonder, Deelen, Zeng,
   Kirsten, Saha, Kreuzhuber, Kasela, Pervjakova, Alvaes, Fave, Agbessi,
-  Christiansen, Jansen, Seppälä, Tong, Teumer, Schramm, Hemani, Verlouw,
-  Yaghootkar, Sönmez, Andrew, Kukushkina, Kalnapenkis, Rüeger, Porcu,
-  Kronberg-Guzman, Kettunen, Powell, Lee, Zhang, Arindrarto, Beutner, {BIOS
+  Christiansen, Jansen, Sepp\"al\"a, Tong, Teumer, Schramm, Hemani, Verlouw,
+  Yaghootkar, S\"onmez, Andrew, Kukushkina, Kalnapenkis, R\"ueger, Porcu,
+  {Kronberg-Guzman}, Kettunen, Powell, Lee, Zhang, Arindrarto, Beutner, {BIOS
   Consortium}, Brugge, {i2QTL Consortium}, Dmitrieva, Elansary, Fairfax,
-  Georges, Heijmans, Kähönen, Kim, Knight, Kovacs, Krohn, Li, Loeffler,
-  Marigorta, Mei, Momozawa, Müller-Nurasyid, Nauck, Nivard, Penninx,
-  Pritchard, Raitakari, Rotzschke, Slagboom, Stehouwer, Stumvoll, Sullivan,
-  't~Hoen, Thiery, Tönjes, van Dongen, van Iterson, Veldink, Völker,
+  Georges, Heijmans, K\"ah\"onen, Kim, Knight, Kovacs, Krohn, Li, Loeffler,
+  Marigorta, Mei, Momozawa, {M\"uller-Nurasyid}, Nauck, Nivard, Penninx,
+  Pritchard, Raitakari, Rotzschke, Slagboom, Stehouwer, Stumvoll, Sullivan, {'t
+  Hoen}, Thiery, T\"onjes, {van Dongen}, {van Iterson}, Veldink, V\"olker,
   Wijmenga, Swertz, Andiappan, Montgomery, Ripatti, Perola, Kutalik,
-  Dermitzakis, Bergmann, Frayling, van Meurs, Prokisch, Ahsan, Pierce,
-  Lehtimäki, Boomsma, Psaty, Gharib, Awadalla, Milani, Ouwehand, Downes,
+  Dermitzakis, Bergmann, Frayling, {van Meurs}, Prokisch, Ahsan, Pierce,
+  Lehtim\"aki, Boomsma, Psaty, Gharib, Awadalla, Milani, Ouwehand, Downes,
   Stegle, Battle, Yang, Visscher, Scholz, Gibson, Esko, and
-  Franke]{vosa_unraveling_2018}
-Urmo Võsa, Annique Claringbould, Harm-Jan Westra, Marc~Jan Bonder, Patrick
+  Franke]{VosaUnravelingpolygenicarchitecture2018}
+Urmo V\~osa, Annique Claringbould, Harm-Jan Westra, Marc~Jan Bonder, Patrick
   Deelen, Biao Zeng, Holger Kirsten, Ashis Saha, Roman Kreuzhuber, Silva
   Kasela, Natalia Pervjakova, Isabel Alvaes, Marie-Julie Fave, Mawusse Agbessi,
-  Mark Christiansen, Rick Jansen, Ilkka Seppälä, Lin Tong, Alexander Teumer,
-  Katharina Schramm, Gibran Hemani, Joost Verlouw, Hanieh Yaghootkar, Reyhan
-  Sönmez, Andrew~A. Andrew, Viktorija Kukushkina, Anette Kalnapenkis, Sina
-  Rüeger, Eleonora Porcu, Jaanika Kronberg-Guzman, Johannes Kettunen, Joseph
-  Powell, Bernett Lee, Futao Zhang, Wibowo Arindrarto, Frank Beutner, {BIOS
-  Consortium}, Harm Brugge, {i2QTL Consortium}, Julia Dmitrieva, Mahmoud
+  Mark Christiansen, Rick Jansen, Ilkka Sepp\"al\"a, Lin Tong, Alexander
+  Teumer, Katharina Schramm, Gibran Hemani, Joost Verlouw, Hanieh Yaghootkar,
+  Reyhan S\"onmez, Andrew~A. Andrew, Viktorija Kukushkina, Anette Kalnapenkis,
+  Sina R\"ueger, Eleonora Porcu, Jaanika {Kronberg-Guzman}, Johannes Kettunen,
+  Joseph Powell, Bernett Lee, Futao Zhang, Wibowo Arindrarto, Frank Beutner,
+  {BIOS Consortium}, Harm Brugge, {i2QTL Consortium}, Julia Dmitrieva, Mahmoud
   Elansary, Benjamin~P. Fairfax, Michel Georges, Bastiaan~T Heijmans, Mika
-  Kähönen, Yungil Kim, Julian~C. Knight, Peter Kovacs, Knut Krohn, Shuang Li,
-  Markus Loeffler, Urko~M Marigorta, Hailang Mei, Yukihide Momozawa, Martina
-  Müller-Nurasyid, Matthias Nauck, Michel Nivard, Brenda Penninx, Jonathan
-  Pritchard, Olli Raitakari, Olaf Rotzschke, Eline~P. Slagboom, Coen~D.A.
-  Stehouwer, Michael Stumvoll, Patrick Sullivan, Peter~A.C. 't~Hoen, Joachim
-  Thiery, Anke Tönjes, Jenny van Dongen, Maarten van Iterson, Jan Veldink, Uwe
-  Völker, Cisca Wijmenga, Morris Swertz, Anand Andiappan, Grant~W. Montgomery,
-  Samuli Ripatti, Markus Perola, Zoltan Kutalik, Emmanouil Dermitzakis, Sven
-  Bergmann, Timothy Frayling, Joyce van Meurs, Holger Prokisch, Habibul Ahsan,
-  Brandon Pierce, Terho Lehtimäki, Dorret Boomsma, Bruce~M. Psaty, Sina~A.
-  Gharib, Philip Awadalla, Lili Milani, Willem~H. Ouwehand, Kate Downes, Oliver
-  Stegle, Alexis Battle, Jian Yang, Peter~M. Visscher, Markus Scholz, Gregory
-  Gibson, Tõnu Esko, and Lude Franke.
+  K\"ah\"onen, Yungil Kim, Julian~C. Knight, Peter Kovacs, Knut Krohn, Shuang
+  Li, Markus Loeffler, Urko~M Marigorta, Hailang Mei, Yukihide Momozawa,
+  Martina {M\"uller-Nurasyid}, Matthias Nauck, Michel Nivard, Brenda Penninx,
+  Jonathan Pritchard, Olli Raitakari, Olaf Rotzschke, Eline~P. Slagboom,
+  Coen~D.A. Stehouwer, Michael Stumvoll, Patrick Sullivan, Peter~A.C. {'t
+  Hoen}, Joachim Thiery, Anke T\"onjes, Jenny {van Dongen}, Maarten {van
+  Iterson}, Jan Veldink, Uwe V\"olker, Cisca Wijmenga, Morris Swertz, Anand
+  Andiappan, Grant~W. Montgomery, Samuli Ripatti, Markus Perola, Zoltan
+  Kutalik, Emmanouil Dermitzakis, Sven Bergmann, Timothy Frayling, Joyce {van
+  Meurs}, Holger Prokisch, Habibul Ahsan, Brandon Pierce, Terho Lehtim\"aki,
+  Dorret Boomsma, Bruce~M. Psaty, Sina~A. Gharib, Philip Awadalla, Lili Milani,
+  Willem~H. Ouwehand, Kate Downes, Oliver Stegle, Alexis Battle, Jian Yang,
+  Peter~M. Visscher, Markus Scholz, Gregory Gibson, T\~onu Esko, and Lude
+  Franke.
 \newblock Unraveling the polygenic architecture of complex traits using blood
-  {eQTL} meta-analysis.
-\newblock preprint, Genomics, October 2018.
-\newblock URL \url{http://biorxiv.org/lookup/doi/10.1101/447367}.
+  {{eQTL}} meta-analysis.
+\newblock Preprint, {Genomics}, October 2018.
 
 \bibitem[Wang et~al.(2008)Wang, Sandberg, Luo, Khrebtukova, Zhang, Mayr,
-  Kingsmore, Schroth, and Burge]{wang_alternative_2008}
+  Kingsmore, Schroth, and Burge]{WangAlternativeisoformregulation2008a}
 Eric~T. Wang, Rickard Sandberg, Shujun Luo, Irina Khrebtukova, Lu~Zhang,
   Christine Mayr, Stephen~F. Kingsmore, Gary~P. Schroth, and Christopher~B.
   Burge.
@@ -334,18 +334,16 @@ Eric~T. Wang, Rickard Sandberg, Shujun Luo, Irina Khrebtukova, Lu~Zhang,
 \newblock \emph{Nature}, 456\penalty0 (7221):\penalty0 470--476, November 2008.
 \newblock ISSN 0028-0836, 1476-4687.
 \newblock \doi{10.1038/nature07509}.
-\newblock URL \url{http://www.nature.com/articles/nature07509}.
 
 \bibitem[Wray et~al.(2014)Wray, Lee, Mehta, Vinkhuyzen, Dudbridge, and
-  Middeldorp]{wray_research_2014}
+  Middeldorp]{WrayResearchReviewPolygenic2014}
 Naomi~R. Wray, Sang~Hong Lee, Divya Mehta, Anna~A.E. Vinkhuyzen, Frank
   Dudbridge, and Christel~M. Middeldorp.
-\newblock Research {Review}: {Polygenic} methods and their application to
+\newblock Research {{Review}}: {{Polygenic}} methods and their application to
   psychiatric traits.
 \newblock \emph{Journal of Child Psychology and Psychiatry}, 55\penalty0
   (10):\penalty0 1068--1087, October 2014.
 \newblock ISSN 00219630.
 \newblock \doi{10.1111/jcpp.12295}.
-\newblock URL \url{http://doi.wiley.com/10.1111/jcpp.12295}.
 
 \end{thebibliography}
