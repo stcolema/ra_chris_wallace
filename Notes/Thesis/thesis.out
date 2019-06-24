@@ -1,11 +1,16 @@
 \BOOKMARK [1][-]{section.1}{Introduction}{}% 1
 \BOOKMARK [1][-]{section.2}{Theory}{}% 2
-\BOOKMARK [2][-]{subsection.2.1}{Mixture models}{section.2}% 3
-\BOOKMARK [2][-]{subsection.2.2}{Bayesian inference}{section.2}% 4
-\BOOKMARK [2][-]{subsection.2.3}{Multiple dataset integration}{section.2}% 5
-\BOOKMARK [2][-]{subsection.2.4}{Tissue specificity}{section.2}% 6
-\BOOKMARK [2][-]{subsection.2.5}{Gene sets}{section.2}% 7
-\BOOKMARK [1][-]{section.3}{Data}{}% 8
-\BOOKMARK [1][-]{section.4}{Methods}{}% 9
-\BOOKMARK [1][-]{section.5}{Results}{}% 10
-\BOOKMARK [1][-]{section*.6}{References}{}% 11
+\BOOKMARK [2][-]{subsection.2.1}{Clustering}{section.2}% 3
+\BOOKMARK [2][-]{subsection.2.2}{Mixture models}{section.2}% 4
+\BOOKMARK [2][-]{subsection.2.3}{Bayesian inference}{section.2}% 5
+\BOOKMARK [2][-]{subsection.2.4}{Multiple dataset integration}{section.2}% 6
+\BOOKMARK [2][-]{subsection.2.5}{Rand index}{section.2}% 7
+\BOOKMARK [2][-]{subsection.2.6}{Standardisation}{section.2}% 8
+\BOOKMARK [2][-]{subsection.2.7}{Tissue specificity}{section.2}% 9
+\BOOKMARK [2][-]{subsection.2.8}{Gene sets}{section.2}% 10
+\BOOKMARK [3][-]{subsubsection.2.8.1}{Example: Standardising gene expression}{subsection.2.8}% 11
+\BOOKMARK [1][-]{section.3}{Data}{}% 12
+\BOOKMARK [1][-]{section.4}{Methods}{}% 13
+\BOOKMARK [2][-]{subsection.4.1}{Consesnsus clustering}{section.4}% 14
+\BOOKMARK [1][-]{section.5}{Results}{}% 15
+\BOOKMARK [1][-]{section*.11}{References}{}% 16
