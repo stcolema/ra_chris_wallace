@@ -1,9 +1,12 @@
+#!/usr/bin/env Rscript
 
 set.seed(1)
 K <- 3
-n <- 1e6
-x <- sample(1:K, size = n, replace = T)
-y <- sample(1:K, size = n, replace = T)
+n <- 1e3
+x <- c(rep(1, 3874), sample(1:K, size = n, replace = T))
+y <- c(rep(1, 3874), sample(1:K, size = n, replace = T))
+
+
 
 # comb_data <- data.frame(X = x, Y = y)
 # 
@@ -15,7 +18,8 @@ y <- sample(1:K, size = n, replace = T)
 # }
 # 
 # cont_table
-(cont_table_2 <- table(x, y) / n)
- 
+(cont_table_2 <- table(x, y) / n) 
 
 mcclust::arandi(x , y)
+fossil::rand.index(x, y)
+fossil:::adj.rand.index(x, y)
