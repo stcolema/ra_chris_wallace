@@ -264,7 +264,6 @@
 	\section{Theory}
 	\subsection{Clustering} \label{sec:clustering}
 	Given data $X=\left(x_1,\ldots,x_n\right)$, we define a \emph{clustering} or partition of the data by:
-	
 	\begin{eqnarray}
 	Y &=& \left\{Y_1,\ldots,Y_K\right\} \\
 	Y_k &=& \left\{x_{1_k},\ldots, x_{n_k}\right\}  \\
@@ -272,12 +271,10 @@
 	n_k & \geq & 1 \enskip \forall \enskip k \in \{1,K\} \\
 	\sum_{k=1}^Kn_k &=& n
 	\end{eqnarray}
-	
 	In short we have $K$ nonempty disjoint sets of data, each of which is referred to as a \emph{cluster}, the set of which form a \emph{clustering}. We define a \emph{label} $c=(c_1,\ldots,c_n)$ as denoting the membership of each point. A label $c_i=k$ states that point $x_i$ is assigned to cluster $Y_k$.
 	
 	\subsection{Mixture models} \label{mixture_models}
 	Given some data $X = (x_1, \ldots, x_n)$, we assume a number of unobserved processes generate the data, and membership to a process for individual $i$ is represented using the latent variable $c_i$. It is assumed that each of the $K$ processes can be modelled by a parametric distribution, $f(\cdot)$ with associated parameters $\theta$ and that the full model density is then the weighted sum of these probability density functions where the weights are the component proportions, $\pi_k$:
-	
 	\begin{align}
 	p(x_i) = \sum_{k=1}^K \pi_k f(x_i | \theta_k)
 	\end{align}
@@ -290,9 +287,7 @@
 		\item For each of K clusters sample $\theta_k$ and $\pi_k$ from the associated distributions based on current memberships, $c_i$; and
 		\item For each of n individuals sample $c_i$ based on the new $\theta_k$ and $\pi_k$.
 	\end{enumerate}
-	
 	For the mixture model we update the parameters after we allocate each observation to a cluster. For a given cluster with associated data $X$ and parameter $\theta$, we sample $\theta$ using Bayes' theorem from the distribution:
-	
 	\begin{align} \label{Bayes_theorem}
 	p(\theta | X) = \frac{p(X | \theta) p(\theta)}{\int_\Theta p(X | \theta ') p(\theta ') d \theta '}
 	\end{align}
@@ -303,7 +298,6 @@
 		\item $p(X | \theta)$ is the \emph{likelihood} of $X$ given $\theta$, the probability of data $X$ being generated given our model is true. It is the criterion we focus on in our model if we would use a frequentist approach to the inference; maximising this quantity in our model generates the curve that best describes the observed data. 
 		\item $\int_\Theta p(X | \theta ') p(\theta ') d \theta '$ is the \emph{normalising constant}. This quantity is also referred to as the \emph{evidence} \cite{MacKayInformationTheoryInference2003} or \emph{marginal likelihood} and is normally represented by $Z$. It is referred to as the marginal likelihood as we marginalise the parameter $\theta$ by integrating over its entire sample space.
 	\end{itemize}
-	
 	In terms of sampling, the prior is very useful as a clever choice of prior can ensure that the posterior is always solvable, that we do not encounter singularities in our distribution.
 	
 	\subsection{Multiple dataset integration}
@@ -318,7 +312,7 @@
 	p(c_{i1},\ldots,c_{iL} | \boldsymbol{\phi}) \propto \left[\prod_{l_1=1}^L\pi_{c_{il_1}l_1} \right]\left[\prod_{l_2=1}^{L-1}\prod_{l_3=l_2+1}^L\left(1+\phi_{l_2l_3}\mathbb{1}(c_{il_2} = c_{il_3}) \right)\right]
 	\end{align}
 	Here $\boldsymbol{\phi}$ is the ${L \choose 2}$-vector of all $\phi_{ij}$ where $\phi_{12}$ is the variable $\phi$ in \eqref{allocation_prior_l_2}.
-	
+
 	Thus MDI is an extension of mixture models to multiple datasets where correlated clustering structure is used to ``upweigh'' similar clusters across datasets. MDI has been applied to precision medicine, specifically glioblastoma sub-typing \cite{SavageIdentifyingcancersubtypes2013a}, in the past showing its potential as a tool.
 	
 	\subsection{Rand index}
@@ -329,11 +323,10 @@
 	\item the same label in one but not in the other ($c_i \neq c_j \land c'_i = c'_j \lor c_i = c_j \land c'_i \neq c'_j$) ($\gamma_{ij}=0$). \label{list:sub:different_label}
 	\end{enumerate}
 	Thus \citet{RandObjectiveCriteriaEvaluation1971} propose counting the number of times any two points have one of \ref{list:sub:same_label_1} or \ref{list:sub:same_label_2} from list \ref{list:labelling_scenarios} and finding the proportion of these compared to the number of all possible point combinations. More formally, this is:
-	
 	\begin{eqnarray} \label{eqn:rand_index}
-	c(Y, Y') & = & \frac{1}{\binom{n}{2} } \sum_{i=1}^{n-1}\sum_{j=i + 1}^n\gamma_{ij} 
+	A \binom{n}{2}^{-1} & = & \frac{1}{\binom{n}{2}} \sum_{i=1}^{n-1}\sum_{j=i + 1}^n\gamma_{ij} 
 	\end{eqnarray}
-	
+%	This is the quantity of points in agreement between the two clusters.
 	This can be envisioned as a $K \times K'$ contingency table of the count of overlapping points, as shown in table \ref{table:rand_contingency}. Table \ref{table:rand_contingency} uses the following notation:
 	\begin{itemize}
 	\item $n_{ij}$ is the number of points that have membership in $Y_i$ in clustering $Y$ and $Y'_j$ in clustering $Y'$;
@@ -356,21 +349,61 @@
 	\caption{Contingency table used by \citet{RandObjectiveCriteriaEvaluation1971} to calculate a measure of similarity between clusterings $Y$ and $Y'$.}
 	\label{table:rand_contingency}
 	\end{table}
-	Using the notation from table \ref{table:rand_contingency} one can restate equation \ref{eqn:rand_index}:
+	One can restate equation \ref{eqn:rand_index} in terms of the notation from table \ref{table:rand_contingency} citeBrennanLight:
 	\begin{eqnarray} \label{eqn:rand_index_alternative}
-	c(Y, Y') = \left[\binom{n}{2} + \sum_{i=1}^K\sum_{j=1}^{K'}n_{ij}^2 - \frac{1}{2}\left(\sum_{i=1}^Kn_{i\cdot}^2 + \sum_{j=1}^{K'}n_{\cdot j}^2  \right) \right]  \binom{n}{2} ^{-1}
+	A &=& \binom{n}{2} + \sum_{i=1}^K\sum_{j=1}^{K'}n_{ij}^2 - \frac{1}{2}\left(\sum_{i=1}^K n_{i\cdot}^2 + \sum_{j=1}^{K'}n_{\cdot j}^2  \right) \\
+	  &=& \binom{n}{2} + 2 \sum_{i=1}^{K}\sum_{j=1}^{K'}\binom{n_{ij}}{2} - \left[\sum_{i=1}^{K}\binom{n_{i \cdot}}{2} + \sum_{j=1}^{K'}\binom{n_{\cdot j}}{2}\right]% \binom{n}{2} ^{-1} 
 	\end{eqnarray}
-	Thie measure, $c$ has three properties.
-	\begin{itemize}
-	\item $c(\cdot, \cdot) \in [0,1]$ (0 for no similarity, 1 high similarity);
-	\item $1 - c$ is a distance measure;
-	\item if one assumes a distribution to describe $X$, then $c$ is a random variable.
-	\end{itemize}
-	\citet{HubertComparingpartitions1985} extend the Rand index to account for chance. They include a null hypothesis and allow that there is a probability of some points have a $\gamma$ of 1 by chance. Consider the scenario where a point $x_i$ has the same label as another point $x_j$ under clustering $Y$. For another clustering $Y'$, there a non-zero is a probability $c'_i=c'_j$ purely by chance and does not represent a similarity between $Y$ and $Y'$. If one generates two clusterings $Y$ and $Y'$ by sampling from the integers in the closed interval $[1,K]$ (i.e. by sampling from discrete unfirom distribution $\mathcal{U}\left\{1,K\right\}$), then the contingency table generated is constructed from the generalised hyper-geometric distribution \cite{HubertComparingpartitions1985}. It can be shown that the expected number of points with common membership in both clusters is non-zero. Specifically:
-	
+%	This function, $c$, has three properties.
+%	\begin{itemize}
+%	\item $c(\cdot, \cdot) \in [0,1]$ (0 for no similarity, 1 for high similarity);
+%	\item $1 - c$ is a distance measure;
+%	\item if one assumes a distribution to describe $X$, then $c$ is a random variable.
+%	\end{itemize}
+	\citet{HubertComparingpartitions1985} extend the Rand index to account for chance. They include a null hypothesis and assume that there is a probability of some points having a $\gamma$ value of 1 by chance. Consider the scenario where a point $x_i$ has the same label as another point $x_j$ under clustering $Y$. For another clustering $Y'$, there a non-zero is a probability $c'_i=c'_j$ purely by chance and does not represent a similarity between $Y$ and $Y'$. If one generates two clusterings $Y$ and $Y'$ by sampling from the integers in the closed interval $[1,K]$ (i.e. by sampling from discrete unfirom distribution $\mathcal{U}\left\{1,K\right\}$), then the contingency table generated is constructed from the generalised hyper-geometric distribution \cite{HubertComparingpartitions1985}. It can be shown that the expected number of points with common membership in both clusters is non-zero. Specifically:
 	\begin{eqnarray}
 	\mathbb{E}\left(\sum_{i=1}^K \sum_{j=1}^K\binom{n_{ij}}{2}\right) = \frac{\sum_{i=1}^K \binom{n_{i\cdot}}{2} \sum_{j=1}^K \binom{n_{\cdot j}}{2}}{\binom{n}{2}}
 	\end{eqnarray}
+	This is the product of the number of distinct pairs that can be formed from rows and the number of distinct pairs that can be constructed from columns, divided by the total number of pairs. 
+	
+	For a particular cell of the contingency table, the expected number of entries of the type described in point \ref{list:sub:same_label_1}, is the product of number of pairs in its row and in its column divided by the total number of possible pairs:
+	\begin{eqnarray} \label{eqn:expected_nij}
+	\mathbb{E}\left(\binom{n_{ij}}{2}\right) = \frac{\binom{n_{i\cdot}}{2}\binom{n_{\cdot j}}{2}}{\binom{n}{2}}
+	\end{eqnarray}
+	One can see that as each component of equation \ref{eqn:rand_index_alternative} is some transformation of $\sum_{i,j}\binom{n_{ij}}{2}$, one can directly state the expected value of the Rand index by combining equations \ref{eqn:rand_index_alternative} and \ref{eqn:expected_nij}:
+	\begin{eqnarray}
+	\mathbb{E}\left(A \binom{n}{2}^{-1}\right) = 1 + 2 \sum_{i=1}^{K} \binom{n_{i \cdot}}{2} \sum_{j=1}^{K'} \binom{n_{\cdot j}}{2} \binom{n}{2}^{-2} - \left[\sum_{i=1}^{K} \binom{n_{i \cdot}}{2} + \sum_{j=1}^{K'} \binom{n_{\cdot j}}{2}\right] \binom{n}{2}^{-1}
+	\end{eqnarray}
+	Defining an index corrected for chance as:
+	\begin{eqnarray}
+	\text{Corrected index} = \frac{\text{Index} - \text{Expected index}}{\text{Maximum index} - \text{Expected index}}
+	\end{eqnarray}
+	Asusming a maximum value of 1 for the Rand index then gives a corrected Rand index:
+	\begin{eqnarray} \label{eqn:adjusted_rand_index}
+	\frac{\sum_{i=1}^{K}\sum_{j=1}^{K'} \binom{n_{ij}}{2} - \sum_{i=1}^{K} \binom{n_{i \cdot}}{2} \sum_{j=1}^{K'} \binom{n_{\cdot j}}{2} \binom{n}{2}^{-1}}{\frac{1}{2} \left[\sum_{i=1}^{K} \binom{n_{i \cdot}}{2} + \sum_{j=1}^{K'} \binom{n_{\cdot j}}{2}\right] - \sum_{i=1}^{K} \binom{n_{i \cdot}}{2} \sum_{j=1}^{K'} \binom{n_{\cdot j}}{2} \binom{n}{2}^{-1}}
+	\end{eqnarray}
+	We define this quantity described in equation \ref{eqn:adjusted_rand_index} as the \emph{adjusted Rand index} and we use it as our measure of choice for similarity between clusterings.
+	
+	We describe an explicit example motivating the adjusted Rand index in section \ref{sec:motivating_example_adjusted_rand_index}.
+	
+	\subsubsection{Motivating example: adjusted Rand index} \label{sec:motivating_example_adjusted_rand_index}
+	Consider the case of $n$ labels $Y$ and $Y'$ generated from $\mathcal{U}\left\{1,3\right\}$ where $n$ is some arbitrarily large number. Then as $n$ tends to infinity we can expect that our contingency table has entries of $\frac{n}{9}$ in each cell. If one calculates the Rand index on these random partitions where any similarity is purely by chance one finds, it comes to (approximately) $0.56$. This suggests there is some similarity between $Y$ and $Y'$, but this is misleading as we know any similarity is stochastic. In the same scenario the adjusted Rand index between the partitions is 0. This seems preferable. Based on this, one could argue that the Rand index has inflated values. Consider the case that we have $n$ points in total, but we let the first $\frac{7n}{16}$ have a common label (say $\left(c_1,\ldots,c_{n_1}\right)=1$ for $n_1 = \frac{7n}{16}$) and then draw the remaining $\frac{9n}{16}$ points from $\mathcal{U}\left\{1,3\right\}$. Then, as $n$ tends to infinity, our contingency table tends to that described in table \ref{table:rand_contingency_example}. One feels that the high Rand index for such a clustering, $0.64$, is misleading in its magnitude. In such a scenario we feel one has to consider this 0.64 in the context of the 0.56 for a purely random similarity - this is difficult to do without explicitly checking what the Rand index is for a random partitioning for a given $K$ and $K'$. Thus the use of the full unit interval in comparing similarity by a corrected index such as the adjusted Rand index requires less vigilance on the part of the analyst. In the second scenario, the adjusted Rand index is $0.28$.
+	
+	\begin{table}[] 
+		\centering
+		\begin{tabular}{c|ccc|c} 
+			$ {{} \atop Y}  \!\diagdown\! ^{Y'}$	& $Y'_1$	& $Y'_2$	& $Y'_3 $	& Sums	\\ 
+			\hline
+			$Y_1$		& $\frac{n}{2}$	& $\frac{n}{16}$ & $\frac{n}{16}$	& $\frac{10n}{16}$	\\
+			$Y_2$		& $\frac{n}{16}$	& $\frac{n}{16}$	& $\frac{n}{16}$	& $\frac{3n}{16}$	\\
+			$Y_3$	& $\frac{n}{16}$	& $\frac{n}{16}$	& $\frac{n}{16}$	& $\frac{3n}{16}$	\\ 
+			\hline
+			Sums	& $\frac{10n}{16}$	&  $\frac{3n}{16}$	& $\frac{3n}{16}$	& $\frac{16n}{16} = n$         
+		\end{tabular}
+		\caption{Contingency table for the non-random clustering described in section \ref{sec:rand_motivation}.}
+		\label{table:rand_contingency_example}
+	\end{table}
+	
 	
 	\subsection{Standardisation} \label{sec:standardisation}
 	For a $p$-vector of observations, $X_i=(x_{i1},\ldots,x_{1p})$, we define \emph{standardisation} of $X_i$ as the mapping from $X_i$ to $X'_i=(x'_{i1},\ldots,x'_{ip})$ defined by the \emph{sample mean}, $\bar{x}_i$, and \emph{sample standard deviation}, $s_i$:
@@ -382,6 +415,11 @@
 	We refer to $X'_i$ as the standardised form of $X$. If we are given a dataset $X=(X_1,\ldots,X_n)$ where each $X_i$ is a $p$-vector of observations of the form referred to above, then in referring to the standardised form of $X$, we mean the dataset $X'=(X'_1,\ldots,X'_n)$ where each $X'_i$ is the standardised form of $X_i$.
 	
 	Standardisation moves the values observed for each $X_i$ to a common scale where each vector has an observed mean and standard deviation of 0 and 1 respectively.
+	
+	We describe an example in section \ref{sec:motivating_example_standardisation} which shows an explicit application and motivation for standardisation in the context of this project.
+	
+	\subsection{Consensus clustering} \label{sec:consensus_clustering}
+	In the scenario that MDI struggles to explore the entire posterior distribution from any given initialisation for any realistic number of iterations of MCMC, we propose use of a ``consensus'' clustering \cite{MontiConsensusClusteringResamplingBased}. In this scenario we draw samples of clusterings from MCMC chains with different initialisations and use these clusterings to describe the posterior distribution. In practice this involves running $n_{seeds}$ different chains of MDI for a smaller number of iterations (some $n_{iter} \in [500, 1000]$), burning out the first $n_{iter} - 1$ iterations and saving the clustering from the final iteration. We then combine the clusterings from all $n_{seeds}$ within a posterior similarity matrix (PSM), a $N \times N$ matrix where the $(i,j)$ entry is the proportion of times genes $i$ and $j$ are in the same cluster. This means that the PSM is not affected by label-flipping and that it is a symmetric matrix with $1$'s along the diagonal and all entries in the unit interval. From this PSM a summary clustering may be calculated. The combination of different initialisations explores all the possible likelihood maixma and thus provides a more informed clustering. As the algorithm is not exploring the full space in any given iteration, we expect that the uncertainty quantification is optimistic, however we argue that an estimate made using insufficient data is better than one made using none at all and that this method is the best currently available to us for quantifying the uncertainty and exploring the posterior distribution.
 
 %	$\delta_{ij}$ here is the Kronecker delta and is defined:
 %	
@@ -457,9 +495,8 @@
 	
 	Gene sets should contain sets of genes that have correlated expression. If this is the case, it is often assumed that the genes are common members of some metabolic pathway and that their products interact. As this correlated expression is represented by a common variation across people rather than in the magnitude of expression, we will standardise the expression data. We describe a small example to explain our reasoning.
 	
-	\subsubsection{Example: Standardising gene expression}
+	\subsubsection{Motivating example: Standardising gene expression data} \label{sec:motivating_example_standardisation}
 	If one considers table \ref{table:example_gene_expression_data} which contains an example of expression data for some genes A, B, C, D and E across people 1 to 4.
-	
 	\begin{table}[] 
 	\centering
 	\begin{tabular}{c|cccc} 
@@ -474,14 +511,12 @@
 	\caption{Example gene expression data.}
 	\label{table:example_gene_expression_data}
 	\end{table}
-	
 	\begin{figure}[h]
 	\centering
-		\includegraphics[scale=0.6]{Images/Examples/example_expression_data.png}
+		\includegraphics[scale=0.55]{Images/Examples/example_expression_data.png}
 		\caption{Heatmap of expression data in table \ref{table:example_gene_expression_data} showing the clusters based upon magnitude of expression.}
 		\label{fig:example_expression_data}
 	\end{figure}
-	
 	One can see that genes A and C have similar patters in variation across the people, as do genes B and D. Gene E is not consistent with any other gene here. However, as this relative variation is of interest rather than the magnitude of expression, one can see that standardising the data is required. If one were to cluster the data as represented in table \ref{table:example_gene_expression_data}, one would place genes A and B in one cluster and genes C, D and E in another as their absolute expression levels are similar (as can be seen in figure \ref{fig:example_expression_data}). However, if the expression level of each gene is standardised as per section \ref{sec:standardisation}, the data is then as represented in table \ref{table:example_standardised_gene_expression_data}. As the data are now on the same scale the characteristic that will determine a clustering is the variation of expression across people. As we want genes with similar patterns of variation (i.e. that are co-expressed) this enables us to cluster under our objective of defining gene sets. In this case genes A and C are one cluster, genes B and D another with gene E in a cluster alone, as can be seen in figure \ref{fig:example_standardised_expression_data}. As this is the type of data we wish to cluster across, we therefore most standardise our expression data before clustering can be implemented.
 
 	\begin{table}[] 
@@ -501,7 +536,7 @@
 	
 	\begin{figure}[h]
 	\centering
-		\includegraphics[scale=0.6]{Images/Examples/example_standardised_expression_data.png}
+		\includegraphics[scale=0.55]{Images/Examples/example_standardised_expression_data.png}
 		\caption{Heatmap of expression data in table \ref{table:example_standardised_gene_expression_data} showing the clusters based upon variation of expression across people.}
 		\label{fig:example_standardised_expression_data}
 	\end{figure}
@@ -563,15 +598,15 @@
 	\begin{enumerate} \label{list:methods}
 		\item Transpose the data to have rows associated with gene probes and columns associated with individuals;
 		\item Remove NAs either imputing values using the minimum expressed value (as missingness is not random) or if above a threshold of missingness removing the column;
+		\item Standardise the data;
 %		\item Apply variance stabilisation \cite{huber_variance_2002} to normalise the gene expression data;
-		\item Inspect the data by PCA and remove outlier individuals for each dataset in each gene set;
+%		\item Inspect the data by PCA and remove outlier individuals for each dataset in each gene set;
 		\item To apply MDI we require that each dataset have the same row names in the same order, so we re-arrange our datasets to have common order of probes and include rows of 0’s for probes entirely missing from a given dataset; and
 		\item Apply MDI \cite{MasonMDIGPUacceleratingintegrative2016a}.
 	\end{enumerate}
 	To validate our clusters we intend to check if some well-annotated gene sets (such as the interleukin pathways) cluster appropriately.
 	
-	\subsection{Consesnsus clustering}
-	In the scenario that MDI struggles to explore the entire posterior distribution from any given initialisation for any realistic number of iterations of MCMC, we propose use of a ``consensus'' clustering \cite{MontiConsensusClusteringResamplingBased}. In this scenario we draw samples of clusterings from MCMC chains with different initialisations and use these clusterings to describe the posterior distribution. In practice this involves running $n_{seeds}$ different chains of MDI for a smaller number of iterations (some $n_{iter} \in [500, 1000]$), burning out the first $n_{iter} - 1$ iterations and saving the clustering from the final iteration. We then combine the clusterings from all $n_{seeds}$ within a posterior similarity matrix (PSM), a $N \times N$ matrix where the $(i,j)$ entry is the proportion of times genes $i$ and $j$ are in the same cluster. This means that the PSM is not affected by label-flipping and that it is a symmetric matrix with $1$'s along the diagonal and all entries in the unit interval. From this PSM a summary clustering may be calculated. The combination of different initialisations explores all the possible likelihood maixma and thus provides a more informed clustering. As the algorithm is not exploring the full space in any given iteration, we expect that the uncertainty quantification is optimistic, however we argue that an estimate made using insufficient data is better than one made using none at all and that this method is the best currently available to us for quantifying the uncertainty and exploring the posterior distribution.
+	
 
 
 	\section{Results}
