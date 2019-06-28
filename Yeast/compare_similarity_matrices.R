@@ -167,7 +167,7 @@ for (j in 1:n_types) {
           row_order <- sim_hc$order
 
           # Find the column order for the expression data
-          expr_hc <- hclust(dist(t(toy_expr)))
+          expr_hc <- hclust(dist(t(.curr_expr)))
           expr_col_order <- expr_hc$order
         } else {
           row_order <- sim_comparison_tibble$Sim_row_order[[which(sim_comparison_tibble$Dataset == d
