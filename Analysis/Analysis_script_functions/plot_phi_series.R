@@ -13,7 +13,7 @@ plot_phi_series <- function(mcmc_out_lst,
   phis <- list()
   count <- 0
 
-  print("Saving plots of phi as a time series.")
+  # print("Saving plots of phi as a time series.")
 
   # Create directory to save this output in
   loc_dir <- paste0(file_path, "Phi_series_plots/")
