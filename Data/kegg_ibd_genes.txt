@@ -1,0 +1,139 @@
+K01165               RNASEL; ribonuclease L 
+K01363               CTSB; cathepsin B [EC:3.4.22.1] 
+K01370               CASP1; caspase 1 [EC:3.4.22.36] 
+K02161               BCL2; apoptosis regulator Bcl-2 
+K02373               FADD; FAS-associated death domain protein 
+K02406               fliC; flagellin 
+K02580               NFKB1; nuclear factor NF-kappa-B p105 subunit 
+K02581               NFKBIB; NF-kappa-B inhibitor beta 
+K02861               RIPK1, RIP1; receptor-interacting serine/threonine-protein kinase 1 [EC:2.7.11.1] 
+K03156               TNF, TNFA; tumor necrosis factor superfamily, member 2 
+K03173               TRAF2; TNF receptor-associated factor 2 [EC:2.3.2.27] 
+K03174               TRAF3; TNF receptor-associated factor 3 
+K03175               TRAF6; TNF receptor-associated factor 6 [EC:2.3.2.27] 
+K03443               PANX1; pannexin 1 
+K03462               NAMPT; nicotinamide phosphoribosyltransferase [EC:2.4.2.12] 
+K03671               trxA; thioredoxin 1 
+K04079               HSP90A, htpG; molecular chaperone HtpG 
+K04371               ERK, MAPK1_3; mitogen-activated protein kinase 1/3 [EC:2.7.11.24] 
+K04394               CASP4, CASP11; caspase 4 [EC:3.4.22.57 3.4.22.64] 
+K04395               CASP5; caspase 5 [EC:3.4.22.58] 
+K04398               CASP8; caspase 8 [EC:3.4.22.61] 
+K04403               MAP3K7IP1, TAB1; TAK1-binding protein 1 
+K04404               MAP3K7IP2, TAB2; TAK1-binding protein 2 
+K04427               MAP3K7, TAK1; mitogen-activated protein kinase kinase kinase 7 [EC:2.7.11.25] 
+K04440               JNK; mitogen-activated protein kinase 8/9/10 (c-Jun N-terminal kinase) [EC:2.7.11.24] 
+K04441               P38; p38 MAP kinase [EC:2.7.11.24] 
+K04448               JUN; transcription factor AP-1 
+K04467               IKBKA, IKKA, CHUK; inhibitor of nuclear factor kappa-B kinase subunit alpha [EC:2.7.11.10] 
+K04513               RHOA; Ras homolog gene family, member A 
+K04519               IL1B; interleukin 1 beta 
+K04570               BCL2L1, bcl-xL; Bcl-2-like 1 (apoptosis regulator Bcl-X) 
+K04612               CASR; calcium-sensing receptor 
+K04622               GPRC6A; G protein-coupled receptor family C group 6 member A 
+K04693               IRF9, ISGF3G, P48; interferon regulatory factor 9 
+K04725               XIAP, BIRC4; E3 ubiquitin-protein ligase XIAP [EC:2.3.2.27] 
+K04729               MYD88; myeloid differentiation primary response protein MyD88 
+K04733               IRAK4; interleukin-1 receptor-associated kinase 4 [EC:2.7.11.1] 
+K04734               NFKBIA; NF-kappa-B inhibitor alpha 
+K04735               RELA; transcription factor p65 
+K04741               CASP12; caspase 12 [EC:3.4.22.-] 
+K04958               ITPR1; inositol 1,4,5-triphosphate receptor type 1 
+K04959               ITPR2; inositol 1,4,5-triphosphate receptor type 2 
+K04960               ITPR3; inositol 1,4,5-triphosphate receptor type 3 
+K04971               TRPV2; transient receptor potential cation channel subfamily V member 2 
+K04977               TRPM2; transient receptor potential cation channel subfamily M member 2 [EC:3.6.1.13] 
+K04982               TRPM7, CHAK1; transient receptor potential cation channel subfamily M member 7 [EC:2.7.11.1] 
+K05130               IFNAR1; interferon receptor 1 
+K05131               IFNAR2; interferon receptor 2 
+K05220               P2RX7; P2X purinoceptor 7 
+K05230               DEFA; defensin, alpha 
+K05405               IL6; interleukin 6 
+K05410               TBK1; TANK-binding kinase 1 [EC:2.7.11.10] 
+K05411               IRF3; interferon regulatory factor 3 
+K05414               IFNA; interferon alpha 
+K05415               IFNB; interferon beta 
+K05482               IL18, IL1F4; interleukin 18 
+K05505               CXCL1_2_3, GRO; C-X-C motif chemokine 1/2/3 
+K05842               TRIF; toll-like receptor adapter molecule 1 
+K05858               PLCB; phosphatidylinositol phospholipase C, beta [EC:3.1.4.11] 
+K05862               VDAC1; voltage-dependent anion channel protein 1 
+K06030               MFN2, FZO1; mitofusin 2 [EC:3.6.5.-] 
+K06068               PRKCD; novel protein kinase C delta type [EC:2.7.11.13] 
+K07209               IKBKB, IKKB; inhibitor of nuclear factor kappa-B kinase subunit beta [EC:2.7.11.10] 
+K07210               IKBKG, IKKG, NEMO; inhibitor of nuclear factor kappa-B kinase subunit gamma 
+K07211               IKBKE, IKKE; inhibitor of nuclear factor kappa-B kinase subunit epsilon [EC:2.7.11.10] 
+K08009               CYBA, P22PHOX; cytochrome b-245, alpha polypeptide 
+K08336               ATG12; ubiquitin-like protein ATG12 
+K08339               ATG5; autophagy-related protein 5 
+K08341               GABARAP, ATG8, LC3; GABA(A) receptor-associated protein 
+K08598               yopJ; YopJ protease family 
+K08645               lef; anthrax lethal toxin endopeptidase [EC:3.4.24.83] 
+K08727               NOD1, CARD4; nucleotide-binding oligomerization domain-containing protein 1 
+K08846               RIPK2; receptor-interacting serine/threonine-protein kinase 2 [EC:2.7.11.1] 
+K08847               RIPK3; receptor-interacting serine/threonine-protein kinase 3 [EC:2.7.11.1] 
+K09447               IRF7; interferon regulatory factor 7 
+K09849               TRAF5; TNF receptor-associated factor 5 
+K10030               IL8, CXCL8; interleukin 8 
+K10160               TLR4, CD284; toll-like receptor 4 
+K10165               NOD2, CARD15; nucleotide-binding oligomerization domain-containing protein 2 
+K10630               RBCK1, HOIL1; RanBP-type and C3HC4-type zinc finger-containing protein 1 [EC:2.3.2.31] 
+K11030               pagA; protective antigen 
+K11217               JAK1; Janus kinase 1 [EC:2.7.10.2] 
+K11219               TYK2; non-receptor tyrosine-protein kinase TYK2 [EC:2.7.10.2] 
+K11220               STAT1; signal transducer and activator of transcription 1 
+K11221               STAT2; signal transducer and activator of transcription 2 
+K11859               TNFAIP3, A20, OTUD7C; tumor necrosis factor, alpha-induced protein 3 [EC:3.4.19.12] 
+K11864               BRCC3, BRCC36; BRCA1/BRCA2-containing complex subunit 3 [EC:3.4.19.-] 
+K11974               RNF31, HOIP; E3 ubiquitin-protein ligase RNF31 [EC:2.3.2.31] 
+K12499               CCL5; C-C motif chemokine 5 
+K12648               MAVS, IPS1; mitochondrial antiviral-signaling protein 
+K12650               TANK; TRAF family member-associated NF-kappa-B activator 
+K12653               NLRX1; NLR family member X1 
+K12654               TMEM173, MITA; transmembrane protein 173 
+K12792               TRIP6; thyroid receptor-interacting protein 6 
+K12793               MAP3K7IP3, TAB3; TAK1-binding protein 3 
+K12794               CARD9; caspase recruitment domain-containing protein 9 
+K12795               SUGT1, SGT1; suppressor of G2 allele of SKP1 
+K12796               ERBB2IP, ERBIN; erbb2-interacting protein 
+K12797               CARD6; caspase recruitment domain-containing protein 6 
+K12798               NLRP1, CARD7; NACHT, LRR and PYD domains-containing protein 1 
+K12799               PYCARD, ASC; apoptosis-associated speck-like protein containing a CARD 
+K12800               NLRP3, PYPAF1; NACHT, LRR and PYD domains-containing protein 3 
+K12801               CARD8, CARDINAL; caspase recruitment domain-containing protein 8 
+K12802               PYDC1; pyrin domain-containing protein 1 
+K12803               MEFV; pyrin 
+K12804               PSTPIP1; proline-serine-threonine phosphatase interacting protein 1 
+K12805               NLRC4, CARD12; NLR family CARD domain-containing protein 4 
+K12806               CARD16_17_18; caspase recruitment domain-containing protein 16/17/18 
+K12807               NAIP, BIRC1; baculoviral IAP repeat-containing protein 1 
+K12966               AIM2; absent in melanoma 2 
+K13916               CAMP, LL37; cathelicidin antimicrobial peptide 
+K14216               OAS; 2'-5'-oligoadenylate synthetase [EC:2.7.7.84] 
+K14624               CCL2, MCP1; C-C motif chemokine 2 
+K15040               VDAC2; voltage-dependent anion channel protein 2 
+K15041               VDAC3; voltage-dependent anion channel protein 3 
+K16060               BIRC2_3; baculoviral IAP repeat-containing protein 2/3 
+K17065               DNM1L; dynamin 1-like protein [EC:3.6.5.5] 
+K17820               DHX33; ATP-dependent RNA helicase DHX33 [EC:3.6.4.13] 
+K17890               ATG16L1; autophagy-related protein 16-1 
+K20858               MCU; calcium uniporter protein, mitochondrial 
+K20863               NLRP6, NALP6; NACHT, LRR and PYD domains-containing protein 6 
+K20864               NLRP7, NALP7; NACHT, LRR and PYD domains-containing protein 7 
+K20865               NLRP12; NACHT, LRR and PYD domains-containing protein 12 
+K20876               NEK7; NIMA (never in mitosis gene a)-related kinase 7 [EC:2.7.11.1] 
+K20894               SHARPIN; shank-associated RH domain-interacting protein 
+K20897               GBP2; guanylate-binding protein 2 
+K20898               GBP5; guanylate-binding protein 5 
+K20899               GBP1_3_4_7; guanylate-binding protein 1/3/4/7 
+K20909               ANTXR; anthrax toxin receptor 
+K20910               TXNIP; thioredoxin-interacting protein 
+K20911               PYDC2, POP2; pyrin domain-containing protein 2 
+K20914               IFI16; gamma-interferon-inducible protein 16 
+K20915               TP53BP1, P202; tumor suppressor p53-binding protein 1 
+K20916               POP3; pyrin domain-only protein 3 
+K20917               GSDMD; gasdermin-D 
+K21100               DEFB4; beta-defensin 4 
+K21356               MFN1; mitofusin 1 [EC:3.6.5.-] 
+K21421               NOX2, GP91, CYBB; NADPH oxidase 2 [EC:1.-.-.-] 
+K23126               DEFB103; beta-defensin 103 
