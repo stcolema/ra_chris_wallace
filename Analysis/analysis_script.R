@@ -71,6 +71,9 @@ library(attempt)
 # For having several plots on the same grid
 library(cowplot)
 
+# For praise
+library(praise)
+
 # === Functions ================================================================
 
 
@@ -538,7 +541,7 @@ if (is.na(n_genes)) {
 
 # Plot phi value between each dataset combination across iterations
 if (do_phis_series) {
-  cat("\nPlotting phi values across iterations.\n")
+  cat("\n\nPlotting phi values across iterations.\n")
   plot_phi_series(mcmc_out_lst,
     file_path,
     num_files,
@@ -1148,6 +1151,9 @@ saveRDS(
 
 if (args$time) {
   cat("\n")
-  cat((Sys.time() - stm_i))
+  print(Sys.time() - stm_i)
   cat("\n")
 }
+
+# Well done
+praise()
