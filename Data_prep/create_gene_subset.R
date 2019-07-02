@@ -6,12 +6,13 @@ source("./Analysis/read_in_kegg_sets.R")
 probe_key <- fread("./Analysis/probe_key_unique_names.csv")
 universe <- probe_key$Gene
 my_universe <- probe_key$Unique_gene_name
+reduced_universe <- unique(universe)
 
 # The KEGG data
 kegg_data <- "Data/kegg_msigdb.txt"
 
 # The number of genes desired in the final gene sample
-n_desired <- 1e3
+n_desired <- 625
 
 # The pathways to include
 pathway_names <- c(
@@ -28,7 +29,7 @@ set.seed(1)
 missing_path <- pathway_names[3]
 
 # Find the gene sets and reduce to those deisred
-gene_sets <- find_gene_sets(kegg_data, universe, unique_universe = my_universe)
+gene_sets <- find_gene_sets(kegg_data, universe) #, unique_universe = my_universe)
 rel_gene_sets <- gene_sets[names(gene_sets) %in% pathway_names]
 
 # The IBD set is missing from the above, read-in the file created by calling 
@@ -40,13 +41,15 @@ ibd_set <- fread("Data/ibd_genes.csv", header = T) %>% unlist() %>% unname()
 # my_universe[universe %in% ibd_set]
 
 # Add to our list of gene sets using the unique labels
-rel_gene_sets[[missing_path]] <- my_universe[universe %in% ibd_set]
+# rel_gene_sets[[missing_path]] <- my_universe[universe %in% ibd_set]
+rel_gene_sets[[missing_path]] <- universe[universe %in% ibd_set]
 
 # Reduce to a vector
 genes_to_inclue <- rel_gene_sets %>% unlist() %>% unname() %>% unique()
 
 # The complement to the above set
-other_possibilies <- my_universe[! my_universe %in% genes_to_inclue]
+# other_possibilies <- my_universe[! my_universe %in% genes_to_inclue]
+other_possibilies <- universe[! universe %in% genes_to_inclue]
 
 # The number of genes required to get up to n_desired
 n_to_sample <- n_desired - length(genes_to_inclue)

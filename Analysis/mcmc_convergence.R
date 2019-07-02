@@ -1,5 +1,5 @@
 
-
+library(magrittr)
 library(rjags)
 library(fitR)
 # N <- 1000
@@ -25,12 +25,12 @@ library(fitR)
 mcmc_data <- list()
 mcmc_data_short <- list()
 for(i in 1:10){
-  curr_data <- read.csv(paste0("/home/MINTS/sdc56/Desktop/Gen_data_output/Long_", 
+  curr_data <- read.csv(paste0("/home/MINTS/sdc56/Desktop/Gen_data_output/Longer_", 
                                     i,
                                     "/out_seed_",
                                     i,
                                     ".csv")
-  )[,1:6]
+  )[1:40000,1:6]
   
   mcmc_data[[i]] <- mcmc(curr_data)
   
@@ -90,12 +90,61 @@ gelman.plot(mcmc.trace)
 
 summary(mcmc_data[[1]])
 plot(mcmc_data[[1]])
-mcmc.trace.burned <- burnAndThin(mcmc_data[[1]], burn = 20, thin = 1)
+mcmc.trace.burned <- burnAndThin(mcmc_data[[1]], burn = 2900, thin = 1)
 plot(mcmc.trace.burned)
 autocorr.plot(mcmc.trace.burned)
 plotESSBurn(mcmc_data[[1]])
+plotESSBurn(mcmc.trace.burned)
+
+mcmc.trace.burned_2 <- burnAndThin(mcmc_data[[2]], burn = 5900, thin = 1)
+plot(mcmc.trace.burned_2)
+autocorr.plot(mcmc.trace.burned_2)
+plotESSBurn(mcmc_data[[2]])
+plotESSBurn(mcmc.trace.burned_2)
+
+plotESSBurn(mcmc_data[[1]]) # burn in to 2900
+plotESSBurn(mcmc_data[[2]]) # burn in to 5900
+plotESSBurn(mcmc_data[[3]]) # no burn in required
+plotESSBurn(mcmc_data[[4]]) # does this converge?
+plotESSBurn(mcmc_data[[5]]) # as 1
+plotESSBurn(mcmc_data[[6]]) # similar to 1 (slightly different)
+plotESSBurn(mcmc_data[[7]]) # between 1 & 3
+plotESSBurn(mcmc_data[[8]]) # as 3 
+plotESSBurn(mcmc_data[[9]]) # as 4
+plotESSBurn(mcmc_data[[10]]) # as 3
+
+
+geweke.plot(mcmc_data[[1]])
+geweke.plot(mcmc_data[[2]])
+geweke.plot(mcmc_data[[3]])
+geweke.plot(mcmc_data[[4]])
+geweke.plot(mcmc_data[[5]])
+geweke.plot(mcmc_data[[6]])
+geweke.plot(mcmc_data[[7]])
+geweke.plot(mcmc_data[[8]])
+geweke.plot(mcmc_data[[9]])
+geweke.plot(mcmc_data[[10]])
+
+mcmc_burned <- list()
+for(i in 1:10){
+  mcmc_burned[[i]] <- burnAndThin(mcmc_data[[i]], burn = 6000, thin = 1)
+  
+}
+
+geweke.plot(mcmc_burned[[1]])
+geweke.plot(mcmc_burned[[2]])
+geweke.plot(mcmc_burned[[3]])
+geweke.plot(mcmc_burned[[4]])
+geweke.plot(mcmc_burned[[5]])
+geweke.plot(mcmc_burned[[6]])
+geweke.plot(mcmc_burned[[7]])
+geweke.plot(mcmc_burned[[8]])
+geweke.plot(mcmc_burned[[9]])
+geweke.plot(mcmc_burned[[10]])
+
 
 gelman.plot(mcmc_data)
+gelman.plot(mcmc_burned)
 # gelman.plot(mcmc_data_short)
 
 geweke.diag(mcmc_data[[1]], frac1=0.1, frac2=0.5)
@@ -112,3 +161,4 @@ gelman.plot(many_seeds_mcmc_data)
 
 # geweke.diag(many_seeds_mcmc_data[[1]], frac1=0.1, frac2=0.5)
 geweke.plot(many_seeds_mcmc_data[[1]], frac1=0.1, frac2=0.5)
+geweke.plot(mcmc.trace.burned)

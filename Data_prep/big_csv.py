@@ -39,6 +39,7 @@ def big_csv(input_dir: str,
     # Open the inputted files
     with open(out_file_name, 'w+') as out_f:
         for i, file_name in enumerate(input_files):
+
             with open(file_name, 'r') as f:
 
                 # iterate over the lines in f
@@ -61,6 +62,7 @@ def big_csv(input_dir: str,
                         continue
 
 if __name__ == "__main__":
+
     dir_path = argv[1]
     out_file_name = argv[2]
     ext = ".csv"
@@ -71,8 +73,6 @@ if __name__ == "__main__":
 
     if(len(argv) > 4):
         ext = argv[4]
-
-    # print(dir_path)
 
     # find_ext_files(dir_path, ext)
     big_csv(dir_path, out_file_name, line_to_keep, ext)

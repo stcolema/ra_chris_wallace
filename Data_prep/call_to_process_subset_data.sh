@@ -40,4 +40,4 @@ mkdir Original_data
 mv *.csv Original_data
 
 # Rename final form of files and move to new directory
-Rscript ../ra_chris_wallace/Data_prep/rename_files.R -d ./Filled_random_data/ -w ./Final_random_data/
+Rscript ../ra_chris_wallace/Data_prep/rename_files.R -d ./Filled_data/ -w ./Final_random_data/
