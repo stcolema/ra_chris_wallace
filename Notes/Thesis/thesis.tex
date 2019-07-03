@@ -560,20 +560,20 @@
 	\section{Data}	
 	The data is from the Correlated Expression and Disease Association Research (CEDAR) cohort \cite{TheInternationalIBDGeneticsConsortiumIBDriskloci2018}. We have 9 .csv files, one for each tissue / cell type present of normalised gene expression data for 323 individuals. These are healthy individuals of European descent; the cohort consists of 182 women and 141 men with an average age of 56 years (but ranging from 19 to 86). None of the individuals are suffering from any autoimmune or inflammatory disease and were not taking corticosteroids or non-steroid anti-inflammatory drugs (with the exception of aspirin). 
 	
-	With regards to tissue types, samples from six circulating immune cells types:
+	With regards to tissue types, samples from six circulating immune cells types (followed in brackets by the abbreviation for the associated dataset):
 	\begin{itemize}
-		\item CD4+ T lymphocytes;
-		\item CD8+ T lymphocytes;
-		\item CD14+ monocytes;
-		\item CD15+ granulocytes;
-		\item CD19+ B lymphocytes; and 
-		\item platelets.
+		\item CD4+ T lymphocytes (CD4);
+		\item CD8+ T lymphocytes (CD8);
+		\item CD14+ monocytes (CD14);
+		\item CD15+ granulocytes (CD15);
+		\item CD19+ B lymphocytes (CD19); and 
+		\item platelets (PLA).
 	\end{itemize}
 	Data from intestinal biopsies are also present, with sample taken from three distinct locations:
 	\begin{itemize}
-		\item the illeum;
-		\item the rectum; and
-		\item the colon.
+		\item the illeum (IL);
+		\item the rectum (RE); and
+		\item the colon (TR).
 	\end{itemize} 
 	Not every individual is present in every dataset. However, as we are clustering genes this should not present a problem.
 	
@@ -634,8 +634,55 @@
 		\item Apply MDI \cite{MasonMDIGPUacceleratingintegrative2016a}.
 	\end{enumerate}
 	
+	\section{Results}
+%	\subsection{Simulations}
+	\subsection{Case 1: Proof of consensus}
+	Generated data based on data from original MDI paper with some additional noisy clusters that MDI succeeds with.
 	
+%	\begin{figure}[h]
+		\begin{sidewaysfigure}
+			\centering
+			\includegraphics[scale=0.9]{Images/Gen_data/Case_1/box_plot_ari_true_clustering.png}
+			\caption{Box plots for distribution of adjusted rand index between the clustering at each iteration to the true clustering for different lengths of consensus clustering and different initialisation of long chains.}
+			\label{fig:gen_data_case_1_boxplot}
+		\end{sidewaysfigure}
+		%	\end{figure}
+		
+		\begin{figure}[h]
+			\centering
+			\includegraphics[scale=0.65]{Images/Gen_data/Case_1/box_plot_ari_true_clustering_collapsed_long.png}
+			\caption{Box plots for distribution of adjusted rand index between the clustering at each iteration to the true clustering for different lengths of consensus clustering and the collapsed long chains.}
+			\label{fig:gen_data_case_1_collapsed_boxplot}
+		\end{figure}
+	
+	\subsection{Case 2: Overcoming multiple modes}
+	Generated data that MDI struggles with.
+	
+%	\begin{figure}[h]
+		\begin{sidewaysfigure}
+		\centering
+		\includegraphics[scale=0.9]{Images/Gen_data/Case_2/box_plot_ari_true_clustering.png}
+		\caption{Box plots for distribution of adjusted rand index between the clustering at each iteration to the true clustering for different lengths of consensus clustering and different initialisation of long chains.}
+		\label{fig:gen_data_case_2_boxplot}
+	\end{sidewaysfigure}
+%	\end{figure}
 
+	\begin{figure}[h]
+		\centering
+		\includegraphics[scale=0.65]{Images/Gen_data/Case_2/box_plot_ari_true_clustering_collapsed_long.png}
+		\caption{Box plots for distribution of adjusted rand index between the clustering at each iteration to the true clustering for different lengths of consensus clustering and the collapsed long chains.}
+		\label{fig:gen_data_case_2_collapsed_boxplot}
+	\end{figure}
+
+	\begin{figure}[h]
+		\centering
+		\includegraphics[scale=0.65]{Images/Gen_data/Case_2/violin_plot_ari_true_clustering_collapsed_long.png}
+		\caption{Violoin plots for distribution of adjusted rand index between the clustering at each iteration to the true clustering for different lengths of consensus clustering and the collapsed long chains. We can see that the consensus clustering approximates the modes described across chains quite well.}
+		\label{fig:gen_data_case_2_collapsed_violin_plot}
+	\end{figure}
+
+	\subsection{Case 3: CEDAR data}
+	Actual data.
 
 %	\section{Results}
 %	
