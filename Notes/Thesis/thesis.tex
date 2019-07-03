@@ -381,7 +381,7 @@
 	\begin{eqnarray}
 	\text{Corrected index} = \frac{\text{Index} - \text{Expected index}}{\text{Maximum index} - \text{Expected index}}
 	\end{eqnarray}
-	Asusming a maximum value of 1 for the Rand index then gives a corrected Rand index:
+	Assuming a maximum value of 1 for the Rand index then gives a corrected Rand index:
 	\begin{eqnarray} \label{eqn:adjusted_rand_index}
 	\frac{\sum_{i=1}^{K}\sum_{j=1}^{K'} \binom{n_{ij}}{2} - \sum_{i=1}^{K} \binom{n_{i \cdot}}{2} \sum_{j=1}^{K'} \binom{n_{\cdot j}}{2} \binom{n}{2}^{-1}}{\frac{1}{2} \left[\sum_{i=1}^{K} \binom{n_{i \cdot}}{2} + \sum_{j=1}^{K'} \binom{n_{\cdot j}}{2}\right] - \sum_{i=1}^{K} \binom{n_{i \cdot}}{2} \sum_{j=1}^{K'} \binom{n_{\cdot j}}{2} \binom{n}{2}^{-1}}
 	\end{eqnarray}
@@ -583,14 +583,14 @@
 	\begin{sidewaysfigure}
 		\centering
 		\includegraphics[scale=0.9 ]{Images/Data_inspection/probe_presence_across_datasets.png}
-		\caption{Probe presence across datasets. Under "All" we have the number of probes present in every dataset, under "All (excl. PLA)" we have the number of probes present in every dataset bar PLA. Note how PLA is less information rich than any other dataset.}
+		\caption{Probe presence across datasets. Under ``All'' we have the number of probes present in every dataset, under ``All (excl. PLA)'' we have the number of probes present in every dataset bar PLA. Note how PLA is less information rich than any other dataset.}
 		\label{fig:probe_presence_across_datasets}
 	\end{sidewaysfigure}
 %	\end{figure}
 	
 	The fluorescence intensities were $\log_2$ transformed and Robust Spline Normalized with Lumi38.
 	
-	It should be noted that some datasets are less information rich than others (for instance the platelets dataset has 6,564 probes present in comparison to an average of 12,838 probes present per dataset, see figure \ref{fig:probe_presence_across_datasets}). Due to this and the exponential increase in computational cost for each additional dataset, we use only the 8 most informative datasets, dropping PLA.
+	It should be noted that some datasets are less information rich than others (for instance the platelets dataset has 6,564 probes present in comparison to an average of 12,838 probes present per dataset, see figure \ref{fig:probe_presence_across_datasets}). Due to this and the exponential increase in computational cost for each additional dataset, we use only the 8 most informative datasets, dropping PLA from our analysis. From a biological perspective we also expect PLA to be the least rich as platelets have no nucleus citeWRIGHT and therefore any gene expression is an artefact from before they differentiated into platelets. 
 	
 %	Individuals were genotyped for more than 700,000 SNPs using Illumina's Human OmniExpress BeadChips, an iScan system and the Genome Studio software following the guidelines of the manufacturer. Variants were elimanted with call rate $\leq 0.95$, deviating from Hardy-Weinberg equilibrium $(p \leq 0.95)$, or which were monomorphic.
 %	
@@ -616,7 +616,7 @@
 	
 	\begin{enumerate} \label{list:kegg_pathways}
 		\item Inositol phosphate metabolism (a broad biological pathway);
-		\item NOD-like receptor signaling pathway (a specific biological pathway with known involvement in IBD); and
+		\item NOD-like receptor signaling pathway (a specific biological pathway with known involvement in IBD citeCERNEIRO citeGARRETT); and
 		\item Inflammatory bowel disease (IBD) (a pathological pathway).
 	\end{enumerate}
 	The union of these sets corresponds to 169 unique genes (or 287 probes as the mapping from the space of probes to that of genes is non-injective) that are present in the CEDAR dataset. The remaining probes are randomly selected from the total possible space (18,524 probes) less those corresponding to these genes (leaving 18,287 possible candidate probes). We then expect that the genes from the sets mentioned above (list \ref{list:kegg_pathways}) should cluster together. We use this as a test of our final clustering.
@@ -630,79 +630,79 @@
 %		\item Apply variance stabilisation \cite{huber_variance_2002} to normalise the gene expression data;
 %		\item Inspect the data by PCA and remove outlier individuals for each dataset in each gene set;
 		\item To apply MDI we require that each dataset have the same row names in the same order, so we re-arrange our datasets to have common order of probes;
-		\item For probes entirely missing from a given dataset we generate expression from a standard normal distribution for each probe. Then these probes are expressed as noise in the dataset and any clustering imposed upon them should be due to information about these probes present in other datasets were they do not have imputed values; and
+		\item For probes entirely missing from a given dataset we generate expression from a standard normal distribution for each probe. Then these probes are expressed as noise in the dataset and any clustering imposed upon them should be due to information about these probes present in other datasets; and
 		\item Apply MDI \cite{MasonMDIGPUacceleratingintegrative2016a}.
 	\end{enumerate}
 	
 	
 
 
-	\section{Results}
-	
-	To check if the algorithm ran and as an initial exploration of the data, we implemented the steps described in \ref{list:methods} applying MDI to all 9 datasets. This was done twice - on the first occasion probes missing from a dataset or containing NAs were dropped (resulting in a total dataset of 4,964 probes in each dataset) and on the second occasion using an imputed value of 0 for missing probes (on this occasion we dropped probes that had NAs in some columns in all datasets reducing the dataset from 18,523 to 18,517 probes).
-	
-	The algorithm was capable of running for 10,000 iterations with a thinning factor of 25 over both these set of data.
-	
-	We used the modal clustering as the predicted clustering as the labels became fixed and did not vary for the majority of iterations. We did not use the clustering implied by the PSM as the clusters were very defined and thus the uncertainty captured by the PSM was not necessary for the predicted clustering. Furthermore, the computational cost of calculating the PSM, particularly for the larger dataset, was quite high (the PSM is a $n \times n$ matrix).
-	
-	MDI begins with 50 clusters (as an approximation of a Dirichlet process - note that we can change the number of clusters present). In the 9 datasets the number of occupied clusters stabilised around 10 (ranging from 8 - 13).
-	
-	We inspected the resulting clusters using the \emph{pheatmap} package \cite{KoldepheatmapPrettyHeatmaps2018} in R \cite{RCoreTeamLanguageEnvironmentStatistical2018}.
-	
-	\begin{figure}[h]
-	%	\centering
-		\includegraphics[scale=1.0]{Images/Initial_analysis/mdi_1_heatmap-1.png}
-		\caption{Predicted clusters for MDI applied to 9 datasets for common probes with datasets as columns and probes as rows.}
-		\label{fig:naive_mdi_reduced}
-	\end{figure}
-
-	We can see from figure \ref{fig:naive_mdi_reduced} that some genes cluster across all datasets (the beige band about 0.25 along the vertical axis). Between the combination of a visual inspect and the hierarchical clustering visible in the tree at the top of figure \ref{fig:naive_mdi_reduced} combined with the information in figure \ref{fig:naive_mdi_reduced_phi_heatmap}, one can see that the platelets behave significantly differently to the other datasets - very few rows align with other datasets. We can see that we have 4 distinct groups of datasets here:
-	\begin{enumerate} \label{list:datasets_naive_mdi_reduced}
-		\item CD14, CD4 and CD8;
-		\item IL and RE;
-		\item CD15, CD19 and TR; and
-		\item PLA.
-	\end{enumerate}
-
-	\begin{figure}[h]
-		\centering
-		\includegraphics[scale=0.75]{Images/Initial_analysis/Phi_heatmap_1.png}
-		\caption{Mean $\phi$ value between datasets across iterations. $\phi$ can be considered a measure of similarity between datasets - the greater $\phi_{i,j}$ is, the more correlated the clustering in datasets $i$ and $j$ is.}
-		\label{fig:naive_mdi_reduced_phi_heatmap}
-	\end{figure}
-	
-	However, there is too much information in figure \ref{fig:naive_mdi_reduced} for serious analysis and we must use subsets of the data to better understand the information contained here. Based on the clusters of datasets mentioned in \label{list:datasets_naive_mdi_reduced}, we visualise the clustering in these groups.
-	
-	From figures \ref{fig:naive_mdi_reduced_il_tr_cluster} and \ref{fig:naive_mdi_reduced_cd14_cd4_cd8_cluster}, one can see that inspecting the clusters in subsets of the datasets makes it easier to see similarity in clustering.
-	
-	
+%	\section{Results}
+%	
+%	To check if the algorithm ran and as an initial exploration of the data, we implemented the steps described in \ref{list:methods} applying MDI to all 9 datasets. This was done twice - on the first occasion probes missing from a dataset or containing NAs were dropped (resulting in a total dataset of 4,964 probes in each dataset) and on the second occasion using an imputed value of 0 for missing probes (on this occasion we dropped probes that had NAs in some columns in all datasets reducing the dataset from 18,523 to 18,517 probes).
+%	
+%	The algorithm was capable of running for 10,000 iterations with a thinning factor of 25 over both these set of data.
+%	
+%	We used the modal clustering as the predicted clustering as the labels became fixed and did not vary for the majority of iterations. We did not use the clustering implied by the PSM as the clusters were very defined and thus the uncertainty captured by the PSM was not necessary for the predicted clustering. Furthermore, the computational cost of calculating the PSM, particularly for the larger dataset, was quite high (the PSM is a $n \times n$ matrix).
+%	
+%	MDI begins with 50 clusters (as an approximation of a Dirichlet process - note that we can change the number of clusters present). In the 9 datasets the number of occupied clusters stabilised around 10 (ranging from 8 - 13).
+%	
+%	We inspected the resulting clusters using the \emph{pheatmap} package \cite{KoldepheatmapPrettyHeatmaps2018} in R \cite{RCoreTeamLanguageEnvironmentStatistical2018}.
+%	
 %	\begin{figure}[h]
-%		%	\centering
-%		\includegraphics[scale=1.0]{Images/Initial_analysis/sim_heatmaps-1.png}
+%	%	\centering
+%		\includegraphics[scale=1.0]{Images/Initial_analysis/mdi_1_heatmap-1.png}
 %		\caption{Predicted clusters for MDI applied to 9 datasets for common probes with datasets as columns and probes as rows.}
 %		\label{fig:naive_mdi_reduced}
 %	\end{figure}
-
-	\begin{figure}[h]
-		%	\centering
-		\includegraphics[scale=1.0]{Images/Initial_analysis/sim_heatmaps-2.png}
-		\caption{Predicted clusters for MDI applied to 9 datasets for common probes with datasets as columns and probes as rows.}
-		\label{fig:naive_mdi_reduced_il_tr_cluster}
-	\end{figure}
-	
-	\begin{figure}[h]
-		%	\centering
-		\includegraphics[scale=1.0]{Images/Initial_analysis/sim_heatmaps-3.png}
-		\caption{Predicted clusters for MDI applied to 9 datasets for common probes with datasets as columns and probes as rows.}
-		\label{fig:naive_mdi_reduced_cd14_cd4_cd8_cluster}
-	\end{figure}
-
-	\begin{figure}[h]
-	%	\centering
-	\includegraphics[scale=1.0]{Images/Initial_analysis/mdi_2_heatmap-1.png}
-	\caption{Predicted clusters for MDI applied to 9 datasets for all probes.}
-	\label{fig:naive_mdi_full}
-\end{figure}
+%
+%	We can see from figure \ref{fig:naive_mdi_reduced} that some genes cluster across all datasets (the beige band about 0.25 along the vertical axis). Between the combination of a visual inspect and the hierarchical clustering visible in the tree at the top of figure \ref{fig:naive_mdi_reduced} combined with the information in figure \ref{fig:naive_mdi_reduced_phi_heatmap}, one can see that the platelets behave significantly differently to the other datasets - very few rows align with other datasets. We can see that we have 4 distinct groups of datasets here:
+%	\begin{enumerate} \label{list:datasets_naive_mdi_reduced}
+%		\item CD14, CD4 and CD8;
+%		\item IL and RE;
+%		\item CD15, CD19 and TR; and
+%		\item PLA.
+%	\end{enumerate}
+%
+%	\begin{figure}[h]
+%		\centering
+%		\includegraphics[scale=0.75]{Images/Initial_analysis/Phi_heatmap_1.png}
+%		\caption{Mean $\phi$ value between datasets across iterations. $\phi$ can be considered a measure of similarity between datasets - the greater $\phi_{i,j}$ is, the more correlated the clustering in datasets $i$ and $j$ is.}
+%		\label{fig:naive_mdi_reduced_phi_heatmap}
+%	\end{figure}
+%	
+%	However, there is too much information in figure \ref{fig:naive_mdi_reduced} for serious analysis and we must use subsets of the data to better understand the information contained here. Based on the clusters of datasets mentioned in \label{list:datasets_naive_mdi_reduced}, we visualise the clustering in these groups.
+%	
+%	From figures \ref{fig:naive_mdi_reduced_il_tr_cluster} and \ref{fig:naive_mdi_reduced_cd14_cd4_cd8_cluster}, one can see that inspecting the clusters in subsets of the datasets makes it easier to see similarity in clustering.
+%	
+%	
+%%	\begin{figure}[h]
+%%		%	\centering
+%%		\includegraphics[scale=1.0]{Images/Initial_analysis/sim_heatmaps-1.png}
+%%		\caption{Predicted clusters for MDI applied to 9 datasets for common probes with datasets as columns and probes as rows.}
+%%		\label{fig:naive_mdi_reduced}
+%%	\end{figure}
+%
+%	\begin{figure}[h]
+%		%	\centering
+%		\includegraphics[scale=1.0]{Images/Initial_analysis/sim_heatmaps-2.png}
+%		\caption{Predicted clusters for MDI applied to 9 datasets for common probes with datasets as columns and probes as rows.}
+%		\label{fig:naive_mdi_reduced_il_tr_cluster}
+%	\end{figure}
+%	
+%	\begin{figure}[h]
+%		%	\centering
+%		\includegraphics[scale=1.0]{Images/Initial_analysis/sim_heatmaps-3.png}
+%		\caption{Predicted clusters for MDI applied to 9 datasets for common probes with datasets as columns and probes as rows.}
+%		\label{fig:naive_mdi_reduced_cd14_cd4_cd8_cluster}
+%	\end{figure}
+%
+%	\begin{figure}[h]
+%	%	\centering
+%	\includegraphics[scale=1.0]{Images/Initial_analysis/mdi_2_heatmap-1.png}
+%	\caption{Predicted clusters for MDI applied to 9 datasets for all probes.}
+%	\label{fig:naive_mdi_full}
+%\end{figure}
 	
 	\newpage
 

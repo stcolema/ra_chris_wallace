@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2019.4.9)  3 JUL 2019 10:43
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2019.4.9)  3 JUL 2019 11:17
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1592,14 +1592,7 @@ Package csquotes Info: Checking for multilingual support...
 Package csquotes Info: ... found 'babel' package.
 Package csquotes Info: Adjusting default style.
 Package csquotes Info: Redefining alias 'default' -> 'english'.
- (./thesis.aux
-
-LaTeX Warning: Label `list:datasets_naive_mdi_reduced' multiply defined.
-
-
-LaTeX Warning: Label `list:datasets_naive_mdi_reduced@cref' multiply defined.
-
-)
+ (./thesis.aux)
 \openout1 = `thesis.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 192.
@@ -1850,7 +1843,7 @@ n/12 , [] , \OML/zplm/m/it/12 X[]\OT1/zplm/m/n/12 )$
 LaTeX Warning: No positions in optional float specifier.
                Default added (so using `tbp') on input line 503.
 
-<Images/Examples/example_expression_data.png, id=218, 505.89pt x 505.89pt>
+<Images/Examples/example_expression_data.png, id=214, 505.89pt x 505.89pt>
 File: Images/Examples/example_expression_data.png Graphic file (type png)
 <use Images/Examples/example_expression_data.png>
 Package pdftex.def Info: Images/Examples/example_expression_data.png  used on i
@@ -1861,7 +1854,7 @@ nput line 519.
 LaTeX Warning: No positions in optional float specifier.
                Default added (so using `tbp') on input line 525.
 
-<Images/Examples/example_standardised_expression_data.png, id=244, 505.89pt x 5
+<Images/Examples/example_standardised_expression_data.png, id=240, 505.89pt x 5
 05.89pt>
 File: Images/Examples/example_standardised_expression_data.png Graphic file (ty
 pe png)
@@ -1876,7 +1869,7 @@ so-ci-a-tion Re-search (CEDAR)
  []
 
 [10 <./Images/Examples/example_standardised_expression_data.png>]
-<Images/Data_inspection/probe_presence_across_datasets.png, id=255, 682.04813pt
+<Images/Data_inspection/probe_presence_across_datasets.png, id=251, 682.04813pt
  x 420.82219pt>
 File: Images/Data_inspection/probe_presence_across_datasets.png Graphic file (t
 ype png)
@@ -1891,111 +1884,37 @@ Overfull \hbox (9.93623pt too wide) in paragraph at lines 619--620
 g-i-cal path-way with known
  []
 
-[13]
-<Images/Initial_analysis/mdi_1_heatmap-1.png, id=286, 505.89pt x 361.35pt>
-File: Images/Initial_analysis/mdi_1_heatmap-1.png Graphic file (type png)
-<use Images/Initial_analysis/mdi_1_heatmap-1.png>
-Package pdftex.def Info: Images/Initial_analysis/mdi_1_heatmap-1.png  used on i
-nput line 654.
-(pdftex.def)             Requested size: 505.88875pt x 361.34912pt.
-
-Overfull \hbox (64.87102pt too wide) in paragraph at lines 654--655
-[][] 
- []
-
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-<Images/Initial_analysis/Phi_heatmap_1.png, id=290, 505.89pt x 505.89pt>
-File: Images/Initial_analysis/Phi_heatmap_1.png Graphic file (type png)
-<use Images/Initial_analysis/Phi_heatmap_1.png>
-Package pdftex.def Info: Images/Initial_analysis/Phi_heatmap_1.png  used on inp
-ut line 669.
-(pdftex.def)             Requested size: 379.41655pt x 379.41655pt.
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-<Images/Initial_analysis/sim_heatmaps-2.png, id=294, 505.89pt x 361.35pt>
-File: Images/Initial_analysis/sim_heatmaps-2.png Graphic file (type png)
-<use Images/Initial_analysis/sim_heatmaps-2.png>
-Package pdftex.def Info: Images/Initial_analysis/sim_heatmaps-2.png  used on in
-put line 688.
-(pdftex.def)             Requested size: 505.88875pt x 361.34912pt.
-
-Overfull \hbox (64.87102pt too wide) in paragraph at lines 688--689
-[][] 
- []
-
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-<Images/Initial_analysis/sim_heatmaps-3.png, id=295, 505.89pt x 361.35pt>
-File: Images/Initial_analysis/sim_heatmaps-3.png Graphic file (type png)
-<use Images/Initial_analysis/sim_heatmaps-3.png>
-Package pdftex.def Info: Images/Initial_analysis/sim_heatmaps-3.png  used on in
-put line 695.
-(pdftex.def)             Requested size: 505.88875pt x 361.34912pt.
-
-Overfull \hbox (64.87102pt too wide) in paragraph at lines 695--696
-[][] 
- []
-
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-<Images/Initial_analysis/mdi_2_heatmap-1.png, id=296, 505.89pt x 361.35pt>
-File: Images/Initial_analysis/mdi_2_heatmap-1.png Graphic file (type png)
-<use Images/Initial_analysis/mdi_2_heatmap-1.png>
-Package pdftex.def Info: Images/Initial_analysis/mdi_2_heatmap-1.png  used on i
-nput line 702.
-(pdftex.def)             Requested size: 505.88875pt x 361.34912pt.
-
-Overfull \hbox (64.87102pt too wide) in paragraph at lines 702--703
-[][] 
- []
-
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-[14] (./thesis.bbl [15 <./Images/Initial_analysis/mdi_1_heatmap-1.png (PNG copy
-)>] [16] [17]
+[13] (./thesis.bbl [14] [15] [16]
 Underfull \hbox (badness 1635) in paragraph at lines 268--284
 []\OT1/ppl/m/n/12 The In-ter-na-tional IBD Ge-net-ics Con-sor-tium, Yuk-i-hide 
 Mo-mozawa, Ju-lia
  []
 
-[18]
+
 Underfull \hbox (badness 1824) in paragraph at lines 300--327
 \OT1/ppl/m/n/12 Jo-hannes Ket-tunen, Joseph Pow-ell, Ber-nett Lee, Fu-tao Zhang
 , Wi-bowo
  []
 
-) [19]
+[17]) [18]
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 716.
- [20 <./Images/Initial_analysis/Phi_heatmap_1.png (PNG copy)>] [21 <./Images/In
-itial_analysis/sim_heatmaps-2.png (PNG copy)>] [22 <./Images/Initial_analysis/s
-im_heatmaps-3.png (PNG copy)>] [23 <./Images/Initial_analysis/mdi_2_heatmap-1.p
-ng (PNG copy)>]
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 716.
  (./thesis.aux)
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 716.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 716.
 Package rerunfilecheck Info: File `thesis.out' has not changed.
-(rerunfilecheck)             Checksum: F752C5999DE76BD5A93A9A9AF830F7BE;1129.
+(rerunfilecheck)             Checksum: E687527D3C31CC6CE881FA66D3A9E38D;1085.
 
 
 LaTeX Warning: There were undefined references.
 
-
-LaTeX Warning: There were multiply-defined labels.
-
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 716.
  ) 
 Here is how much of TeX's memory you used:
- 43306 strings out of 494847
- 959187 string characters out of 6179081
+ 43252 strings out of 494847
+ 957551 string characters out of 6179081
  1177071 words of memory out of 5000000
- 45867 multiletter control sequences out of 15000+600000
+ 45834 multiletter control sequences out of 15000+600000
  567062 words of font info for 111 fonts, out of 8000000 for 9000
  59 hyphenation exceptions out of 8191
  69i,13n,119p,10415b,609s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -2011,10 +1930,10 @@ pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/sh
 are/texlive/texmf-dist/fonts/type1/urw/palatino/uplb8a.pfb></usr/share/texlive/
 texmf-dist/fonts/type1/urw/palatino/uplr8a.pfb></usr/share/texlive/texmf-dist/f
 onts/type1/urw/palatino/uplri8a.pfb>
-Output written on thesis.pdf (24 pages, 706111 bytes).
+Output written on thesis.pdf (19 pages, 242340 bytes).
 PDF statistics:
- 417 PDF objects out of 1000 (max. 8388607)
- 362 compressed objects within 4 object streams
- 111 named destinations out of 1000 (max. 500000)
- 197 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 366 PDF objects out of 1000 (max. 8388607)
+ 321 compressed objects within 4 object streams
+ 96 named destinations out of 1000 (max. 500000)
+ 164 words of extra memory for PDF output out of 10000 (max. 10000000)
 
