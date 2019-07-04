@@ -7,45 +7,45 @@ Warning--empty publisher in MacKayInformationTheoryInference2003
 Warning--empty journal in MontiConsensusClusteringResamplingBased
 Warning--empty year in MontiConsensusClusteringResamplingBased
 Warning--empty year in MontiConsensusClusteringResamplingBased
-You've used 26 entries,
+You've used 27 entries,
             2773 wiz_defined-function locations,
-            818 strings with 18746 characters,
-and the built_in function-call counts, 30510 in all, are:
-= -- 2232
-> -- 3907
-< -- 12
-+ -- 1307
-- -- 1281
-* -- 3291
-:= -- 5197
-add.period$ -- 116
-call.type$ -- 26
-change.case$ -- 505
-chr.to.int$ -- 26
-cite$ -- 56
-duplicate$ -- 523
-empty$ -- 1015
-format.name$ -- 1315
-if$ -- 5854
+            836 strings with 19246 characters,
+and the built_in function-call counts, 31549 in all, are:
+= -- 2332
+> -- 3986
+< -- 11
++ -- 1332
+- -- 1305
+* -- 3422
+:= -- 5363
+add.period$ -- 125
+call.type$ -- 27
+change.case$ -- 516
+chr.to.int$ -- 27
+cite$ -- 58
+duplicate$ -- 555
+empty$ -- 1073
+format.name$ -- 1342
+if$ -- 6067
 int.to.chr$ -- 1
 int.to.str$ -- 1
-missing$ -- 24
-newline$ -- 176
-num.names$ -- 104
-pop$ -- 954
+missing$ -- 27
+newline$ -- 187
+num.names$ -- 108
+pop$ -- 955
 preamble$ -- 1
-purify$ -- 479
+purify$ -- 489
 quote$ -- 0
-skip$ -- 726
+skip$ -- 745
 stack$ -- 0
-substring$ -- 531
-swap$ -- 51
+substring$ -- 596
+swap$ -- 55
 text.length$ -- 1
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 281
+type$ -- 292
 warning$ -- 4
-while$ -- 99
+while$ -- 105
 width$ -- 0
-write$ -- 414
+write$ -- 441
 (There were 4 warnings)
