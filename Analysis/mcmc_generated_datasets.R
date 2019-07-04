@@ -18,6 +18,8 @@ yeast_plot_dir <- "Notes/Thesis/Images/Gen_data/Case_1"
 all_dirs <- list.dirs(yeast_data_dir, recursive = F)
 all_types <- list.dirs(yeast_data_dir, recursive = F, full.names = F)
 
+burn <- 20000 
+
 long_dirs <- all_dirs %>% 
   extract(grep("Long", .))
 
@@ -85,19 +87,21 @@ for(i in 1:n_long){
 
 # Individual chain stationary
 for(i in 1:n_long){
-  png(paste0(yeast_plot_dir, "/Geweke_plot_", long_seed[i], ".png"))
+  png(paste0(yeast_plot_dir, "/Geweke_plot_burn_", burn, "_", long_seed[i], ".png"))
   geweke.plot(burn_mcmc_yeast[[i]])
   dev.off()
 }
 
 
 p_values_yeast <- vector("list", length = n_long)
-
+z_scores_yeast <- vector("list", length = n_long)
 for(i in 1:n_long){
   gew_diag <- geweke.diag(burn_mcmc_yeast[[i]])
   
   p_values_yeast[[i]] <- rep(0, n_param)
   names(p_values_yeast[[i]]) <- names(gew_diag$z)
+  
+  z_scores_yeast[[i]] <- gew_diag$z
   
   for(j in 1:n_param){
     # Ca;culate a p-value from the z-score
@@ -107,6 +111,7 @@ for(i in 1:n_long){
 }
 
 p_values_df_yeast <- data.frame(do.call(rbind, p_values_yeast))
+z_values_df_yeast <- data.frame(do.call(rbind, z_scores_yeast))
 
 # === Generated data ===========================================================
 
@@ -187,12 +192,12 @@ burn_mcmc_gen <- list()
 for(i in 1:n_long){
   # curr_data <- read.csv(long_files[i], header = T)[10000:40000, 1:6] # stop at 40,000 as 2 million is good (and differing lengths)
   
-  burn_mcmc_gen[[i]] <- burnAndThin(long_mcmc_gen[[i]], burn = 15000, thin = 1)
+  burn_mcmc_gen[[i]] <- burnAndThin(long_mcmc_gen[[i]], burn = burn, thin = 1)
 }
 
 # Individual chain stationary
 for(i in 1:n_long){
-  png(paste0(gen_plot_dir, "/Geweke_plot_burn_15000_", long_seed[i], ".png"))
+  png(paste0(gen_plot_dir, "/Geweke_plot_burn_", burn, "_", long_seed[i], ".png"))
   geweke.plot(burn_mcmc_gen[[i]])
   dev.off()
 }
@@ -215,10 +220,10 @@ for(i in 1:n_long){
 }
 
 p_values_df_gen <- data.frame(do.call(rbind, p_values_gen))
-
+z_values_df_gen <- data.frame(do.call(rbind, z_scores_gen))
 gelman.diag(burn_mcmc_gen)
 
-png(paste0(gen_plot_dir, "/Gelman_plot_burn_15000.png"))
+png(paste0(gen_plot_dir, "/Gelman_plot_burn_", burn, ".png"))
 gelman.plot(burn_mcmc_gen)
 dev.off()
 
@@ -235,15 +240,44 @@ data_type_vec <- c(rep("Case 1", nrow(p_values_df_yeast)),
                        rep("Case 2", nrow(p_values_df_gen)  )
 )
 
-p_adj_vec <- p.adjust(p_values_vec, method = "BH")
+# p_adj_vec <- p.adjust(p_values_vec, method = "BH")
 
 # Put them all in a data.frame
-p_adj_mat <- t(matrix(p_adj_vec, nrow = 6)) %>% 
+p_adj_mat <- t(matrix(p_values_vec, nrow = 6)) %>% 
   set_colnames(names(gew_diag$z)) %>% 
   round(., 3) %>% 
   as.data.frame()
 
 p_adj_mat$Case <- data_type_vec
+
+# === Z-scores ================================================================
+
+z_values_df <- rbind(z_values_df_yeast, z_values_df_gen)
+
+z_values_vec <- c(unlist(z_scores_yeast), unlist(z_scores_gen))
+
+data_type_vec <- c(rep("Case 1", nrow(z_values_df_yeast)),
+                   rep("Case 2", nrow(z_values_df_gen)  )
+)
+
+# z_adj_vec <- p.adjust(z_values_vec, method = "BH")
+
+# Put them all in a data.frame
+z_mat <- t(matrix(z_values_vec, nrow = 6)) %>% 
+  set_colnames(names(gew_diag$z)) %>% 
+  round(., 3)
+
+z_df <- z_mat %>% 
+  as.data.frame()
+
+z_values_df_yeast[rowSums(abs(z_values_df_yeast) > 1.96) > 0,]
+z_values_df_gen[rowSums(abs(z_values_df_gen) > 1.96) > 0,]
+# (abs(z_values_df_gen) > 1.96)
+
+z_mat[abs(z_mat) > 1.96]
+
+
+z_dt$Case <- data_type_vec
 
 # === Nonsense =================================================================
 

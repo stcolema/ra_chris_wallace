@@ -19,7 +19,7 @@
 \usepackage{geometry} % to change the page dimensions
 \geometry{a4paper} % or letterpaper (US) or a5paper or....
 %\geometry{margin=2in} % for example, change the margins to 2 inches all round
-\geometry{left=2.75cm, right=2.75cm, top=3.5cm, bottom=4.5cm}
+%\geometry{left=2.75cm, right=2.75cm, top=3.5cm, bottom=4.5cm}
 % \geometry{landscape} % set up the page for landscape
 %   read geometry.pdf for detailed page layout information
 
@@ -200,12 +200,12 @@
 		\begin{center}
 			\vspace*{1cm}
 			
-			\par{\LARGE \textbf{Defining tissue specific gene sets using Bayesian unsupervised clustering}}
+			\par{\LARGE \textbf{Defining tissue specific gene sets using consensus clustering}}
 			
 			\vspace{0.5cm}
 			GEN80436
 			
-			\vspace{1.1cm}
+			\vspace{0.8cm}
 			
 			\textbf{Stephen Coleman \\ 940309160050}
 			
@@ -220,7 +220,7 @@
 			
 
 			
-			\vspace{1.0cm}
+			\vspace{0.8cm}
 	
 			\begin{abstract}
 				\emph{A priori} defined gene sets are key to gene set enrichment analysis \cite{SubramanianGenesetenrichment2005a} a powerful tool in genetic analysis. Gene sets are constructed through linking genes by some common feature. This can be a function, the location of the gene product, the participation of the product in some metabolic or signalling pathway, the protein structure, the presence of transcription-factor-binding sites or other regulatory elements, the participation in multiprotein complexes, or any one of several other definitions \cite{SzklarczykSTRINGv11protein2019}\cite{SubramanianGenesetenrichment2005a}\cite{KanehisaNewapproachunderstanding2019}\cite{AshburnerGeneOntologytool2000a}. However, all of these criteria are tissue agnostic.
@@ -230,10 +230,7 @@
 				We show that problems with convergence and dependence upon initialisation common in high dimensionality settings can be overcome by means of consensus clustering \cite{MontiConsensusClusteringResamplingBased}. We then use MDI by means of consensus clustering to produce gene sets.
 			\end{abstract}
 		
-			\vfill
-			
-
-			
+			\vfill		
 			
 			A thesis presented for the degree of\\
 			Master's in Bioinformatics
@@ -690,91 +687,117 @@
 	\subsection{Case 3: CEDAR data}
 	Actual data.
 	
-	\newpage
-	\begin{table}[]
-		\centering
-		\begin{tabular}{l|CCCCCC}
-			Case   & \alpha_1 & \alpha_2 & \alpha_3 & \phi_{12}   & \phi_{13}   & \phi_{23} \\
-			\hline
-			Case 1 & 0.951            & 0.912            & 0.705            & 0.534   & 0.893   & 0.705   \\
-			Case 1 & 0.804            & 0.787            & 0.516            & 0.563   & 0.605   & 0.787   \\
-			Case 1 & 0.627            & 0.784            & 0.592            & 0.534   & 0.789   & 0.985   \\
-			Case 1 & 0.87             & 0.912            & 0.534            & 0.686   & 0.951   & 0.743   \\
-			Case 1 & 0.516            & 0.534            & 0.985            & 0.686   & 0.705   & 0.951   \\
-			Case 1 & 0.893            & 0.534            & 0.951            & 0.985   & 0.705   & 0.743   \\
-			Case 1 & 0.79             & 0.787            & 0.867            & 0.705   & 0.992   & 0.888   \\
-			Case 1 & 0.563            & 0.534            & 0.592            & 0.789   & 0.572   & 0.534   \\
-			Case 1 & 0.516            & 0.784            & 0.985            & 0.627   & 0.985   & 0.893   \\
-			Case 1 & 0.743            & 0.892            & 0.892            & 0.743   & 0.787   & 0.572   \\
-			Case 2 & 0.867            & 0.787            & 0.951            & 0.821   & 0.87    & 0.789   \\
-			Case 2 & 0.787            & 0.516            & 0.847            & 0.743   & 0.686   & 0.951   \\
-			Case 2 & 0.787            & 0.627            & 0.516            & 0.87    & 0.87    & 0.897   \\
-			Case 2 & 0.705            & 0.789            & 0.795            & 0.592   & 0.985   & 0.605   \\
-			Case 2 & 0.787            & 0.87             & 0.893            & 0.516   & 0.787   & 0.985   \\
-			Case 2 & 0.867            & 0.795            & 0.87             & 0.784   & 0.893   & 0.87    \\
-			Case 2 & 0.534            & 0.534            & 0.516            & 0.87    & 0.705   & 0.563   \\
-			Case 2 & 0.605            & 0.969            & 0.784            & 0.897   & 0.534   & 0.516   \\
-			Case 2 & 0.743            & 0.705            & 0.592            & 0.827   & 0.892   & 0.883   \\
-			Case 2 & 0.563            & 0.534            & 0.893            & 0.563   & 0.592   & 0.787  
-		\end{tabular}
-	\end{table}
+	\section{Conclusion}
+	We conclude, and finish dispute.
 	
-	\newpage
-	\begin{table}[]
-		\begin{tabular}{lLLLLLL}
-			Case & \alpha_1 & \alpha_2 & \alpha_3 & \phi_{12}   & \phi_{13}   & \phi_{23}  \\
-			Case 1 & 0.9505772        & 0.9116344        & 0.7047116        & 0.5340074 & 0.8930726 & 0.7047116 \\
-			Case 1 & 0.8042817        & 0.786642         & 0.5161572        & 0.5626989 & 0.6046996 & 0.786642  \\
-			Case 1 & 0.6274789        & 0.784401         & 0.5917193        & 0.5340074 & 0.789036  & 0.9847826 \\
-			Case 1 & 0.8704659        & 0.9116344        & 0.5340074        & 0.6859305 & 0.9505772 & 0.7427875 \\
-			Case 1 & 0.5161572        & 0.5340074        & 0.9847826        & 0.6859305 & 0.7047116 & 0.9505772 \\
-			Case 1 & 0.8930726        & 0.5340074        & 0.9505772        & 0.9847826 & 0.7047116 & 0.7427875 \\
-			Case 1 & 0.7903479        & 0.786642         & 0.8674106        & 0.7047116 & 0.9916138 & 0.8883986 \\
-			Case 1 & 0.5626989        & 0.5340074        & 0.5917193        & 0.789036  & 0.5722547 & 0.5340074 \\
-			Case 1 & 0.5161572        & 0.784401         & 0.9847826        & 0.6274789 & 0.9847826 & 0.8930726 \\
-			Case 1 & 0.7427875        & 0.8918732        & 0.8918732        & 0.7427875 & 0.786642  & 0.5722547 \\
-			Case 2 & 0.8674106        & 0.786642         & 0.9505772        & 0.8214892 & 0.8704659 & 0.789036  \\
-			Case 2 & 0.786642         & 0.5161572        & 0.8468546        & 0.7427875 & 0.6859305 & 0.9505772 \\
-			Case 2 & 0.786642         & 0.6274789        & 0.5161572        & 0.8704659 & 0.8704659 & 0.8974104 \\
-			Case 2 & 0.7047116        & 0.789036         & 0.7948441        & 0.5917193 & 0.9847826 & 0.6046996 \\
-			Case 2 & 0.786642         & 0.8704659        & 0.8930726        & 0.5161572 & 0.786642  & 0.9847826 \\
-			Case 2 & 0.8674106        & 0.7948441        & 0.8704659        & 0.784401  & 0.8930726 & 0.8704659 \\
-			Case 2 & 0.5340074        & 0.5340074        & 0.5161572        & 0.8704659 & 0.7047116 & 0.5626989 \\
-			Case 2 & 0.6046996        & 0.969308         & 0.784401         & 0.8966716 & 0.5340074 & 0.5161572 \\
-			Case 2 & 0.7427875        & 0.7047116        & 0.5917193        & 0.8269233 & 0.8918732 & 0.8828287 \\
-			Case 2 & 0.5626989        & 0.5340074        & 0.8930726        & 0.5626989 & 0.5917193 & 0.786642 
-		\end{tabular}
-	\end{table}
 	
-	\newpage
-	\begin{table}[]
-		
-		\begin{tabular}{LLLLLLc}
-			
-			\alpha_1 & \alpha_2 & \alpha_3 & \phi_{12}   & \phi_{13}   & \phi_{23}   & Case   \\
-			0.9505772        & 0.9116344        & 0.7047116        & 0.5340074 & 0.8930726 & 0.7047116 & Case 1 \\
-			0.8042817        & 0.786642         & 0.5161572        & 0.5626989 & 0.6046996 & 0.786642  & Case 1 \\
-			0.6274789        & 0.784401         & 0.5917193        & 0.5340074 & 0.789036  & 0.9847826 & Case 1 \\
-			0.8704659        & 0.9116344        & 0.5340074        & 0.6859305 & 0.9505772 & 0.7427875 & Case 1 \\
-			0.5161572        & 0.5340074        & 0.9847826        & 0.6859305 & 0.7047116 & 0.9505772 & Case 1 \\
-			0.8930726        & 0.5340074        & 0.9505772        & 0.9847826 & 0.7047116 & 0.7427875 & Case 1 \\
-			0.7903479        & 0.786642         & 0.8674106        & 0.7047116 & 0.9916138 & 0.8883986 & Case 1 \\
-			0.5626989        & 0.5340074        & 0.5917193        & 0.789036  & 0.5722547 & 0.5340074 & Case 1 \\
-			0.5161572        & 0.784401         & 0.9847826        & 0.6274789 & 0.9847826 & 0.8930726 & Case 1 \\
-			0.7427875        & 0.8918732        & 0.8918732        & 0.7427875 & 0.786642  & 0.5722547 & Case 1 \\
-			0.8674106        & 0.786642         & 0.9505772        & 0.8214892 & 0.8704659 & 0.789036  & Case 2 \\
-			0.786642         & 0.5161572        & 0.8468546        & 0.7427875 & 0.6859305 & 0.9505772 & Case 2 \\
-			0.786642         & 0.6274789        & 0.5161572        & 0.8704659 & 0.8704659 & 0.8974104 & Case 2 \\
-			0.7047116        & 0.789036         & 0.7948441        & 0.5917193 & 0.9847826 & 0.6046996 & Case 2 \\
-			0.786642         & 0.8704659        & 0.8930726        & 0.5161572 & 0.786642  & 0.9847826 & Case 2 \\
-			0.8674106        & 0.7948441        & 0.8704659        & 0.784401  & 0.8930726 & 0.8704659 & Case 2 \\
-			0.5340074        & 0.5340074        & 0.5161572        & 0.8704659 & 0.7047116 & 0.5626989 & Case 2 \\
-			0.6046996        & 0.969308         & 0.784401         & 0.8966716 & 0.5340074 & 0.5161572 & Case 2 \\
-			0.7427875        & 0.7047116        & 0.5917193        & 0.8269233 & 0.8918732 & 0.8828287 & Case 2 \\
-			0.5626989        & 0.5340074        & 0.8930726        & 0.5626989 & 0.5917193 & 0.786642  & Case 2
-		\end{tabular}
-		
-	\end{table}
+	
+%	\newpage
+%	\begin{table}[]
+%		\centering
+%		\begin{tabular}{l|CCCCCC}
+%			Case   & \alpha_1 & \alpha_2 & \alpha_3 & \phi_{12}   & \phi_{13}   & \phi_{23} \\
+%			\hline
+%			Case 1 & 0.951            & 0.912            & 0.705            & 0.534   & 0.893   & 0.705   \\
+%			Case 1 & 0.804            & 0.787            & 0.516            & 0.563   & 0.605   & 0.787   \\
+%			Case 1 & 0.627            & 0.784            & 0.592            & 0.534   & 0.789   & 0.985   \\
+%			Case 1 & 0.870             & 0.912            & 0.534            & 0.686   & 0.951   & 0.743   \\
+%			Case 1 & 0.516            & 0.534            & 0.985            & 0.686   & 0.705   & 0.951   \\
+%			Case 1 & 0.893            & 0.534            & 0.951            & 0.985   & 0.705   & 0.743   \\
+%			Case 1 & 0.790	& 0.787            & 0.867            & 0.705   & 0.992   & 0.888   \\
+%			Case 1 & 0.563            & 0.534            & 0.592            & 0.789   & 0.572   & 0.534   \\
+%			Case 1 & 0.516            & 0.784            & 0.985            & 0.627   & 0.985   & 0.893   \\
+%			Case 1 & 0.743            & 0.892            & 0.892            & 0.743   & 0.787   & 0.572  
+%		\end{tabular}
+%		\caption{Test statistic from Geweke diagnostic of convergence for each parameter for case 1 chains.}
+%	\label{table:geweke_case_1}
+%	\end{table}
+%
+%		\begin{table}[]
+%		\centering
+%		\begin{tabular}{l|CCCCCC}
+%			Case   & \alpha_1 & \alpha_2 & \alpha_3 & \phi_{12}   & \phi_{13}   & \phi_{23} \\
+%			\hline
+%			Case 2 & 0.867            & 0.787            & 0.951            & 0.821   & 0.87    & 0.789   \\
+%			Case 2 & 0.787            & 0.516            & 0.847            & 0.743   & 0.686   & 0.951   \\
+%			Case 2 & 0.787            & 0.627            & 0.516            & 0.870    & 0.87    & 0.897   \\
+%			Case 2 & 0.705            & 0.789            & 0.795            & 0.592   & 0.985   & 0.605   \\
+%			Case 2 & 0.787            & 0.870             & 0.893            & 0.516   & 0.787   & 0.985   \\
+%			Case 2 & 0.867            & 0.795            & 0.87             & 0.784   & 0.893   & 0.870    \\
+%			Case 2 & 0.534            & 0.534            & 0.516            & 0.870    & 0.705   & 0.563   \\
+%			Case 2 & 0.605            & 0.969            & 0.784            & 0.897   & 0.534   & 0.516   \\
+%			Case 2 & 0.743            & 0.705            & 0.592            & 0.827   & 0.892   & 0.883   \\
+%			Case 2 & 0.563            & 0.534            & 0.893            & 0.563   & 0.592   & 0.787  
+%		\end{tabular}
+%	\caption{Test statistic from Geweke diagnostic of convergence for each parameter for case 2 chains.}
+%	\label{table:geweke_case_2}
+%	\end{table}
+%
+%
+%\begin{table}[]
+%	\begin{tabular}{l|CCCCCC}
+%		Case   & \alpha_1 & \alpha_2 & \alpha_3 & \phi_{12}   & \phi_{13}   & \phi_{23} \\
+%		\hline
+%		Case 1 & 0.157            & -0.256           & -1.129           & -1.905  & -0.325  & 1.098   \\
+%		Case 1 & -0.66            & -0.819           & 2.288            & 1.587   & -1.368  & 0.792   \\
+%		Case 1 & 1.307            & -0.888           & 1.499            & -1.766  & 0.732   & 0.042   \\
+%		Case 1 & -0.484           & -0.263           & 1.779            & -1.22   & 0.152   & 0.984   \\
+%		Case 1 & -2.115           & -1.837           & 0.062            & 1.212   & -1.104  & -0.164  \\
+%		Case 1 & -0.331           & 1.748            & 0.195            & 0.031   & 1.148   & 0.984   \\
+%		Case 1 & -0.705           & 0.762            & 0.549            & 1.166   & -0.011  & -0.411  \\
+%		Case 1 & -1.607           & 1.977            & 1.478            & 0.722   & -1.538  & 1.725   \\
+%		Case 1 & -2.139           & -0.88            & 0.029            & 1.3     & -0.086  & -0.353  \\
+%		Case 1 & 1.026            & 0.378            & -0.382           & 0.974   & -0.779  & 1.548   \\
+%		Case 2 & -0.542           & -0.768           & 0.161            & -0.632  & -0.458  & 0.74    \\
+%		Case 2 & 0.781            & 2.296            & 0.587            & 0.966   & -1.204  & 0.189   \\
+%		Case 2 & -0.775           & -1.302           & 2.52             & 0.482   & -0.477  & -0.292  \\
+%		Case 2 & -1.076           & -0.717           & -0.68            & 1.43    & 0.078   & -1.377  \\
+%		Case 2 & -0.768           & -0.514           & -0.333           & -2.164  & 0.792   & -0.06   \\
+%		Case 2 & 0.535            & -0.685           & 0.45             & -0.884  & 0.336   & -0.464  \\
+%		Case 2 & -1.99            & 1.768            & -2.202           & 0.457   & 1.088   & -1.602  \\
+%		Case 2 & -1.392           & 0.12             & 0.902            & -0.303  & 1.816   & -2.591  \\
+%		Case 2 & -0.993           & 1.133            & 1.434            & 0.617   & -0.377  & 0.427   \\
+%		Case 2 & -1.588           & 1.798            & 0.316            & 1.589   & -1.429  & -0.85  
+%	\end{tabular}
+%\end{table}
+%
+%
+%\begin{table}[]
+%	\begin{tabular}{l|CCCCCC}
+%		Case   & \alpha_1 & \alpha_2 & \alpha_3 & \phi_{12}   & \phi_{13}   & \phi_{23} \\
+%		\hline
+%		Case 1 & 0.157            & -0.256           & -1.129           & -1.905  & -0.325  & 1.098   \\
+%		Case 1 & -0.66            & -0.819           & 2.288            & 1.587   & -1.368  & 0.792   \\
+%		Case 1 & 1.307            & -0.888           & 1.499            & -1.766  & 0.732   & 0.042   \\
+%		Case 1 & -0.484           & -0.263           & 1.779            & -1.22   & 0.152   & 0.984   \\
+%		Case 1 & -2.115           & -1.837           & 0.062            & 1.212   & -1.104  & -0.164  \\
+%		Case 1 & -0.331           & 1.748            & 0.195            & 0.031   & 1.148   & 0.984   \\
+%		Case 1 & -0.705           & 0.762            & 0.549            & 1.166   & -0.011  & -0.411  \\
+%		Case 1 & -1.607           & 1.977            & 1.478            & 0.722   & -1.538  & 1.725   \\
+%		Case 1 & -2.139           & -0.88            & 0.029            & 1.3     & -0.086  & -0.353  \\
+%		Case 1 & 1.026            & 0.378            & -0.382           & 0.974   & -0.779  & 1.548  
+%	\end{tabular}
+%\end{table}
+%
+%
+%\begin{table}[]
+%	\begin{tabular}{l|CCCCCC}
+%		Case   & \alpha_1 & \alpha_2 & \alpha_3 & \phi_{12}   & \phi_{13}   & \phi_{23} \\
+%		\hline
+%		Case 2 & -0.542           & -0.768           & 0.161            & -0.632  & -0.458  & 0.74    \\
+%		Case 2 & 0.781            & 2.296            & 0.587            & 0.966   & -1.204  & 0.189   \\
+%		Case 2 & -0.775           & -1.302           & 2.52             & 0.482   & -0.477  & -0.292  \\
+%		Case 2 & -1.076           & -0.717           & -0.68            & 1.43    & 0.078   & -1.377  \\
+%		Case 2 & -0.768           & -0.514           & -0.333           & -2.164  & 0.792   & -0.06   \\
+%		Case 2 & 0.535            & -0.685           & 0.45             & -0.884  & 0.336   & -0.464  \\
+%		Case 2 & -1.99            & 1.768            & -2.202           & 0.457   & 1.088   & -1.602  \\
+%		Case 2 & -1.392           & 0.12             & 0.902            & -0.303  & 1.816   & -2.591  \\
+%		Case 2 & -0.993           & 1.133            & 1.434            & 0.617   & -0.377  & 0.427   \\
+%		Case 2 & -1.588           & 1.798            & 0.316            & 1.589   & -1.429  & -0.85  
+%	\end{tabular}
+%\end{table}
+
+
 
 %	\section{Results}
 %	
@@ -852,5 +875,164 @@
 %	\bibliography{thesis}
 	\bibliography{thesis_ref_better}
 	
-\end{document}
 
+\newpage
+
+\appendix
+\section{Additional convergence plots}
+\subsection{Case 1: Convergence diagnostics}
+
+\subsubsection{Geweke plots}
+
+\subsubsection{Estimated burn in}
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.65]{Images/Gen_data/Case_1/Esimated_burn_in_plot_1.png}
+	\caption{Box plots for distribution of adjusted rand index between the clustering at each iteration to the true clustering for different lengths of consensus clustering and the collapsed long chains.}
+	\label{fig:case_1_esimated_burn_in_plot_1}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.65]{Images/Gen_data/Case_1/Esimated_burn_in_plot_2.png}
+	\caption{Box plots for distribution of adjusted rand index between the clustering at each iteration to the true clustering for different lengths of consensus clustering and the collapsed long chains.}
+	\label{fig:case_1_esimated_burn_in_plot_2}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.65]{Images/Gen_data/Case_1/Esimated_burn_in_plot_3.png}
+	\caption{Box plots for distribution of adjusted rand index between the clustering at each iteration to the true clustering for different lengths of consensus clustering and the collapsed long chains.}
+	\label{fig:case_1_esimated_burn_in_plot_3}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.65]{Images/Gen_data/Case_1/Esimated_burn_in_plot_4.png}
+	\caption{Box plots for distribution of adjusted rand index between the clustering at each iteration to the true clustering for different lengths of consensus clustering and the collapsed long chains.}
+	\label{fig:case_1_esimated_burn_in_plot_4}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.65]{Images/Gen_data/Case_1/Esimated_burn_in_plot_5.png}
+	\caption{Box plots for distribution of adjusted rand index between the clustering at each iteration to the true clustering for different lengths of consensus clustering and the collapsed long chains.}
+	\label{fig:case_1_esimated_burn_in_plot_5}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.65]{Images/Gen_data/Case_1/Esimated_burn_in_plot_6.png}
+	\caption{Box plots for distribution of adjusted rand index between the clustering at each iteration to the true clustering for different lengths of consensus clustering and the collapsed long chains.}
+	\label{fig:case_1_esimated_burn_in_plot_6}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.65]{Images/Gen_data/Case_1/Esimated_burn_in_plot_7.png}
+	\caption{Box plots for distribution of adjusted rand index between the clustering at each iteration to the true clustering for different lengths of consensus clustering and the collapsed long chains.}
+	\label{fig:case_1_esimated_burn_in_plot_7}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.65]{Images/Gen_data/Case_1/Esimated_burn_in_plot_8.png}
+	\caption{Box plots for distribution of adjusted rand index between the clustering at each iteration to the true clustering for different lengths of consensus clustering and the collapsed long chains.}
+	\label{fig:case_1_esimated_burn_in_plot_8}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.65]{Images/Gen_data/Case_1/Esimated_burn_in_plot_9.png}
+	\caption{Box plots for distribution of adjusted rand index between the clustering at each iteration to the true clustering for different lengths of consensus clustering and the collapsed long chains.}
+	\label{fig:case_1_esimated_burn_in_plot_9}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.65]{Images/Gen_data/Case_1/Esimated_burn_in_plot_10.png}
+	\caption{Box plots for distribution of adjusted rand index between the clustering at each iteration to the true clustering for different lengths of consensus clustering and the collapsed long chains.}
+	\label{fig:case_1_esimated_burn_in_plot_10}
+\end{figure}
+
+
+
+
+
+\subsection{Case 2: Convergence diagnostics}
+
+\subsubsection{Geweke plots}
+
+\subsubsection{Estimated burn in}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.65]{Images/Gen_data/Case_2/Esimated_burn_in_plot_1.png}
+	\caption{Plot of effective sample size (ESS) to burn-in for chain 1.}
+	\label{fig:case_2_esimated_burn_in_plot_1}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.65]{Images/Gen_data/Case_2/Esimated_burn_in_plot_2.png}
+	\caption{Plot of effective sample size (ESS) to burn-in for chain 2.}
+	\label{fig:case_2_esimated_burn_in_plot_2}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.65]{Images/Gen_data/Case_2/Esimated_burn_in_plot_3.png}
+	\caption{Plot of effective sample size (ESS) to burn-in for chain 3.}
+	\label{fig:case_2_esimated_burn_in_plot_3}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.65]{Images/Gen_data/Case_2/Esimated_burn_in_plot_4.png}
+	\caption{Plot of effective sample size (ESS) to burn-in for chain 4.}
+	\label{fig:case_2_esimated_burn_in_plot_4}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.65]{Images/Gen_data/Case_2/Esimated_burn_in_plot_5.png}
+	\caption{Plot of effective sample size (ESS) to burn-in for chain 5.}
+	\label{fig:case_2_esimated_burn_in_plot_5}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.65]{Images/Gen_data/Case_2/Esimated_burn_in_plot_6.png}
+	\caption{Plot of effective sample size (ESS) to burn-in for chain 6.}
+	\label{fig:case_2_esimated_burn_in_plot_6}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.65]{Images/Gen_data/Case_2/Esimated_burn_in_plot_7.png}
+	\caption{Plot of effective sample size (ESS) to burn-in for chain 7.}
+	\label{fig:case_2_esimated_burn_in_plot_7}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.65]{Images/Gen_data/Case_2/Esimated_burn_in_plot_8.png}
+	\caption{Plot of effective sample size (ESS) to burn-in for chain 8.}
+	\label{fig:case_2_esimated_burn_in_plot_8}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.65]{Images/Gen_data/Case_2/Esimated_burn_in_plot_9.png}
+	\caption{Plot of effective sample size (ESS) to burn-in for chain 9.}
+	\label{fig:case_2_esimated_burn_in_plot_9}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.65]{Images/Gen_data/Case_2/Esimated_burn_in_plot_10.png}
+	\caption{Plot of effective sample size (ESS) to burn-in for chain 10.}
+	\label{fig:case_2_esimated_burn_in_plot_10}
+\end{figure}
+
+\end{document}
