@@ -20,10 +20,11 @@
 \BOOKMARK [2][-]{subsection.5.3}{Case 3: CEDAR data}{section.5}% 20
 \BOOKMARK [1][-]{section.6}{Conclusion}{}% 21
 \BOOKMARK [1][-]{section*.13}{References}{}% 22
-\BOOKMARK [1][-]{appendix.A}{Additional convergence plots}{}% 23
-\BOOKMARK [2][-]{subsection.A.1}{Case 1: Convergence diagnostics}{appendix.A}% 24
-\BOOKMARK [3][-]{subsubsection.A.1.1}{Geweke plots}{subsection.A.1}% 25
-\BOOKMARK [3][-]{subsubsection.A.1.2}{Estimated burn in}{subsection.A.1}% 26
-\BOOKMARK [2][-]{subsection.A.2}{Case 2: Convergence diagnostics}{appendix.A}% 27
-\BOOKMARK [3][-]{subsubsection.A.2.1}{Geweke plots}{subsection.A.2}% 28
-\BOOKMARK [3][-]{subsubsection.A.2.2}{Estimated burn in}{subsection.A.2}% 29
+\BOOKMARK [1][-]{appendix.A}{Data generation explained}{}% 23
+\BOOKMARK [1][-]{appendix.B}{Additional convergence plots}{}% 24
+\BOOKMARK [2][-]{subsection.B.1}{Case 1: Convergence diagnostics}{appendix.B}% 25
+\BOOKMARK [3][-]{subsubsection.B.1.1}{Geweke plots}{subsection.B.1}% 26
+\BOOKMARK [3][-]{subsubsection.B.1.2}{Estimated burn in}{subsection.B.1}% 27
+\BOOKMARK [2][-]{subsection.B.2}{Case 2: Convergence diagnostics}{appendix.B}% 28
+\BOOKMARK [3][-]{subsubsection.B.2.1}{Geweke plots}{subsection.B.2}% 29
+\BOOKMARK [3][-]{subsubsection.B.2.2}{Estimated burn in}{subsection.B.2}% 30
