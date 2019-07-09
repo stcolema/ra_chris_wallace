@@ -33,9 +33,11 @@ probe_key_file <- "/home/MINTS/sdc56/Desktop/ra_chris_wallace/Analysis/probe_key
 probe_key <- data.table::fread(probe_key_file)
 
 unique_gene_names <- probe_key$Gene %>% 
+  as.character() %>% 
   unique_names_from_recurring()
 
 probe_key$Unique_gene_name <- unique_gene_names
 
 fwrite(probe_key, "/home/MINTS/sdc56/Desktop/ra_chris_wallace/Analysis/probe_key_unique_names.csv")
+
 
