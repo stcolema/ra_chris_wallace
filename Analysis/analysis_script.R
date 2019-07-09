@@ -444,6 +444,7 @@ n_iter <- args$n_iter
 thin <- args$thin
 burn <- args$burn
 
+
 # Number of genes present in datasets
 # The number of genes is the number of columns in the mcmc_output
 # exclusing the columns containing information on the phi and mass parameters
@@ -503,9 +504,6 @@ mdi_output_files <- list.files(path = file_path, full.names = T, include.dirs = 
 num_files <- length(mdi_output_files)
 file_names <- basename(tools::file_path_sans_ext(mdi_output_files))
 
-# The effective number of iterations saved
-eff_n_iter <- n_iter / thin # - burn
-
 # For plotting phis
 phis <- list()
 count <- 0
@@ -527,6 +525,9 @@ for (i in 1:num_files) {
 if(is.na(n_iter)){
   n_iter <- nrow(mcmc_out_lst[[1]]) * thin
 }
+
+# The effective number of iterations saved
+eff_n_iter <- n_iter / thin # - burn
 
 # Note that as each mdi output is on the same data, we only need to count one dataset
 if (is.na(n_genes)) {
@@ -598,7 +599,6 @@ for (j in 1:num_files) {
 
   # Capture the allocation information in the named lists and the predicted
   # allocation in the dataframe
-
   phis[[j]] <- mcmc_out_lst[[j]] %>%
     dplyr::select(contains("Phi"))
 
@@ -683,7 +683,6 @@ for (j in 1:num_files) {
     .sim_mat <- make_psm(.mdi_alloc) %>%
       set_colnames(gene_id) %>%
       set_rownames(gene_id)
-
 
     # Use the maxpear() function from mcclust to interpret the PSM as a clustering
     .pred_alloc <- .sim_mat %>%
@@ -908,7 +907,14 @@ for (i in 1:num_datasets) {
   f <- relevant_input_files[[i]]
   expression_data <- fread(f, header = T)
 
-  if(! all.equal(unname(unlist(expression_data[,1])), gene_id)){
+  # Convert from probe ids to gene ids if necessary
+  if(sum(expression_data[[1]] %in% probe_names) > 0){
+    
+    expression_data[,1] <- gene_id[match(expression_data[[1]], probe_names)]
+    
+  }
+  
+  if(! all.equal(unname(unlist(expression_data[[1]])), gene_id)){
     stop("Gene ids not matching in expression data.")
   }
   
