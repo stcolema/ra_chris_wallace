@@ -202,14 +202,14 @@
 			
 			\par{\LARGE \textbf{Defining tissue specific gene sets using consensus clustering}}
 			
-			\vspace{0.5cm}
+			\vspace{1.25cm}
 			GEN80436
 			
-			\vspace{0.8cm}
+			\vspace{1.8cm}
 			
 			\textbf{Stephen Coleman \\ 940309160050}
 			
-			\vspace{0.8cm}
+			\vspace{2.5cm}
 			
 			supervised by \\
 			\textbf{Bas Zwaan} \\
@@ -220,26 +220,19 @@
 			
 
 			
-			\vspace{0.8cm}
+%			\vspace{0.8cm}
 	
-			\begin{abstract}
-				\emph{A priori} defined gene sets are key to gene set enrichment analysis \cite{SubramanianGenesetenrichment2005a} a powerful tool in genetic analysis. Gene sets are constructed through linking genes by some common feature. This can be a function, the location of the gene product, the participation of the product in some metabolic or signalling pathway, the protein structure, the presence of transcription-factor-binding sites or other regulatory elements, the participation in multiprotein complexes, or any one of several other definitions \cite{SzklarczykSTRINGv11protein2019}\cite{SubramanianGenesetenrichment2005a}\cite{KanehisaNewapproachunderstanding2019}\cite{AshburnerGeneOntologytool2000a}. However, all of these criteria are tissue agnostic.
-%				Some attempts to include tissue specific information has been proposed \cite{frost_computation_2018}\cite{greene_understanding_2015}, but these attempts have limitations.
-				We propose to produce tissue specific gene sets by applying multiple dataset integration \cite{KirkBayesiancorrelatedclustering2012} (a Bayesian unsupervised clustering method) to the gene expression data from the Correlated Expression and Disease Association Research cohort \cite{TheInternationalIBDGeneticsConsortiumIBDriskloci2018}, a dataset of 9 tissue / cell types.
-				
-				We show that problems with convergence and dependence upon initialisation common in high dimensionality settings can be overcome by means of consensus clustering \cite{MontiConsensusClusteringResamplingBased}. We then use Multiple Dataset Integration by means of consensus clustering to produce gene sets.
-			\end{abstract}
 		
 			\vfill		
 			
 			A thesis presented for the degree of\\
 			Master's in Bioinformatics
 			
-			\vspace{0.8cm}
+			\vspace{1.8cm}
 			
 			%		\includegraphics[width=0.4\textwidth]{university}
 			
-%			Genetics \\
+			Laboratory of Genetics \\
 			Wageningen University
 			
 		\end{center}
@@ -261,6 +254,18 @@
 %	\emph{A priori} defined gene sets are key to gene set enrichment analysis \cite{SubramanianGenesetenrichment2005a} a powerful tool in genetic analysis. Gene sets are constructed through linking genes by some common feature. This can be a function, the location of the gene product, the participation of the product in some metabolic or signalling pathway, the protein structure, the presence of transcription-factor-binding sites or other regulatory elements, the participation in multiprotein complexes, or any one of several other definitions \cite{SzklarczykSTRINGv11protein2019}\cite{SubramanianGenesetenrichment2005a}\cite{KanehisaNewapproachunderstanding2019}\cite{AshburnerGeneOntologytool2000a}. However, all of these criteria are tissue agnostic.
 %	%				Some attempts to include tissue specific information has been proposed \cite{frost_computation_2018}\cite{greene_understanding_2015}, but these attempts have limitations.
 %	We propose to produce tissue specific gene sets by applying multiple dataset integration \cite{KirkBayesiancorrelatedclustering2012} (a Bayesian unsupervised clustering method) to the CEDAR cohort \cite{TheInternationalIBDGeneticsConsortiumIBDriskloci2018}, a dataset of 9 tissue / cell types.
+	
+	\vspace{1.8cm}
+	
+				\begin{abstract}
+				\emph{A priori} defined gene sets are key to gene set enrichment analysis \cite{SubramanianGenesetenrichment2005a} a powerful tool in genetic analysis. Gene sets are constructed through linking genes by some common feature. This can be a function, the location of the gene product, the participation of the product in some metabolic or signalling pathway, the protein structure, the presence of transcription-factor-binding sites or other regulatory elements, the participation in multiprotein complexes, or any one of several other definitions \cite{SzklarczykSTRINGv11protein2019}\cite{SubramanianGenesetenrichment2005a}\cite{KanehisaNewapproachunderstanding2019}\cite{AshburnerGeneOntologytool2000a}. However, all of these criteria are tissue agnostic.
+%				Some attempts to include tissue specific information has been proposed \cite{frost_computation_2018}\cite{greene_understanding_2015}, but these attempts have limitations.
+				We propose to produce tissue specific gene sets by applying multiple dataset integration \cite{KirkBayesiancorrelatedclustering2012} (a Bayesian unsupervised clustering method) to the gene expression data from the Correlated Expression and Disease Association Research cohort \cite{TheInternationalIBDGeneticsConsortiumIBDriskloci2018}, a dataset of 9 tissue / cell types.
+				
+				We show that problems with convergence and dependence upon initialisation common in high dimensionality settings can be overcome by means of consensus clustering \cite{MontiConsensusClusteringResamplingBased}. We then use Multiple Dataset Integration by means of consensus clustering to produce gene sets.
+			\end{abstract}
+			
+			\newpage
 	
 	\section*{Layout}
 	\begin{enumerate}
@@ -332,9 +337,9 @@
 	We use consensus clustering to produce tissue-specific gene sets. In this section we briefly introduce the core components of this project such as gene sets, the data and the concepts of consensus and integrative clustering.
 	
 	\subsection{Gene sets}
-		With the onset of microarrays and RNAseq, producing gene expression data in large quantities for a wide number of genes is increasingly enabled. Unfortunately the large amount of data gifted onto the genomics community by these methods is difficult to interpret and analyse. Gene Set Enrichment Analysis (GSEA) attempts to overcome some of these issues by using prior knowledge to define groups of genes linked through their biological function citeHEJBLUM. The set is defined using knowledge external to the current analysis; a common method is using the manually annotated pathways available on the Kyoto Encyclopedia of Genes and Genomes (KEGG) database citeFRIDLEYGene.
+		With the onset of microarrays and RNAseq, producing gene expression data in large quantities for a wide number of genes is increasingly enabled. Unfortunately the large amount of data gifted onto the genomics community by these methods is difficult to interpret and analyse. Gene Set Enrichment Analysis (GSEA) attempts to overcome some of these issues by using prior knowledge to define groups of genes linked through their biological function \cite{HejblumTimeCourseGeneSet2015}. The set is defined using knowledge external to the current analysis; a common method is using the manually annotated pathways available on the Kyoto Encyclopedia of Genes and Genomes (KEGG) database \cite{FridleyGenesetanalysis2011}.
 	
-		Analysing pre-defined gene sets and changes in the expression of the full set rather than considering each constituent member on an individual basis has more statistical power \cite{MooneyGenesetanalysis2015}. Consider, that in analysing gene sets as a group, the degree of perturbation in the expression of the full gene set due to the disease state / alternative phenotype that is required to be considered significant is much less than that required in analysing each of its constituent members individually \cite{DudbridgePowerPredictiveAccuracy2013}\cite{WrayResearchReviewPolygenic2014}.
+		Analysing pre-defined gene sets and changes in the expression of the full set rather than considering each constituent member on an individual basis has more statistical power \cite{MooneyGenesetanalysis2015}. Consider, in analysing gene sets as a group the degree of perturbation in the expression of the full gene set due to the disease state / alternative phenotype that is required to be considered significant is much less than that required in analysing each of its constituent members individually \cite{DudbridgePowerPredictiveAccuracy2013}\cite{WrayResearchReviewPolygenic2014}.
 		
 %		We know from Genome Wide Association Studies (GWAS) that many diseases are polygenic in nature \cite{MooneyGenesetanalysis2015}. This suggests that it is natural to be considering sets of genes in analysis of many diseases. \citet{SubramanianGenesetenrichment2005a} highlight the importance of gene sets, claiming that within a single metabolic pathway an increase of $20\%$ in all the associated gene products may be more important than a 20-fold increase in a single gene.
 %		
@@ -348,7 +353,16 @@
 %		Previous attempts to achieve this have used the Genotype Tissue Expression (GTEx) \cite{GTExConsortiumGeneticeffectsgene2017} database \cite{LonsdaleGenotypeTissueExpressionGTEx2013}, but here the profiles are for human donors
 %		post-mortem. We suspect that the data derived from these cells may not contain the same information as that collected from living, active cells. Furthermore, the GTEx data is across many different tissues (144 are used in \cite{LonsdaleGenotypeTissueExpressionGTEx2013}), but we focus on cell types relevant to autoimmune disease in general (i.e. blood cells) and Inflammatory Bowel Disease in particular (intestinal samples).
 		
-
+	\subsection{Clustering}
+	To describe gene sets within the data, some clustering method is required. Applied on expression values or some transformed variation thereof, groups of genes are created based on some concept of similarity (or alternatively on some concept of dissimilarity or distance). Depending on the choice of transformation and clustering method further questions might arise such as defining the number of clusters (required for instance with $K$-means clustering) or the type of distance to use (for instance within hierarchical clustering and the methods that integrate this method such as Weighted Gene Correlation Network Analysis). For clustering within a dataset we choose \emph{Dirichlet processes} as the method as the number of clusters is learnt from the data and the concept of distance in these models is based upon the Euclidean distance, an intuitive measure for continuous data (CHECK). Specifically we use Bayesian Dirichlet processes  as these capture uncertainty of membership which is appropriate in this application. Genes can be members of multiple sets or else their membership might be poorly defined; thus the model uncertainty represents biological uncertainty.
+	
+	\subsubsection{Integrative clustering}
+	Within the CEDAR cohort there are multiple datasets containing information about the same genes for different tissues or cell types. Ideally a model could integrate information about common clustering structure across the datasets to reduce uncertainty within making assumptions that could impose false structure upon the data or in some other way reduce the signal unique to each tissue. Such methods are referred to as \emph{integrative clustering methods}. Of this field we choose to use \emph{Multiple Dataset Integration} (MDI) \cite{KirkBayesiancorrelatedclustering2012} as this method is Bayesian (and thus has principled quantification of uncertainty) and is an extension of Dirichlet processes.
+	
+	\subsubsection{Consensus clustering}
+	A recurring problem with Bayesian clustering methods is that they rely upon \emph{Markov Chain Monte Carlo} (MCMC) methods to describe the posterior distribution. These methods have the nice property that they guarantee describing the correct distribution given infinite time. Unfortunately any amount of finite time is very small in comparison to infinite time and no MCMC method guarantees convergence within finite time. This problem is particular present as the number of dimensions scales and the posterior distribution is multi-modal. In this case the algorithm tends to describe the space within a mode, but as the mode is far denser than the surronding space (particularly in high dimensions), the probability of escaping the mode and exploring the full space is very low. Thus to describe the full space in finite time requires use of multiple unique initialisations. The number of initialisations is required to be sufficiently high that each mode is described. In this way the full space can be explored by the combinations of models. Combining clustering models in this way is referred to as \emph{consensus clustering}. It is a natural extension to the concept of ensemble methods (such as Random Forest). The final model is a strong method built of many weak methods, similarly to Bagging. This consensus clustering uses many short MCMC chains aggressively thinned, thus it is both a better description of the target distribution than an individual model, but also far quicker to run as each chain is both embarrassingly parallel and short.
+	
+	
 	
 	
 %	This project, which consists of applying a Bayesian unsupervised clustering method across multiple datasets to define tissue specific gene sets, is interesting on a number of fronts. It provides a chance to learn relevant, topical biology in understanding gene sets, the role context plays in gene expression and to learn the basics of immunology. From an informatics / statistics perspective, Bayesian inference, unsupervised clustering and the use of multiple datasets are all interesting. These are relevant skills to both industry and research that I wish to develop.
@@ -592,7 +606,7 @@
 	Previous attempts to achieve this have used the Genotype Tissue Expression (GTEx) \cite{GTExConsortiumGeneticeffectsgene2017} database \cite{LonsdaleGenotypeTissueExpressionGTEx2013}, but here the profiles are for human donors
 	post-mortem. We suspect that the data derived from these cells may not contain the same information as that collected from living, active cells. Furthermore, the GTEx data is across many different tissues (144 are used in \cite{LonsdaleGenotypeTissueExpressionGTEx2013}), but we focus on cell types relevant to autoimmune disease in general (i.e. blood cells) and Inflammatory Bowel Disease in particular (intestinal samples).
 	
-%	With the onset of microarrays and RNAseq, producing gene expression data in large quantities for a wide number of genes is increasingly enabled. Unfortunately the large amount of data gifted onto the genomics community by these methods is difficult to interpret and analyse. Gene Set Enrichment Analysis (GSEA) attempts to overcome some of these issues by using prior knowledge to define groups of genes linked through their biological function citeHEJBLUM. The set is defined using knowledge external to the current analysis; a common method is using the manually annotated pathways available on the Kyoto Encyclopedia of Genes and Genomes (KEGG) database citeFRIDLEYGene.
+%	With the onset of microarrays and RNAseq, producing gene expression data in large quantities for a wide number of genes is increasingly enabled. Unfortunately the large amount of data gifted onto the genomics community by these methods is difficult to interpret and analyse. Gene Set Enrichment Analysis (GSEA) attempts to overcome some of these issues by using prior knowledge to define groups of genes linked through their biological function \cite{HejblumTimeCourseGeneSet2015}. The set is defined using knowledge external to the current analysis; a common method is using the manually annotated pathways available on the Kyoto Encyclopedia of Genes and Genomes (KEGG) database \cite{FridleyGenesetanalysis2011}.
 %		
 %	Analysing pre-defined gene sets and changes in the expression of the full set rather than considering each constituent member on an individual basis has more statistical power \cite{MooneyGenesetanalysis2015}. Consider, that in analysing gene sets as a group, the degree of perturbation in the expression of the full gene set due to the disease state / alternative phenotype that is required to be considered significant is much less than that required in analysing each of its constituent members individually \cite{DudbridgePowerPredictiveAccuracy2013}\cite{WrayResearchReviewPolygenic2014}.
 %	

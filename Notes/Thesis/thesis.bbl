@@ -1,4 +1,4 @@
-\begin{thebibliography}{27}
+\begin{thebibliography}{28}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -44,6 +44,15 @@ Frank Dudbridge.
 \newblock ISSN 1553-7404.
 \newblock \doi{10.1371/journal.pgen.1003348}.
 
+\bibitem[Fridley and Biernacka(2011)]{FridleyGenesetanalysis2011}
+Brooke~L Fridley and Joanna~M Biernacka.
+\newblock Gene set analysis of {{SNP}} data: Benefits, challenges, and future
+  directions.
+\newblock \emph{European Journal of Human Genetics}, 19\penalty0 (8):\penalty0
+  837--843, August 2011.
+\newblock ISSN 1018-4813, 1476-5438.
+\newblock \doi{10.1038/ejhg.2011.57}.
+
 \bibitem[Garrett et~al.(2010)Garrett, Gordon, and
   Glimcher]{GarrettHomeostasisInflammationIntestine2010}
 Wendy~S. Garrett, Jeffrey~I. Gordon, and Laurie~H. Glimcher.
@@ -84,6 +93,16 @@ Elin Grundberg, Kerrin~S Small, \AA{}sa~K Hedman, Alexandra~C Nica, Alfonso
 \newblock \emph{Nature}, 550\penalty0 (7675):\penalty0 204--213, October 2017.
 \newblock ISSN 0028-0836, 1476-4687.
 \newblock \doi{10.1038/nature24277}.
+
+\bibitem[Hejblum et~al.(2015)Hejblum, Skinner, and
+  Thi\'ebaut]{HejblumTimeCourseGeneSet2015}
+Boris~P. Hejblum, Jason Skinner, and Rodolphe Thi\'ebaut.
+\newblock Time-{{Course Gene Set Analysis}} for {{Longitudinal Gene Expression
+  Data}}.
+\newblock \emph{PLOS Computational Biology}, 11\penalty0 (6):\penalty0
+  e1004310, June 2015.
+\newblock ISSN 1553-7358.
+\newblock \doi{10.1371/journal.pcbi.1004310}.
 
 \bibitem[Hubert and Arabie(1985)]{HubertComparingpartitions1985}
 Lawrence Hubert and Phipps Arabie.
@@ -340,16 +359,6 @@ Urmo V\~osa, Annique Claringbould, Harm-Jan Westra, Marc~Jan Bonder, Patrick
 \newblock Unraveling the polygenic architecture of complex traits using blood
   {{eQTL}} meta-analysis.
 \newblock Preprint, {Genomics}, October 2018.
-
-\bibitem[Wang et~al.(2008)Wang, Sandberg, Luo, Khrebtukova, Zhang, Mayr,
-  Kingsmore, Schroth, and Burge]{WangAlternativeisoformregulation2008a}
-Eric~T. Wang, Rickard Sandberg, Shujun Luo, Irina Khrebtukova, Lu~Zhang,
-  Christine Mayr, Stephen~F. Kingsmore, Gary~P. Schroth, and Christopher~B.
-  Burge.
-\newblock Alternative isoform regulation in human tissue transcriptomes.
-\newblock \emph{Nature}, 456\penalty0 (7221):\penalty0 470--476, November 2008.
-\newblock ISSN 0028-0836, 1476-4687.
-\newblock \doi{10.1038/nature07509}.
 
 \bibitem[Wray et~al.(2014)Wray, Lee, Mehta, Vinkhuyzen, Dudbridge, and
   Middeldorp]{WrayResearchReviewPolygenic2014}
