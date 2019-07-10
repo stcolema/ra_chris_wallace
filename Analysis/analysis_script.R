@@ -538,6 +538,14 @@ if (is.na(n_genes)) {
   # n_genes <- mcmc_out_lst[[1]]$nitems
 }
 
+
+# Boolean instructing labels to be included in heatmaps
+show_heatmap_labels <- TRUE
+
+if(n_genes > 50) {
+  show_heatmap_labels <- FALSE
+}
+
 # === Plotting phis ==========================================================
 
 # Plot phi value between each dataset combination across iterations
@@ -768,7 +776,8 @@ if (do_similarity_matrices_plot) {
     num_datasets,
     file_path,
     col_pal = col_pal_sim,
-    breaks = my_breaks
+    breaks = my_breaks,
+    show_labels = show_heatmap_labels
   )
 }
 
@@ -885,6 +894,10 @@ big_annotation <- data.frame(matrix(nrow = n_genes, ncol = num_datasets)) %>%
 
 n_total_clusters <- 0
 
+# Vector of columns in each expression dataset (controls showing column names in
+# heatmaps)
+n_people <- c()
+
 data_files <- list()
 
 for (i in 1:num_datasets) {
@@ -952,6 +965,12 @@ for (i in 1:num_datasets) {
 
   expr_breaks <- define_breaks(col_pal_expr, lb = expr_min, ub = expr_max)
   
+  n_people <- c(n_people, ncol(expression_data_tidy))
+  show_expr_col_names <- TRUE
+  if(n_people[i] > 50){
+    show_expr_col_names <- FALSE
+  }
+  
   if (do_expression_heatmap) {
     if (n_clusters > 12) {
       cat("\nToo many clusters. Cannot include annotation row.\n")
@@ -963,7 +982,9 @@ for (i in 1:num_datasets) {
           filename = file_name,
           main = ph_title,
           color = col_pal_expr,
-          breaks = expr_breaks
+          breaks = expr_breaks,
+          show_rownames = show_heatmap_labels,
+          show_colnames = show_expr_col_names
         )
     } else {
       col_pal <- col_vector[1:n_clusters] %>%
@@ -983,7 +1004,9 @@ for (i in 1:num_datasets) {
           annotation_row = pred_clustering,
           annotation_colors = annotation_colors,
           color = col_pal_expr,
-          breaks = expr_breaks
+          breaks = expr_breaks,
+          show_rownames = show_heatmap_labels,
+          show_colnames = show_expr_col_names
         )
     }
   }
@@ -1020,7 +1043,9 @@ if (do_expression_heatmap) {
       filename = big_file_name,
       main = big_ph_title,
       color = col_pal_expr,
-      breaks = expr_breaks
+      breaks = expr_breaks,
+      show_colnames = F,
+      show_rownames = show_heatmap_labels
     )
   } else {
     col_pal <- sample(col_vector, n_total_clusters) %>%
@@ -1034,7 +1059,9 @@ if (do_expression_heatmap) {
       annotation_row = big_annotation,
       annotation_colors = annotation_colors,
       color = col_pal_expr,
-      breaks = expr_breaks
+      breaks = expr_breaks,
+      show_colnames = F,
+      show_rownames = show_heatmap_labels
     )
   }
 }
@@ -1112,7 +1139,7 @@ for (k in 1:num_files) {
 
 if (do_fused_gene_expression) {
   cat("\nSaving heatmaps of pairwise fused gene expression across datasets.\n")
-
+  
   fused_gene_heatmaps(
     compare_tibble$expression_data,
     compare_tibble$fused_probes,
@@ -1121,7 +1148,8 @@ if (do_fused_gene_expression) {
     file_path,
     num_datasets,
     plot_type,
-    probes_present_dt
+    probes_present_dt,
+    show_row_labels = show_heatmap_labels
   )
 }
 
@@ -1135,7 +1163,8 @@ if (do_comparison_plots) {
     num_datasets,
     file_path,
     plot_type,
-    col_pal_sim = col_pal_sim
+    col_pal_sim = col_pal_sim,
+    show_row_labels = show_heatmap_labels
   )
 
   plot_comparison_corr_sim_expr(
@@ -1144,7 +1173,8 @@ if (do_comparison_plots) {
     num_datasets,
     file_path,
     plot_type,
-    col_pal_sim = col_pal_sim
+    col_pal_sim = col_pal_sim,
+    show_row_labels = show_heatmap_labels
   )
 }
 

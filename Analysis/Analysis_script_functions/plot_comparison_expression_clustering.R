@@ -75,7 +75,8 @@ heatmap_comparison_sim_expr <- function(...,
                                         col_pal_sim = colorRampPalette(brewer.pal(n = 7, name = "Blues"))(100),
                                         col_pal_expr = colorRampPalette(c("#146EB4", "white", "#FF9900"))(100),
                                         expr_breaks = NULL,
-                                        sim_breaks = NULL) {
+                                        sim_breaks = NULL,
+                                        show_row_labels = FALSE) {
   
   if (is.null(expr_breaks)) {
     expr_breaks <- define_breaks(col_pal_expr)
@@ -109,14 +110,18 @@ heatmap_comparison_sim_expr <- function(...,
     cluster_rows = F,
     cluster_cols = F,
     color = col_pal_sim,
-    breaks = sim_breaks
+    breaks = sim_breaks,
+    show_rownames = show_row_labels,
+    silent = TRUE
   )$gtable
 
   ph_list[[2]] <- pheatmap(data_to_compare[[2]],
     cluster_rows = F,
     cluster_cols = F,
     color = col_pal_expr,
-    breaks = expr_breaks
+    breaks = expr_breaks,
+    show_rownames = show_row_labels,
+    silent = TRUE
   )$gtable
 
   # Combine these in a grid and save
@@ -139,7 +144,8 @@ heatmap_comparison <- function(...,
     ph_list[[i]] <- pheatmap(data_to_compare[[i]],
       cluster_rows = F,
       cluster_cols = F,
-      color = col_pal
+      color = col_pal,
+      silent = TRUE
     )$gtable
   }
 
@@ -156,7 +162,8 @@ plot_comparison_expression_to_clustering <- function(compare_tibble,
                                                      col_pal_sim = colorRampPalette(brewer.pal(n = 7, name = "Blues"))(100),
                                                      col_pal_expr = colorRampPalette(c("#146EB4", "white", "#FF9900"))(100),
                                                      sim_breaks = NULL,
-                                                     expr_breaks = NULL) {
+                                                     expr_breaks = NULL,
+                                                     show_row_labels = FALSE) {
   
   
   if (is.null(expr_breaks)) {
@@ -242,7 +249,8 @@ plot_comparison_corr_sim_expr <- function(compare_tibble,
                                           col_pal_sim = colorRampPalette(c("#FF9900", "white", "#146EB4"))(100),
                                           col_pal_expr = colorRampPalette(c("#146EB4", "white", "#FF9900"))(100),
                                           sim_breaks = NULL,
-                                          expr_breaks = NULL) {
+                                          expr_breaks = NULL,
+                                          show_row_labels = FALSE) {
   
   if (is.null(expr_breaks)) {
     expr_breaks <- define_breaks(col_pal_expr)
@@ -302,7 +310,8 @@ heatmap_wrapper_sim_expr_corr <- function(sim_mat,
                                           expr_breaks = NULL,
                                           sim_breaks = NULL,
                                           font_size = 20,
-                                          expr_col_order = T) {
+                                          expr_col_order = TRUE,
+                                          show_row_labels = FALSE) {
   if (is.null(expr_breaks)) {
     expr_breaks <- define_breaks(col_pal_expr)
     
@@ -356,7 +365,8 @@ heatmap_wrapper_sim_expr_corr <- function(sim_mat,
     col_pal_expr = col_pal_expr,
     expr_breaks = expr_breaks,
     sim_breaks = sim_breaks,
-    font_size = font_size
+    font_size = font_size,
+    show_row_labels = show_row_labels
     
   )
 }
@@ -374,7 +384,8 @@ heatmap_comparison_sim_expr_cor <- function(...,
                                             col_pal_expr = colorRampPalette(c("#146EB4", "white", "#FF9900"))(100),
                                             expr_breaks = NULL,
                                             sim_breaks = NULL,
-                                            font_size = 20) {
+                                            font_size = 20,
+                                            show_row_labels = FALSE) {
   if (is.null(expr_breaks)) {
     expr_breaks <- define_breaks(col_pal_expr)
     
@@ -407,21 +418,27 @@ heatmap_comparison_sim_expr_cor <- function(...,
     cluster_rows = F,
     cluster_cols = F,
     color = col_pal_sim,
-    breaks = sim_breaks
+    breaks = sim_breaks,
+    show_rownames = show_row_labels,
+    silent = TRUE
   )$gtable
 
   ph_list[[2]] <- pheatmap(data_to_compare[[2]],
     cluster_rows = F,
     cluster_cols = F,
     color = col_pal_expr,
-    breaks = expr_breaks
+    breaks = expr_breaks,
+    show_rownames = show_row_labels,
+    silent = TRUE
   )$gtable
 
   ph_list[[3]] <- pheatmap(data_to_compare[[3]],
     cluster_rows = F,
     cluster_cols = F,
     color = col_pal_expr,
-    breaks = expr_breaks
+    breaks = expr_breaks,
+    show_rownames = show_row_labels,
+    silent = TRUE
   )$gtable
 
   # Combine these in a grid and save

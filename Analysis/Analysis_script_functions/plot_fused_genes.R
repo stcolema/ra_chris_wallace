@@ -18,7 +18,8 @@ fused_gene_heatmaps <- function(expression_data_lst,
                                 file_path,
                                 n_datasets,
                                 plot_type = ".png",
-                                probes_present_dt = NULL) {
+                                probes_present_dt = NULL,
+                                show_row_labels = F) {
 
   # Set up the directory to save too
   dir_name <- paste0(file_path, "Fusion_expression_data/")
@@ -34,9 +35,22 @@ fused_gene_heatmaps <- function(expression_data_lst,
     d_i <- datasets[[i]]
     expression_data_i <- expression_data_lst[[i]]
     
+    # number of people in current expression data
+    n_col_i <- ncol(expression_data_i)
+    
     for (j in (i + 1):n_datasets) {
       d_j <- datasets[[j]]
       expression_data_j <- expression_data_lst[[j]]
+      
+      n_col_j <- ncol(expression_data_j)
+      
+      # If too many columns to read in current expression data, hide column 
+      # labels in the heatmaps
+      n_col <- n_col_i + n_col_j
+      show_col_labels = TRUE
+      if(n_col > 50){
+        show_col_labels = FALSE
+      }
       
       # Extract the indices for the "fused" and "unfused" genes
       fused_ind <- fused_probes_lst[[i]][[j]] # fused_non_zero_probes[[1]][[2]]
@@ -125,7 +139,9 @@ fused_gene_heatmaps <- function(expression_data_lst,
           annotation_row = fused_annotation_data,
           annotation_colors = annotation_colors,
           color = col_pal_expr,
-          breaks = expr_breaks 
+          breaks = expr_breaks,
+          show_rownames = show_row_labels,
+          show_colnames = show_col_labels
         )
       } else {
         # If exactly 1 fused gene can still heatmap but no clustering
@@ -149,7 +165,9 @@ fused_gene_heatmaps <- function(expression_data_lst,
             annotation_row = fused_annotation_data,
             annotation_colors = annotation_colors,
             color = col_pal_expr,
-            breaks = expr_breaks
+            breaks = expr_breaks,
+            show_rownames = show_row_labels,
+            show_colnames = show_col_labels
           )
         }
       }
@@ -177,7 +195,9 @@ fused_gene_heatmaps <- function(expression_data_lst,
           annotation_row = unfused_annotation_data,
           annotation_colors = annotation_colors,
           color = col_pal_expr,
-          breaks = expr_breaks
+          breaks = expr_breaks,
+          show_rownames = show_row_labels,
+          show_colnames = show_col_labels
         )
       } else {
         if (sum(non_fused_ind) == 1) {
@@ -190,7 +210,9 @@ fused_gene_heatmaps <- function(expression_data_lst,
             annotation_row = unfused_annotation_data,
             annotation_colors = annotation_colors,
             color = col_pal_expr,
-            breaks = expr_breaks
+            breaks = expr_breaks,
+            show_rownames = show_row_labels,
+            show_colnames = show_col_labels
           )
         }
       }

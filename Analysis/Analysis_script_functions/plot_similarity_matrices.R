@@ -9,7 +9,8 @@ plot_similarity_matrices <- function(similarity_matrices_lst,
                                      n_datasets,
                                      file_path,
                                      col_pal = colorRampPalette(brewer.pal(n = 7, name = "Blues"))(100),
-                                     breaks = NA) {
+                                     breaks = NA,
+                                     show_labels = TRUE) {
   loc_dir <- paste0(file_path, "Similarity_matrices/")
   dir.create(loc_dir, showWarnings = FALSE)
 
@@ -40,16 +41,21 @@ plot_similarity_matrices <- function(similarity_matrices_lst,
           cluster_rows = T,
           filename = file_name,
           color =  col_pal,
-          breaks = breaks
+          breaks = breaks,
+          show_rownames = show_labels,
+          show_colnames = show_labels
         )
       } else {
         ph <- pheatmap(similarity_matrices_lst[i + (j - 1) * n_files][[1]],
           main = title,
           cluster_rows = T,
           color =  col_pal,
-          breaks = breaks
+          breaks = breaks,
+          show_rownames = show_labels,
+          show_colnames = show_labels
         )
       }
     }
   }
+  # ph
 }
