@@ -267,100 +267,88 @@
 			
 			\newpage
 	
-	\section*{Layout}
-	\begin{enumerate}
-		\item Introduction
-		\begin{itemize}
-			\item Describe aim
-			\item introduce concepts of gene sets (and why to cluster genes) and why might tissue specific ones be a thing
-			\item Describe data in brief
-			\item Consensus clustering
-			\item Multiple dataset integration
-		\end{itemize}
-		\item Data
-		\begin{itemize}
-			\item Describe data (make clear pre-processing is done by other people and what the steps do)
-			\item Standardisation
-			\item Simulation studies
-			\item Imputing missing values for MDI
-		\end{itemize}
-		\item Methods
-		\begin{itemize}
-			\item Clustering
-
-			\item Bayesian inference
-			\item MCMC
-			\begin{itemize}
-				\item Gibbs sampling
-			\end{itemize}
-			\item Mixture models
-			\begin{itemize}
-				\item Bayesian mixture models
-			\end{itemize}
-			\item Problems with Bayesian method (large p - stickiness, large n - slowness)
-			\item Consensus clustering using multiple short chains 
-			\begin{itemize}
-				\item Give context of ensembles (such as random forest) and talk about many weak classifiers working well together (bagging)
-				\item avoid stickiness
-				\item embarrassingly parallel
-			\end{itemize}
-			\item Simulations
-			\begin{itemize}
-				\item Rand index and concept of ground truth
-			\end{itemize}
-		\end{itemize}
-	\item Results
-	\begin{itemize}
-		\item Simulation 1
-		\item Simulation 2
-		\item Sampled genes from CEDAR
-	\end{itemize}
-	\item Conclusion
-	\begin{itemize}
-		\item Consensus clustering is great
-		\item Biology
-	\end{itemize}
-	\end{enumerate}
-	
-	\newpage
+%	\section*{Layout}
+%	\begin{enumerate}
+%		\item Introduction
+%		\begin{itemize}
+%			\item Describe aim
+%			\item introduce concepts of gene sets (and why to cluster genes) and why might tissue specific ones be a thing
+%			\item Describe data in brief
+%			\item Consensus clustering
+%			\item Multiple dataset integration
+%		\end{itemize}
+%		\item Data
+%		\begin{itemize}
+%			\item Describe data (make clear pre-processing is done by other people and what the steps do)
+%			\item Standardisation
+%			\item Simulation studies
+%			\item Imputing missing values for MDI
+%		\end{itemize}
+%		\item Methods
+%		\begin{itemize}
+%			\item Clustering
+%
+%			\item Bayesian inference
+%			\item MCMC
+%			\begin{itemize}
+%				\item Gibbs sampling
+%			\end{itemize}
+%			\item Mixture models
+%			\begin{itemize}
+%				\item Bayesian mixture models
+%			\end{itemize}
+%			\item Problems with Bayesian method (large p - stickiness, large n - slowness)
+%			\item Consensus clustering using multiple short chains 
+%			\begin{itemize}
+%				\item Give context of ensembles (such as random forest) and talk about many weak classifiers working well together (bagging)
+%				\item avoid stickiness
+%				\item embarrassingly parallel
+%			\end{itemize}
+%			\item Simulations
+%			\begin{itemize}
+%				\item Rand index and concept of ground truth
+%			\end{itemize}
+%		\end{itemize}
+%	\item Results
+%	\begin{itemize}
+%		\item Simulation 1
+%		\item Simulation 2
+%		\item Sampled genes from CEDAR
+%	\end{itemize}
+%	\item Conclusion
+%	\begin{itemize}
+%		\item Consensus clustering is great
+%		\item Biology
+%	\end{itemize}
+%	\end{enumerate}
+%	
+%	\newpage
 	
 	\section{Introduction}	
 
-	\begin{itemize}
-		\item Describe aim
-		\item introduce concepts of gene sets (and why to cluster genes) and why might tissue specific ones be a thing
-		\item Describe data in brief
-		\item Consensus clustering
-		\item Multiple dataset integration
-	\end{itemize}
+%	\begin{itemize}
+%		\item Describe aim
+%		\item introduce concepts of gene sets (and why to cluster genes) and why might tissue specific ones be a thing
+%		\item Describe data in brief
+%		\item Consensus clustering
+%		\item Multiple dataset integration
+%	\end{itemize}
 	
-	We use consensus clustering to produce tissue-specific gene sets. In this section we briefly introduce the core components of this project such as gene sets, the data and the concepts of consensus and integrative clustering.
+%	We use consensus clustering to produce tissue-specific gene sets. In this section we briefly introduce the core components of this project such as gene sets, the data and the concepts of consensus and integrative clustering.
 	
-	\subsection{Gene sets}
-		With the onset of microarrays and RNAseq, producing gene expression data in large quantities for a wide number of genes is increasingly enabled. Unfortunately the large amount of data gifted onto the genomics community by these methods is difficult to interpret and analyse. Gene Set Enrichment Analysis (GSEA) attempts to overcome some of these issues by using prior knowledge to define groups of genes linked through their biological function \cite{HejblumTimeCourseGeneSet2015}. The set is defined using knowledge external to the current analysis; a common method is using the manually annotated pathways available on the Kyoto Encyclopedia of Genes and Genomes (KEGG) database \cite{FridleyGenesetanalysis2011}.
+	With the onset of microarrays and RNAseq, producing gene expression data in large quantities for a wide number of genes is increasingly enabled. Unfortunately the large amount of data gifted onto the genomics community by these methods is difficult to interpret and analyse. Gene Set Enrichment Analysis (GSEA) attempts to overcome some of these issues by using prior knowledge to define groups of genes linked through their biological function \cite{HejblumTimeCourseGeneSet2015}. The set is defined using knowledge external to the current analysis; a common method is using the manually annotated pathways available on the Kyoto Encyclopedia of Genes and Genomes (KEGG) database \cite{FridleyGenesetanalysis2011}.
+
+	Analysing pre-defined gene sets and changes in the expression of the full set rather than considering each constituent member on an individual basis has more statistical power \cite{MooneyGenesetanalysis2015}. Consider, in analysing gene sets as a group the degree of perturbation in the expression of the full gene set due to the disease state / alternative phenotype that is required to be considered significant is much less than that required in analysing each of its constituent members individually \cite{DudbridgePowerPredictiveAccuracy2013}\cite{WrayResearchReviewPolygenic2014}.
 	
-		Analysing pre-defined gene sets and changes in the expression of the full set rather than considering each constituent member on an individual basis has more statistical power \cite{MooneyGenesetanalysis2015}. Consider, in analysing gene sets as a group the degree of perturbation in the expression of the full gene set due to the disease state / alternative phenotype that is required to be considered significant is much less than that required in analysing each of its constituent members individually \cite{DudbridgePowerPredictiveAccuracy2013}\cite{WrayResearchReviewPolygenic2014}.
-		
-%		We know from Genome Wide Association Studies (GWAS) that many diseases are polygenic in nature \cite{MooneyGenesetanalysis2015}. This suggests that it is natural to be considering sets of genes in analysis of many diseases. \citet{SubramanianGenesetenrichment2005a} highlight the importance of gene sets, claiming that within a single metabolic pathway an increase of $20\%$ in all the associated gene products may be more important than a 20-fold increase in a single gene.
-%		
-%		Thus clustering genes into groups known as ``gene sets'' is natural and useful from both a biological and statistical perspective - it can increase the interpretability and the power of an analysis \cite{NicaExpressionquantitativetrait2013}\cite{VosaUnravelingpolygenicarchitecture2018}.
-		
-		\subsubsection{Tissue specificity}
-		The problem of defining gene sets is non-trivial with many variations in-use. There exist many databases of gene sets \cite{AshburnerGeneOntologytool2000a}\cite{KanehisaNewapproachunderstanding2019}\cite{SzklarczykSTRINGv11protein2019}. The Molecular Signature Database \cite{SubramanianGenesetenrichment2005a} (MSigDB) is one of the most popular resources for GSEA and encompasses many different gene sets defined under various criteria or generated from separate resources.
-		
-		However, none of these definitions of a ``set'' incorporate tissue specific information. This seems an oversight. Cell-type specific gene pathways are pivotal in differentiating tissue function, implicated in hereditary organ failure, and mediate acquired chronic disease \cite{JuDefiningcelltypespecificity2013a}. More and more evidence is being accrued to highlight the cell-type specific level of gene expression \cite{GrundbergMappingcistransregulatory2012}\cite{OngEnhancerfunctionnew2011}\cite{ManiatisRegulationinducibletissuespecific1987}. Thus we propose defining tissue specific gene sets. 
-		
-%		Previous attempts to achieve this have used the Genotype Tissue Expression (GTEx) \cite{GTExConsortiumGeneticeffectsgene2017} database \cite{LonsdaleGenotypeTissueExpressionGTEx2013}, but here the profiles are for human donors
-%		post-mortem. We suspect that the data derived from these cells may not contain the same information as that collected from living, active cells. Furthermore, the GTEx data is across many different tissues (144 are used in \cite{LonsdaleGenotypeTissueExpressionGTEx2013}), but we focus on cell types relevant to autoimmune disease in general (i.e. blood cells) and Inflammatory Bowel Disease in particular (intestinal samples).
-		
-	\subsection{Clustering}
-	To describe gene sets within the data, some clustering method is required. Applied on expression values or some transformed variation thereof, groups of genes are created based on some concept of similarity (or alternatively on some concept of dissimilarity or distance). Depending on the choice of transformation and clustering method further questions might arise such as defining the number of clusters (required for instance with $K$-means clustering) or the type of distance to use (for instance within hierarchical clustering and the methods that integrate this method such as Weighted Gene Correlation Network Analysis). For clustering within a dataset we choose \emph{Dirichlet processes} as the method as the number of clusters is learnt from the data and the concept of distance in these models is based upon the Euclidean distance, an intuitive measure for continuous data (CHECK). Specifically we use Bayesian Dirichlet processes  as these capture uncertainty of membership which is appropriate in this application. Genes can be members of multiple sets or else their membership might be poorly defined; thus the model uncertainty represents biological uncertainty.
+	The problem of how to define gene sets is non-trivial, with many variations present in the literature. There exist many databases of gene sets \cite{AshburnerGeneOntologytool2000a}\cite{KanehisaNewapproachunderstanding2019}\cite{SzklarczykSTRINGv11protein2019}. The Molecular Signature Database \cite{SubramanianGenesetenrichment2005a} (MSigDB) is one of the most popular resources for GSEA and encompasses many different gene sets defined under various criteria or generated from separate resources.
 	
-	\subsubsection{Integrative clustering}
+	However, none of these definitions of a ``set'' incorporate tissue specific information. This seems an oversight. Cell-type specific gene pathways are pivotal in differentiating tissue function, implicated in hereditary organ failure, and mediate acquired chronic disease \cite{JuDefiningcelltypespecificity2013a}. More and more evidence is being accrued to highlight the cell-type specific level of gene expression \cite{GrundbergMappingcistransregulatory2012}\cite{OngEnhancerfunctionnew2011}\cite{ManiatisRegulationinducibletissuespecific1987}. Thus we propose defining tissue specific gene sets. 
+	
+	To describe gene sets within the data, some clustering method is required. Applied on expression values or some transformed variation thereof, groups of genes are created based on some concept of similarity (or alternatively on some concept of dissimilarity or distance). Depending on the choice of transformation and clustering method further questions might arise such as defining the number of clusters (required for instance with $K$-means clustering) or the type of distance to use (for instance within hierarchical clustering and the methods that integrate this method such as Weighted Gene Correlation Network Analysis). For clustering within a dataset we choose \emph{Dirichlet processes} as the method as the number of clusters is learnt from the data and the concept of distance in these models is based upon the likelihood of the Gaussian distributions describing the sub-populations, an intuitive measure for continuous data. Specifically we use Bayesian Dirichlet processes  as these capture uncertainty of membership which is appropriate in this application. Genes can be members of multiple sets or else their membership might be poorly defined; thus the model uncertainty represents biological uncertainty.
+
 	Within the CEDAR cohort there are multiple datasets containing information about the same genes for different tissues or cell types. Ideally a model could integrate information about common clustering structure across the datasets to reduce uncertainty within making assumptions that could impose false structure upon the data or in some other way reduce the signal unique to each tissue. Such methods are referred to as \emph{integrative clustering methods}. Of this field we choose to use \emph{Multiple Dataset Integration} (MDI) \cite{KirkBayesiancorrelatedclustering2012} as this method is Bayesian (and thus has principled quantification of uncertainty) and is an extension of Dirichlet processes.
 	
-	\subsubsection{Consensus clustering}
-	A recurring problem with Bayesian clustering methods is that they rely upon \emph{Markov Chain Monte Carlo} (MCMC) methods to describe the posterior distribution. These methods have the nice property that they guarantee describing the correct distribution given infinite time. Unfortunately any amount of finite time is very small in comparison to infinite time and no MCMC method guarantees convergence within finite time. This problem is particular present as the number of dimensions scales and the posterior distribution is multi-modal. In this case the algorithm tends to describe the space within a mode, but as the mode is far denser than the surronding space (particularly in high dimensions), the probability of escaping the mode and exploring the full space is very low. Thus to describe the full space in finite time requires use of multiple unique initialisations. The number of initialisations is required to be sufficiently high that each mode is described. In this way the full space can be explored by the combinations of models. Combining clustering models in this way is referred to as \emph{consensus clustering}. It is a natural extension to the concept of ensemble methods (such as Random Forest). The final model is a strong method built of many weak methods, similarly to Bagging. This consensus clustering uses many short MCMC chains aggressively thinned, thus it is both a better description of the target distribution than an individual model, but also far quicker to run as each chain is both embarrassingly parallel and short.
+	As we have a large number of variables ($p$ > 250), we implement \emph{consensus clustering} to overcome the problem of describing multiple modes in high dimension space. This is a recurring problem with Bayesian clustering methods as they rely upon \emph{Markov Chain Monte Carlo} (MCMC) methods to describe the posterior distribution. These methods have the nice property that they guarantee describing the correct distribution given infinite time. Unfortunately any amount of finite time is very small in comparison to infinite time and no MCMC method guarantees convergence within finite time. This problem is particular present as the number of dimensions scales and the posterior distribution is multi-modal. In this case the algorithm tends to describe the space within a mode, but as the mode is far denser than the surrounding space (particularly in high dimensions), the probability of escaping the mode and exploring the full space is very low. Thus to describe the full space in finite time requires use of multiple unique initialisations. The number of initialisations is required to be sufficiently high that each mode is described. In this way the full space can be explored by the combinations of models. Combining clustering models in this way is referred to as \emph{consensus clustering}. It is a natural extension to the concept of ensemble methods (such as Random Forest citeBREIMANrandomforest). The final model is a strong method built of many weak methods that depend upon the instability of the model similarly to Bagging citeBREIMANbagging. This consensus clustering uses many short MCMC chains aggressively thinned, thus it is both a better description of the target distribution than an individual model, but also far quicker to run as each chain is both embarrassingly parallel and short.
 	
 	
 	
@@ -369,44 +357,64 @@
 %	
 %	Beyond developing new skills, this project also offers the opportunity to be involved in relevant research. Gene sets are commonly used in genetic analyses, thus if we can produce sets that are informed by the context of interest, it could be relevant to many researchers. Hopefully by producing more informative gene sets we can help narrow the gap between biology and disease.	
 
-	\section{Theory}
+	\section{Theory}	
+	\subsection{Bayesian inference}	
+	Bayesian inference is an alternative paradigm to frequentist methods that has several attractive properties.
+	
+	\begin{enumerate} \label{list:bayes}
+		\item \label{list:bayes:point:error} Principled error qualification;
+		\item Integration of prior knowledge and beliefs; and
+		\item \label{list:bayes:point:random_variables} Variables are treated as stochastic rather than the data (in comparison to frequentist methods).
+	\end{enumerate}
+	In this project it is points \ref{list:bayes:point:error} and \ref{list:bayes:point:random_variables} that makes this framework attractive. As stated previously, model uncertainty can represent biological uncertainty and treating variables within the model as random is more intuitive than treating the data as stochastic realisations of some process.
+	
+	The keystone of Bayesian inference is Bayes' rule which defines how one can update a hypothesis as more information is made available. For observations $X$ and a random variable $\theta$ where $\Theta$ is the entire sample space for $\theta$:
+	\begin{align} \label{Bayes_theorem}
+	p(\theta | X) = \frac{p(X | \theta) p(\theta)}{\int_\Theta p(X | \theta ') p(\theta ') d \theta '}
+	\end{align}
+	\begin{itemize}
+		\item We refer to $p(\theta | X)$ as the \emph{posterior} distribution of $\theta$ as it is the distribution associated with $\theta$ \emph{after} observing $X$.
+		\item $p(\theta)$ is the \emph{prior} distribution of $\theta$ and captures our beliefs about $\theta$ before we observe $X$.
+		\item $p(X | \theta)$ is the \emph{likelihood} of $X$ given $\theta$, the probability of data $X$ being generated given our model is true. It is the criterion we focus on in our model if we would use a frequentist approach to the inference (and hence why the frequentist philosophy treats the data as random); maximising this quantity in our model generates the manifold that best describes the observed data. 
+		\item $\int_\Theta p(X | \theta ') p(\theta ') d \theta '$ is the \emph{normalising constant}. This quantity is also referred to as the \emph{evidence} \cite{MacKayInformationTheoryInference2003} or \emph{marginal likelihood} and is normally represented by $Z$. It is referred to as the marginal likelihood as we marginalise the parameter $\theta$ by integrating over its entire sample space.
+	\end{itemize}
+	In terms of sampling, the prior is very useful as a clever choice of prior can ensure that the posterior is always solvable, that we do not encounter singularities in our distribution.
+	
 	\subsection{Clustering} \label{sec:clustering}
 	Given data $X=\left(x_1,\ldots,x_n\right)$, we define a \emph{clustering} or partition of the data by:
 	\begin{eqnarray}
 	Y &=& \left\{Y_1,\ldots,Y_K\right\} \\
 	Y_k &=& \left\{x_{1_k},\ldots, x_{n_k}\right\}  \\
 	Y_i \cap Y_j &=& \emptyset \enskip \forall \enskip i,j \in \{1,K\}, i \neq j \\
-	n_k & \geq & 1 \enskip \forall \enskip k \in \{1,K\} \\
+	n_k & = & \mid Y_k \mid \enskip \geq 1 \enskip \forall \enskip k \in \{1,\ldots,K\} \\
 	\sum_{k=1}^Kn_k &=& n
 	\end{eqnarray}
-	In short we have $K$ nonempty disjoint sets of data, each of which is referred to as a \emph{cluster}, the set of which form a \emph{clustering}. We define a \emph{label} $c=(c_1,\ldots,c_n)$ as denoting the membership of each point. A label $c_i=k$ states that point $x_i$ is assigned to cluster $Y_k$.
+	In short we have $K$ nonempty disjoint sets of data, each of which is referred to as a \emph{cluster}, the set of which form a \emph{clustering}. A label $c_i=k$ states that point $x_i$ is assigned to cluster $Y_k$. We define the collection of labels $c=(c_1,\ldots,c_n)$ as denoting the membership of each point.
 	
 	\subsection{Mixture models} \label{mixture_models}
-	Given some data $X = (x_1, \ldots, x_n)$, we assume a number of unobserved processes generate the data, and membership to a process for individual $i$ is represented using the latent variable $c_i$. It is assumed that each of the $K$ processes can be modelled by a parametric distribution, $f(\cdot)$ with associated parameters $\theta$ and that the full model density is then the weighted sum of these probability density functions where the weights are the component proportions, $\pi_k$:
+	Given some data $X = (x_1, \ldots, x_n)$, we assume $K$ unobserved subpopulations generate the data and that these subpopluations can be revealed by imposing a clustering $Y = \left\{Y_1,\ldots,Y_K\right\}$ on the data.
+	
+	It is assumed that each of the $K$ subpopulations can be modelled by a parametric distribution, $f(\cdot)$ with associated parameters $\theta$ and that the full model density is then the weighted sum of these probability density functions where the weights are the component proportions, $\pi_k$:
 	\begin{align}
-	p(x_i) = \sum_{k=1}^K \pi_k f(x_i | \theta_k)
+	p(x_i|c_i = k) = \sum_{k=1}^K \pi_k f(x_i | \theta_k)
 	\end{align}
+	We use a Multivariate Gaussian distribution to describe each subpopulation for three reasons:
+	\begin{enumerate}
+		\item Convention: the Gaussian distribution is extremely common within the literature;
+		\item Pragmatism: the Gaussian distribution is easy to work with; and
+		\item Conservatism: if the only statements we are willing to make about a distribution over real numbers are its mean and variance, than the Gaussian distribution maximises the entropy and is thus the most conservative choice of distribution.
+	\end{enumerate}
+	We use a large $K$ (specifically, 50) to imitate a Dirichlet process. Strictly speaking a Dirichlet process sets $K=\infty$, but if we use a sufficiently large $K$ such that the data empties the majority of clusters, then we have the desired property of Dirichlet processes. This property is that the number of inhabited clusters is not fixed and can increase or decrease depending on the data.
 	
-	\subsection{Bayesian inference}	
-	We carry out Bayesian inference of this model using Markov chain Monte Carlo methods. We sample first the component parameters, $\theta_k$, and associated weights, $\pi_k$, from the associated distributions and then sample component membership.
-	
-	Basically:
+	\subsubsection{Bayesian mixture models}
+	We carry out Bayesian inference of this model using MCMC methods. Specifically, we employ is Gibbs sampling which can be summarised as iterating between the following steps:
 	\begin{enumerate}
 		\item For each of K clusters sample $\theta_k$ and $\pi_k$ from the associated distributions based on current memberships, $c_i$; and
 		\item For each of n individuals sample $c_i$ based on the new $\theta_k$ and $\pi_k$.
 	\end{enumerate}
-	For the mixture model we update the parameters after we allocate each observation to a cluster. For a given cluster with associated data $X$ and parameter $\theta$, we sample $\theta$ using Bayes' theorem from the distribution:
-	\begin{align} \label{Bayes_theorem}
-	p(\theta | X) = \frac{p(X | \theta) p(\theta)}{\int_\Theta p(X | \theta ') p(\theta ') d \theta '}
-	\end{align}
-	Here $\Theta$ is the entire sample space for $\theta$. 
-	\begin{itemize}
-		\item We refer to $p(\theta | X)$ as the \emph{posterior} distribution of $\theta$ as it is the distribution associated with $\theta$ \emph{after} observing $X$.
-		\item $p(\theta)$ is the \emph{prior} distribution of $\theta$ and captures our beliefs about $\theta$ before we observe $X$.
-		\item $p(X | \theta)$ is the \emph{likelihood} of $X$ given $\theta$, the probability of data $X$ being generated given our model is true. It is the criterion we focus on in our model if we would use a frequentist approach to the inference; maximising this quantity in our model generates the curve that best describes the observed data. 
-		\item $\int_\Theta p(X | \theta ') p(\theta ') d \theta '$ is the \emph{normalising constant}. This quantity is also referred to as the \emph{evidence} \cite{MacKayInformationTheoryInference2003} or \emph{marginal likelihood} and is normally represented by $Z$. It is referred to as the marginal likelihood as we marginalise the parameter $\theta$ by integrating over its entire sample space.
-	\end{itemize}
-	In terms of sampling, the prior is very useful as a clever choice of prior can ensure that the posterior is always solvable, that we do not encounter singularities in our distribution.
+	The output consists of a matrix $n_{iter}$ rows and $p$ columns (fro $p$ genes). The $i^{th}$ row describes the cluster the genes are assigned to in the $i^{th}$ iteration of the Gibbs sampler. To summarise this information we use a posterior similarity matrix (PSM). The $(i,j)$ cell of the PSM contains there is the fraction of recorded iterations for which the $i^{th}$ and $j^{th}$ genes have common labelling. One can see that this implies the PSM is symmetric and has diagonal entries of 1.
+	
+	From this PSM a single clustering estimate, $\hat{c}$, can be described from the PSM by maximising the posterior expected adjusted Rand index citeFRITSCH. Other methods such as minimisation of Binder's loss function or  minimization of Dahl’s criterion are based on the original unadjusted for chance Rand index. We prefer the adjusted Rand index for reasons mentioned in section \ref{sec:rand_index} and thus choose to use the method described by citetFRITSCH.
 	
 	\subsection{Multiple dataset integration}
 	Consider the case when we have observed paired datasets $X_1 = (x_{1,1},\ldots,x_{n,1}), X_2 = (x_{1,2},\ldots,x_{n,2})$, where observations in the $i$th row of each dataset represent information about the same individual. We would like to cluster individuals using information common to both datasets. One could concatenate the datasets, adding additional covariates for each individual. However, if the two datasets have different clustering structures this would reduce the signal of both clusterings and probably have one dominate. If the two datasets have the same structure but different signal-to-noise ratios this would reduce the signal in the final clustering. In both these cases independent models on each dataset would be preferable. \citet{KirkBayesiancorrelatedclustering2012} suggest a method to carry out clustering on both datasets where common information is used but two individual clusterings are outputted. This method is driven by the allocation prior:
@@ -423,7 +431,10 @@
 
 	Thus MDI is an extension of mixture models to multiple datasets where correlated clustering structure is used to ``upweigh'' similar clusters across datasets. MDI has been applied to precision medicine, specifically glioblastoma sub-typing \cite{SavageIdentifyingcancersubtypes2013a}, in the past showing its potential as a tool.
 	
-	\subsection{Rand index}
+	\subsection{Consensus clustering} \label{sec:consensus_clustering}
+	In the scenario that MDI struggles to explore the entire posterior distribution from any given initialisation for any realistic number of iterations of MCMC, we propose use of a ``consensus'' clustering \cite{MontiConsensusClusteringResamplingBased}. In this scenario we draw samples of clusterings from MCMC chains with different initialisations and use these clusterings to describe the posterior distribution. In practice this involves running $n_{seeds}$ different chains of MDI for a smaller number of iterations (some $n_{iter} \in [500, 1000]$), burning out the first $n_{iter} - 1$ iterations and saving the clustering from the final iteration. We then combine the clusterings from all $n_{seeds}$ within a posterior similarity matrix (PSM), a $N \times N$ matrix where the $(i,j)$ entry is the proportion of times genes $i$ and $j$ are in the same cluster. This means that the PSM is not affected by label-flipping and that it is a symmetric matrix with $1$'s along the diagonal and all entries in the unit interval. From this PSM a summary clustering may be calculated. The combination of different initialisations explores all the possible likelihood maixma and thus provides a more informed clustering. As the algorithm is not exploring the full space in any given iteration, we expect that the uncertainty quantification is optimistic, however we argue that an estimate made using insufficient data is better than one made using none at all and that this method is the best currently available to us for quantifying the uncertainty and exploring the posterior distribution.
+	
+	\subsection{Rand index} \label{sec:rand_index}
 	A popular metric for comparing the similarity of two clusterings of the data is the \emph{Rand index} \cite{RandObjectiveCriteriaEvaluation1971}. 	If one assumes that all points are of equal importance in determining clusterings, then in combination with the discrete nature of clusters and the fact that a cluster is defined as much by what it does not contain as that which it does, \citet{RandObjectiveCriteriaEvaluation1971} proposes a metric to measure similarity between clusterings. Between clusterings $Y$ and $Y'$ for any two points $x_i$ and $x_j$ there can exist one of a number of scenarios regarding their labeling. Let $\gamma_{ij}$ be a measure between the two points $x_i$ and $x_j$. For the two points, they can have:
 	\begin{enumerate} \label{list:labelling_scenarios}
 	\item the same label in both clusterings ($c_i = c_j \land c'_i = c'_j$) ($\gamma_{ij}=1$); \label{list:sub:same_label_1}
@@ -508,26 +519,14 @@
 			\hline
 			Sums	& $\frac{10n}{16}$	&  $\frac{3n}{16}$	& $\frac{3n}{16}$	& $\frac{16n}{16} = n$         
 		\end{tabular}
-		\caption{Contingency table for the non-random clustering described in section \ref{sec:rand_motivation}.}
+		\caption{Contingency table for the non-random clustering described in section \ref{sec:motivating_example_adjusted_rand_index}.}
 		\label{table:rand_contingency_example}
 	\end{table}
 	
 	
-	\subsection{Standardisation} \label{sec:standardisation}
-	For a $p$-vector of observations, $X_i=(x_{i1},\ldots,x_{1p})$, we define \emph{standardisation} of $X_i$ as the mapping from $X_i$ to $X'_i=(x'_{i1},\ldots,x'_{ip})$ defined by the \emph{sample mean}, $\bar{x}_i$, and \emph{sample standard deviation}, $s_i$:
-	\begin{eqnarray} \label{eqn:standardisation}
-	\bar{x}_i &=& \frac{1}{p}\sum_{j=1}^p x_{ij} \\
-	s_i^2 &=& \frac{1}{p - 1}\sum_{j=1}^p \left( x_{ij} - \bar{x}_i \right) ^2 \\
-	x'_{ij} &=& \frac{x_{ij}- \bar{x}_i}{s_i} \quad \forall \quad j \in (1,\ldots,p)
-	\end{eqnarray}
-	We refer to $X'_i$ as the standardised form of $X$. If we are given a dataset $X=(X_1,\ldots,X_n)$ where each $X_i$ is a $p$-vector of observations of the form referred to above, then in referring to the standardised form of $X$, we mean the dataset $X'=(X'_1,\ldots,X'_n)$ where each $X'_i$ is the standardised form of $X_i$.
 	
-	Standardisation moves the values observed for each $X_i$ to a common scale where each vector has an observed mean and standard deviation of 0 and 1 respectively.
 	
-	We describe an example in section \ref{sec:motivating_example_standardisation} which shows an explicit application and motivation for standardisation in the context of this project.
-	
-	\subsection{Consensus clustering} \label{sec:consensus_clustering}
-	In the scenario that MDI struggles to explore the entire posterior distribution from any given initialisation for any realistic number of iterations of MCMC, we propose use of a ``consensus'' clustering \cite{MontiConsensusClusteringResamplingBased}. In this scenario we draw samples of clusterings from MCMC chains with different initialisations and use these clusterings to describe the posterior distribution. In practice this involves running $n_{seeds}$ different chains of MDI for a smaller number of iterations (some $n_{iter} \in [500, 1000]$), burning out the first $n_{iter} - 1$ iterations and saving the clustering from the final iteration. We then combine the clusterings from all $n_{seeds}$ within a posterior similarity matrix (PSM), a $N \times N$ matrix where the $(i,j)$ entry is the proportion of times genes $i$ and $j$ are in the same cluster. This means that the PSM is not affected by label-flipping and that it is a symmetric matrix with $1$'s along the diagonal and all entries in the unit interval. From this PSM a summary clustering may be calculated. The combination of different initialisations explores all the possible likelihood maixma and thus provides a more informed clustering. As the algorithm is not exploring the full space in any given iteration, we expect that the uncertainty quantification is optimistic, however we argue that an estimate made using insufficient data is better than one made using none at all and that this method is the best currently available to us for quantifying the uncertainty and exploring the posterior distribution.
+
 
 %	$\delta_{ij}$ here is the Kronecker delta and is defined:
 %	
@@ -617,53 +616,65 @@
 %	However, the problem of defining gene sets is non-trivial with many variations in-use. There exist many databases of gene sets \cite{AshburnerGeneOntologytool2000a}\cite{KanehisaNewapproachunderstanding2019}\cite{SzklarczykSTRINGv11protein2019}. The Molecular Signature Database \cite{SubramanianGenesetenrichment2005a} (MSigDB) is one of the most popular resources for GSEA and encompasses many different gene sets defined under various criteria or generated from separate resources. However, none of these definitions of a ``set'' incorporate tissue specific information. We believe that this is an oversight as there is evidence that some genes are involved in tissue specific pathways (see section \ref{sec:tissue_specificity}). Thus we propose defining tissue specific gene sets. Previous attempts to achieve this have used the Genotype Tissue Expression (GTEx) \cite{GTExConsortiumGeneticeffectsgene2017} database \cite{LonsdaleGenotypeTissueExpressionGTEx2013}, but here the profiles are for human donors
 %	post-mortem. We suspect that the data derived from these cells may not contain the same information as that collected from living, active cells. Furthermore, the GTEx data is across many different tissues (144 are used in \cite{LonsdaleGenotypeTissueExpressionGTEx2013}), but we focus on cell types relevant to autoimmune disease in general (i.e. blood cells) and IBD in particular (intestinal samples). This restricted focus should offer relevant gene sets.
 	
-	Gene sets should contain sets of genes that have correlated expression. If this is the case, it is often assumed that the genes are common members of some metabolic pathway and that their products interact. As this correlated expression is represented by a common variation across people rather than in the magnitude of expression, we will standardise the expression data. We describe a small example to explain our reasoning.
+	Gene sets should contain sets of genes that have correlated expression. If this is the case, it is often assumed that the genes are common members of some metabolic pathway and that their products interact. As this correlated expression is represented by a common variation across people rather than in the magnitude of expression, we will standardise the expression data as described in section \ref{sec:standardisation}. We describe a small example to highlight our reasoning in section \ref{sec:motivating_example_standardisation}.
+	
+		\subsection{Standardisation} \label{sec:standardisation}
+	For a $p$-vector of observations, $X_i=(x_{i1},\ldots,x_{1p})$, we define \emph{standardisation} of $X_i$ as the mapping from $X_i$ to $X'_i=(x'_{i1},\ldots,x'_{ip})$ defined by the \emph{sample mean}, $\bar{x}_i$, and \emph{sample standard deviation}, $s_i$:
+	\begin{eqnarray} \label{eqn:standardisation}
+	\bar{x}_i &=& \frac{1}{p}\sum_{j=1}^p x_{ij} \\
+	s_i^2 &=& \frac{1}{p - 1}\sum_{j=1}^p \left( x_{ij} - \bar{x}_i \right) ^2 \\
+	x'_{ij} &=& \frac{x_{ij}- \bar{x}_i}{s_i} \quad \forall \quad j \in (1,\ldots,p)
+	\end{eqnarray}
+	We refer to $X'_i$ as the standardised form of $X$. If we are given a dataset $X=(X_1,\ldots,X_n)$ where each $X_i$ is a $p$-vector of observations of the form referred to above, then in referring to the standardised form of $X$, we mean the dataset $X'=(X'_1,\ldots,X'_n)$ where each $X'_i$ is the standardised form of $X_i$.
+	
+	Standardisation moves the values observed for each $X_i$ to a common scale where each vector has an observed mean and standard deviation of 0 and 1 respectively.
 	
 	\subsubsection{Motivating example: Standardising gene expression data} \label{sec:motivating_example_standardisation}
 	If one considers table \ref{table:example_gene_expression_data} which contains an example of expression data for some genes A, B, C, D and E across people 1 to 4.
 	\begin{table}[] 
-	\centering
-	\begin{tabular}{c|cccc} 
-	Genes 	& Person 1	& Person 2	& Person 3	& Person 4	\\ 
-	\hline
-	A 		& 5.1		& 5.2 		& 4.9		& 5.0		\\
-	B 		& 5.1		& 4.9		& 5.2		& 5.4		\\
-	C 		& 1.4		& 1.5		& 1.2		& 1.3		\\
-	D 		& 1.4		& 1.2		& 1.5		& 1.7		\\
-	E 		& 1.4		& 1.5		& 1.4		& 1.5		
-	\end{tabular}
-	\caption{Example gene expression data.}
-	\label{table:example_gene_expression_data}
+		\centering
+		\begin{tabular}{c|cccc} 
+			Genes 	& Person 1	& Person 2	& Person 3	& Person 4	\\ 
+			\hline
+			A 		& 5.1		& 5.2 		& 4.9		& 5.0		\\
+			B 		& 5.1		& 4.9		& 5.2		& 5.4		\\
+			C 		& 1.4		& 1.5		& 1.2		& 1.3		\\
+			D 		& 1.4		& 1.2		& 1.5		& 1.7		\\
+			E 		& 1.4		& 1.5		& 1.4		& 1.5		
+		\end{tabular}
+		\caption{Example gene expression data.}
+		\label{table:example_gene_expression_data}
 	\end{table}
 	\begin{figure}[h]
-	\centering
+		\centering
 		\includegraphics[scale=0.55]{Images/Examples/example_expression_data.png}
 		\caption{Heatmap of expression data in table \ref{table:example_gene_expression_data} showing the clusters based upon magnitude of expression.}
 		\label{fig:example_expression_data}
 	\end{figure}
 	One can see that genes A and C have similar patters in variation across the people, as do genes B and D. Gene E is not consistent with any other gene here. However, as this relative variation is of interest rather than the magnitude of expression, one can see that standardising the data is required. If one were to cluster the data as represented in table \ref{table:example_gene_expression_data}, one would place genes A and B in one cluster and genes C, D and E in another as their absolute expression levels are similar (as can be seen in figure \ref{fig:example_expression_data}). However, if the expression level of each gene is standardised as per section \ref{sec:standardisation}, the data is then as represented in table \ref{table:example_standardised_gene_expression_data}. As the data are now on the same scale the characteristic that will determine a clustering is the variation of expression across people. As we want genes with similar patterns of variation (i.e. that are co-expressed) this enables us to cluster under our objective of defining gene sets. In this case genes A and C are one cluster, genes B and D another with gene E in a cluster alone, as can be seen in figure \ref{fig:example_standardised_expression_data}. As this is the type of data we wish to cluster across, we therefore most standardise our expression data before clustering can be implemented.
-
+	
 	\begin{table}[] 
-	\centering
-	\begin{tabular}{c|cccc} 
-	Genes 	& Person 1	& Person 2	& Person 3	& Person 4	\\ 
-	\hline
-	A 		& 0.39		& 1.16 		& -1.16		& -0.39		\\
-	B 		& -0.24		& -1.20		& 0.24		& 1.20		\\
-	C 		& 0.39		& 1.16		& -1.16		& -0.39		\\
-	D 		& -0.24		& -1.20		& 0.24		& 1.20		\\
-	E 		& -0.87		& 0.87		& -0.87		& 0.87		
-	\end{tabular}
-	\caption{Example standardised gene expression data.}
-	\label{table:example_standardised_gene_expression_data}
+		\centering
+		\begin{tabular}{c|cccc} 
+			Genes 	& Person 1	& Person 2	& Person 3	& Person 4	\\ 
+			\hline
+			A 		& 0.39		& 1.16 		& -1.16		& -0.39		\\
+			B 		& -0.24		& -1.20		& 0.24		& 1.20		\\
+			C 		& 0.39		& 1.16		& -1.16		& -0.39		\\
+			D 		& -0.24		& -1.20		& 0.24		& 1.20		\\
+			E 		& -0.87		& 0.87		& -0.87		& 0.87		
+		\end{tabular}
+		\caption{Example standardised gene expression data.}
+		\label{table:example_standardised_gene_expression_data}
 	\end{table}
 	
 	\begin{figure}[h]
-	\centering
+		\centering
 		\includegraphics[scale=0.55]{Images/Examples/example_standardised_expression_data.png}
 		\caption{Heatmap of expression data in table \ref{table:example_standardised_gene_expression_data} showing the clusters based upon variation of expression across people.}
 		\label{fig:example_standardised_expression_data}
 	\end{figure}
+	
 		
 %	\subsection{The importance of gene sets}
 %	If we can cluster genes together it is possible that we can find deeper biological interpretation, understanding the context of the gene products and what they interact with. This can offer some insight into the connection between the gene and the expressed phenotype. Furthermore, \citet{NicaExpressionquantitativetrait2013} recommend investigating groups of cis-eQTL affecting a gene network that when perturbed results in a disease state. They claim this is far higher powered than the classical approach. This claim is supported by the findings of \citet{VosaUnravelingpolygenicarchitecture2018} who found that associations between \emph{polygenic risk scores} and gene expression (this association is referred to as ``expression quantitative trait score'' (eQTS) in \cite{VosaUnravelingpolygenicarchitecture2018}) contained the most biological information about disease in a comparison of cis-eQTL, trans-EQTL and eQTS. This finding is not unique to this paper \cite{DudbridgePowerPredictiveAccuracy2013}\cite{WrayResearchReviewPolygenic2014}. More generally, gene set enrichment analysis (GSEA) \cite{SubramanianGenesetenrichment2005a}\cite{MooneyGenesetanalysis2015} relies upon pre-defined gene sets. This method determines if gene sets have statistically significant, concordant differences between phenotypes and offers biological interpretation of the sets. Thus well-defined gene sets are required for informative, interpretable analysis of genomic information.
@@ -678,8 +689,11 @@
 %	\subsection{Variance stabilisation}
 	
 
-	\subsection{Data}
-	We use the gene expression data from Correlated Expression and Disease Association Research (CEDAR) cohort \cite{TheInternationalIBDGeneticsConsortiumIBDriskloci2018}. This data is avialable in a processed form \href{http://139.165.108.18/srv/genmol/permanent/1be6993fe41c12a051c9244d67c91da2be49e5dd26a6cd79f442bc006971e2ef/crohn-index.html}{online}. This consists of 9 .csv files, one for each tissue / cell type present of normalised gene expression data for 323 individuals. These are healthy individuals of European descent; the cohort consists of 182 women and 141 men with an average age of 56 years (but ranging from 19 to 86). None of the individuals are suffering from any autoimmune or inflammatory disease and were not taking corticosteroids or non-steroid anti-inflammatory drugs (with the exception of aspirin). 
+	\section{Data}
+	\subsection{Simulation: Case 1}
+	\subsection{Simulation: Case 2}
+	\subsection{CEDAR dataset}
+	We use the gene expression data from the CEDAR cohort \cite{TheInternationalIBDGeneticsConsortiumIBDriskloci2018}. This data is available in a processed form \href{http://139.165.108.18/srv/genmol/permanent/1be6993fe41c12a051c9244d67c91da2be49e5dd26a6cd79f442bc006971e2ef/crohn-index.html}{online}. This consists of 9 .csv files, one for each tissue / cell type present of normalised gene expression data for 323 individuals. These are healthy individuals of European descent; the cohort consists of 182 women and 141 men with an average age of 56 years (but ranging from 19 to 86). None of the individuals are suffering from any autoimmune or inflammatory disease and were not taking corticosteroids or non-steroid anti-inflammatory drugs (with the exception of aspirin). 
 	
 	With regards to tissue types, samples from six circulating immune cells types (followed in brackets by the abbreviation for the associated dataset):
 	\begin{itemize}
@@ -698,7 +712,7 @@
 	\end{itemize} 
 	Not every individual is present in every dataset. However, as we are clustering genes this should not present a problem.
 	
-	Whole genome expression data were generated using HT-12 Expression Beadchips following the instructions of the manufacturer (Illumina). There are 18,524 probes present between the 9 datasets.
+	Whole genome expression data were generated using HT-12 Expression Beadchips following the instructions of the manufacturer (Illumina). There are 18,524 probes present between the 9 datasets. The fluorescence intensities are available after undergoing a $\log_2$ transformation and being Robust Spline Normalized (a method that is designed to normalize variance-stabilized data).
 	
 %	\begin{figure}[h]
 	\begin{sidewaysfigure}
@@ -709,11 +723,21 @@
 	\end{sidewaysfigure}
 %	\end{figure}
 	
-	The fluorescence intensities were $\log_2$ transformed and Robust Spline Normalized with Lumi38.
-	
 	It should be noted that there are differing degrees of missingness between the datasets (for instance the platelets dataset has 6,564 probes present in comparison to an average of 12,838 probes present per dataset, see figure \ref{fig:probe_presence_across_datasets}).
 	
-	Due to this and the exponential increase in computational cost for each additional dataset, we use only the 8 most informative datasets, dropping PLA from our analysis. From a biological perspective we also expect PLA to be the least rich as platelets have no nucleus citeWRIGHT and therefore any gene expression is an artefact from before they differentiated into platelets. 
+	Due to exponential increase in computational cost for each additional dataset, we use only the 7 most informative datasets, dropping PLA and CD15 from our analysis. 
+	
+	From a biological perspective we also expect PLA to be the least rich as platelets have no nucleus \cite{Wrighthistogenesisbloodplatelets1910} and therefore any gene expression is an artefact from before they differentiated into platelets. 
+	
+	With regards to CD15 granulocytes, (mast cells, basophils, neutrophils and eosinophils), these are quite distinct from B and T lymphocytes (see figure \ref{fig:white_blood_cell_differentiation}). Based on this we expect there to be less common information pertinent to clustering genes in other datasets. Arguably monocytes are equally distant, but the level of missingness in the CD15 dataset is greater than that in the CD14 dataset; thus CD15 is elimanted from our analysis.
+
+	\begin{figure}[h]
+		\centering
+		\includegraphics[scale=0.75]{Images/white_blood_cell_differentiation.jpg}
+		\caption{The differentiation of multipotent cells into blood and immune cells.}
+		\label{fig:white_blood_cell_differentiation}
+	\end{figure}
+
 
 %	Individuals were genotyped for more than 700,000 SNPs using Illumina's Human OmniExpress BeadChips, an iScan system and the Genome Studio software following the guidelines of the manufacturer. Variants were elimanted with call rate $\leq 0.95$, deviating from Hardy-Weinberg equilibrium $(p \leq 0.95)$, or which were monomorphic.
 %	

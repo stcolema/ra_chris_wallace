@@ -1,4 +1,4 @@
-\begin{thebibliography}{28}
+\begin{thebibliography}{29}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -370,5 +370,13 @@ Naomi~R. Wray, Sang~Hong Lee, Divya Mehta, Anna~A.E. Vinkhuyzen, Frank
   (10):\penalty0 1068--1087, October 2014.
 \newblock ISSN 00219630.
 \newblock \doi{10.1111/jcpp.12295}.
+
+\bibitem[Wright(1910)]{Wrighthistogenesisbloodplatelets1910}
+James~Homer Wright.
+\newblock The histogenesis of the blood platelets.
+\newblock \emph{Journal of Morphology}, 21\penalty0 (2):\penalty0 263--278,
+  July 1910.
+\newblock ISSN 0362-2525, 1097-4687.
+\newblock \doi{10.1002/jmor.1050210204}.
 
 \end{thebibliography}
