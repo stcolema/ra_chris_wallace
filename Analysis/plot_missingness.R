@@ -81,10 +81,13 @@ for(d in new_order[1:9]){
 mean(n_pres)
 mean(n_pres[-9])
 
-ggplot(gathered_data, aes(Dataset, ..count..)) +
-  geom_bar(aes(fill = Present), position = "dodge") +
+ggplot(gathered_data, aes(Dataset, ..count.., fill = Present)) +
+  geom_bar(, position = "dodge") +
+  ylim(0, 20000) +
+  geom_text(stat='count', aes(label=..count..), position = position_dodge(width=1), hjust = 0, vjust=-1, angle = 60) +
   labs(title = "Probe presence across datasets",
        y = "Count") +
   theme_bw() + 
-  theme(axis.text.x = element_text(angle = 30, hjust=1))
-  
+  theme(axis.text.x = element_text(angle = 30, hjust=1)) 
+
+ggsave("./Notes/Thesis/Images/probe_presence_across_datasets.png")

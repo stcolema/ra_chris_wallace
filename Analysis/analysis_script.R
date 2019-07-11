@@ -417,8 +417,6 @@ curr_viable_datasets <- list(
   )
 )
 
-# print(all_datasets)
-
 # Check columns are as expected.
 if(length(all_datasets) == length(curr_viable_datasets[[1]])){
   if(! all.equal(all_datasets[match(curr_viable_datasets[[1]], all_datasets)], curr_viable_datasets[[1]])){
