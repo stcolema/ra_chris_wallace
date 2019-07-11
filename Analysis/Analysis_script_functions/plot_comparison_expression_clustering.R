@@ -46,8 +46,10 @@ combine_pheatmaps <- function(ph_list,
     if (is.null(save_name)) {
       return(out_plot)
     }
-    # Save using ggplot2::ggsave
-    ggsave(save_name, width = 12, height = 8)
+    if(! is.na(save_name)){
+      # Save using ggplot2::ggsave
+      ggsave(save_name, width = 12, height = 8)
+    }
   }
   if (n_ph == 3) {
     out_plot <- cowplot::plot_grid(
@@ -64,9 +66,12 @@ combine_pheatmaps <- function(ph_list,
     if (is.null(save_name)) {
       return(out_plot)
     }
-    # Save using ggplot2::ggsave
-    ggsave(save_name, width = 18, height = 8)
+    if(! is.na(save_name)){
+      # Save using ggplot2::ggsave
+      ggsave(save_name, width = 18, height = 8)
+    }
   }
+  out_plot
 }
 
 heatmap_comparison_sim_expr <- function(...,
@@ -76,7 +81,8 @@ heatmap_comparison_sim_expr <- function(...,
                                         col_pal_expr = colorRampPalette(c("#146EB4", "white", "#FF9900"))(100),
                                         expr_breaks = NULL,
                                         sim_breaks = NULL,
-                                        show_row_labels = FALSE) {
+                                        show_row_labels = FALSE,
+                                        show_col_labels = FALSE) {
   
   if (is.null(expr_breaks)) {
     expr_breaks <- define_breaks(col_pal_expr)
@@ -112,6 +118,7 @@ heatmap_comparison_sim_expr <- function(...,
     color = col_pal_sim,
     breaks = sim_breaks,
     show_rownames = show_row_labels,
+    show_colnames = show_col_labels,
     silent = TRUE
   )$gtable
 
@@ -121,6 +128,7 @@ heatmap_comparison_sim_expr <- function(...,
     color = col_pal_expr,
     breaks = expr_breaks,
     show_rownames = show_row_labels,
+    show_colnames = show_col_labels,
     silent = TRUE
   )$gtable
 
@@ -385,7 +393,8 @@ heatmap_comparison_sim_expr_cor <- function(...,
                                             expr_breaks = NULL,
                                             sim_breaks = NULL,
                                             font_size = 20,
-                                            show_row_labels = FALSE) {
+                                            show_row_labels = FALSE,
+                                            show_col_labels = FALSE) {
   if (is.null(expr_breaks)) {
     expr_breaks <- define_breaks(col_pal_expr)
     
@@ -420,6 +429,7 @@ heatmap_comparison_sim_expr_cor <- function(...,
     color = col_pal_sim,
     breaks = sim_breaks,
     show_rownames = show_row_labels,
+    show_colnames = show_col_labels,
     silent = TRUE
   )$gtable
 
@@ -429,6 +439,7 @@ heatmap_comparison_sim_expr_cor <- function(...,
     color = col_pal_expr,
     breaks = expr_breaks,
     show_rownames = show_row_labels,
+    show_colnames = show_col_labels,
     silent = TRUE
   )$gtable
 
@@ -438,6 +449,7 @@ heatmap_comparison_sim_expr_cor <- function(...,
     color = col_pal_expr,
     breaks = expr_breaks,
     show_rownames = show_row_labels,
+    show_colnames = show_col_labels,
     silent = TRUE
   )$gtable
 
