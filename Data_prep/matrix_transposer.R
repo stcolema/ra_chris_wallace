@@ -334,6 +334,7 @@ vsn_data_table <- function(dt, exponent = 2) {
   dt %>%
     .[rowSums(.) != 0, ] %>% # Remove any empty observations
     as.matrix() %>% # Convert to matrix (required by vsnMatrix)
+    # lumi::inverseVST() %>% # remove variance stabilisation transform (this is not possible with the information availabe)
     exponent^. %>% # Exponentiate to move from log scale
     vsn::vsnMatrix() %>% # Apply variance stabilization
     vsn::exprs() %>% # get the expression data
@@ -446,6 +447,9 @@ write_data <- function(file_name, extension, write_dir,
     }
     
     if (do_vsn) {
+      
+      cat("\nDoing variance stabilisation normalisation.\n")
+      
       # Variance stabilisation
       keep_names <- names(dt_out) != "V1"
 
