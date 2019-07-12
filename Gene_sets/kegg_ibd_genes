@@ -1,0 +1,67 @@
+KEGG GENES
+
+hsa:112744           K05494 interleukin 17F | (RefSeq) IL17F, CANDF6, IL-17F, ML-1, ML1; interleukin 17F 
+hsa:149233           K05065 interleukin 23 receptor | (RefSeq) IL23R; interleukin 23 receptor 
+hsa:2625             K17895 GATA-binding protein 3 | (RefSeq) GATA3, HDR, HDRS; GATA binding protein 3 
+hsa:30009            K10166 T-box protein 21 | (RefSeq) TBX21, T-PET, T-bet, TBET, TBLYM; T-box 21 
+hsa:3108             K06752 MHC class II antigen | (RefSeq) HLA-DMA, D6S222E, DMA, HLADM, RING6; major histocompatibility 
+hsa:3109             K06752 MHC class II antigen | (RefSeq) HLA-DMB, D6S221E, RING7; major histocompatibility complex, cl 
+hsa:3111             K06752 MHC class II antigen | (RefSeq) HLA-DOA, HLA-DNA, HLA-DZA, HLADZ; major histocompatibility co 
+hsa:3112             K06752 MHC class II antigen | (RefSeq) HLA-DOB, DOB, HLA_DOB; major histocompatibility complex, clas 
+hsa:3113             K06752 MHC class II antigen | (RefSeq) HLA-DPA1, DP(W3), DP(W4), DPA1, HLA-DP1A, HLADP, HLASB, PLT1; 
+hsa:3115             K06752 MHC class II antigen | (RefSeq) HLA-DPB1, DPB1, HLA-DP, HLA-DP1B, HLA-DPB; major histocompati 
+hsa:3117             K06752 MHC class II antigen | (RefSeq) HLA-DQA1, CELIAC1, DQ-A1, DQA1, HLA-DQA; major histocompatibi 
+hsa:3118             K06752 MHC class II antigen | (RefSeq) HLA-DQA2, DC-alpha, DX-ALPHA, HLA-DCA, HLA-DXA, HLADQA2; majo 
+hsa:3119             K06752 MHC class II antigen | (RefSeq) HLA-DQB1, CELIAC1, HLA-DQB, IDDM1; major histocompatibility c 
+hsa:3122             K06752 MHC class II antigen | (RefSeq) HLA-DRA, HLA-DRA1; major histocompatibility complex, class II 
+hsa:3123             K06752 MHC class II antigen | (RefSeq) HLA-DRB1, DRB1, HLA-DR1B, HLA-DRB, SS1; major histocompatibil 
+hsa:3125             K06752 MHC class II antigen | (RefSeq) HLA-DRB3, DRB3, HLA-DPB1, HLA-DR1B, HLA-DR3B; major histocomp 
+hsa:3126             K06752 MHC class II antigen | (RefSeq) HLA-DRB4, DR4, DRB4, HLA-DR4B; major histocompatibility compl 
+hsa:3127             K06752 MHC class II antigen | (RefSeq) HLA-DRB5; major histocompatibility complex, class II, DR beta 
+hsa:3458             K04687 interferon gamma | (RefSeq) IFNG, IFG, IFI; interferon gamma 
+hsa:3459             K05132 interferon gamma receptor 1 | (RefSeq) IFNGR1, CD119, IFNGR, IMD27A, IMD27B; interferon gamma 
+hsa:3460             K05133 interferon gamma receptor 2 | (RefSeq) IFNGR2, AF-1, IFGR2, IFNGT1, IMD28; interferon gamma r 
+hsa:3552             K04383 interleukin 1 alpha | (RefSeq) IL1A, IL-1A, IL1, IL1-ALPHA, IL1F1; interleukin 1 alpha 
+hsa:3553             K04519 interleukin 1 beta | (RefSeq) IL1B, IL-1, IL1-BETA, IL1F2; interleukin 1 beta 
+hsa:3558             K05429 interleukin 2 | (RefSeq) IL2, IL-2, TCGF, lymphokine; interleukin 2 
+hsa:3561             K05070 interleukin 2 receptor gamma | (RefSeq) IL2RG, CD132, CIDX, IL-2RG, IMD4, P64, SCIDX, SCIDX1; 
+hsa:3565             K05430 interleukin 4 | (RefSeq) IL4, BCGF-1, BCGF1, BSF-1, BSF1, IL-4; interleukin 4 
+hsa:3566             K05071 interleukin 4 receptor | (RefSeq) IL4R, CD124, IL-4RA, IL4RA; interleukin 4 receptor 
+hsa:3567             K05428 interleukin 5 | (RefSeq) IL5, EDF, IL-5, TRF; interleukin 5 
+hsa:3569             K05405 interleukin 6 | (RefSeq) IL6, BSF-2, BSF2, CDF, HGF, HSF, IFN-beta-2, IFNB2, IL-6; interleuki 
+hsa:3586             K05443 interleukin 10 | (RefSeq) IL10, CSIF, GVHDS, IL-10, IL10A, TGIF; interleukin 10 
+hsa:3592             K05406 interleukin 12A | (RefSeq) IL12A, CLMF, IL-12A, NFSK, NKSF1, P35; interleukin 12A 
+hsa:3593             K05425 interleukin 12B | (RefSeq) IL12B, CLMF, CLMF2, IL-12B, IMD28, IMD29, NKSF, NKSF2; interleukin 
+hsa:3594             K05063 interleukin 12 receptor beta-1 | (RefSeq) IL12RB1, CD212, IL-12R-BETA1, IL12RB, IMD30; interl 
+hsa:3595             K05064 interleukin 12 receptor beta-2 | (RefSeq) IL12RB2; interleukin 12 receptor subunit beta 2 
+hsa:3596             K05435 interleukin 13 | (RefSeq) IL13, IL-13, P600; interleukin 13 
+hsa:3605             K05489 interleukin 17A | (RefSeq) IL17A, CTLA-8, CTLA8, IL-17, IL-17A, IL17; interleukin 17A 
+hsa:3606             K05482 interleukin 18 | (RefSeq) IL18, IGIF, IL-18, IL-1g, IL1F4; interleukin 18 
+hsa:3725             K04448 transcription factor AP-1 | (RefSeq) JUN, AP-1, AP1, c-Jun, p39; Jun proto-oncogene, AP-1 tra 
+hsa:4087             K04500 mothers against decapentaplegic homolog 2/3 | (RefSeq) SMAD2, JV18, JV18-1, MADH2, MADR2, hMA 
+hsa:4088             K04500 mothers against decapentaplegic homolog 2/3 | (RefSeq) SMAD3, HSPC193, HsT17436, JV15-2, LDS1 
+hsa:4094             K09035 transcription factor Maf | (RefSeq) MAF, AYGRP, CCA4, CTRCT21, c-MAF; MAF bZIP transcription  
+hsa:4772             K04446 nuclear factor of activated T-cells, cytoplasmic 1 | (RefSeq) NFATC1, NF-ATC, NF-ATc1.2, NFAT 
+hsa:4790             K02580 nuclear factor NF-kappa-B p105 subunit | (RefSeq) NFKB1, CVID12, EBP-1, KBF1, NF-kB1, NF-kapp 
+hsa:50615            K05075 interleukin 21 receptor | (RefSeq) IL21R, CD360, IMD56, NILR; interleukin 21 receptor 
+hsa:50616            K05445 interleukin 22 | (RefSeq) IL22, IL-21, IL-22, IL-D110, IL-TIF, ILTIF, TIFIL-23, TIFa, zcyto18 
+hsa:50943            K10163 forkhead box P3 | (RefSeq) FOXP3, AIID, DIETER, IPEX, JM2, PIDX, XPID; forkhead box P3 
+hsa:51561            K05426 interleukin 23 subunit alpha | (RefSeq) IL23A, IL-23, IL-23A, IL23P19, P19, SGRF; interleukin 
+hsa:59067            K05434 interleukin 21 | (RefSeq) IL21, CVID11, IL-21, Za11; interleukin 21 
+hsa:5970             K04735 transcription factor p65 | (RefSeq) RELA, CMCU, NFKB3, p65; RELA proto-oncogene, NF-kB subuni 
+hsa:6095             K08532 RAR-related orphan receptor alpha | (RefSeq) RORA, IDDECA, NR1F1, ROR1, ROR2, ROR3, RZR-ALPHA 
+hsa:6097             K08534 RAR-related orphan receptor gamma | (RefSeq) RORC, IMD42, NR1F3, RORG, RZR-GAMMA, RZRG, TOR;  
+hsa:64127            K10165 nucleotide-binding oligomerization domain-containing protein 2 | (RefSeq) NOD2, ACUG, BLAU, B 
+hsa:6772             K11220 signal transducer and activator of transcription 1 | (RefSeq) STAT1, CANDF7, IMD31A, IMD31B,  
+hsa:6774             K04692 signal transducer and activator of transcription 3 | (RefSeq) STAT3, ADMIO, ADMIO1, APRF, HIE 
+hsa:6775             K11222 signal transducer and activator of transcription 4 | (RefSeq) STAT4, SLEB11; signal transduce 
+hsa:6778             K11225 signal transducer and activator of transcription 6 | (RefSeq) STAT6, D12S1644, IL-4-STAT, STA 
+hsa:7040             K13375 transforming growth factor beta-1 | (RefSeq) TGFB1, CED, DPD1, IBDIMDE, LAP, TGFB, TGFbeta; t 
+hsa:7042             K13376 transforming growth factor beta-2 | (RefSeq) TGFB2, G-TSF, LDS4, TGF-beta2; transforming grow 
+hsa:7043             K13377 transforming growth factor beta-3 | (RefSeq) TGFB3, ARVD, ARVD1, LDS5, RNHF, TGF-beta3; trans 
+hsa:7097             K10159 toll-like receptor 2 | (RefSeq) TLR2, CD282, TIL4; toll like receptor 2 
+hsa:7099             K10160 toll-like receptor 4 | (RefSeq) TLR4, ARMD10, CD284, TLR-4, TOLL; toll like receptor 4 
+hsa:7100             K10168 toll-like receptor 5 | (RefSeq) TLR5, MELIOS, SLE1, SLEB1, TIL3; toll like receptor 5 
+hsa:7124             K03156 tumor necrosis factor superfamily, member 2 | (RefSeq) TNF, DIF, TNF-alpha, TNFA, TNFSF2, TNL 
+hsa:8807             K05174 interleukin 18 receptor accessory protein | (RefSeq) IL18RAP, ACPL, CD218b, CDw218b, IL-18R-b 
+hsa:8809             K05173 interleukin 18 receptor 1 | (RefSeq) IL18R1, CD218a, CDw218a, IL-1Rrp, IL18RA, IL1RRP; interl 
