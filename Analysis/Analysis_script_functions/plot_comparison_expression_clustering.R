@@ -4,6 +4,7 @@
 library(cowplot)
 library(pheatmap)
 library(ggplot2)
+library(RColorBrewer)
 
 define_breaks <- function(col_pal, lb = -1, ub = 1){
   palette_length <- length(col_pal)

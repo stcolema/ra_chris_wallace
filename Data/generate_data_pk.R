@@ -126,12 +126,12 @@ input_arguments <- function() {
 }
 
 
-generate_peturbed_data <- function(
-                                   means,
+generate_peturbed_data <- function(means,
                                    n_clust,
                                    mu_peturbation,
-                                   sd_peturbation) {
-  
+                                   sd_peturbation,
+                                   p) {
+
   # Basic data of 5 clusters
   univariateData <- c(
     rnorm(n_clust[1], means[1]),
@@ -171,13 +171,13 @@ sd_peturbation <- args$sd
 # The number of clusters to generate in each cluster
 n_clust <- args$n_clust %>%
   strsplit(" ") %>%
-  unlist() %>% 
+  unlist() %>%
   as.numeric()
 
 # The means of the clusters
 means <- args$means %>%
   strsplit(" ") %>%
-  unlist() %>% 
+  unlist() %>%
   as.numeric()
 
 # Directory to save to
@@ -202,7 +202,8 @@ new_data <- generate_peturbed_data(
   means,
   n_clust,
   mu_peturbation,
-  sd_peturbation
+  sd_peturbation,
+  p
 )
 
 # Create directory if doesn't exist
