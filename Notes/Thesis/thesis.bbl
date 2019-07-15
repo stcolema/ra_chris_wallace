@@ -1,4 +1,4 @@
-\begin{thebibliography}{29}
+\begin{thebibliography}{40}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -19,10 +19,25 @@ Michael Ashburner, Catherine~A. Ball, Judith~A. Blake, David Botstein, Heather
 \newblock ISSN 1061-4036, 1546-1718.
 \newblock \doi{10.1038/75556}.
 
-\bibitem[Brennan and Light(1974)]{BrennanMEASURINGAGREEMENTWHEN1974}
+\bibitem[Breiman(1)]{BreimanRandomForests1}
+Leo Breiman.
+\newblock Random {{Forests}}.
+\newblock \emph{Machine Learning}, 45\penalty0 (1573-0565):\penalty0 5--32,
+  January 1.
+\newblock \doi{10.1023/A:1010933404324}.
+
+\bibitem[Breiman(1996)]{BreimanBaggingpredictors1996}
+Leo Breiman.
+\newblock Bagging predictors.
+\newblock \emph{Machine Learning}, 24\penalty0 (2):\penalty0 123--140, August
+  1996.
+\newblock ISSN 0885-6125, 1573-0565.
+\newblock \doi{10.1007/BF00058655}.
+
+\bibitem[Brennan and Light(1974)]{BrennanMeasuringagreementwhen1974}
 Robert~L. Brennan and Richard~J. Light.
-\newblock {{MEASURING AGREEMENT WHEN TWO OBSERVERS CLASSIFY PEOPLE INTO
-  CATEGORIES NOT DEFINED IN ADVANCE}}.
+\newblock Measuring agreement when two observers classify people into
+  categories not defined in advance.
 \newblock \emph{British Journal of Mathematical and Statistical Psychology},
   27\penalty0 (2):\penalty0 154--163, November 1974.
 \newblock ISSN 00071102.
@@ -53,6 +68,15 @@ Brooke~L Fridley and Joanna~M Biernacka.
 \newblock ISSN 1018-4813, 1476-5438.
 \newblock \doi{10.1038/ejhg.2011.57}.
 
+\bibitem[Fritsch and Ickstadt(2009)]{FritschImprovedcriteriaclustering2009}
+Arno Fritsch and Katja Ickstadt.
+\newblock Improved criteria for clustering based on the posterior similarity
+  matrix.
+\newblock \emph{Bayesian Analysis}, 4\penalty0 (2):\penalty0 367--391, June
+  2009.
+\newblock ISSN 1936-0975.
+\newblock \doi{10.1214/09-BA414}.
+
 \bibitem[Garrett et~al.(2010)Garrett, Gordon, and
   Glimcher]{GarrettHomeostasisInflammationIntestine2010}
 Wendy~S. Garrett, Jeffrey~I. Gordon, and Laurie~H. Glimcher.
@@ -61,6 +85,20 @@ Wendy~S. Garrett, Jeffrey~I. Gordon, and Laurie~H. Glimcher.
 \newblock ISSN 00928674.
 \newblock \doi{10.1016/j.cell.2010.01.023}.
 
+\bibitem[Gelman and Rubin(1992)]{GelmanInferenceIterativeSimulation1992}
+Andrew Gelman and Donald~B. Rubin.
+\newblock Inference from {{Iterative Simulation Using Multiple Sequences}}.
+\newblock \emph{Statistical Science}, 7\penalty0 (4):\penalty0 457--472,
+  November 1992.
+\newblock ISSN 0883-4237.
+\newblock \doi{10.1214/ss/1177011136}.
+
+\bibitem[Geweke()]{GewekeEvaluatingAccuracySamplingBased}
+John Geweke.
+\newblock Evaluating the {{Accuracy}} of {{Sampling}}-{{Based Approaches}} to
+  the {{Calculation}} of {{Posterior Moments}}.
+\newblock \emph{Bayesian Statistics}, 4:\penalty0 169--193.
+
 \bibitem[Grundberg et~al.(2012)Grundberg, Small, Hedman, Nica, Buil, Keildson,
   Bell, Yang, Meduri, Barrett, Nisbett, Sekowska, Wilk, Shin, Glass, Travers,
   Min, Ring, Ho, Thorleifsson, Kong, Thorsteindottir, Ainali, Dimas, Hassanali,
@@ -68,7 +106,7 @@ Wendy~S. Garrett, Jeffrey~I. Gordon, and Laurie~H. Glimcher.
   Surdulescu, Tsaprouni, Tsoka, Bataille, Durbin, Nestle, O'Rahilly, Soranzo,
   Lindgren, Zondervan, Ahmadi, Schadt, Stefansson, Smith, McCarthy, Deloukas,
   Dermitzakis, and Spector]{GrundbergMappingcistransregulatory2012}
-Elin Grundberg, Kerrin~S Small, \AA{}sa~K Hedman, Alexandra~C Nica, Alfonso
+Elin Grundberg, Kerrin~S Small, {\AA}sa~K Hedman, Alexandra~C Nica, Alfonso
   Buil, Sarah Keildson, Jordana~T Bell, Tsun-Po Yang, Eshwar Meduri, Amy
   Barrett, James Nisbett, Magdalena Sekowska, Alicja Wilk, So-Youn Shin, Daniel
   Glass, Mary Travers, Josine~L Min, Sue Ring, Karen Ho, Gudmar Thorleifsson,
@@ -95,8 +133,8 @@ Elin Grundberg, Kerrin~S Small, \AA{}sa~K Hedman, Alexandra~C Nica, Alfonso
 \newblock \doi{10.1038/nature24277}.
 
 \bibitem[Hejblum et~al.(2015)Hejblum, Skinner, and
-  Thi\'ebaut]{HejblumTimeCourseGeneSet2015}
-Boris~P. Hejblum, Jason Skinner, and Rodolphe Thi\'ebaut.
+  Thi{\'e}baut]{HejblumTimeCourseGeneSet2015}
+Boris~P. Hejblum, Jason Skinner, and Rodolphe Thi{\'e}baut.
 \newblock Time-{{Course Gene Set Analysis}} for {{Longitudinal Gene Expression
   Data}}.
 \newblock \emph{PLOS Computational Biology}, 11\penalty0 (6):\penalty0
@@ -145,6 +183,24 @@ Paul Kirk, Jim~E. Griffin, Richard~S. Savage, Zoubin Ghahramani, and David~L.
 \newblock ISSN 1460-2059, 1367-4803.
 \newblock \doi{10.1093/bioinformatics/bts595}.
 
+\bibitem[Lancichinetti and
+  Fortunato(2012)]{LancichinettiConsensusclusteringcomplex2012}
+Andrea Lancichinetti and Santo Fortunato.
+\newblock Consensus clustering in complex networks.
+\newblock \emph{Scientific Reports}, 2\penalty0 (1):\penalty0 336, December
+  2012.
+\newblock ISSN 2045-2322.
+\newblock \doi{10.1038/srep00336}.
+
+\bibitem[Li and Ding(2008)]{LiWeightedConsensusClustering2008}
+Tao Li and Chris Ding.
+\newblock Weighted {{Consensus Clustering}}.
+\newblock In \emph{Proceedings of the 2008 {{SIAM International Conference}} on
+  {{Data Mining}}}, pages 798--809. {Society for Industrial and Applied
+  Mathematics}, April 2008.
+\newblock ISBN 978-0-89871-654-2 978-1-61197-278-8.
+\newblock \doi{10.1137/1.9781611972788.72}.
+
 \bibitem[Lonsdale et~al.(2013)Lonsdale, Thomas, Salvatore, Phillips, Lo, Shad,
   Hasz, Walters, Garcia, Young, Foster, Moser, Karasik, Gillard, Ramsey,
   Sullivan, Bridge, Magazine, Syron, Fleming, Siminoff, Traino, Mosavel,
@@ -177,7 +233,7 @@ John Lonsdale, Jeffrey Thomas, Mike Salvatore, Rebecca Phillips, Edmund Lo,
   Young, Ellen Gelfand, Molly Donovan, Yan Meng, George Grant, Deborah Mash,
   Yvonne Marcus, Margaret Basile, Jun Liu, Jun Zhu, Zhidong Tu, Nancy~J Cox,
   Dan~L Nicolae, Eric~R Gamazon, Hae~Kyung Im, Anuar Konkashbaev, Jonathan
-  Pritchard, Matthew Stevens, Timoth\`ee Flutre, Xiaoquan Wen, Emmanouil~T
+  Pritchard, Matthew Stevens, Timoth{\`e}e Flutre, Xiaoquan Wen, Emmanouil~T
   Dermitzakis, Tuuli Lappalainen, Roderic Guigo, Jean Monlong, Michael Sammeth,
   Daphne Koller, Alexis Battle, Sara Mostafavi, Mark McCarthy, Manual Rivas,
   Julian Maller, Ivan Rusyn, Andrew Nobel, Fred Wright, Andrey Shabalin, Mike
@@ -250,6 +306,23 @@ Chin-Tong Ong and Victor~G. Corces.
 \newblock ISSN 1471-0056, 1471-0064.
 \newblock \doi{10.1038/nrg2957}.
 
+\bibitem[OpenStax(2016)]{OpenStaxAnatomyPhysiology2016}
+OpenStax.
+\newblock \emph{Anatomy \& {{Physiology}}}.
+\newblock {OpenStax CNX}, February 2016.
+
+\bibitem[{Pita-Ju{\'a}rez} et~al.(2018){Pita-Ju{\'a}rez}, Altschuler, Kariotis,
+  Wei, Koler, Green, Tanzi, and
+  Hide]{Pita-JuarezPathwayCoexpressionNetwork2018}
+Yered {Pita-Ju{\'a}rez}, Gabriel Altschuler, Sokratis Kariotis, Wenbin Wei,
+  Katju{\v s}a Koler, Claire Green, Rudolph~E. Tanzi, and Winston Hide.
+\newblock The {{Pathway Coexpression Network}}: {{Revealing}} pathway
+  relationships.
+\newblock \emph{PLOS Computational Biology}, 14\penalty0 (3):\penalty0
+  e1006042, March 2018.
+\newblock ISSN 1553-7358.
+\newblock \doi{10.1371/journal.pcbi.1006042}.
+
 \bibitem[Rand(1971)]{RandObjectiveCriteriaEvaluation1971}
 William~N. Rand.
 \newblock Objective {{Criteria}} for the {{Evaluation}} of {{Clustering
@@ -293,23 +366,23 @@ Damian Szklarczyk, Annika~L Gable, David Lyon, Alexander Junge, Stefan Wyder,
 \newblock \doi{10.1093/nar/gky1131}.
 
 \bibitem[{The International IBD Genetics Consortium} et~al.(2018){The
-  International IBD Genetics Consortium}, Momozawa, Dmitrieva, Th\'e\^atre,
+  International IBD Genetics Consortium}, Momozawa, Dmitrieva, Th{\'e}{\^a}tre,
   Deffontaine, Rahmouni, Charloteaux, Crins, Docampo, Elansary, Gori, Lecut,
   Mariman, Mni, Oury, Altukhov, Alexeev, Aulchenko, Amininejad, Bouma,
-  Hoentjen, L\"owenberg, Oldenburg, Pierik, {vander Meulen-de Jong}, {Janneke
+  Hoentjen, L{\"o}wenberg, Oldenburg, Pierik, {vander Meulen-de Jong}, {Janneke
   van der Woude}, Visschedijk, Lathrop, Hugot, Weersma, De~Vos, Franchimont,
   Vermeire, Kubo, Louis, and
   Georges]{TheInternationalIBDGeneticsConsortiumIBDriskloci2018}
 {The International IBD Genetics Consortium}, Yukihide Momozawa, Julia
-  Dmitrieva, Emilie Th\'e\^atre, Val\'erie Deffontaine, Souad Rahmouni,
-  Beno\^it Charloteaux, Fran{\c c}ois Crins, Elisa Docampo, Mahmoud Elansary,
-  Ann-Stephan Gori, Christelle Lecut, Rob Mariman, Myriam Mni, C\'ecile Oury,
+  Dmitrieva, Emilie Th{\'e}{\^a}tre, Val{\'e}rie Deffontaine, Souad Rahmouni,
+  Beno{\^i}t Charloteaux, Fran{\c c}ois Crins, Elisa Docampo, Mahmoud Elansary,
+  Ann-Stephan Gori, Christelle Lecut, Rob Mariman, Myriam Mni, C{\'e}cile Oury,
   Ilya Altukhov, Dmitry Alexeev, Yuri Aulchenko, Leila Amininejad, Gerd Bouma,
-  Frank Hoentjen, Mark L\"owenberg, Bas Oldenburg, Marieke~J. Pierik, Andrea~E.
-  {vander Meulen-de Jong}, C.~{Janneke van der Woude}, Marijn~C. Visschedijk,
-  Mark Lathrop, Jean-Pierre Hugot, Rinse~K. Weersma, Martine De~Vos, Denis
-  Franchimont, Severine Vermeire, Michiaki Kubo, Edouard Louis, and Michel
-  Georges.
+  Frank Hoentjen, Mark L{\"o}wenberg, Bas Oldenburg, Marieke~J. Pierik,
+  Andrea~E. {vander Meulen-de Jong}, C.~{Janneke van der Woude}, Marijn~C.
+  Visschedijk, Mark Lathrop, Jean-Pierre Hugot, Rinse~K. Weersma, Martine
+  De~Vos, Denis Franchimont, Severine Vermeire, Michiaki Kubo, Edouard Louis,
+  and Michel Georges.
 \newblock {{IBD}} risk loci are enriched in multigenic regulatory modules
   encompassing putative causative genes.
 \newblock \emph{Nature Communications}, 9\penalty0 (1):\penalty0 2427, December
@@ -317,48 +390,67 @@ Damian Szklarczyk, Annika~L Gable, David Lyon, Alexander Junge, Stefan Wyder,
 \newblock ISSN 2041-1723.
 \newblock \doi{10.1038/s41467-018-04365-8}.
 
-\bibitem[V\~osa et~al.(2018)V\~osa, Claringbould, Westra, Bonder, Deelen, Zeng,
-  Kirsten, Saha, Kreuzhuber, Kasela, Pervjakova, Alvaes, Fave, Agbessi,
-  Christiansen, Jansen, Sepp\"al\"a, Tong, Teumer, Schramm, Hemani, Verlouw,
-  Yaghootkar, S\"onmez, Andrew, Kukushkina, Kalnapenkis, R\"ueger, Porcu,
-  {Kronberg-Guzman}, Kettunen, Powell, Lee, Zhang, Arindrarto, Beutner, {BIOS
-  Consortium}, Brugge, {i2QTL Consortium}, Dmitrieva, Elansary, Fairfax,
-  Georges, Heijmans, K\"ah\"onen, Kim, Knight, Kovacs, Krohn, Li, Loeffler,
-  Marigorta, Mei, Momozawa, {M\"uller-Nurasyid}, Nauck, Nivard, Penninx,
+\bibitem[Tjelmeland and Hegstad(2001)]{TjelmelandModeJumpingProposals2001}
+Hakon Tjelmeland and Bjorn~Kare Hegstad.
+\newblock Mode {{Jumping Proposals}} in {{MCMC}}.
+\newblock \emph{Scandinavian Journal of Statistics}, 28\penalty0 (1):\penalty0
+  205--223, March 2001.
+\newblock ISSN 0303-6898, 1467-9469.
+\newblock \doi{10.1111/1467-9469.00232}.
+
+\bibitem[V{\~o}sa et~al.(2018)V{\~o}sa, Claringbould, Westra, Bonder, Deelen,
+  Zeng, Kirsten, Saha, Kreuzhuber, Kasela, Pervjakova, Alvaes, Fave, Agbessi,
+  Christiansen, Jansen, Sepp{\"a}l{\"a}, Tong, Teumer, Schramm, Hemani,
+  Verlouw, Yaghootkar, S{\"o}nmez, Andrew, Kukushkina, Kalnapenkis, R{\"u}eger,
+  Porcu, {Kronberg-Guzman}, Kettunen, Powell, Lee, Zhang, Arindrarto, Beutner,
+  {BIOS Consortium}, Brugge, {i2QTL Consortium}, Dmitrieva, Elansary, Fairfax,
+  Georges, Heijmans, K{\"a}h{\"o}nen, Kim, Knight, Kovacs, Krohn, Li, Loeffler,
+  Marigorta, Mei, Momozawa, {M{\"u}ller-Nurasyid}, Nauck, Nivard, Penninx,
   Pritchard, Raitakari, Rotzschke, Slagboom, Stehouwer, Stumvoll, Sullivan, {'t
-  Hoen}, Thiery, T\"onjes, {van Dongen}, {van Iterson}, Veldink, V\"olker,
+  Hoen}, Thiery, T{\"o}njes, {van Dongen}, {van Iterson}, Veldink, V{\"o}lker,
   Wijmenga, Swertz, Andiappan, Montgomery, Ripatti, Perola, Kutalik,
   Dermitzakis, Bergmann, Frayling, {van Meurs}, Prokisch, Ahsan, Pierce,
-  Lehtim\"aki, Boomsma, Psaty, Gharib, Awadalla, Milani, Ouwehand, Downes,
+  Lehtim{\"a}ki, Boomsma, Psaty, Gharib, Awadalla, Milani, Ouwehand, Downes,
   Stegle, Battle, Yang, Visscher, Scholz, Gibson, Esko, and
   Franke]{VosaUnravelingpolygenicarchitecture2018}
-Urmo V\~osa, Annique Claringbould, Harm-Jan Westra, Marc~Jan Bonder, Patrick
+Urmo V{\~o}sa, Annique Claringbould, Harm-Jan Westra, Marc~Jan Bonder, Patrick
   Deelen, Biao Zeng, Holger Kirsten, Ashis Saha, Roman Kreuzhuber, Silva
   Kasela, Natalia Pervjakova, Isabel Alvaes, Marie-Julie Fave, Mawusse Agbessi,
-  Mark Christiansen, Rick Jansen, Ilkka Sepp\"al\"a, Lin Tong, Alexander
+  Mark Christiansen, Rick Jansen, Ilkka Sepp{\"a}l{\"a}, Lin Tong, Alexander
   Teumer, Katharina Schramm, Gibran Hemani, Joost Verlouw, Hanieh Yaghootkar,
-  Reyhan S\"onmez, Andrew~A. Andrew, Viktorija Kukushkina, Anette Kalnapenkis,
-  Sina R\"ueger, Eleonora Porcu, Jaanika {Kronberg-Guzman}, Johannes Kettunen,
-  Joseph Powell, Bernett Lee, Futao Zhang, Wibowo Arindrarto, Frank Beutner,
-  {BIOS Consortium}, Harm Brugge, {i2QTL Consortium}, Julia Dmitrieva, Mahmoud
-  Elansary, Benjamin~P. Fairfax, Michel Georges, Bastiaan~T Heijmans, Mika
-  K\"ah\"onen, Yungil Kim, Julian~C. Knight, Peter Kovacs, Knut Krohn, Shuang
-  Li, Markus Loeffler, Urko~M Marigorta, Hailang Mei, Yukihide Momozawa,
-  Martina {M\"uller-Nurasyid}, Matthias Nauck, Michel Nivard, Brenda Penninx,
-  Jonathan Pritchard, Olli Raitakari, Olaf Rotzschke, Eline~P. Slagboom,
-  Coen~D.A. Stehouwer, Michael Stumvoll, Patrick Sullivan, Peter~A.C. {'t
-  Hoen}, Joachim Thiery, Anke T\"onjes, Jenny {van Dongen}, Maarten {van
-  Iterson}, Jan Veldink, Uwe V\"olker, Cisca Wijmenga, Morris Swertz, Anand
-  Andiappan, Grant~W. Montgomery, Samuli Ripatti, Markus Perola, Zoltan
-  Kutalik, Emmanouil Dermitzakis, Sven Bergmann, Timothy Frayling, Joyce {van
-  Meurs}, Holger Prokisch, Habibul Ahsan, Brandon Pierce, Terho Lehtim\"aki,
-  Dorret Boomsma, Bruce~M. Psaty, Sina~A. Gharib, Philip Awadalla, Lili Milani,
-  Willem~H. Ouwehand, Kate Downes, Oliver Stegle, Alexis Battle, Jian Yang,
-  Peter~M. Visscher, Markus Scholz, Gregory Gibson, T\~onu Esko, and Lude
-  Franke.
+  Reyhan S{\"o}nmez, Andrew~A. Andrew, Viktorija Kukushkina, Anette
+  Kalnapenkis, Sina R{\"u}eger, Eleonora Porcu, Jaanika {Kronberg-Guzman},
+  Johannes Kettunen, Joseph Powell, Bernett Lee, Futao Zhang, Wibowo
+  Arindrarto, Frank Beutner, {BIOS Consortium}, Harm Brugge, {i2QTL
+  Consortium}, Julia Dmitrieva, Mahmoud Elansary, Benjamin~P. Fairfax, Michel
+  Georges, Bastiaan~T Heijmans, Mika K{\"a}h{\"o}nen, Yungil Kim, Julian~C.
+  Knight, Peter Kovacs, Knut Krohn, Shuang Li, Markus Loeffler, Urko~M
+  Marigorta, Hailang Mei, Yukihide Momozawa, Martina {M{\"u}ller-Nurasyid},
+  Matthias Nauck, Michel Nivard, Brenda Penninx, Jonathan Pritchard, Olli
+  Raitakari, Olaf Rotzschke, Eline~P. Slagboom, Coen~D.A. Stehouwer, Michael
+  Stumvoll, Patrick Sullivan, Peter~A.C. {'t Hoen}, Joachim Thiery, Anke
+  T{\"o}njes, Jenny {van Dongen}, Maarten {van Iterson}, Jan Veldink, Uwe
+  V{\"o}lker, Cisca Wijmenga, Morris Swertz, Anand Andiappan, Grant~W.
+  Montgomery, Samuli Ripatti, Markus Perola, Zoltan Kutalik, Emmanouil
+  Dermitzakis, Sven Bergmann, Timothy Frayling, Joyce {van Meurs}, Holger
+  Prokisch, Habibul Ahsan, Brandon Pierce, Terho Lehtim{\"a}ki, Dorret Boomsma,
+  Bruce~M. Psaty, Sina~A. Gharib, Philip Awadalla, Lili Milani, Willem~H.
+  Ouwehand, Kate Downes, Oliver Stegle, Alexis Battle, Jian Yang, Peter~M.
+  Visscher, Markus Scholz, Gregory Gibson, T{\~o}nu Esko, and Lude Franke.
 \newblock Unraveling the polygenic architecture of complex traits using blood
   {{eQTL}} meta-analysis.
 \newblock Preprint, {Genomics}, October 2018.
+
+\bibitem[Weirauch(2011)]{WeirauchGeneCoexpressionNetworks2011}
+Matthew~T. Weirauch.
+\newblock Gene {{Coexpression Networks}} for the {{Analysis}} of {{DNA
+  Microarray Data}}.
+\newblock In Matthias Dehmer, Frank {Emmert-Streib}, Armin Graber, and Armindo
+  Salvador, editors, \emph{Applied {{Statistics}} for {{Network Biology}}},
+  pages 215--250. {Wiley-VCH Verlag GmbH \& Co. KGaA}, {Weinheim, Germany},
+  April 2011.
+\newblock ISBN 978-3-527-63807-9 978-3-527-32750-8.
+\newblock \doi{10.1002/9783527638079.ch11}.
 
 \bibitem[Wray et~al.(2014)Wray, Lee, Mehta, Vinkhuyzen, Dudbridge, and
   Middeldorp]{WrayResearchReviewPolygenic2014}
