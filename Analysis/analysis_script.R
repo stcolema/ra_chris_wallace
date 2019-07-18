@@ -548,6 +548,7 @@ if(n_genes > 50) {
 
 # Plot phi value between each dataset combination across iterations
 if (do_phis_series) {
+  if(num_datasets > 1){
   cat("\n\nPlotting phi values across iterations.\n")
   plot_phi_series(mcmc_out_lst,
     file_path,
@@ -557,6 +558,9 @@ if (do_phis_series) {
     eff_n_iter,
     save_plots = T
   )
+  } else {
+    cat("\nOnly one dataset. No phi parameters.")
+  }
 }
 
 
@@ -749,15 +753,23 @@ for (j in 1:num_files) {
 # === Phi denisty plots ================================================================
 
 if (do_phis_densities) {
+  if(num_datasets > 1){
   cat("\nSaving phi density plots.\n")
   plot_phi_densities(phis, file_path, start_index, eff_n_iter)
+  } else {
+    cat("\nOnly one dataset. No phi parameters.")
+  }
 }
 
 # === Phi histograms ===========================================================
 
 if (do_phis_histograms) {
+  if(num_datasets > 1){
   cat("\nSaving phi histogram plots.\n")
   plot_phi_histograms(phis, file_path, start_index, eff_n_iter)
+  } else {
+    cat("\nOnly one dataset. No phi parameters.")
+  }
 }
 
 # === Plot posterior similarity matrices =======================================
@@ -820,7 +832,7 @@ if (do_rand_plot) {
 
 # If instructed do Rand index matrices and the heatmap
 if(do_arandi_matrices){
-  
+  if(num_datasets > 1){
   arandi_matrices <- arandi_matrices(compare_tibble$mdi_allocation, num_datasets)
   
   avg_arandi_matrix <- average_matrix(arandi_matrices) %>% 
@@ -838,7 +850,9 @@ if(do_arandi_matrices){
      color = col_pal #,
      # breaks = breaks_0_1
    )
-  
+  } else {
+    cat("\nOnly one dataset. No comparison between datasets possible.")
+  }
 }
 
 # === Plot mass parameters =====================================================
@@ -1070,6 +1084,7 @@ if (do_expression_heatmap) {
 # We save this as a named list to the tibble. Each entry in the list corresponds
 # to a dataset and records the fused probes between the current dataset and the
 # entry name
+if(num_datasets > 2){
 cat("\nFinding ''fused'' probes.\n")
 for (k in 1:num_files) {
   for (i in 1:num_datasets) {
@@ -1150,7 +1165,9 @@ if (do_fused_gene_expression) {
     show_row_labels = show_heatmap_labels
   )
 }
-
+} else {
+  cat("\nOnly one dataset. No fusion possible.")
+}
 # === Compare similarity and gene expression ===================================
 
 if (do_comparison_plots) {
