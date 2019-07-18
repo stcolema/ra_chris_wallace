@@ -259,12 +259,16 @@
 				\begin{abstract}
 				\emph{A priori} defined gene sets are key to gene set enrichment analysis \cite{SubramanianGenesetenrichment2005a} a powerful tool in genetic analysis. Gene sets are constructed through linking genes by some common feature. This can be a function, the location of the gene product, the participation of the product in some metabolic or signalling pathway, the protein structure, the presence of transcription-factor-binding sites or other regulatory elements, the participation in multiprotein complexes, or any one of several other definitions \cite{SzklarczykSTRINGv11protein2019}\cite{SubramanianGenesetenrichment2005a}\cite{KanehisaNewapproachunderstanding2019}\cite{AshburnerGeneOntologytool2000a}. However, all of these criteria are tissue agnostic.
 %				Some attempts to include tissue specific information has been proposed \cite{frost_computation_2018}\cite{greene_understanding_2015}, but these attempts have limitations.
-				We propose to produce tissue specific gene sets by applying multiple dataset integration \cite{KirkBayesiancorrelatedclustering2012} (a Bayesian unsupervised clustering method) to the gene expression data from the Correlated Expression and Disease Association Research cohort \cite{TheInternationalIBDGeneticsConsortiumIBDriskloci2018}, a dataset of 9 tissue / cell types.
+				We propose to produce tissue specific gene sets by applying Multiple Dataset Integration \cite{KirkBayesiancorrelatedclustering2012} (a Bayesian clustering method) to the gene expression data from the Correlated Expression and Disease Association Research cohort \cite{TheInternationalIBDGeneticsConsortiumIBDriskloci2018}, a dataset of 9 tissue / cell types.
 				
 				We show that problems with convergence and dependence upon initialisation common in high dimensionality settings can be overcome by means of consensus clustering \cite{MontiConsensusClusteringResamplingBased}. We then use consensus clustering of Multiple Dataset Integration models to produce gene sets.
 			\end{abstract}
 		\vspace*{\fill}	
 			\newpage
+	
+	\tableofcontents
+	
+	\newpage
 	
 %	\section*{Layout}
 %	\begin{enumerate}
@@ -335,20 +339,22 @@
 	
 %	We use consensus clustering to produce tissue-specific gene sets. In this section we briefly introduce the core components of this project such as gene sets, the data and the concepts of consensus and integrative clustering.
 	
-	With the onset of microarrays and RNAseq, producing gene expression data in large quantities for a wide number of genes is increasingly enabled. Unfortunately the large amount of data gifted onto the genomics community by these methods is difficult to interpret and analyse. Gene Set Enrichment Analysis (GSEA) attempts to overcome some of these issues by using prior knowledge to define groups of genes linked through their biological function \cite{HejblumTimeCourseGeneSet2015}. The set is defined using knowledge external to the current analysis; a common method is using the manually annotated pathways available on the Kyoto Encyclopedia of Genes and Genomes (KEGG) database \cite{FridleyGenesetanalysis2011}.
-
-	Analysing pre-defined gene sets and changes in the expression of the full set rather than considering each constituent member on an individual basis has more statistical power \cite{MooneyGenesetanalysis2015}. Consider, in analysing gene sets as a group the degree of perturbation in the expression of the full gene set due to the disease state / alternative phenotype that is required to be considered significant is much less than that required in analysing each of its constituent members individually \cite{DudbridgePowerPredictiveAccuracy2013}\cite{WrayResearchReviewPolygenic2014}.
+	With the onset of microarrays and RNAseq, producing gene expression data in large quantities for a wide number of genes is increasingly enabled. Unfortunately the large amount of data gifted onto the genomics community by these methods is difficult to interpret and analyse. Gene Set Enrichment Analysis (GSEA) attempts to overcome some of these issues by using prior knowledge to define groups of genes linked through their biological function \cite{HejblumTimeCourseGeneSet2015}. The set is defined using knowledge external to the current analysis; a common method is using the manually annotated discrete pathways available on the Kyoto Encyclopedia of Genes and Genomes (KEGG) database \cite{FridleyGenesetanalysis2011}.
+	
+	Analysis of gene sets is both advantageous from the perspective of biological interpretation and statistical power. In terms of the underlying biology, genes do not function in isolation; they participate in pathways, interacting with other genes to carry out specific biological processes. Thus analysis of gene sets is analysis of an object closer to phenotype than the individual gene. In terms of statistical power, in analysing gene sets as a group the degree of perturbation required in the expression of the full gene set due to the disease state / alternative phenotype to be considered significant is much less than that required in analysing each of its constituent members individually \cite{DudbridgePowerPredictiveAccuracy2013}\cite{WrayResearchReviewPolygenic2014}.
 	
 	The problem of how to define gene sets is non-trivial, with many variations present in the literature. There exist many databases of gene sets \cite{AshburnerGeneOntologytool2000a}\cite{KanehisaNewapproachunderstanding2019}\cite{SzklarczykSTRINGv11protein2019}. The Molecular Signature Database \cite{SubramanianGenesetenrichment2005a} (MSigDB) is one of the most popular resources for GSEA and encompasses many different gene sets defined under various criteria or generated from separate resources.
 	
 	However, none of these definitions of a ``set'' incorporate tissue specific information. This seems an oversight. Cell-type specific gene pathways are pivotal in differentiating tissue function, implicated in hereditary organ failure, and mediate acquired chronic disease \cite{JuDefiningcelltypespecificity2013a}. More and more evidence is being accrued to highlight the cell-type specific level of gene expression \cite{GrundbergMappingcistransregulatory2012}\cite{OngEnhancerfunctionnew2011}\cite{ManiatisRegulationinducibletissuespecific1987}. Thus we propose defining tissue specific gene sets. 
 	
-	To describe gene sets within the data, some clustering method is required. Applied on expression values or some transformed variation thereof, groups of genes are created based on some concept of similarity (or alternatively on some concept of dissimilarity or distance). Depending on the choice of transformation and clustering method further questions might arise such as defining the number of clusters (required for instance with $K$-means clustering) or the type of distance to use (for instance within hierarchical clustering and the methods that integrate this method such as Weighted Gene Correlation Network Analysis). For clustering within a dataset we choose \emph{Dirichlet processes} as the method as the number of clusters is learnt from the data and the concept of distance in these models is based upon the likelihood of the Gaussian distributions describing the sub-populations, an intuitive measure for continuous data. Specifically we use Bayesian Dirichlet processes  as these capture uncertainty of membership which is appropriate in this application. Genes can be members of multiple sets or else their membership might be poorly defined; thus the model uncertainty represents biological uncertainty.
+	To describe gene sets within the data, some clustering method is required. Applied on expression values or some transformed variation thereof, groups of genes are created based on some concept of similarity (or alternatively on some concept of dissimilarity or distance). Depending on the choice of transformation and clustering method further questions might arise such as defining the number of clusters (required for instance with $K$-means clustering) or the type of distance to use (for instance within hierarchical clustering and the methods that integrate this method such as Weighted Gene Correlation Network Analysis). For clustering within a dataset we choose \emph{Dirichlet processes} as the method as the number of clusters is learnt from the data and the concept of distance in these models is based upon the likelihood of the Gaussian distributions describing the sub-populations, an intuitive measure for continuous data. Specifically we use Bayesian Dirichlet processes  as these capture uncertainty of membership which is appropriate in this application. Genes can be members of multiple sets or else their membership might be poorly defined \cite{Pita-JuarezPathwayCoexpressionNetwork2018}; thus the model uncertainty represents biological uncertainty.
 
 	Within the CEDAR cohort there are multiple datasets containing information about the same genes for different tissues or cell types. Ideally a model could integrate information about common clustering structure across the datasets to reduce uncertainty within making assumptions that could impose false structure upon the data or in some other way reduce the signal unique to each tissue. Such methods are referred to as \emph{integrative clustering methods}. Of this field we choose to use \emph{Multiple Dataset Integration} (MDI) \cite{KirkBayesiancorrelatedclustering2012} as this method is Bayesian (and thus has principled quantification of uncertainty) and is an extension of Dirichlet processes.
 	
-	As we have a large number of variables ($p > 250$), we implement \emph{consensus clustering} to overcome the problem of describing multiple modes in high dimension space. This is a recurring problem with Bayesian clustering methods as they rely upon \emph{Markov Chain Monte Carlo} (MCMC) methods to describe the posterior distribution. These methods have the nice property that they guarantee describing the correct distribution given infinite time. However, if the posterior distribution is multi-modal, it is possible that no finite amount of time is sufficient to describe the space. This problem is more prevalent as the number of dimensions scales. and the posterior distribution is multi-modal. In this case the algorithm tends to describe the space within a mode, but as the mode is far denser than the surrounding space (particularly in high dimensions), the probability of escaping the mode and exploring the full space is very low. Thus to describe the full space in finite time requires use of multiple unique initialisations. The number of initialisations is required to be sufficiently high that each mode is described. In this way the full space can be explored by the combinations of models. Combining clustering models in this way is referred to as \emph{consensus clustering}. It is a natural extension to the concept of ensemble methods (such as Random Forest citeBREIMANrandomforest). The final model is a strong method built of many weak methods that depend upon the instability of the model similarly to Bagging citeBREIMANbagging. This consensus clustering uses many short MCMC chains aggressively thinned, thus it is both a better description of the target distribution than an individual model, but also far quicker to run as each chain is both embarrassingly parallel and short.
+	As we have a large number of variables ($p > 250$), we implement \emph{consensus clustering} to overcome the problem of describing multiple modes in high dimension space. This is a recurring problem with Bayesian clustering methods as they rely upon \emph{Markov Chain Monte Carlo} (MCMC) methods to describe the posterior distribution. These methods have the property that they guarantee describing the posterior distribution given infinite time. However, if the posterior distribution is multi-modal, it is possible that no finite amount of time is sufficient to describe the space \cite{TjelmelandModeJumpingProposals2001}. This problem is more prevalent as the number of dimensions scales. In this case the algorithm tends to describe the space within a mode, but as the mode is far denser than the surrounding space (particularly in high dimensions), the probability of escaping the mode and exploring the full space is very low. Thus to describe the full space in finite time requires use of multiple unique initialisations. The number of initialisations is required to be sufficiently high that each mode is described. In this way the full space can be explored by the combinations of models. Combining clustering models in this way is referred to as \emph{consensus clustering}. It is a natural extension to the concept of ensemble methods (such as Random Forest \cite{BreimanRandomForests1}). The final model is a strong method built of many weak methods; it depends upon the instability of the individual models, similarly to Bagging \cite{BreimanBaggingpredictors1996}. Our implementation of consensus clustering uses many short MCMC chains of MDI aggressively thinned, thus it is both a better description of the target distribution than an individual model, but also far quicker to run as each chain is both embarrassingly parallel and short.
 	
+	
+
 	
 	
 	
@@ -383,7 +389,7 @@
 	\begin{eqnarray}
 	Y &=& \left\{Y_1,\ldots,Y_K\right\} \\
 	Y_k &=& \left\{x_{1_k},\ldots, x_{n_k}\right\}  \\
-	Y_i \cap Y_j &=& \emptyset \enskip \forall \enskip i,j \in \{1,K\}, i \neq j \\
+	Y_i \cap Y_j &=& \emptyset \enskip \forall \enskip i,j \in \{1,\ldots,K\}, \enskip i \neq j \\
 	n_k & = & \mid Y_k \mid \enskip \geq 1 \enskip \forall \enskip k \in \{1,\ldots,K\} \\
 	\sum_{k=1}^Kn_k &=& n
 	\end{eqnarray}
@@ -400,22 +406,22 @@
 	We use a Multivariate Normal (MVN) distribution to describe each subpopulation for three reasons:
 	\begin{enumerate}
 		\item Convention: the Gaussian distribution is extremely common within the literature;
-		\item Pragmatism: the Gaussian distribution is easy to work with; and
+		\item Pragmatism: the Gaussian distribution is easy to work with (due to conjugacy); and
 		\item Conservatism: if the only statements we are willing to make about a distribution over real numbers are its mean and variance, than the Gaussian distribution maximises the entropy and is thus the most conservative choice of distribution.
 	\end{enumerate}
-	We use a large $K$ (specifically, 50) to imitate a Dirichlet process. Strictly speaking a Dirichlet process sets $K=\infty$, but if we use a sufficiently large $K$ such that the data empties the majority of clusters, then we have the desired property of Dirichlet processes. This property is that the number of inhabited clusters is not fixed and can increase or decrease depending on the data.
+	We use a large $K$ (specifically, 50) to imitate a Dirichlet process. Strictly speaking a Dirichlet process sets $K=\infty$, but if we use a sufficiently large $K$ such that the model learns to empty any clusters from the data, then we have the desired property of Dirichlet processes. This property is that the number of inhabited clusters is not fixed and can increase or decrease depending on the data.
 	
 	\subsubsection{Bayesian mixture models}
 	We use Bayesian mixture models. In this case we have a prior distribution on each of the random variables. This allows us to ensure that there is a non-zero probability of a gene being assigned to an empty cluster (whereas under the frequentist paradigm an empty cluster would have an aossicated weight of 0, and hence the number of occupied clusters has no probability of growing). 
 	
 	We carry out Bayesian inference of this model using MCMC methods. Specifically, we employ is Gibbs sampling which can be summarised as iterating between the following steps (the order of which step comes first is arbitrary):
 	\begin{enumerate}
-		\item For each of K clusters sample $\theta_k$ and $\pi_k$ from the associated distributions based on current memberships, $c_i$; and
-		\item For each of n individuals sample $c_i$ based on the new $\theta_k$ and $\pi_k$.
+		\item For each of $K$ clusters sample $\theta_k$ and $\pi_k$ from the associated distributions based on current memberships, $c_i$; and
+		\item For each of $n$ individuals sample $c_i$ based on the new $\theta_k$ and $\pi_k$.
 	\end{enumerate}
 	The output consists of a matrix $n_{iter}$ rows and $p$ columns (for $p$ genes). The $i^{th}$ row describes the cluster the genes are assigned to in the $i^{th}$ iteration of the Gibbs sampler. To summarise this information we use a posterior similarity matrix (PSM). The $(i,j)$ cell of the PSM contains there is the fraction of recorded iterations for which the $i^{th}$ and $j^{th}$ genes have common labelling. One can see that this implies the PSM is symmetric and has diagonal entries of 1.
 	
-	From this PSM a single clustering estimate, $\hat{c}$, can be described from the PSM by maximising the posterior expected adjusted Rand index citeFRITSCH. Other methods such as minimisation of Binder's loss function or  minimization of Dahl’s criterion are based on the original unadjusted for chance Rand index. We prefer the adjusted Rand index for reasons mentioned in section \ref{sec:rand_index} and thus choose to use the method described by citetFRITSCH.
+	From this PSM a single clustering estimate, $\hat{c}$, can be described from the PSM by maximising the posterior expected adjusted Rand index \cite{FritschImprovedcriteriaclustering2009}. Other methods such as minimisation of Binder's loss function or  minimization of Dahl’s criterion are based on the original Rand index, and thus are unadjusted for chance. We prefer use of the adjusted Rand index for reasons mentioned in section \ref{sec:rand_index} and thus choose to use the method described by \citet{FritschImprovedcriteriaclustering2009} utilisng the  posterior expected adjusted Rand index.
 	
 	\subsection{Multiple dataset integration}
 	Consider the case when we have observed paired datasets $X_1 = (x_{1,1},\ldots,x_{n,1})$, $X_2 = (x_{1,2},\ldots,x_{n,2})$, where observations in the $i$th row of each dataset represent information about the same gene. We would like to cluster genes using information common to both datasets. One could concatenate the datasets, adding additional covariates for each gene. However, if the two datasets have different clustering structures this would reduce the signal of both clusterings and probably have one dominate. If the two datasets have the same structure but different signal-to-noise ratios this would reduce the signal in the final clustering. In both these cases independent models on each dataset would be preferable. \citet{KirkBayesiancorrelatedclustering2012} suggest a method to carry out clustering on both datasets where common information is used but two individual clusterings are outputted. This method is driven by the allocation prior:
@@ -425,7 +431,7 @@
 	Where:
 	\begin{itemize}
 		\item $c_{ij}$ is the label of the $i^{th}$ gene in the $j^{th}$ dataset;
-		\item $\pi_{c_{ij}}$ is the component weight of the cluster associated with label $c_{ij}$;
+		\item $\pi_{c_{ij}}$ is the component weight of the cluster associated with label $c_{ij}$ in dataset $j$;
 		\item $\phi \in \mathbb{R} > 0$ is the correlation between datasets;
 		\item $\mathbb{I}(c_{i1} = c_{i2})$ is the indicator function - it takes a value of one if $c_{i1}$ and $c_{i2}$ are equal (i.e. a common allocation across datasets) and 0 otherwise.
 	\end{itemize}
@@ -440,11 +446,11 @@
 	Thus MDI is an extension of mixture models to multiple datasets where correlated clustering structure is used to ``upweigh'' similar clusters across datasets. MDI has been applied to precision medicine, specifically glioblastoma sub-typing \cite{SavageIdentifyingcancersubtypes2013a}, in the past showing its potential as a tool.
 	
 	\subsection{Consensus clustering} \label{sec:consensus_clustering}
-	In the scenario that MDI struggles to explore the entire posterior distribution from any given initialisation for any realistic number of iterations of MCMC, we propose use of a ``consensus'' clustering \cite{MontiConsensusClusteringResamplingBased}. In this scenario we draw samples of clusterings from MCMC chains with different initialisations and use these clusterings to describe the posterior distribution. In practice this involves running $n_{seeds}$ different chains of MDI for a smaller number of iterations, $n_{iter}$, and burning out the first $n_{iter} - 1$ iterations. The clustering from the final iteration is then saved for this model.
+	In the scenario that MDI struggles to explore the entire posterior distribution from any given initialisation for any realistic number of iterations of MCMC, we propose use of a ``consensus clustering'' \cite{MontiConsensusClusteringResamplingBased}. In this scenario we draw samples of clusterings from MCMC chains with different initialisations and use these clusterings to describe the posterior distribution. In practice this involves running $n_{seeds}$ different chains of MDI for a smaller number of iterations, $n_{iter}$, and burning out the first $n_{iter} - 1$ iterations. The clustering from the final iteration is then saved for this model.
 	
 	We then combine the clusterings from all $n_{seeds}$ within a posterior similarity matrix (PSM) for the $n$ genes. This is a $n \times n$ matrix where the $(i,j)$ entry is the proportion of times genes $i$ and $j$ are in the same cluster. This means that the PSM is not affected by label-flipping (a problem in clustering) and that it is a symmetric matrix with $1$'s along the diagonal and all entries in the unit interval. From this PSM a summary clustering may be calculated. The combination of different initialisations explores all the possible likelihood maixma and thus provides a more informed clustering. As the algorithm is not exploring the full space in any given iteration, we expect that the uncertainty quantification is optimistic. However we argue that an estimate made using insufficient data is better than one made using none at all and that this method is the best currently available to us for quantifying the uncertainty and exploring the posterior distribution.
 	
-	We show the validity of this implementation of consensus clustering by means of simulations. In this case we know the true clustering as we can control which points are drawn from which subpopulations. We can then compare the quality of recorded clusterings generated by a single converged chain of MDI to different version of consensus clustering (i.e. varying $n_{iter}$). We let the quality of a clustering be defined by its similarity to the ground truth, measured using the \emph{adjusted Rand index}.
+	There has already been numerous applications of consensus clustering \cite{LiWeightedConsensusClustering2008} \cite{LancichinettiConsensusclusteringcomplex2012} \cite{BreimanRandomForests1}, but we show the validity of this implementation of consensus clustering by means of simulations. In this case we know the true clustering as we can control which points are drawn from which subpopulations. We can then compare the quality of recorded clusterings generated by a single converged chain of MDI to different version of consensus clustering (i.e. varying $n_{iter}$). We let the quality of a clustering be defined by its similarity to the ground truth, measured using the \emph{adjusted Rand index}.
 	
 	\subsection{Rand index} \label{sec:rand_index}
 	A popular metric for comparing the similarity of two clusterings of the data is the \emph{Rand index} \cite{RandObjectiveCriteriaEvaluation1971}. 	If one assumes that all points are of equal importance in determining clusterings, then in combination with the discrete nature of clusters and the fact that a cluster is defined as much by what it does not contain as that which it does, \citet{RandObjectiveCriteriaEvaluation1971} proposes a metric to measure similarity between clusterings. Between clusterings $Y$ and $Y'$ for any two points $x_i$ and $x_j$ there can exist one of a number of scenarios regarding their labeling. Let $\gamma_{ij}$ be a measure between the two points $x_i$ and $x_j$. For the two points, they can have:
@@ -480,7 +486,7 @@
 	\caption{Contingency table used by \citet{RandObjectiveCriteriaEvaluation1971} to calculate a measure of similarity between clusterings $Y$ and $Y'$.}
 	\label{table:rand_contingency}
 	\end{table}
-	One can restate equation \ref{eqn:rand_index} in terms of the notation from table \ref{table:rand_contingency} \cite{BrennanMEASURINGAGREEMENTWHEN1974}:
+	One can restate equation \ref{eqn:rand_index} in terms of the notation from table \ref{table:rand_contingency} \cite{BrennanMeasuringagreementwhen1974}:
 	\begin{eqnarray} \label{eqn:rand_index_alternative}
 	A &=& \binom{n}{2} + \sum_{i=1}^K\sum_{j=1}^{K'}n_{ij}^2 - \frac{1}{2}\left(\sum_{i=1}^K n_{i\cdot}^2 + \sum_{j=1}^{K'}n_{\cdot j}^2  \right) \\
 	  &=& \binom{n}{2} + 2 \sum_{i=1}^{K}\sum_{j=1}^{K'}\binom{n_{ij}}{2} - \left[\sum_{i=1}^{K}\binom{n_{i \cdot}}{2} + \sum_{j=1}^{K'}\binom{n_{\cdot j}}{2}\right]% \binom{n}{2} ^{-1} 
@@ -518,7 +524,7 @@
 	We describe an explicit example motivating the adjusted Rand index in section \ref{sec:motivating_example_adjusted_rand_index}.
 	
 	\subsubsection{Motivating example: adjusted Rand index} \label{sec:motivating_example_adjusted_rand_index}
-	Consider the case of $n$ labels $Y$ and $Y'$ generated from $\mathcal{U}\left\{1,3\right\}$ where $n$ is some arbitrarily large number. Then as $n$ tends to infinity we can expect that our contingency table has entries of $\frac{n}{9}$ in each cell. If one calculates the Rand index on these random partitions where any similarity is purely by chance one finds, it comes to (approximately) $0.56$. This suggests there is some similarity between $Y$ and $Y'$, but this is misleading as we know any similarity is stochastic. In the same scenario the adjusted Rand index between the partitions is 0. This seems preferable. Based on this, one could argue that the Rand index has inflated values. Consider the case that we have $n$ points in total, but we let the first $\frac{7n}{16}$ have a common label (say $\left(c_1,\ldots,c_{n_1}\right)=1$ for $n_1 = \frac{7n}{16}$) and then draw the remaining $\frac{9n}{16}$ points from $\mathcal{U}\left\{1,3\right\}$. Then, as $n$ tends to infinity, our contingency table tends to that described in table \ref{table:rand_contingency_example}. One feels that the high Rand index for such a clustering, $0.64$, is misleading in its magnitude. In such a scenario we feel one has to consider this 0.64 in the context of the 0.56 for a purely random similarity - this is difficult to do without explicitly checking what the Rand index is for a random partitioning for a given $K$ and $K'$. Thus the use of the full unit interval in comparing similarity by a corrected index such as the adjusted Rand index requires less vigilance on the part of the analyst. In the second scenario, the adjusted Rand index is $0.28$.
+	Consider the case of $n$ labels $Y$ and $Y'$ generated from $\mathcal{U}\left\{1,3\right\}$ where $n$ is some arbitrarily large number and $\mathcal{U}\{x,y\}$ is the uniform distribution over the interval $[x,y]$ . Then as $n$ tends to infinity we can expect that our contingency table has entries of $\frac{n}{9}$ in each cell. If one calculates the Rand index on these random partitions where any similarity is purely by chance one finds, it comes to (approximately) $0.56$. This suggests there is some similarity between $Y$ and $Y'$, but this is misleading as we know any similarity is stochastic. In the same scenario the adjusted Rand index between the partitions is 0. This seems preferable. Based on this, one could argue that the Rand index has inflated values. Consider the case that we have $n$ points in total, but we let the first $\frac{7n}{16}$ have a common label (say $\left(c_1,\ldots,c_{n_1}\right)=1$ for $n_1 = \frac{7n}{16}$) and then draw the remaining $\frac{9n}{16}$ points from $\mathcal{U}\left\{1,3\right\}$. Then, as $n$ tends to infinity, our contingency table tends to that described in table \ref{table:rand_contingency_example}. One feels that the high Rand index for such a clustering, $0.64$, is misleading in its magnitude. In such a scenario we feel one has to consider this 0.64 in the context of the 0.56 for a purely random similarity - this is difficult to do without explicitly checking what the Rand index is for a random partitioning for a given $K$ and $K'$. Thus the use of the full unit interval in comparing similarity by a corrected index such as the adjusted Rand index requires less vigilance on the part of the analyst. In the second scenario, the adjusted Rand index is $0.28$.
 	
 	\begin{table}[] 
 		\centering
@@ -605,16 +611,28 @@
 	\subsection{Gene sets}
 %	Analysing pre-defined gene sets and changes in the expression of the full set rather than considering each constituent member on an individual basis has more statistical power \cite{MooneyGenesetanalysis2015}. Consider, that in analysing gene sets as a group, the degree of perturbation in the expression of the full gene set due to the disease state / alternative phenotype that is required to be considered significant is much less than that required in analysing each of its constituent members individually \cite{DudbridgePowerPredictiveAccuracy2013}\cite{WrayResearchReviewPolygenic2014}.
 	
-	We know from Genome Wide Association Studies (GWAS) that many diseases are polygenic in nature \cite{MooneyGenesetanalysis2015}. This suggests that it is natural to be considering sets of genes in analysis of many diseases. \citet{SubramanianGenesetenrichment2005a} highlight the importance of gene sets, claiming that within a single metabolic pathway an increase of $20\%$ in all the associated gene products may be more important than a 20-fold increase in a single gene.
+	We identify gene sets based upon common patterns of expression. Correlated expression (or co-expression) between genes is often an indicator that they are:
+	\begin{itemize}
+		\item Controlled by the same transcription factor;
+		\item Functionally related; or
+		\item Members of the same pathway \cite{WeirauchGeneCoexpressionNetworks2011}.
+	\end{itemize}
+	As this correlated expression is represented by a common variation across people (or experimental conditions) rather than in the magnitude of expression, we will standardise the expression data as described in section \ref{sec:standardisation}. We describe a small example to highlight our reasoning in section \ref{sec:motivating_example_standardisation}.
+	
+	Furthermore, we know from Genome Wide Association Studies that many diseases are polygenic in nature \cite{MooneyGenesetanalysis2015}. This suggests that it is natural to be considering sets of genes in analysis of many diseases. \citet{SubramanianGenesetenrichment2005a} highlight the importance of gene sets, claiming that within a single metabolic pathway an increase of $20\%$ in all the associated gene products may have more impact upon phenotype than a 20-fold increase in a single gene.
+	
+	Analysing pre-defined gene sets increases the statistical power of an analysis\cite{MooneyGenesetanalysis2015}. Aswe have stated previously, analysis of the set requires less peturbation of expression for significance than analysis of an individual. There is also no obvious detriment in analysing gene sets - no loss of information found. As the gene sets are expected to have correlated expression \cite{WeirauchGeneCoexpressionNetworks2011}, one expects that if the expression of a gene within the set does change then, if this is not due to noise or stochasticity, the expression of other members of the set should should also vary accordingly.
 	
 	Thus clustering genes into groups known as ``gene sets'' is natural and useful from both a biological and statistical perspective - it can increase the interpretability and the power of an analysis \cite{NicaExpressionquantitativetrait2013}\cite{VosaUnravelingpolygenicarchitecture2018}.
 	
-	\subsubsection{Tissue specificity}
+%	\subsubsection{Tissue specificity}
 %	The problem of defining gene sets is non-trivial with many variations in-use. There exist many databases of gene sets \cite{AshburnerGeneOntologytool2000a}\cite{KanehisaNewapproachunderstanding2019}\cite{SzklarczykSTRINGv11protein2019}. The Molecular Signature Database \cite{SubramanianGenesetenrichment2005a} (MSigDB) is one of the most popular resources for GSEA and encompasses many different gene sets defined under various criteria or generated from separate resources.
 %	
 %	However, none of these definitions of a ``set'' incorporate tissue specific information. This seems an oversight. Cell-type specific gene pathways are pivotal in differentiating tissue function, implicated in hereditary organ failure, and mediate acquired chronic disease \cite{JuDefiningcelltypespecificity2013a}. More and more evidence is being accrued to highlight the cell-type specific level of gene expression \cite{GrundbergMappingcistransregulatory2012}\cite{OngEnhancerfunctionnew2011}\cite{ManiatisRegulationinducibletissuespecific1987}. Thus we propose defining tissue specific gene sets. 
 	
-	Previous attempts to achieve this have used the Genotype Tissue Expression (GTEx) \cite{GTExConsortiumGeneticeffectsgene2017} database \cite{LonsdaleGenotypeTissueExpressionGTEx2013}, but here the profiles are for human donors
+%	EXPAND THIS SECTION
+	
+	We have specific interest in defining tissue-specific gene sets. Previous attempts to achieve this have used the Genotype Tissue Expression (GTEx) \cite{GTExConsortiumGeneticeffectsgene2017} database \cite{LonsdaleGenotypeTissueExpressionGTEx2013}, but here the profiles are for human donors
 	post-mortem. We suspect that the data derived from these cells may not contain the same information as that collected from living, active cells. Furthermore, the GTEx data is across many different tissues (144 are used in \cite{LonsdaleGenotypeTissueExpressionGTEx2013}), but we focus on cell types relevant to autoimmune disease in general (i.e. blood cells) and Inflammatory Bowel Disease in particular (intestinal samples).
 	
 %	With the onset of microarrays and RNAseq, producing gene expression data in large quantities for a wide number of genes is increasingly enabled. Unfortunately the large amount of data gifted onto the genomics community by these methods is difficult to interpret and analyse. Gene Set Enrichment Analysis (GSEA) attempts to overcome some of these issues by using prior knowledge to define groups of genes linked through their biological function \cite{HejblumTimeCourseGeneSet2015}. The set is defined using knowledge external to the current analysis; a common method is using the manually annotated pathways available on the Kyoto Encyclopedia of Genes and Genomes (KEGG) database \cite{FridleyGenesetanalysis2011}.
@@ -627,11 +645,11 @@
 %	
 %	However, the problem of defining gene sets is non-trivial with many variations in-use. There exist many databases of gene sets \cite{AshburnerGeneOntologytool2000a}\cite{KanehisaNewapproachunderstanding2019}\cite{SzklarczykSTRINGv11protein2019}. The Molecular Signature Database \cite{SubramanianGenesetenrichment2005a} (MSigDB) is one of the most popular resources for GSEA and encompasses many different gene sets defined under various criteria or generated from separate resources. However, none of these definitions of a ``set'' incorporate tissue specific information. We believe that this is an oversight as there is evidence that some genes are involved in tissue specific pathways (see section \ref{sec:tissue_specificity}). Thus we propose defining tissue specific gene sets. Previous attempts to achieve this have used the Genotype Tissue Expression (GTEx) \cite{GTExConsortiumGeneticeffectsgene2017} database \cite{LonsdaleGenotypeTissueExpressionGTEx2013}, but here the profiles are for human donors
 %	post-mortem. We suspect that the data derived from these cells may not contain the same information as that collected from living, active cells. Furthermore, the GTEx data is across many different tissues (144 are used in \cite{LonsdaleGenotypeTissueExpressionGTEx2013}), but we focus on cell types relevant to autoimmune disease in general (i.e. blood cells) and IBD in particular (intestinal samples). This restricted focus should offer relevant gene sets.
-	
-	Gene sets should contain sets of genes that have correlated expression. If this is the case, it is often assumed that the genes are common members of some metabolic pathway and that their products interact. As this correlated expression is represented by a common variation across people rather than in the magnitude of expression, we will standardise the expression data as described in section \ref{sec:standardisation}. We describe a small example to highlight our reasoning in section \ref{sec:motivating_example_standardisation}.
+%	
+%	Gene sets should contain sets of genes that have correlated expression. If this is the case, it is often assumed that the genes are common members of some metabolic pathway and that their products interact. As this correlated expression is represented by a common variation across people rather than in the magnitude of expression, we will standardise the expression data as described in section \ref{sec:standardisation}. We describe a small example to highlight our reasoning in section \ref{sec:motivating_example_standardisation}.
 	
 		\subsection{Standardisation} \label{sec:standardisation}
-	For a $p$-vector of observations, $X_i=(x_{i1},\ldots,x_{1p})$, we define \emph{standardisation} of $X_i$ as the mapping from $X_i$ to $X'_i=(x'_{i1},\ldots,x'_{ip})$ defined by the \emph{sample mean}, $\bar{x}_i$, and \emph{sample standard deviation}, $s_i$:
+	For a $p$-vector of observations, $X_i=(x_{i1},\ldots,x_{1p})$, we define standardisation of $X_i$ as the mapping from $X_i$ to $X'_i=(x'_{i1},\ldots,x'_{ip})$ defined by the \emph{sample mean}, $\bar{x}_i$, and sample standard deviation, $s_i$:
 	\begin{eqnarray} \label{eqn:standardisation}
 	\bar{x}_i &=& \frac{1}{p}\sum_{j=1}^p x_{ij} \\
 	s_i^2 &=& \frac{1}{p - 1}\sum_{j=1}^p \left( x_{ij} - \bar{x}_i \right) ^2 \\
@@ -643,7 +661,7 @@
 	
 	\subsubsection{Motivating example: Standardising gene expression data} \label{sec:motivating_example_standardisation}
 	If one considers table \ref{table:example_gene_expression_data} which contains an example of expression data for some genes A, B, C, D and E across people 1 to 4.
-	\begin{table}[] 
+	\begin{table}[!htb] 
 		\centering
 		\begin{tabular}{c|cccc} 
 			Genes 	& Person 1	& Person 2	& Person 3	& Person 4	\\ 
@@ -657,13 +675,15 @@
 		\caption{Example gene expression data.}
 		\label{table:example_gene_expression_data}
 	\end{table}
-	\begin{figure}[h]
+	\begin{figure}[!htb]
 		\centering
 		\includegraphics[scale=0.55]{Images/Examples/example_expression_data.png}
 		\caption{Heatmap of expression data in table \ref{table:example_gene_expression_data} showing the clusters based upon magnitude of expression.}
 		\label{fig:example_expression_data}
 	\end{figure}
-	One can see that genes A and C have similar patters in variation across the people, as do genes B and D. Gene E is not consistent with any other gene here. However, as this relative variation is of interest rather than the magnitude of expression, one can see that standardising the data is required. If one were to cluster the data as represented in table \ref{table:example_gene_expression_data}, one would place genes A and B in one cluster and genes C, D and E in another as their absolute expression levels are similar (as can be seen in figure \ref{fig:example_expression_data}). However, if the expression level of each gene is standardised as per section \ref{sec:standardisation}, the data is then as represented in table \ref{table:example_standardised_gene_expression_data}. As the data are now on the same scale the characteristic that will determine a clustering is the variation of expression across people. As we want genes with similar patterns of variation (i.e. that are co-expressed) this enables us to cluster under our objective of defining gene sets. In this case genes A and C are one cluster, genes B and D another with gene E in a cluster alone, as can be seen in figure \ref{fig:example_standardised_expression_data}. As this is the type of data we wish to cluster across, we therefore most standardise our expression data before clustering can be implemented.
+One can see that genes A and C have similar patters in variation across the people, as do genes B and D. Gene E is not consistent with any other gene here. However, as this relative variation is of interest rather than the magnitude of expression, one can see that standardising the data is required. 
+
+If one were to cluster the data as represented in table \ref{table:example_gene_expression_data}, one would place genes A and B in one cluster and genes C, D and E in another as their absolute expression levels are similar (as can be seen in figure \ref{fig:example_expression_data}). However, if the expression level of each gene is standardised as per section \ref{sec:standardisation}, the data is then as represented in table \ref{table:example_standardised_gene_expression_data}. The data are now on the same scale and thus the characteristic that will determine a clustering is the variation of expression across people. As we want genes with similar patterns of variation (i.e. that are co-expressed) this enables us to cluster under our objective of defining gene sets. In this case genes A and C are one cluster, genes B and D another with gene E in a cluster alone, as can be seen in figure \ref{fig:example_standardised_expression_data}. As this is the type of data we wish to cluster across, we therefore most standardise our expression data before clustering can be implemented.
 	
 	\begin{table}[] 
 		\centering
@@ -680,14 +700,13 @@
 		\label{table:example_standardised_gene_expression_data}
 	\end{table}
 	
-	\begin{figure}[h]
+	\begin{figure}[!htb]
 		\centering
 		\includegraphics[scale=0.55]{Images/Examples/example_standardised_expression_data.png}
 		\caption{Heatmap of expression data in table \ref{table:example_standardised_gene_expression_data} showing the clusters based upon variation of expression across people.}
 		\label{fig:example_standardised_expression_data}
 	\end{figure}
 	
-		
 %	\subsection{The importance of gene sets}
 %	If we can cluster genes together it is possible that we can find deeper biological interpretation, understanding the context of the gene products and what they interact with. This can offer some insight into the connection between the gene and the expressed phenotype. Furthermore, \citet{NicaExpressionquantitativetrait2013} recommend investigating groups of cis-eQTL affecting a gene network that when perturbed results in a disease state. They claim this is far higher powered than the classical approach. This claim is supported by the findings of \citet{VosaUnravelingpolygenicarchitecture2018} who found that associations between \emph{polygenic risk scores} and gene expression (this association is referred to as ``expression quantitative trait score'' (eQTS) in \cite{VosaUnravelingpolygenicarchitecture2018}) contained the most biological information about disease in a comparison of cis-eQTL, trans-EQTL and eQTS. This finding is not unique to this paper \cite{DudbridgePowerPredictiveAccuracy2013}\cite{WrayResearchReviewPolygenic2014}. More generally, gene set enrichment analysis (GSEA) \cite{SubramanianGenesetenrichment2005a}\cite{MooneyGenesetanalysis2015} relies upon pre-defined gene sets. This method determines if gene sets have statistically significant, concordant differences between phenotypes and offers biological interpretation of the sets. Thus well-defined gene sets are required for informative, interpretable analysis of genomic information.
 	
@@ -702,7 +721,7 @@
 	
 
 	\section{Data}
-	\subsection{Simulation: Case 1}
+	\subsection{Simulation: Case 1} \label{sec:sim:data:case_1}
 	The data in the first simulation is designed to allow MDI to converge. In this case we take the data from the original MDI paper \cite{KirkBayesiancorrelatedclustering2012}. As this data is highly separable we add some noise to ensure that the chain has not converged within a small number of iterations (i.e. to ensure that the consensus clustering is not converged in each chain sampled). 
 	
 	In this case we have 3 datasets (MDItestdata1, MDItestdata2 and MDItestdata3). We use MDItestdata1 as the basis to define new data. We generate two overlapping clusters (cluster A and B) defined by two of the original clusters (cluster  1 and 2). We define cluster A to be generated from a MVN distribution with a mean defined by the weighted means of clusters 1 and 2 and a variance defined by the weighted variance of these same clusters. For cluster A the relative weights are 0.6 and 1 for clusters 1 and 2. Cluster B is defined in the same way, but the weights are reversed such that cluster B is more similar to cluster 1.
@@ -710,16 +729,16 @@
 	\subsection{Simulation: Case 2} \label{sec:sim:data:case_2}
 	The data in the first simulation is designed to prevent MDI from achieving convergence. This data is based upon 5 clusters of 25, 50, 75, 100 and 150 genes each. Each cluster is defined by a MVN distribution with common variance of 1. We then perturb the clusters, adding a small amount of noise generate from a normal distribution of mean 0 and standard deviation 0.1. This noise makes the clusters less distinct. We generate 3 datasets this way, varying the means defining the clusters between datasets.
 	
-	\begin{figure}[h]
+	\begin{figure}[!htb]
 		\centering
 		\includegraphics[scale=0.65]{Images/Gen_data/Case_2/data_pheatmap_0.png}
-		\caption{Heatmap of expression data generated for the second simulation as described in section \ref{sec:sim:data:case_2}. Note that there are 5 populations present here and that the boundaries between clusters are not obvious.}
+		\caption{Heatmap of expression data generated for the second simulation as described in section \ref{sec:sim:data:case_2}. Note that there are 5 populations present here and that cluster membership and boundaries are not obvious.}
 		\label{fig:gen_data_sim_case_2}
 	\end{figure}
 
 	
 	\subsection{CEDAR dataset}
-	We use the gene expression data from the CEDAR cohort \cite{TheInternationalIBDGeneticsConsortiumIBDriskloci2018}. This data is available in a processed form \href{http://139.165.108.18/srv/genmol/permanent/1be6993fe41c12a051c9244d67c91da2be49e5dd26a6cd79f442bc006971e2ef/crohn-index.html}{online}. This consists of 9 .csv files, one for each tissue / cell type present of normalised gene expression data for 323 individuals. These are healthy individuals of European descent; the cohort consists of 182 women and 141 men with an average age of 56 years (but ranging from 19 to 86). None of the individuals are suffering from any autoimmune or inflammatory disease and were not taking corticosteroids or non-steroid anti-inflammatory drugs (with the exception of aspirin). 
+	We use the gene expression data from the CEDAR cohort \cite{TheInternationalIBDGeneticsConsortiumIBDriskloci2018}. This data is available in a processed form \href{http://139.165.108.18/srv/genmol/permanent/1be6993fe41c12a051c9244d67c91da2be49e5dd26a6cd79f442bc006971e2ef/crohn-index.html}{online}. This consists of 9 .csv files, one for each tissue / cell type present of normalised gene expression data for 323 individuals. These are healthy individuals of European descent; the cohort consists of 182 women and 141 men with an average age of 56 years (but ranging from 19 to 86). None of the individuals were suffering from any autoimmune or inflammatory disease and were not taking corticosteroids or non-steroid anti-inflammatory drugs (with the exception of aspirin). 
 	
 	With regards to tissue types, samples from six circulating immune cells types (followed in brackets by the abbreviation for the associated dataset):
 	\begin{itemize}
@@ -736,9 +755,9 @@
 		\item the rectum (RE); and
 		\item the colon (TR).
 	\end{itemize} 
-	Not every individual is present in every dataset. However, as we are clustering genes this should not present a problem.
+	Not every individual is present in every dataset. However, as genes are our object of interest this should not present a problem.
 	
-	Whole genome expression data were generated using HT-12 Expression Beadchips following the instructions of the manufacturer (Illumina). There are 18,524 probes present between the 9 datasets. The fluorescence intensities are available after undergoing a $\log_2$ transformation and being Robust Spline Normalized (a method that is designed to normalize variance-stabilized data).
+	Whole genome expression data were generated using HT-12 Expression Beadchips following the instructions of the manufacturer (Illumina). There are 18,524 probes present between the 9 datasets. It should be noted that there are differing degrees of missingness between the datasets (for instance the platelets dataset has 6,564 probes present in comparison to an average of 12,838 probes present per dataset, see figure \ref{fig:probe_presence_across_datasets}).
 	
 %	\begin{figure}[h]
 	\begin{sidewaysfigure}
@@ -749,10 +768,8 @@
 	\end{sidewaysfigure}
 %	\end{figure}
 	
-	It should be noted that there are differing degrees of missingness between the datasets (for instance the platelets dataset has 6,564 probes present in comparison to an average of 12,838 probes present per dataset, see figure \ref{fig:probe_presence_across_datasets}).
 	
 	Due to exponential increase in computational cost for each additional dataset, we use only the 7 most informative datasets, dropping PLA and CD15 from our analysis. 
-	
 	From a biological perspective we also expect PLA to be the least rich as platelets have no nucleus \cite{Wrighthistogenesisbloodplatelets1910} and therefore any gene expression is an artefact from before they differentiated into platelets. 
 	
 	With regards to CD15 granulocytes, (mast cells, basophils, neutrophils and eosinophils), these are quite distinct from B and T lymphocytes (see figure \ref{fig:white_blood_cell_differentiation}). Based on this we expect there to be less common information pertinent to clustering genes in other datasets. Arguably monocytes are equally distant, but the level of missingness in the CD15 dataset is greater than that in the CD14 dataset; thus CD15 is elimanted from our analysis.
@@ -760,7 +777,7 @@
 	\begin{figure}[h]
 		\centering
 		\includegraphics[scale=0.75]{Images/white_blood_cell_differentiation.jpg}
-		\caption{The differentiation of multipotent cells into blood and immune cells. Image courtesy of the OpenStax project citeOPENSTAX.}
+		\caption{The differentiation of multipotent cells into blood and immune cells. Image courtesy of the OpenStax project \cite{OpenStaxAnatomyPhysiology2016}.}
 		\label{fig:white_blood_cell_differentiation}
 	\end{figure}
 
@@ -781,18 +798,18 @@
 	
 	
 	\section{Methods}
-	We first show via simulated data that MDI can cluster appropriately and that the consensus clustering does produce similar results to a converged single run.
+	We first show via simulated data that consensus clustering does produce similar results to a converged single run for MDI.
 	
 	We then simulate data where individual chains of MDI will struggle to converge and possibly will not converge in finite time. We show that consensus clustering explores a wider space than any individual chain and appears to describe something similar to the space described by the union of the chains.
 	
-	Finally we apply consensus clustering to 1,000 probes for 8 datasets from the CEDAR dataset. An initial set of probes are chosen based on the members of 3 KEGG pathways:
+	Finally we apply consensus clustering to 254 probes for 8 datasets from the CEDAR dataset. An initial set of probes are chosen based on the members of 3 KEGG pathways:
 	
 	\begin{enumerate} \label{list:kegg_pathways}
 		\item Inositol phosphate metabolism (a broad biological pathway);
 		\item NOD-like receptor signaling pathway (a specific biological pathway with known involvement in IBD \cite{CarneiroNodlikeproteinsinflammation2008}\cite{GarrettHomeostasisInflammationIntestine2010}); and
 		\item Inflammatory bowel disease (IBD) (a pathological pathway).
 	\end{enumerate}
-	The union of these sets corresponds to 169 unique genes (or 287 probes as the mapping from the space of probes to that of genes is non-injective) that are present in the CEDAR dataset. The remaining probes are randomly selected from the total possible space (18,524 probes) less those corresponding to these genes (leaving 18,287 possible candidate probes). We then expect that the genes from the sets mentioned above (list \ref{list:kegg_pathways}) should cluster together. We use this as a test of our final clustering.
+	CHECK THESE NUMBERS AGAIN: The union of these sets corresponds to 169 unique genes (or 287 probes as the mapping from the space of probes to that of genes is non-injective) that are present in the CEDAR dataset. The remaining probes are randomly selected from the total possible space (18,524 probes) less those corresponding to these genes (leaving 18,287 possible candidate probes). We then expect that the genes from the sets mentioned above (list \ref{list:kegg_pathways}) should cluster together. We use this as a test of our final clustering.
 	
 	\subsection{CEDAR data pipeline}
 	For the CEDAR data, we follow this pipeline to prepare the data for clustering:
@@ -809,8 +826,28 @@
 	
 	\section{Results}
 %	\subsection{Simulations}
-	\subsection{Case 1: Proof of consensus}
-	Ran single chains of MDI for 2 million iterations, thinning factor of 50, 10 separate chains. MDI converged successfully (Geweke, Gelman). Consensus agreed (ARI).
+	\subsection{Case 1: Proof of consensus} \label{sec:results:case_1}
+	10 separate chains of MDI were run for 2 million iterations with a thinning factor of 50 and consensus clustering of 1,000 different seeds for different 4 lengths of chains were applied to the data generated as described in section \ref{sec:sim:data:case_1}. Results are compared by means of a Geweke plot \cite{GewekeEvaluatingAccuracySamplingBased}, a Gelman plot \cite{GelmanInferenceIterativeSimulation1992} and the distribution of adjusted Rand index comparing the clustering at each iteration (or each seed in the consensus clustering) with the clustering defined by the subpopluations used to generate the data. These were shown to have converged successfully both wtihin chain, by inspecting a Geweke plot (see figure \ref{fig:gen_data_case_1_geweke_plot_3}), and across chains, by means of the Gelman-Rubin convergence statistic (see figure \ref{fig:gen_data_case_1_gelman_plot}). The clustering at each iteration was compared to the the clustering defined by the subpopulations that generated the data and the long chains were compared to each other and consensus clustering for various chain lengths (see figure \ref{fig:gen_data_case_1_boxplot}). One can see that the consensus clustering perform very similarly to the individual chains. Finally, in figure \ref{fig:gen_data_case_1_collapsed_boxplot}, the full space of clusterings across all chains is compared to the consensus clustering under the adjusted Rand Index.
+
+	\newpage
+
+	\begin{figure}[h]
+			\centering
+			\includegraphics[scale=0.65]{Images/Gen_data/Case_1/Geweke_plot_3.png}
+			\caption{Geweke plot \cite{GewekeEvaluatingAccuracySamplingBased} for a long chain with random seed 3 in case 1 of the simulations. If the chain has reached stationarity the Z-scores should be described by a standard normal distribution (in which case 95\% of recorded values should be contained within the dashed lines). We show only the continuous random variables.}
+			\label{fig:gen_data_case_1_geweke_plot_3}
+		\end{figure}
+		
+	\newpage
+	
+	\begin{figure}[h]
+			\centering
+			\includegraphics[scale=0.65]{Images/Gen_data/Case_1/Gelman_plot.png}
+			\caption{Plot of the shrinkage factor described by \citet{GelmanInferenceIterativeSimulation1992} for the continuous variables across chains in case 1 of the simulations. If the chains are truly converged (and thus describing similar spaces to one another) the values should tend to 1.}
+			\label{fig:gen_data_case_1_gelman_plot}
+		\end{figure}
+
+	\newpage
 	
 %	\begin{figure}[h]
 		\begin{sidewaysfigure}
@@ -823,19 +860,41 @@
 		
 		\newpage
 		
-		\begin{figure}[h]
+		\begin{figure}[!htb]
 			\centering
 			\includegraphics[scale=0.65]{Images/Gen_data/Case_1/box_plot_ari_true_clustering_collapsed_long.png}
 			\caption{Box plots for distribution of adjusted rand index between the clustering at each iteration to the true clustering for different lengths of consensus clustering and the collapsed long chains.}
 			\label{fig:gen_data_case_1_collapsed_boxplot}
 		\end{figure}
+		
+		\newpage
+
 	
+	\subsection{Case 2: Overcoming multiple modes} \label{sec:results:case_2}
+	Similar versions of consensus clustering and individual chains were run for the data generated as described in section \ref{sec:sim:data:case_2}. These were then compared using the same methods. We can see in figure \ref{fig:gen_data_case_2_geweke_plot_3} an example of how the individual chains have reached stationarity (the individual chain is no longer exploring new space). However, convergence has not been achieved across chains as is shown in figure \ref{fig:gen_data_case_2_gelman_plot}. The space explored across the ten chains is compared to that explored in each of the consensus clusterings (see figures \ref{fig:gen_data_case_2_boxplot}, \ref{fig:gen_data_case_2_collapsed_boxplot} and \ref{fig:gen_data_case_2_collapsed_violin_plot}).
 	
-	\subsection{Case 2: Overcoming multiple modes}
-	MDI did not converge successfully (Geweke, Gelman show this). Ran single chains of MDI for 2 million iterations, thinning factor of 50, 10 separate chains. The space explored across the ten chains does match that explored in each of the consensus clusterings (see figures \ref{fig:gen_data_case_2_boxplot}, \ref{fig:gen_data_case_2_collapsed_boxplot} and particularly \ref{fig:gen_data_case_2_collapsed_violin_plot}; in this last plot we can see that the not just the range of clusterings explored but also their density is very similar).
+			\newpage
+	
+	\begin{figure}[!htb]
+			\centering
+			\includegraphics[scale=0.65]{Images/Gen_data/Case_2/Geweke_plot_3.png}
+			\caption{Geweke plot for a long chain with random seed 3 in case 2 of the simulations.}
+			\label{fig:gen_data_case_2_geweke_plot_3}
+		\end{figure}
+		
+	\newpage
+	
+	\begin{figure}[!htb]
+			\centering
+			\includegraphics[scale=0.65]{Images/Gen_data/Case_2/Gelman_plot.png}
+			\caption{Plot of the  Gelman-Rubin shrinkage factor for the continuous variables across chains in case 2 of the simulations.}
+			\label{fig:gen_data_case_2_gelman_plot}
+		\end{figure}
+	
+		\newpage
 	
 %	\begin{figure}[h]
-		\begin{sidewaysfigure}
+		\begin{sidewaysfigure}[!htb]
 		\centering
 		\includegraphics[scale=0.9]{Images/Gen_data/Case_2/box_plot_ari_true_clustering.png}
 		\caption{Box plots for distribution of adjusted rand index between the clustering at each iteration to the true clustering for different lengths of consensus clustering and different initialisation of long chains.}
@@ -845,26 +904,29 @@
 
 	\newpage
 
-	\begin{figure}[h]
+	\begin{figure}[!htb]
 		\centering
 		\includegraphics[scale=0.65]{Images/Gen_data/Case_2/box_plot_ari_true_clustering_collapsed_long.png}
 		\caption{Box plots for distribution of adjusted rand index between the clustering at each iteration to the true clustering for different lengths of consensus clustering and the collapsed long chains.}
 		\label{fig:gen_data_case_2_collapsed_boxplot}
 	\end{figure}
+	
+	\newpage
 
 	\begin{figure}[h]
 		\centering
 		\includegraphics[scale=0.65]{Images/Gen_data/Case_2/violin_plot_ari_true_clustering_collapsed_long.png}
-		\caption{Violoin plots for distribution of adjusted rand index between the clustering at each iteration to the true clustering for different lengths of consensus clustering and the collapsed long chains. We can see that the consensus clustering approximates the modes described across chains quite well.}
+		\caption{Violin plots for distribution of adjusted rand index between the clustering at each iteration to the true clustering for different lengths of consensus clustering and the collapsed long chains. We can see that the consensus clustering approximates the modes described across chains quite well.}
 		\label{fig:gen_data_case_2_collapsed_violin_plot}
 	\end{figure}
 
 	\newpage
 
 	\subsection{Case 3: CEDAR data}
-	Actual data.
+	Actual data. Show long chains not feasible (lack of convergence)
 	
 	\section{Conclusion}
+	PLAN FOR CONCLUSION
 	\begin{itemize}
 		\item Consensus clustering does explore the same space as MDI attempts to cover;
 		\item Appears robust to different values of $n_{iter}$;
@@ -874,6 +936,11 @@
 		\item future work - more datasets; include sick people, more people; try different clustering methods within consensus clustering
 	\end{itemize}
 	
+	We can see that when MDI does converge and successfully describe the posterior space (section \ref{sec:results:case_1}), consensus clustering describes a similar space and performs very similarly in terms of describing the underlying structure of the data. The results in section \ref{sec:results:case_2} show that even when MCMC methods struggle to converge, consensus clustering offers a description of the space of interest. Consensus clustering captures multiple nodes in a similar distribution to the space described across all chains (see figure \ref{fig:gen_data_case_2_collapsed_violin_plot}). The consensus clustering also appears to be robust in terms of the number of iterations used in each individual chain (each consensus clustering length performs identically). As each chain used in Consensus clustering is independent of the others, the problem is embarassingly parallel; therefore 1,000 chains of 500 iterations is far quicker to run in parallel than a single long chain.
+	The combination of these results encourages the claim that consensus clustering is a quick, robust solution to the problem of multi-modality. Consensus clustering produces a more accurate description of the posterior distribution than any single chain is capable of in a multi-modal high dimensional space; thus this implementation has many of the advantages of Bayesian inference (the use of priors, quantification of error and intuition of interpretability as mentioned in list \ref{list:bayes}) but overcomes the limitations of convergence and speed.
+	
+	\subsection{Gene stuff}
+	Initial result is not significant but is encouraging - suggests trying with larger / different datasets.
 	
 	
 %	\newpage
@@ -1063,7 +1130,7 @@
 \newpage
 
 \appendix
-\section{Data generation explained}
+%\section{Data generation explained}
 
 \section{Additional convergence plots}
 \subsection{Case 1: Convergence diagnostics}
