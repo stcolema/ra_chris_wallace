@@ -18,8 +18,9 @@ fused_gene_heatmaps <- function(expression_data_lst,
                                 file_path,
                                 n_datasets,
                                 plot_type = ".png",
-                                probes_present_dt = NULL,
-                                show_row_labels = F) {
+                                probes_present_dt = NULL #,
+                                # show_row_labels = F
+                                ) {
 
   # Set up the directory to save too
   dir_name <- paste0(file_path, "Fusion_expression_data/")
@@ -130,6 +131,11 @@ fused_gene_heatmaps <- function(expression_data_lst,
       
       # If more than 1 fused gene can attempt to cluster rows
       if (sum(fused_ind) > 1) {
+        
+        show_row_labels <- T
+        if(nrow(new_expression_data) > 50){
+          show_row_labels <- F
+        }
         
         pheatmap(new_expression_data[fused_ind, ],
           cluster_cols = F,

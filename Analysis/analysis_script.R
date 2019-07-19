@@ -1161,8 +1161,8 @@ if (do_fused_gene_expression) {
     file_path,
     num_datasets,
     plot_type,
-    probes_present_dt,
-    show_row_labels = show_heatmap_labels
+    probes_present_dt #,
+    # show_row_labels = TRUE
   )
 }
 } else {
