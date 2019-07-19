@@ -1,4 +1,6 @@
-This is BibTeX, Version 0.99dThe top-level auxiliary file: thesis.aux
+This is BibTeX, Version 0.99d (TeX Live 2017/Debian)
+Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
+The top-level auxiliary file: thesis.aux
 The style file: plainnat.bst
 Database file #1: thesis_ref_better.bib
 Warning--empty year in GewekeEvaluatingAccuracySamplingBased
@@ -7,4 +9,45 @@ Warning--empty publisher in MacKayInformationTheoryInference2003
 Warning--empty journal in MontiConsensusClusteringResamplingBased
 Warning--empty year in MontiConsensusClusteringResamplingBased
 Warning--empty year in MontiConsensusClusteringResamplingBased
+You've used 40 entries,
+            2773 wiz_defined-function locations,
+            945 strings with 22279 characters,
+and the built_in function-call counts, 37454 in all, are:
+= -- 2905
+> -- 4207
+< -- 25
++ -- 1409
+- -- 1369
+* -- 3894
+:= -- 6263
+add.period$ -- 187
+call.type$ -- 40
+change.case$ -- 574
+chr.to.int$ -- 40
+cite$ -- 86
+duplicate$ -- 841
+empty$ -- 1607
+format.name$ -- 1431
+if$ -- 7350
+int.to.chr$ -- 1
+int.to.str$ -- 1
+missing$ -- 41
+newline$ -- 273
+num.names$ -- 162
+pop$ -- 1049
+preamble$ -- 1
+purify$ -- 535
+quote$ -- 0
+skip$ -- 940
+stack$ -- 0
+substring$ -- 873
+swap$ -- 99
+text.length$ -- 3
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 430
+warning$ -- 6
+while$ -- 159
+width$ -- 0
+write$ -- 653
 (There were 6 warnings)

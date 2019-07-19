@@ -809,7 +809,7 @@ If one were to cluster the data as represented in table \ref{table:example_gene_
 		\item NOD-like receptor signaling pathway (a specific biological pathway with known involvement in IBD \cite{CarneiroNodlikeproteinsinflammation2008}\cite{GarrettHomeostasisInflammationIntestine2010}); and
 		\item Inflammatory bowel disease (IBD) (a pathological pathway).
 	\end{enumerate}
-	CHECK THESE NUMBERS AGAIN: The union of these sets corresponds to 169 unique genes (or 287 probes as the mapping from the space of probes to that of genes is non-injective) that are present in the CEDAR dataset. The remaining probes are randomly selected from the total possible space (18,524 probes) less those corresponding to these genes (leaving 18,287 possible candidate probes). We then expect that the genes from the sets mentioned above (list \ref{list:kegg_pathways}) should cluster together. We use this as a test of our final clustering.
+	The union of these sets corresponds to 169 unique genes (or 237 probes as the mapping from the space of probes to that of genes is non-injective) that are present in the CEDAR dataset. The remaining probes are randomly selected from the total possible space (18,524 probes) less those corresponding to these genes (leaving 18,287 possible candidate probes). We then expect that the genes from the sets mentioned above (list \ref{list:kegg_pathways}) should cluster together. We use this as a test of our final clustering.
 	
 	\subsection{CEDAR data pipeline}
 	For the CEDAR data, we follow this pipeline to prepare the data for clustering:
@@ -923,7 +923,145 @@ If one were to cluster the data as represented in table \ref{table:example_gene_
 	\newpage
 
 	\subsection{Case 3: CEDAR data}
-	Actual data. Show long chains not feasible (lack of convergence)
+	Consensus clustering with MDI $n_{iter}=500$ and $n_{seeds}=1000$ was implemented on 7 datasets. Individual Dirichlet processes were also run on each dataset for the same number of seeds and iterations as a comparison. Each chain of MDI took approximately 7 hours and 20 minutes to run. The output was inspected under multiple lenses: 
+	
+	\begin{enumerate}
+		\item The adjusted Rand index between $i^{th}$ and $1,000^{th}$ clusterings were plotted for all $i\in \{1,\ldots,1000\}$;
+		\item The $\phi_{ij}$ values were plotted across seeds for all combinations of datasets;
+		\item The distribution of $\phi_{ij}$ values were plotted for all combinations of datasets;
+		\item The number of clusters present in any given seed were plotted for each dataset;
+		\item The mass parameter for the underlying Dirichlet processes were plotted across seeds for each dataset;
+		\item The PSM for each dataset was plotted as a heatmap;
+		\item The comparison of the PSM, the standardised expression data and the correlation matrix were plotted with a common row ordering for each dataset; and
+		\item The expression of fused genes was plotted for all dataset combinations.
+	\end{enumerate}
+	Note that some of these (such as the $\phi_{ij}$ plots and the fused genes only apply to MDI, not the Dirichlet process as this is the single dataset case and comparisons across datasets are not possible).
+
+	\newpage
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[scale=0.75]{Images/Biology_data/All_datasets/Adjusted_rand_index_plots/rand_index_plot_CD4.png}
+		\caption{Plot of the adjusted Rand index between the clustering in each seed to that in the 1,000$^{th}$ for CD14.}
+		\label{fig:mdi_cd4_adj_rand_ind_plot}
+	\end{figure}
+	
+	\newpage
+		
+	\begin{figure}[h]
+		\centering
+		\includegraphics[scale=0.75]{Images/Biology_data/All_datasets/Phi_series_plots/file_1_Phi_67.png}
+		\caption{Plot of the $\phi_{67}$ values across all seeds, between the RE and TR datasets (note that the high values indicate a high clustering correlation).}
+		\label{fig:mdi_re_tr_phi_series_plot}
+	\end{figure}
+
+	\newpage
+
+	\begin{figure}[h]
+		\centering
+		\includegraphics[scale=0.75]{Images/Biology_data/All_datasets/Cluster_series_plots/CD4.png}
+		\caption{Plot of the number of clusters present in each seed for the CD4 dataset.}
+		\label{fig:mdi_cd4_number_clusters_plot}
+	\end{figure}
+	
+	\newpage
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[scale=0.75]{Images/Biology_data/All_datasets/Mass_parameter_plots/CD4.png}
+		\caption{Plot of the mass parameter ($\alpha$) for the Dirichlet process for the CD4 dataset of MDI.}
+		\label{fig:mdi_cd4_mass_parameter_plot}
+	\end{figure}
+	
+	\newpage
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[scale=0.75]{Images/Biology_data/All_datasets/Phi_histograms/Phi_67_histogram_plot.png}
+		\caption{Histogram of the distribution of $\phi_{67}$ values across seeds(between the RE and TR datasets).}
+		\label{fig:mdi_re_tr_phi_histogram}
+	\end{figure}
+
+	\newpage
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[scale=0.75]{Images/Biology_data/All_datasets/Similarity_matrices/similarity_matrix_CD4.png}
+		\caption{Heatmap of the PSM for the CD4 dataset from the consensus clustering of MDI.}
+		\label{fig:mdi_cd4_psm}
+	\end{figure}
+	
+	\newpage
+	
+	\begin{sidewaysfigure}[h]
+		\centering
+		\includegraphics[scale=0.5]{Images/Biology_data/All_datasets/Comparison_expression_clustering_correlation/CD4.png}
+		\caption{Heatmap of the PSM for the CD4 dataset from the consensus clustering of MDI.}
+		\label{fig:mdi_cd4_psm_expr_cor}
+	\end{sidewaysfigure}
+
+	\newpage
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[scale=0.75]{Images/Biology_data/All_datasets/Fusion_expression_data/heatmap_fused_genes_CD4_CD8.png}
+		\caption{Heatmap of the expression data for the fused genes between the CD4 and CD8 datasets from the consensus clustering of MDI.}
+		\label{fig:mdi_cd4_cd8_fused_genes}
+	\end{figure}
+
+	\newpage
+
+	\begin{figure}[h]
+		\centering
+		\includegraphics[scale=0.75]{Images/Biology_data/All_datasets/Fusion_expression_data/heatmap_unfused_genes_CD4_CD8.png}
+		\caption{Heatmap of the expression data for the unfused genes between the CD4 and CD8 datasets from the consensus clustering of MDI.}
+		\label{fig:mdi_cd4_cd8_unfused_genes}
+	\end{figure}
+		
+	\newpage
+	
+	We decided to focus on the Inositol phosphate metabolism pathway ("Inostiol") as the IBD and Nod-like genes made up 145 and 80 of the 254 genes used (i.e. $57.1\%$ and $34.5\%$ of the total dataset respectively). This large proportion of the available genes made analysis of these sets difficult.
+	
+	The clustering for the KEGG pathways was inspected primarily using three visualisation techniques:
+	\begin{enumerate}
+		\item The annotated PSMs of the dataset and the subset of data from each pathway were plotted;
+		\item For a pathway of $m$ members, we sampled $m$ random genes not in this pathway and found the mean probability of the pairwise alignment of these genes (i.e. the proportion of seeds for which any two of the $m$ genes had the same labelling). Taking $n$ of these samples allowed us to describe the distribution of the mean pairwise alignment probability and compare with the mean pairwise alignment probability of the $m$ genes from the pathway of interest; and
+		\item The violin plots of the PSM entries for each pathway were compared to the PSM entries for the remaining genes in the dataset.
+	\end{enumerate}
+	
+		\newpage
+	
+	\begin{sidewaysfigure}[h]
+		\centering
+		\includegraphics[scale=0.75]{Images/Biology_data/All_datasets/Heatmaps/KEGG_INOSITOL_PHOSPHATE_METABOLISM/CD4_comp_psm_corr.png}
+		\caption{Heatmap of the PSM and expression data for the Inostiol genes for the CD4 datasets from the consensus clustering of MDI.}
+		\label{fig:mdi_cd4_inostiol_psm_cor}
+	\end{sidewaysfigure}
+
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.75]{Images/Biology_data/All_datasets/Mean_alignment_probability/CD4_KEGG_INOSITOL_PHOSPHATE_METABOLISM.png}
+	\caption{Plot of the distribution of the mean probability of pairwise alignment for a random sample of 60 genes (to coincide with the number of genes associated with the Inostiol pathway present) with a dashed line indicating the mean probability of pairwise alignment for the Inostiol genes.}
+	\label{fig:mdi_cd4_inostiol_alignemnt_prob_distn}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[scale=0.75]{Images/Biology_data/All_datasets/PSM_densities/KEGG_INOSITOL_PHOSPHATE_METABOLISM/CD4.png}
+	\caption{Violin plot of the PSM entries for the Inostiol genes and the genes not belonging to this pathway for the CD4 datasets from the consensus clustering of MDI.}
+	\label{fig:mdi_cd4_inostiol_psm_violin}
+\end{figure}
+	\newpage
+	
+	
+%	If a pathway has $m$ members present in a dataset, we sampled $m$ random genes not in this pathway and found the mean probability of the pairwise alignment of these genes (i.e. the proportion of seeds for which any two of the $m$ genes had the same labelling). Taking $n$ of these samples allowed us to describe the distribution of the mean pairwise alignment probability and compare with the mean pairwise alignment probability of the $m$ genes from the pathway of interest.
+%	
+%	The violin plots of the PSM entries for each pathway were compared to the PSM entries for the remaining genes in the dataset.
+	
+	
+
+	
 	
 	\section{Conclusion}
 	PLAN FOR CONCLUSION
