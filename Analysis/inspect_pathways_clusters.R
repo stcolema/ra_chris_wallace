@@ -54,12 +54,17 @@ sim_cor_ph_list <- function(sim, cor_mat, annotation_row, annotation_colours,
     silent = T
   )$gtable
 
+  show_rownames <- T
+  if (nrow(sim) > 70) {
+    show_rownames <- F
+  }
+
   ph2 <- pheatmap(cor_mat[row_order, row_order],
     annotation_row = annotation_row,
     annotation_colors = annotation_colours,
     color = cor_pal,
     breaks = my_breaks,
-    show_rownames = F,
+    show_rownames = show_rownames,
     show_colnames = F,
     cluster_rows = F,
     cluster_cols = F,
@@ -163,13 +168,20 @@ find_gene_combinations <- function(sim, threshold = 0.8) { # , combine = TRUE) {
 
 input_arguments <- function() {
   option_list <- list(
-    
+
     # Directory to read from
     optparse::make_option(c("-d", "--dir"),
-                          type = "character",
-                          default = ".",
-                          help = "directory to read files from [default= %default]",
-                          metavar = "character"
+      type = "character",
+      default = ".",
+      help = "directory to read files from [default= %default]",
+      metavar = "character"
+    ),
+
+    optparse::make_option(c("-p", "--probes"),
+      type = "character",
+      default = "~/Desktop/newnet_228/Meta_data/probes_present_per_dataset.csv",
+      help = "file to read probes preesence across datasets from [default= %default]",
+      metavar = "character"
     )
   )
   opt_parser <- optparse::OptionParser(option_list = option_list)
@@ -222,7 +234,11 @@ abbreviated_names <- c(
 n_pathways <- length(pathway_names)
 
 # Probes present across datasets
-probes_present_per_dataset <- read.csv("~/Desktop/newnet_228/Meta_data/probes_present_per_dataset.csv", row.names = 1, header = T)
+probes_present_per_dataset_file_name <- args$probes
+probes_present_per_dataset <- read.csv(probes_present_per_dataset_file_name,
+  row.names = 1,
+  header = T
+)
 
 colnames(probes_present_per_dataset) <- c(
   "CD14",
@@ -454,7 +470,7 @@ big_non_empty_non_pathway_dt <- data.frame(
 )
 
 pathway_plots <- vector("list", n_datasets) %>% set_names(datasets)
-n_sample <- 5e4
+n_sample <- 1e4
 
 align_plot_dir <- paste0(save_dir, "Mean_alignment_probability/")
 dir.create(align_plot_dir, showWarnings = F)
@@ -517,6 +533,8 @@ for (i in 1:n_datasets) {
       next
     }
 
+    # print(head(non_empty_non_pathway_sim))
+
     non_empty_mean_dstn <- find_mean_prob_distribution(non_empty_non_pathway_sim, n_sample, m)
 
     non_empty_non_pathway_dt <- data.frame(
@@ -526,6 +544,8 @@ for (i in 1:n_datasets) {
       Pathway = abrv_p,
       Pathway_mean = pathway_mean
     )
+
+    # print(head(non_empty_non_pathway_dt))
 
     plot_title <- paste0(d, ": Distribution of mean probability of pairwise alignment (", abrv_p, ")")
 
@@ -559,7 +579,7 @@ gene_combinations <- vector("list", n_datasets) %>% set_names(datasets)
 for (i in 1:n_datasets) {
   d <- datasets[i]
   curr_sim <- my_tib$similarity_matrix[[i]]
-  
+
   gene_combinations[[d]] <- vector("list", n_pathways) %>% set_names(pathway_names)
   for (j in 1:n_pathways) {
     p <- pathway_names[[j]]
@@ -617,23 +637,23 @@ for (i in 1:n_datasets) {
         title = plot_title
       )
     ggsave(save_name, violin_all)
-    
+
     gene_combinations[[d]][[p]] <- find_gene_combinations(non_empty_pathway_sim, threshold = 0.8)
-    
   }
 }
 
 gene_comb_save_dir <- paste0(save_dir, "/Gene_combinations/")
 dir.create(gene_comb_save_dir, showWarnings = F)
 
-for(d in datasets){
-  for(j in 1:n_pathways){
+for (d in datasets) {
+  for (j in 1:n_pathways) {
     p <- pathway_names[j]
     save_name <- paste0(gene_comb_save_dir, d, "_", p, "_gene_combinations.txt")
     lapply(gene_combinations[[d]][[p]],
-           write.table,
-           save_name,
-           append = T, sep = ", ", row.names = F)
+      write.table,
+      save_name,
+      append = T, sep = ", ", row.names = F
+    )
   }
 }
 
