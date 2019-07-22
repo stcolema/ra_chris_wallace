@@ -177,12 +177,22 @@ input_arguments <- function() {
       metavar = "character"
     ),
 
-    optparse::make_option(c("-p", "--probes"),
+    optparse::make_option(c("--probes_present"),
       type = "character",
       default = "~/Desktop/newnet_228/Meta_data/probes_present_per_dataset.csv",
-      help = "file to read probes preesence across datasets from [default= %default]",
+      help = "file to read probes presence across datasets from [default= %default]",
       metavar = "character"
+    ),
+    
+    
+    optparse::make_option(c("--probe_key"),
+                          type = "character",
+                          default = "~/Desktop/Final_set/Meta_data/probe_key_unique_names.csv",
+                          help = "file to read relating probes to genes [default= %default]",
+                          metavar = "character"
     )
+    
+    
   )
   opt_parser <- optparse::OptionParser(option_list = option_list)
   opt <- optparse::parse_args(opt_parser)
@@ -210,10 +220,12 @@ col_pal <- colorRampPalette(c("#FF9900", "white", "#146EB4"))(100)
 cor_pal <- colorRampPalette(c("#146EB4", "white", "#FF9900"))(100)
 
 # Read in the universe of genes for this project
-probe_key <- fread("~/Desktop/Final_set/Meta_data/probe_key_unique_names.csv")
+print("HI")
+probe_key <- fread(args$probe_key)
 universe <- probe_key$Gene
 my_universe <- probe_key$Unique_gene_name
 reduced_universe <- unique(universe)
+print("LOE")
 
 # The KEGG data
 kegg_data <- "~/Desktop/ra_chris_wallace/Data/kegg_msigdb.txt"
@@ -234,7 +246,7 @@ abbreviated_names <- c(
 n_pathways <- length(pathway_names)
 
 # Probes present across datasets
-probes_present_per_dataset_file_name <- args$probes
+probes_present_per_dataset_file_name <- args$probes_present
 probes_present_per_dataset <- read.csv(probes_present_per_dataset_file_name,
   row.names = 1,
   header = T
