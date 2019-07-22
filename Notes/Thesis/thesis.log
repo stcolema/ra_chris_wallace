@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2019.4.9)  19 JUL 2019 15:16
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2019.4.9)  22 JUL 2019 17:53
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1758,11 +1758,11 @@ LaTeX Font Info:    Try loading font information for OT1+zplm on input line 2.
 
 (/usr/share/texlive/texmf-dist/tex/latex/psnfss/ot1zplm.fd
 File: ot1zplm.fd 2002/09/08 Fontinst v1.914 font definitions for OT1/zplm.
-))
+) [2])
 \tf@toc=\write5
 \openout5 = `thesis.toc'.
 
- [2] [3]
+ [3] [4]
 Overfull \hbox (12.27731pt too wide) in paragraph at lines 352--353
 \OT1/ppl/m/n/12 could in-te-grate in-for-ma-tion about com-mon clus-ter-ing str
 uc-ture across the datasets
@@ -1772,7 +1772,7 @@ LaTeX Font Info:    Font shape `OT1/ppl/bx/n' in size <14.4> not available
 (Font)              Font shape `OT1/ppl/b/n' tried instead on input line 366.
 LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <14.4> not available
 (Font)              Font shape `OT1/phv/b/n' tried instead on input line 366.
-[4]
+[5]
 LaTeX Font Info:    Try loading font information for OMS+ppl on input line 381.
 
  (/usr/share/texlive/texmf-dist/tex/latex/psnfss/omsppl.fd
@@ -1780,22 +1780,22 @@ File: omsppl.fd
 )
 LaTeX Font Info:    Font shape `OMS/ppl/m/n' in size <12> not available
 (Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 381.
- [5] [6]
+ [6] [7]
 LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <12> not available
-(Font)              Font shape `OT1/phv/b/n' tried instead on input line 414.
+(Font)              Font shape `OT1/phv/b/n' tried instead on input line 415.
 
-Overfull \hbox (1.5587pt too wide) in paragraph at lines 417--419
+Overfull \hbox (1.5587pt too wide) in paragraph at lines 418--420
 []\OT1/ppl/m/n/12 We carry out Bayesian in-fer-ence of this model us-ing MCMC m
 eth-ods. Specif-
  []
 
-[7]
-LaTeX Font Info:    Try loading font information for U+fplmbb on input line 430
+[8]
+LaTeX Font Info:    Try loading font information for U+fplmbb on input line 431
 .
  (/usr/share/texlive/texmf-dist/tex/latex/psnfss/ufplmbb.fd
 File: ufplmbb.fd 2003/10/30 Fontinst v1.914 font definitions for U/fplmbb.
 )
-Overfull \hbox (17.36798pt too wide) in paragraph at lines 440--441
+Overfull \hbox (17.36798pt too wide) in paragraph at lines 441--442
 []\OT1/ppl/m/n/12 The gen-er-alised case for $\OML/zplm/m/it/12 L$ \OT1/ppl/m/n
 /12 datasets, $\OML/zplm/m/it/12 X[] \OT1/zplm/m/n/12 = (\OML/zplm/m/it/12 x[]\
 OT1/ppl/m/n/12 , [] , \OML/zplm/m/it/12 x[]\OT1/zplm/m/n/12 )\OT1/ppl/m/n/12 , 
@@ -1806,290 +1806,248 @@ n/12 , [] , \OML/zplm/m/it/12 x[]\OT1/zplm/m/n/12 )$
 
 Package amsmath Warning: Foreign command \atopwithdelims;
 (amsmath)                \frac or \genfrac should be used instead
-(amsmath)                 on input line 444.
+(amsmath)                 on input line 445.
 
 
-Overfull \hbox (1.60957pt too wide) in paragraph at lines 446--447
+Overfull \hbox (1.60957pt too wide) in paragraph at lines 447--448
 \OT1/ppl/m/n/12 re-lated clus-ter-ing struc-ture is used to ``up-weigh'' sim-i-
 lar clus-ters across datasets.
  []
 
 
-Overfull \hbox (6.86452pt too wide) in paragraph at lines 446--447
+Overfull \hbox (6.86452pt too wide) in paragraph at lines 447--448
 \OT1/ppl/m/n/12 MDI has been ap-plied to pre-ci-sion medicine, specif-i-cally g
 lioblas-toma sub-typing
  []
 
-[8] [9]
-
-LaTeX Warning: No positions in optional float specifier.
-               Default added (so using `tbp') on input line 474.
-
-
-Package amsmath Warning: Foreign command \atop;
-(amsmath)                \frac or \genfrac should be used instead
-(amsmath)                 on input line 477.
-
-[10]
-Overfull \hbox (41.90126pt too wide) in alignment at lines 511--513
- [][][] []
- []
-
-[11]
-
-LaTeX Warning: No positions in optional float specifier.
-               Default added (so using `tbp') on input line 529.
-
-[12]
-Overfull \hbox (21.71883pt too wide) in paragraph at lines 624--625
+[9] [10]
+Overfull \hbox (21.71883pt too wide) in paragraph at lines 533--534
 []\OT1/ppl/m/n/12 Analysing pre-defined gene sets in-creases the sta-tis-ti-cal
  power of an analysis[[]].
  []
 
-[13]
-<Images/Examples/example_expression_data.png, id=381, 505.89pt x 505.89pt>
-File: Images/Examples/example_expression_data.png Graphic file (type png)
-<use Images/Examples/example_expression_data.png>
-Package pdftex.def Info: Images/Examples/example_expression_data.png  used on i
-nput line 680.
-(pdftex.def)             Requested size: 278.24034pt x 278.24034pt.
- [14]
-
-LaTeX Warning: No positions in optional float specifier.
-               Default added (so using `tbp') on input line 688.
-
-<Images/Examples/example_standardised_expression_data.png, id=397, 505.89pt x 5
-05.89pt>
-File: Images/Examples/example_standardised_expression_data.png Graphic file (ty
-pe png)
-<use Images/Examples/example_standardised_expression_data.png>
-Package pdftex.def Info: Images/Examples/example_standardised_expression_data.p
-ng  used on input line 705.
-(pdftex.def)             Requested size: 278.24034pt x 278.24034pt.
-[15 <./Images/Examples/example_expression_data.png>] [16 <./Images/Examples/exa
-mple_standardised_expression_data.png>]
-<Images/Gen_data/Case_2/data_pheatmap_0.png, id=413, 505.89pt x 505.89pt>
+[11]
+<Images/Gen_data/Case_2/data_pheatmap_0.png, id=348, 505.89pt x 505.89pt>
 File: Images/Gen_data/Case_2/data_pheatmap_0.png Graphic file (type png)
 <use Images/Gen_data/Case_2/data_pheatmap_0.png>
 Package pdftex.def Info: Images/Gen_data/Case_2/data_pheatmap_0.png  used on in
-put line 734.
+put line 591.
 (pdftex.def)             Requested size: 328.82458pt x 328.82458pt.
- [17]
-Overfull \hbox (6.51555pt too wide) in paragraph at lines 760--761
+ [12] [13 <./Images/Gen_data/Case_2/data_pheatmap_0.png (PNG copy)>]
+Overfull \hbox (6.51555pt too wide) in paragraph at lines 617--618
 []\OT1/ppl/m/n/12 Whole genome ex-pres-sion data were gen-er-ated us-ing HT-12 
 Ex-pres-sion Bead-
  []
 
-[18 <./Images/Gen_data/Case_2/data_pheatmap_0.png (PNG copy)>]
-<Images/Data_inspection/probe_presence_across_datasets.png, id=429, 681.9879pt 
+<Images/Data_inspection/probe_presence_across_datasets.png, id=364, 681.9879pt 
 x 420.6114pt>
 File: Images/Data_inspection/probe_presence_across_datasets.png Graphic file (t
 ype png)
 <use Images/Data_inspection/probe_presence_across_datasets.png>
 Package pdftex.def Info: Images/Data_inspection/probe_presence_across_datasets.
-png  used on input line 765.
+png  used on input line 622.
 (pdftex.def)             Requested size: 613.78343pt x 378.54677pt.
 
-Overfull \hbox (22.25323pt too wide) in paragraph at lines 765--766
+Overfull \hbox (22.25323pt too wide) in paragraph at lines 622--623
  [][] 
  []
 
 
-Overfull \hbox (3.68257pt too wide) in paragraph at lines 772--774
+Overfull \hbox (3.68257pt too wide) in paragraph at lines 629--631
 []\OT1/ppl/m/n/12 Due to ex-po-nen-tial in-crease in com-pu-ta-tional cost for 
 each ad-di-tional dataset,
  []
 
-<Images/white_blood_cell_differentiation.jpg, id=432, 555.7563pt x 456.7464pt>
+<Images/white_blood_cell_differentiation.jpg, id=367, 555.7563pt x 456.7464pt>
 File: Images/white_blood_cell_differentiation.jpg Graphic file (type jpg)
 <use Images/white_blood_cell_differentiation.jpg>
 Package pdftex.def Info: Images/white_blood_cell_differentiation.jpg  used on i
-nput line 779.
+nput line 636.
 (pdftex.def)             Requested size: 416.81621pt x 342.55896pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[19] [20 <./Images/Data_inspection/probe_presence_across_datasets.png (PNG copy
-)>] [21 <./Images/white_blood_cell_differentiation.jpg>] [22]
-<Images/Gen_data/Case_1/Geweke_plot_3.png, id=485, 481.8pt x 481.8pt>
+[14] [15 <./Images/Data_inspection/probe_presence_across_datasets.png (PNG copy
+)>] [16 <./Images/white_blood_cell_differentiation.jpg>] [17]
+<Images/Gen_data/Case_1/Geweke_plot_3.png, id=415, 481.8pt x 481.8pt>
 File: Images/Gen_data/Case_1/Geweke_plot_3.png Graphic file (type png)
 <use Images/Gen_data/Case_1/Geweke_plot_3.png>
 Package pdftex.def Info: Images/Gen_data/Case_1/Geweke_plot_3.png  used on inpu
-t line 836.
+t line 716.
 (pdftex.def)             Requested size: 313.16628pt x 313.16628pt.
- [23 <./Images/Gen_data/Case_1/Geweke_plot_3.png>]
-<Images/Gen_data/Case_1/Gelman_plot.png, id=493, 481.8pt x 481.8pt>
+ [18 <./Images/Gen_data/Case_1/Geweke_plot_3.png>]
+<Images/Gen_data/Case_1/Gelman_plot.png, id=424, 481.8pt x 481.8pt>
 File: Images/Gen_data/Case_1/Gelman_plot.png Graphic file (type png)
 <use Images/Gen_data/Case_1/Gelman_plot.png>
 Package pdftex.def Info: Images/Gen_data/Case_1/Gelman_plot.png  used on input 
-line 845.
+line 725.
 (pdftex.def)             Requested size: 313.16628pt x 313.16628pt.
- [24 <./Images/Gen_data/Case_1/Gelman_plot.png (PNG copy)>]
-<Images/Gen_data/Case_1/box_plot_ari_true_clustering.png, id=501, 681.9879pt x 
+ [19 <./Images/Gen_data/Case_1/Gelman_plot.png (PNG copy)>]
+<Images/Gen_data/Case_1/box_plot_ari_true_clustering.png, id=431, 681.9879pt x 
 420.6114pt>
 File: Images/Gen_data/Case_1/box_plot_ari_true_clustering.png Graphic file (typ
 e png)
 <use Images/Gen_data/Case_1/box_plot_ari_true_clustering.png>
 Package pdftex.def Info: Images/Gen_data/Case_1/box_plot_ari_true_clustering.pn
-g  used on input line 855.
+g  used on input line 735.
 (pdftex.def)             Requested size: 613.78343pt x 378.54677pt.
 
-Overfull \hbox (22.25323pt too wide) in paragraph at lines 855--856
+Overfull \hbox (22.25323pt too wide) in paragraph at lines 735--736
  [][] 
  []
 
-<Images/Gen_data/Case_1/box_plot_ari_true_clustering_collapsed_long.png, id=502
+<Images/Gen_data/Case_1/box_plot_ari_true_clustering_collapsed_long.png, id=432
 , 681.9879pt x 420.6114pt>
 File: Images/Gen_data/Case_1/box_plot_ari_true_clustering_collapsed_long.png Gr
 aphic file (type png)
 <use Images/Gen_data/Case_1/box_plot_ari_true_clustering_collapsed_long.png>
 Package pdftex.def Info: Images/Gen_data/Case_1/box_plot_ari_true_clustering_co
-llapsed_long.png  used on input line 865.
+llapsed_long.png  used on input line 745.
 (pdftex.def)             Requested size: 443.28688pt x 273.39418pt.
 
-Overfull \hbox (25.0332pt too wide) in paragraph at lines 865--866
+Overfull \hbox (25.0332pt too wide) in paragraph at lines 745--746
  [][] 
  []
 
-[25] [26 <./Images/Gen_data/Case_1/box_plot_ari_true_clustering.png>]
-<Images/Gen_data/Case_2/Geweke_plot_3.png, id=523, 481.8pt x 481.8pt>
+[20] [21 <./Images/Gen_data/Case_1/box_plot_ari_true_clustering.png>]
+<Images/Gen_data/Case_2/Geweke_plot_3.png, id=454, 481.8pt x 481.8pt>
 File: Images/Gen_data/Case_2/Geweke_plot_3.png Graphic file (type png)
 <use Images/Gen_data/Case_2/Geweke_plot_3.png>
 Package pdftex.def Info: Images/Gen_data/Case_2/Geweke_plot_3.png  used on inpu
-t line 880.
+t line 760.
 (pdftex.def)             Requested size: 313.16628pt x 313.16628pt.
-<Images/Gen_data/Case_2/Gelman_plot.png, id=524, 481.8pt x 481.8pt>
+<Images/Gen_data/Case_2/Gelman_plot.png, id=455, 481.8pt x 481.8pt>
 File: Images/Gen_data/Case_2/Gelman_plot.png Graphic file (type png)
 <use Images/Gen_data/Case_2/Gelman_plot.png>
 Package pdftex.def Info: Images/Gen_data/Case_2/Gelman_plot.png  used on input 
-line 889.
+line 769.
 (pdftex.def)             Requested size: 313.16628pt x 313.16628pt.
-<Images/Gen_data/Case_2/box_plot_ari_true_clustering.png, id=525, 681.9879pt x 
+<Images/Gen_data/Case_2/box_plot_ari_true_clustering.png, id=456, 681.9879pt x 
 420.6114pt>
 File: Images/Gen_data/Case_2/box_plot_ari_true_clustering.png Graphic file (typ
 e png)
 <use Images/Gen_data/Case_2/box_plot_ari_true_clustering.png>
 Package pdftex.def Info: Images/Gen_data/Case_2/box_plot_ari_true_clustering.pn
-g  used on input line 899.
+g  used on input line 779.
 (pdftex.def)             Requested size: 613.78343pt x 378.54677pt.
 
-Overfull \hbox (22.25323pt too wide) in paragraph at lines 899--900
+Overfull \hbox (22.25323pt too wide) in paragraph at lines 779--780
  [][] 
  []
 
-<Images/Gen_data/Case_2/box_plot_ari_true_clustering_collapsed_long.png, id=526
+<Images/Gen_data/Case_2/box_plot_ari_true_clustering_collapsed_long.png, id=457
 , 681.9879pt x 420.6114pt>
 File: Images/Gen_data/Case_2/box_plot_ari_true_clustering_collapsed_long.png Gr
 aphic file (type png)
 <use Images/Gen_data/Case_2/box_plot_ari_true_clustering_collapsed_long.png>
 Package pdftex.def Info: Images/Gen_data/Case_2/box_plot_ari_true_clustering_co
-llapsed_long.png  used on input line 909.
+llapsed_long.png  used on input line 789.
 (pdftex.def)             Requested size: 443.28688pt x 273.39418pt.
 
-Overfull \hbox (25.0332pt too wide) in paragraph at lines 909--910
+Overfull \hbox (25.0332pt too wide) in paragraph at lines 789--790
  [][] 
  []
 
 <Images/Gen_data/Case_2/violin_plot_ari_true_clustering_collapsed_long.png, id=
-527, 681.9879pt x 420.6114pt>
+458, 681.9879pt x 420.6114pt>
 File: Images/Gen_data/Case_2/violin_plot_ari_true_clustering_collapsed_long.png
  Graphic file (type png)
 <use Images/Gen_data/Case_2/violin_plot_ari_true_clustering_collapsed_long.png>
 
 Package pdftex.def Info: Images/Gen_data/Case_2/violin_plot_ari_true_clustering
-_collapsed_long.png  used on input line 918.
+_collapsed_long.png  used on input line 798.
 (pdftex.def)             Requested size: 443.28688pt x 273.39418pt.
 
-Overfull \hbox (25.0332pt too wide) in paragraph at lines 918--919
+Overfull \hbox (25.0332pt too wide) in paragraph at lines 798--799
  [][] 
  []
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[27 <./Images/Gen_data/Case_1/box_plot_ari_true_clustering_collapsed_long.png>]
-[28 <./Images/Gen_data/Case_2/Geweke_plot_3.png>]
+[22 <./Images/Gen_data/Case_1/box_plot_ari_true_clustering_collapsed_long.png>]
+[23 <./Images/Gen_data/Case_2/Geweke_plot_3.png>]
 <Images/Biology_data/All_datasets/Adjusted_rand_index_plots/rand_index_plot_CD4
-.png, id=546, 505.89pt x 505.89pt>
+.png, id=477, 505.89pt x 505.89pt>
 File: Images/Biology_data/All_datasets/Adjusted_rand_index_plots/rand_index_plo
 t_CD4.png Graphic file (type png)
 <use Images/Biology_data/All_datasets/Adjusted_rand_index_plots/rand_index_plot
 _CD4.png>
 Package pdftex.def Info: Images/Biology_data/All_datasets/Adjusted_rand_index_p
-lots/rand_index_plot_CD4.png  used on input line 944.
+lots/rand_index_plot_CD4.png  used on input line 824.
 (pdftex.def)             Requested size: 379.41655pt x 379.41655pt.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<Images/Biology_data/All_datasets/Phi_series_plots/file_1_Phi_67.png, id=547, 5
+<Images/Biology_data/All_datasets/Phi_series_plots/file_1_Phi_67.png, id=478, 5
 05.89pt x 505.89pt>
 File: Images/Biology_data/All_datasets/Phi_series_plots/file_1_Phi_67.png Graph
 ic file (type png)
 <use Images/Biology_data/All_datasets/Phi_series_plots/file_1_Phi_67.png>
 Package pdftex.def Info: Images/Biology_data/All_datasets/Phi_series_plots/file
-_1_Phi_67.png  used on input line 953.
+_1_Phi_67.png  used on input line 833.
 (pdftex.def)             Requested size: 379.41655pt x 379.41655pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<Images/Biology_data/All_datasets/Cluster_series_plots/CD4.png, id=548, 505.89p
+<Images/Biology_data/All_datasets/Cluster_series_plots/CD4.png, id=479, 505.89p
 t x 505.89pt>
 File: Images/Biology_data/All_datasets/Cluster_series_plots/CD4.png Graphic fil
 e (type png)
 <use Images/Biology_data/All_datasets/Cluster_series_plots/CD4.png>
 Package pdftex.def Info: Images/Biology_data/All_datasets/Cluster_series_plots/
-CD4.png  used on input line 962.
+CD4.png  used on input line 842.
 (pdftex.def)             Requested size: 379.41655pt x 379.41655pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<Images/Biology_data/All_datasets/Mass_parameter_plots/CD4.png, id=549, 505.89p
+<Images/Biology_data/All_datasets/Mass_parameter_plots/CD4.png, id=480, 505.89p
 t x 505.89pt>
 File: Images/Biology_data/All_datasets/Mass_parameter_plots/CD4.png Graphic fil
 e (type png)
 <use Images/Biology_data/All_datasets/Mass_parameter_plots/CD4.png>
 Package pdftex.def Info: Images/Biology_data/All_datasets/Mass_parameter_plots/
-CD4.png  used on input line 971.
+CD4.png  used on input line 851.
 (pdftex.def)             Requested size: 379.41655pt x 379.41655pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 <Images/Biology_data/All_datasets/Phi_histograms/Phi_67_histogram_plot.png, id=
-550, 505.89pt x 505.89pt>
+481, 505.89pt x 505.89pt>
 File: Images/Biology_data/All_datasets/Phi_histograms/Phi_67_histogram_plot.png
  Graphic file (type png)
 <use Images/Biology_data/All_datasets/Phi_histograms/Phi_67_histogram_plot.png>
 
 Package pdftex.def Info: Images/Biology_data/All_datasets/Phi_histograms/Phi_67
-_histogram_plot.png  used on input line 980.
+_histogram_plot.png  used on input line 860.
 (pdftex.def)             Requested size: 379.41655pt x 379.41655pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 <Images/Biology_data/All_datasets/Similarity_matrices/similarity_matrix_CD4.png
-, id=551, 505.89pt x 505.89pt>
+, id=482, 505.89pt x 505.89pt>
 File: Images/Biology_data/All_datasets/Similarity_matrices/similarity_matrix_CD
 4.png Graphic file (type png)
 <use Images/Biology_data/All_datasets/Similarity_matrices/similarity_matrix_CD4
 .png>
 Package pdftex.def Info: Images/Biology_data/All_datasets/Similarity_matrices/s
-imilarity_matrix_CD4.png  used on input line 989.
+imilarity_matrix_CD4.png  used on input line 869.
 (pdftex.def)             Requested size: 379.41655pt x 379.41655pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 <Images/Biology_data/All_datasets/Comparison_expression_clustering_correlation/
-CD4.png, id=552, 1300.86pt x 578.16pt>
+CD4.png, id=483, 1300.86pt x 578.16pt>
 File: Images/Biology_data/All_datasets/Comparison_expression_clustering_correla
 tion/CD4.png Graphic file (type png)
 <use Images/Biology_data/All_datasets/Comparison_expression_clustering_correlat
 ion/CD4.png>
 Package pdftex.def Info: Images/Biology_data/All_datasets/Comparison_expression
-_clustering_correlation/CD4.png  used on input line 998.
+_clustering_correlation/CD4.png  used on input line 878.
 (pdftex.def)             Requested size: 650.42842pt x 289.07928pt.
 
-Overfull \hbox (58.89822pt too wide) in paragraph at lines 998--999
+Overfull \hbox (58.89822pt too wide) in paragraph at lines 878--879
  [][] 
  []
 
@@ -2097,41 +2055,41 @@ Overfull \hbox (58.89822pt too wide) in paragraph at lines 998--999
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 <Images/Biology_data/All_datasets/Fusion_expression_data/heatmap_fused_genes_CD
-4_CD8.png, id=553, 505.89pt x 505.89pt>
+4_CD8.png, id=484, 505.89pt x 505.89pt>
 File: Images/Biology_data/All_datasets/Fusion_expression_data/heatmap_fused_gen
 es_CD4_CD8.png Graphic file (type png)
 <use Images/Biology_data/All_datasets/Fusion_expression_data/heatmap_fused_gene
 s_CD4_CD8.png>
 Package pdftex.def Info: Images/Biology_data/All_datasets/Fusion_expression_dat
-a/heatmap_fused_genes_CD4_CD8.png  used on input line 1007.
+a/heatmap_fused_genes_CD4_CD8.png  used on input line 887.
 (pdftex.def)             Requested size: 379.41655pt x 379.41655pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 <Images/Biology_data/All_datasets/Fusion_expression_data/heatmap_unfused_genes_
-CD4_CD8.png, id=554, 505.89pt x 505.89pt>
+CD4_CD8.png, id=485, 505.89pt x 505.89pt>
 File: Images/Biology_data/All_datasets/Fusion_expression_data/heatmap_unfused_g
 enes_CD4_CD8.png Graphic file (type png)
 <use Images/Biology_data/All_datasets/Fusion_expression_data/heatmap_unfused_ge
 nes_CD4_CD8.png>
 Package pdftex.def Info: Images/Biology_data/All_datasets/Fusion_expression_dat
-a/heatmap_unfused_genes_CD4_CD8.png  used on input line 1016.
+a/heatmap_unfused_genes_CD4_CD8.png  used on input line 896.
 (pdftex.def)             Requested size: 379.41655pt x 379.41655pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[29 <./Images/Gen_data/Case_2/Gelman_plot.png (PNG copy)>] [30]
+[24 <./Images/Gen_data/Case_2/Gelman_plot.png (PNG copy)>] [25]
 <Images/Biology_data/All_datasets/Heatmaps/KEGG_INOSITOL_PHOSPHATE_METABOLISM/C
-D4_comp_psm_corr.png, id=567, 867.24pt x 578.16pt>
+D4_comp_psm_corr.png, id=498, 867.24pt x 578.16pt>
 File: Images/Biology_data/All_datasets/Heatmaps/KEGG_INOSITOL_PHOSPHATE_METABOL
 ISM/CD4_comp_psm_corr.png Graphic file (type png)
 <use Images/Biology_data/All_datasets/Heatmaps/KEGG_INOSITOL_PHOSPHATE_METABOLI
 SM/CD4_comp_psm_corr.png>
 Package pdftex.def Info: Images/Biology_data/All_datasets/Heatmaps/KEGG_INOSITO
-L_PHOSPHATE_METABOLISM/CD4_comp_psm_corr.png  used on input line 1036.
+L_PHOSPHATE_METABOLISM/CD4_comp_psm_corr.png  used on input line 916.
 (pdftex.def)             Requested size: 650.42842pt x 433.61893pt.
 
-Overfull \hbox (58.89822pt too wide) in paragraph at lines 1036--1037
+Overfull \hbox (58.89822pt too wide) in paragraph at lines 916--917
  [][] 
  []
 
@@ -2139,316 +2097,355 @@ Overfull \hbox (58.89822pt too wide) in paragraph at lines 1036--1037
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 <Images/Biology_data/All_datasets/Mean_alignment_probability/CD4_KEGG_INOSITOL_
-PHOSPHATE_METABOLISM.png, id=568, 505.89pt x 505.89pt>
+PHOSPHATE_METABOLISM.png, id=499, 505.89pt x 505.89pt>
 File: Images/Biology_data/All_datasets/Mean_alignment_probability/CD4_KEGG_INOS
 ITOL_PHOSPHATE_METABOLISM.png Graphic file (type png)
 <use Images/Biology_data/All_datasets/Mean_alignment_probability/CD4_KEGG_INOSI
 TOL_PHOSPHATE_METABOLISM.png>
 Package pdftex.def Info: Images/Biology_data/All_datasets/Mean_alignment_probab
-ility/CD4_KEGG_INOSITOL_PHOSPHATE_METABOLISM.png  used on input line 1044.
+ility/CD4_KEGG_INOSITOL_PHOSPHATE_METABOLISM.png  used on input line 924.
 (pdftex.def)             Requested size: 379.41655pt x 379.41655pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 <Images/Biology_data/All_datasets/PSM_densities/KEGG_INOSITOL_PHOSPHATE_METABOL
-ISM/CD4.png, id=569, 505.89pt x 505.89pt>
+ISM/CD4.png, id=500, 505.89pt x 505.89pt>
 File: Images/Biology_data/All_datasets/PSM_densities/KEGG_INOSITOL_PHOSPHATE_ME
 TABOLISM/CD4.png Graphic file (type png)
 <use Images/Biology_data/All_datasets/PSM_densities/KEGG_INOSITOL_PHOSPHATE_MET
 ABOLISM/CD4.png>
 Package pdftex.def Info: Images/Biology_data/All_datasets/PSM_densities/KEGG_IN
-OSITOL_PHOSPHATE_METABOLISM/CD4.png  used on input line 1051.
+OSITOL_PHOSPHATE_METABOLISM/CD4.png  used on input line 931.
 (pdftex.def)             Requested size: 379.41655pt x 379.41655pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[31] (./thesis.bbl [32] [33] [34]
+[26] (./thesis.bbl [27] [28] [29]
 Underfull \hbox (badness 1163) in paragraph at lines 317--325
 []\OT1/ppl/m/n/12 Yered Pita-Ju[]arez, Gabriel Altschuler, Sokratis Kar-i-o-tis
 , Wen-bin Wei,
  []
 
-[35]
+[30]
 Underfull \hbox (badness 1024) in paragraph at lines 357--367
 \OT1/ppl/m/n/12 er-age, sup-port-ing func-tional dis-cov-ery in genome-wide ex-
 per-i-men-tal
  []
 
-[36] [37]) [38]
-<Images/Gen_data/Case_1/Esimated_burn_in_plot_1.png, id=608, 481.8pt x 481.8pt>
+[31] [32]) [33]
+
+LaTeX Warning: No positions in optional float specifier.
+               Default added (so using `tbp') on input line 1176.
+
+
+Package amsmath Warning: Foreign command \atop;
+(amsmath)                \frac or \genfrac should be used instead
+(amsmath)                 on input line 1179.
+
+[34]
+Overfull \hbox (41.90126pt too wide) in alignment at lines 1213--1215
+ [][][] []
+ []
+
+[35]
+
+LaTeX Warning: No positions in optional float specifier.
+               Default added (so using `tbp') on input line 1231.
+
+[36]
+<Images/Examples/example_expression_data.png, id=594, 505.89pt x 505.89pt>
+File: Images/Examples/example_expression_data.png Graphic file (type png)
+<use Images/Examples/example_expression_data.png>
+Package pdftex.def Info: Images/Examples/example_expression_data.png  used on i
+nput line 1281.
+(pdftex.def)             Requested size: 278.24034pt x 278.24034pt.
+ [37]
+
+LaTeX Warning: No positions in optional float specifier.
+               Default added (so using `tbp') on input line 1289.
+
+<Images/Examples/example_standardised_expression_data.png, id=608, 505.89pt x 5
+05.89pt>
+File: Images/Examples/example_standardised_expression_data.png Graphic file (ty
+pe png)
+<use Images/Examples/example_standardised_expression_data.png>
+Package pdftex.def Info: Images/Examples/example_standardised_expression_data.p
+ng  used on input line 1306.
+(pdftex.def)             Requested size: 278.24034pt x 278.24034pt.
+<Images/Gen_data/Case_1/Esimated_burn_in_plot_1.png, id=611, 481.8pt x 481.8pt>
 
 File: Images/Gen_data/Case_1/Esimated_burn_in_plot_1.png Graphic file (type png
 )
 <use Images/Gen_data/Case_1/Esimated_burn_in_plot_1.png>
 Package pdftex.def Info: Images/Gen_data/Case_1/Esimated_burn_in_plot_1.png  us
-ed on input line 1281.
+ed on input line 1320.
 (pdftex.def)             Requested size: 313.16628pt x 313.16628pt.
-
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[39]
-<Images/Gen_data/Case_1/Esimated_burn_in_plot_2.png, id=613, 481.8pt x 481.8pt>
+[38]
+<Images/Gen_data/Case_1/Esimated_burn_in_plot_2.png, id=619, 481.8pt x 481.8pt>
 
 File: Images/Gen_data/Case_1/Esimated_burn_in_plot_2.png Graphic file (type png
 )
 <use Images/Gen_data/Case_1/Esimated_burn_in_plot_2.png>
 Package pdftex.def Info: Images/Gen_data/Case_1/Esimated_burn_in_plot_2.png  us
-ed on input line 1290.
+ed on input line 1329.
 (pdftex.def)             Requested size: 313.16628pt x 313.16628pt.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<Images/Gen_data/Case_1/Esimated_burn_in_plot_3.png, id=614, 481.8pt x 481.8pt>
+<Images/Gen_data/Case_1/Esimated_burn_in_plot_3.png, id=620, 481.8pt x 481.8pt>
 
 File: Images/Gen_data/Case_1/Esimated_burn_in_plot_3.png Graphic file (type png
 )
 <use Images/Gen_data/Case_1/Esimated_burn_in_plot_3.png>
 Package pdftex.def Info: Images/Gen_data/Case_1/Esimated_burn_in_plot_3.png  us
-ed on input line 1299.
+ed on input line 1338.
 (pdftex.def)             Requested size: 313.16628pt x 313.16628pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<Images/Gen_data/Case_1/Esimated_burn_in_plot_4.png, id=615, 481.8pt x 481.8pt>
+<Images/Gen_data/Case_1/Esimated_burn_in_plot_4.png, id=621, 481.8pt x 481.8pt>
 
 File: Images/Gen_data/Case_1/Esimated_burn_in_plot_4.png Graphic file (type png
 )
 <use Images/Gen_data/Case_1/Esimated_burn_in_plot_4.png>
 Package pdftex.def Info: Images/Gen_data/Case_1/Esimated_burn_in_plot_4.png  us
-ed on input line 1308.
+ed on input line 1347.
 (pdftex.def)             Requested size: 313.16628pt x 313.16628pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<Images/Gen_data/Case_1/Esimated_burn_in_plot_5.png, id=616, 481.8pt x 481.8pt>
+<Images/Gen_data/Case_1/Esimated_burn_in_plot_5.png, id=622, 481.8pt x 481.8pt>
 
 File: Images/Gen_data/Case_1/Esimated_burn_in_plot_5.png Graphic file (type png
 )
 <use Images/Gen_data/Case_1/Esimated_burn_in_plot_5.png>
 Package pdftex.def Info: Images/Gen_data/Case_1/Esimated_burn_in_plot_5.png  us
-ed on input line 1317.
+ed on input line 1356.
 (pdftex.def)             Requested size: 313.16628pt x 313.16628pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<Images/Gen_data/Case_1/Esimated_burn_in_plot_6.png, id=617, 481.8pt x 481.8pt>
+<Images/Gen_data/Case_1/Esimated_burn_in_plot_6.png, id=623, 481.8pt x 481.8pt>
 
 File: Images/Gen_data/Case_1/Esimated_burn_in_plot_6.png Graphic file (type png
 )
 <use Images/Gen_data/Case_1/Esimated_burn_in_plot_6.png>
 Package pdftex.def Info: Images/Gen_data/Case_1/Esimated_burn_in_plot_6.png  us
-ed on input line 1326.
+ed on input line 1365.
 (pdftex.def)             Requested size: 313.16628pt x 313.16628pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<Images/Gen_data/Case_1/Esimated_burn_in_plot_7.png, id=618, 481.8pt x 481.8pt>
+<Images/Gen_data/Case_1/Esimated_burn_in_plot_7.png, id=624, 481.8pt x 481.8pt>
 
 File: Images/Gen_data/Case_1/Esimated_burn_in_plot_7.png Graphic file (type png
 )
 <use Images/Gen_data/Case_1/Esimated_burn_in_plot_7.png>
 Package pdftex.def Info: Images/Gen_data/Case_1/Esimated_burn_in_plot_7.png  us
-ed on input line 1335.
+ed on input line 1374.
 (pdftex.def)             Requested size: 313.16628pt x 313.16628pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<Images/Gen_data/Case_1/Esimated_burn_in_plot_8.png, id=619, 481.8pt x 481.8pt>
+<Images/Gen_data/Case_1/Esimated_burn_in_plot_8.png, id=625, 481.8pt x 481.8pt>
 
 File: Images/Gen_data/Case_1/Esimated_burn_in_plot_8.png Graphic file (type png
 )
 <use Images/Gen_data/Case_1/Esimated_burn_in_plot_8.png>
 Package pdftex.def Info: Images/Gen_data/Case_1/Esimated_burn_in_plot_8.png  us
-ed on input line 1344.
+ed on input line 1383.
 (pdftex.def)             Requested size: 313.16628pt x 313.16628pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<Images/Gen_data/Case_1/Esimated_burn_in_plot_9.png, id=620, 481.8pt x 481.8pt>
+<Images/Gen_data/Case_1/Esimated_burn_in_plot_9.png, id=626, 481.8pt x 481.8pt>
 
 File: Images/Gen_data/Case_1/Esimated_burn_in_plot_9.png Graphic file (type png
 )
 <use Images/Gen_data/Case_1/Esimated_burn_in_plot_9.png>
 Package pdftex.def Info: Images/Gen_data/Case_1/Esimated_burn_in_plot_9.png  us
-ed on input line 1353.
+ed on input line 1392.
 (pdftex.def)             Requested size: 313.16628pt x 313.16628pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<Images/Gen_data/Case_1/Esimated_burn_in_plot_10.png, id=621, 481.8pt x 481.8pt
+<Images/Gen_data/Case_1/Esimated_burn_in_plot_10.png, id=627, 481.8pt x 481.8pt
 >
 File: Images/Gen_data/Case_1/Esimated_burn_in_plot_10.png Graphic file (type pn
 g)
 <use Images/Gen_data/Case_1/Esimated_burn_in_plot_10.png>
 Package pdftex.def Info: Images/Gen_data/Case_1/Esimated_burn_in_plot_10.png  u
-sed on input line 1362.
+sed on input line 1401.
 (pdftex.def)             Requested size: 313.16628pt x 313.16628pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<Images/Gen_data/Case_2/Esimated_burn_in_plot_1.png, id=622, 481.8pt x 481.8pt>
+<Images/Gen_data/Case_2/Esimated_burn_in_plot_1.png, id=628, 481.8pt x 481.8pt>
 
 File: Images/Gen_data/Case_2/Esimated_burn_in_plot_1.png Graphic file (type png
 )
 <use Images/Gen_data/Case_2/Esimated_burn_in_plot_1.png>
 Package pdftex.def Info: Images/Gen_data/Case_2/Esimated_burn_in_plot_1.png  us
-ed on input line 1377.
+ed on input line 1416.
 (pdftex.def)             Requested size: 313.16628pt x 313.16628pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[40]
-<Images/Gen_data/Case_2/Esimated_burn_in_plot_2.png, id=627, 481.8pt x 481.8pt>
+[39]
+<Images/Gen_data/Case_2/Esimated_burn_in_plot_2.png, id=633, 481.8pt x 481.8pt>
 
 File: Images/Gen_data/Case_2/Esimated_burn_in_plot_2.png Graphic file (type png
 )
 <use Images/Gen_data/Case_2/Esimated_burn_in_plot_2.png>
 Package pdftex.def Info: Images/Gen_data/Case_2/Esimated_burn_in_plot_2.png  us
-ed on input line 1386.
+ed on input line 1425.
 (pdftex.def)             Requested size: 313.16628pt x 313.16628pt.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<Images/Gen_data/Case_2/Esimated_burn_in_plot_3.png, id=628, 481.8pt x 481.8pt>
+<Images/Gen_data/Case_2/Esimated_burn_in_plot_3.png, id=634, 481.8pt x 481.8pt>
 
 File: Images/Gen_data/Case_2/Esimated_burn_in_plot_3.png Graphic file (type png
 )
 <use Images/Gen_data/Case_2/Esimated_burn_in_plot_3.png>
 Package pdftex.def Info: Images/Gen_data/Case_2/Esimated_burn_in_plot_3.png  us
-ed on input line 1395.
+ed on input line 1434.
 (pdftex.def)             Requested size: 313.16628pt x 313.16628pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<Images/Gen_data/Case_2/Esimated_burn_in_plot_4.png, id=629, 481.8pt x 481.8pt>
+<Images/Gen_data/Case_2/Esimated_burn_in_plot_4.png, id=635, 481.8pt x 481.8pt>
 
 File: Images/Gen_data/Case_2/Esimated_burn_in_plot_4.png Graphic file (type png
 )
 <use Images/Gen_data/Case_2/Esimated_burn_in_plot_4.png>
 Package pdftex.def Info: Images/Gen_data/Case_2/Esimated_burn_in_plot_4.png  us
-ed on input line 1404.
+ed on input line 1443.
 (pdftex.def)             Requested size: 313.16628pt x 313.16628pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<Images/Gen_data/Case_2/Esimated_burn_in_plot_5.png, id=630, 481.8pt x 481.8pt>
+<Images/Gen_data/Case_2/Esimated_burn_in_plot_5.png, id=636, 481.8pt x 481.8pt>
 
 File: Images/Gen_data/Case_2/Esimated_burn_in_plot_5.png Graphic file (type png
 )
 <use Images/Gen_data/Case_2/Esimated_burn_in_plot_5.png>
 Package pdftex.def Info: Images/Gen_data/Case_2/Esimated_burn_in_plot_5.png  us
-ed on input line 1413.
+ed on input line 1452.
 (pdftex.def)             Requested size: 313.16628pt x 313.16628pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<Images/Gen_data/Case_2/Esimated_burn_in_plot_6.png, id=631, 481.8pt x 481.8pt>
+<Images/Gen_data/Case_2/Esimated_burn_in_plot_6.png, id=637, 481.8pt x 481.8pt>
 
 File: Images/Gen_data/Case_2/Esimated_burn_in_plot_6.png Graphic file (type png
 )
 <use Images/Gen_data/Case_2/Esimated_burn_in_plot_6.png>
 Package pdftex.def Info: Images/Gen_data/Case_2/Esimated_burn_in_plot_6.png  us
-ed on input line 1422.
+ed on input line 1461.
 (pdftex.def)             Requested size: 313.16628pt x 313.16628pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<Images/Gen_data/Case_2/Esimated_burn_in_plot_7.png, id=632, 481.8pt x 481.8pt>
+<Images/Gen_data/Case_2/Esimated_burn_in_plot_7.png, id=638, 481.8pt x 481.8pt>
 
 File: Images/Gen_data/Case_2/Esimated_burn_in_plot_7.png Graphic file (type png
 )
 <use Images/Gen_data/Case_2/Esimated_burn_in_plot_7.png>
 Package pdftex.def Info: Images/Gen_data/Case_2/Esimated_burn_in_plot_7.png  us
-ed on input line 1431.
+ed on input line 1470.
 (pdftex.def)             Requested size: 313.16628pt x 313.16628pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<Images/Gen_data/Case_2/Esimated_burn_in_plot_8.png, id=633, 481.8pt x 481.8pt>
+<Images/Gen_data/Case_2/Esimated_burn_in_plot_8.png, id=639, 481.8pt x 481.8pt>
 
 File: Images/Gen_data/Case_2/Esimated_burn_in_plot_8.png Graphic file (type png
 )
 <use Images/Gen_data/Case_2/Esimated_burn_in_plot_8.png>
 Package pdftex.def Info: Images/Gen_data/Case_2/Esimated_burn_in_plot_8.png  us
-ed on input line 1440.
+ed on input line 1479.
 (pdftex.def)             Requested size: 313.16628pt x 313.16628pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<Images/Gen_data/Case_2/Esimated_burn_in_plot_9.png, id=634, 481.8pt x 481.8pt>
+<Images/Gen_data/Case_2/Esimated_burn_in_plot_9.png, id=640, 481.8pt x 481.8pt>
 
 File: Images/Gen_data/Case_2/Esimated_burn_in_plot_9.png Graphic file (type png
 )
 <use Images/Gen_data/Case_2/Esimated_burn_in_plot_9.png>
 Package pdftex.def Info: Images/Gen_data/Case_2/Esimated_burn_in_plot_9.png  us
-ed on input line 1449.
+ed on input line 1488.
 (pdftex.def)             Requested size: 313.16628pt x 313.16628pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<Images/Gen_data/Case_2/Esimated_burn_in_plot_10.png, id=635, 481.8pt x 481.8pt
+<Images/Gen_data/Case_2/Esimated_burn_in_plot_10.png, id=641, 481.8pt x 481.8pt
 >
 File: Images/Gen_data/Case_2/Esimated_burn_in_plot_10.png Graphic file (type pn
 g)
 <use Images/Gen_data/Case_2/Esimated_burn_in_plot_10.png>
 Package pdftex.def Info: Images/Gen_data/Case_2/Esimated_burn_in_plot_10.png  u
-sed on input line 1458.
+sed on input line 1497.
 (pdftex.def)             Requested size: 313.16628pt x 313.16628pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1465.
-[41 <./Images/Gen_data/Case_2/box_plot_ari_true_clustering.png>] [42 <./Images/
-Gen_data/Case_2/box_plot_ari_true_clustering_collapsed_long.png>] [43 <./Images
-/Gen_data/Case_2/violin_plot_ari_true_clustering_collapsed_long.png>] [44 <./Im
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1504.
+[40 <./Images/Gen_data/Case_2/box_plot_ari_true_clustering.png>] [41 <./Images/
+Gen_data/Case_2/box_plot_ari_true_clustering_collapsed_long.png>] [42 <./Images
+/Gen_data/Case_2/violin_plot_ari_true_clustering_collapsed_long.png>] [43 <./Im
 ages/Biology_data/All_datasets/Adjusted_rand_index_plots/rand_index_plot_CD4.pn
-g>] [45 <./Images/Biology_data/All_datasets/Phi_series_plots/file_1_Phi_67.png>
-] [46 <./Images/Biology_data/All_datasets/Cluster_series_plots/CD4.png>]
-[47 <./Images/Biology_data/All_datasets/Mass_parameter_plots/CD4.png>] [48 <./I
+g>] [44 <./Images/Biology_data/All_datasets/Phi_series_plots/file_1_Phi_67.png>
+] [45 <./Images/Biology_data/All_datasets/Cluster_series_plots/CD4.png>]
+[46 <./Images/Biology_data/All_datasets/Mass_parameter_plots/CD4.png>] [47 <./I
 mages/Biology_data/All_datasets/Phi_histograms/Phi_67_histogram_plot.png>]
-[49 <./Images/Biology_data/All_datasets/Similarity_matrices/similarity_matrix_C
-D4.png (PNG copy)>] [50 <./Images/Biology_data/All_datasets/Comparison_expressi
-on_clustering_correlation/CD4.png (PNG copy)>] [51 <./Images/Biology_data/All_d
+[48 <./Images/Biology_data/All_datasets/Similarity_matrices/similarity_matrix_C
+D4.png (PNG copy)>] [49 <./Images/Biology_data/All_datasets/Comparison_expressi
+on_clustering_correlation/CD4.png (PNG copy)>] [50 <./Images/Biology_data/All_d
 atasets/Fusion_expression_data/heatmap_fused_genes_CD4_CD8.png (PNG copy)>]
-[52 <./Images/Biology_data/All_datasets/Fusion_expression_data/heatmap_unfused_
-genes_CD4_CD8.png (PNG copy)>] [53 <./Images/Biology_data/All_datasets/Heatmaps
-/KEGG_INOSITOL_PHOSPHATE_METABOLISM/CD4_comp_psm_corr.png (PNG copy)>] [54 <./I
+[51 <./Images/Biology_data/All_datasets/Fusion_expression_data/heatmap_unfused_
+genes_CD4_CD8.png (PNG copy)>] [52 <./Images/Biology_data/All_datasets/Heatmaps
+/KEGG_INOSITOL_PHOSPHATE_METABOLISM/CD4_comp_psm_corr.png (PNG copy)>] [53 <./I
 mages/Biology_data/All_datasets/Mean_alignment_probability/CD4_KEGG_INOSITOL_PH
-OSPHATE_METABOLISM.png (PNG copy)>] [55 <./Images/Biology_data/All_datasets/PSM
-_densities/KEGG_INOSITOL_PHOSPHATE_METABOLISM/CD4.png (PNG copy)>] [56 <./Image
-s/Gen_data/Case_1/Esimated_burn_in_plot_1.png>] [57 <./Images/Gen_data/Case_1/E
-simated_burn_in_plot_2.png>] [58 <./Images/Gen_data/Case_1/Esimated_burn_in_plo
-t_3.png>] [59 <./Images/Gen_data/Case_1/Esimated_burn_in_plot_4.png>] [60 <./Im
-ages/Gen_data/Case_1/Esimated_burn_in_plot_5.png>] [61 <./Images/Gen_data/Case_
-1/Esimated_burn_in_plot_6.png>] [62 <./Images/Gen_data/Case_1/Esimated_burn_in_
-plot_7.png>] [63 <./Images/Gen_data/Case_1/Esimated_burn_in_plot_8.png>]
-[64 <./Images/Gen_data/Case_1/Esimated_burn_in_plot_9.png>] [65 <./Images/Gen_d
-ata/Case_1/Esimated_burn_in_plot_10.png>] [66 <./Images/Gen_data/Case_2/Esimate
-d_burn_in_plot_1.png>] [67 <./Images/Gen_data/Case_2/Esimated_burn_in_plot_2.pn
-g>] [68 <./Images/Gen_data/Case_2/Esimated_burn_in_plot_3.png>] [69 <./Images/G
-en_data/Case_2/Esimated_burn_in_plot_4.png>] [70 <./Images/Gen_data/Case_2/Esim
-ated_burn_in_plot_5.png>] [71 <./Images/Gen_data/Case_2/Esimated_burn_in_plot_6
-.png>] [72 <./Images/Gen_data/Case_2/Esimated_burn_in_plot_7.png>] [73 <./Image
-s/Gen_data/Case_2/Esimated_burn_in_plot_8.png>] [74 <./Images/Gen_data/Case_2/E
-simated_burn_in_plot_9.png>] [75 <./Images/Gen_data/Case_2/Esimated_burn_in_plo
-t_10.png>]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 1465.
+OSPHATE_METABOLISM.png (PNG copy)>] [54 <./Images/Biology_data/All_datasets/PSM
+_densities/KEGG_INOSITOL_PHOSPHATE_METABOLISM/CD4.png (PNG copy)>] [55 <./Image
+s/Examples/example_expression_data.png>] [56 <./Images/Examples/example_standar
+dised_expression_data.png>] [57 <./Images/Gen_data/Case_1/Esimated_burn_in_plot
+_1.png>] [58 <./Images/Gen_data/Case_1/Esimated_burn_in_plot_2.png>] [59 <./Ima
+ges/Gen_data/Case_1/Esimated_burn_in_plot_3.png>] [60 <./Images/Gen_data/Case_1
+/Esimated_burn_in_plot_4.png>] [61 <./Images/Gen_data/Case_1/Esimated_burn_in_p
+lot_5.png>] [62 <./Images/Gen_data/Case_1/Esimated_burn_in_plot_6.png>]
+[63 <./Images/Gen_data/Case_1/Esimated_burn_in_plot_7.png>] [64 <./Images/Gen_d
+ata/Case_1/Esimated_burn_in_plot_8.png>] [65 <./Images/Gen_data/Case_1/Esimated
+_burn_in_plot_9.png>] [66 <./Images/Gen_data/Case_1/Esimated_burn_in_plot_10.pn
+g>] [67 <./Images/Gen_data/Case_2/Esimated_burn_in_plot_1.png>] [68 <./Images/G
+en_data/Case_2/Esimated_burn_in_plot_2.png>] [69 <./Images/Gen_data/Case_2/Esim
+ated_burn_in_plot_3.png>] [70 <./Images/Gen_data/Case_2/Esimated_burn_in_plot_4
+.png>] [71 <./Images/Gen_data/Case_2/Esimated_burn_in_plot_5.png>] [72 <./Image
+s/Gen_data/Case_2/Esimated_burn_in_plot_6.png>] [73 <./Images/Gen_data/Case_2/E
+simated_burn_in_plot_7.png>] [74 <./Images/Gen_data/Case_2/Esimated_burn_in_plo
+t_8.png>] [75 <./Images/Gen_data/Case_2/Esimated_burn_in_plot_9.png>] [76 <./Im
+ages/Gen_data/Case_2/Esimated_burn_in_plot_10.png>]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 1504.
  (./thesis.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1465.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1465.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1504.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1504.
 
 Package rerunfilecheck Info: File `thesis.out' has not changed.
-(rerunfilecheck)             Checksum: 763DFC04B42810BE63504E67501013CC;2203.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1465.
+(rerunfilecheck)             Checksum: 7104F2BCFC51E32568EFF5DF643D8D98;2484.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1504.
  ) 
 Here is how much of TeX's memory you used:
- 43785 strings out of 494847
- 977662 string characters out of 6179081
- 1184069 words of memory out of 5000000
- 46174 multiletter control sequences out of 15000+600000
+ 43789 strings out of 494847
+ 977790 string characters out of 6179081
+ 1186069 words of memory out of 5000000
+ 46177 multiletter control sequences out of 15000+600000
  567062 words of font info for 111 fonts, out of 8000000 for 9000
  59 hyphenation exceptions out of 8191
  69i,13n,119p,10415b,609s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -2465,10 +2462,10 @@ usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/share/te
 xlive/texmf-dist/fonts/type1/urw/palatino/uplb8a.pfb></usr/share/texlive/texmf-
 dist/fonts/type1/urw/palatino/uplr8a.pfb></usr/share/texlive/texmf-dist/fonts/t
 ype1/urw/palatino/uplri8a.pfb>
-Output written on thesis.pdf (76 pages, 4895560 bytes).
+Output written on thesis.pdf (77 pages, 4896541 bytes).
 PDF statistics:
- 944 PDF objects out of 1000 (max. 8388607)
- 757 compressed objects within 8 object streams
- 245 named destinations out of 1000 (max. 500000)
- 507 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 960 PDF objects out of 1000 (max. 8388607)
+ 772 compressed objects within 8 object streams
+ 246 named destinations out of 1000 (max. 500000)
+ 531 words of extra memory for PDF output out of 10000 (max. 10000000)
 

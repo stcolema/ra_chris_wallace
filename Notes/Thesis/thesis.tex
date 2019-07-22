@@ -347,11 +347,11 @@
 	
 	However, none of these definitions of a ``set'' incorporate tissue specific information. This seems an oversight. Cell-type specific gene pathways are pivotal in differentiating tissue function, implicated in hereditary organ failure, and mediate acquired chronic disease \cite{JuDefiningcelltypespecificity2013a}. More and more evidence is being accrued to highlight the cell-type specific level of gene expression \cite{GrundbergMappingcistransregulatory2012}\cite{OngEnhancerfunctionnew2011}\cite{ManiatisRegulationinducibletissuespecific1987}. Thus we propose defining tissue specific gene sets. 
 	
-	To describe gene sets within the data, some clustering method is required. Applied on expression values or some transformed variation thereof, groups of genes are created based on some concept of similarity (or alternatively on some concept of dissimilarity or distance). Depending on the choice of transformation and clustering method further questions might arise such as defining the number of clusters (required for instance with $K$-means clustering) or the type of distance to use (for instance within hierarchical clustering and the methods that integrate this method such as Weighted Gene Correlation Network Analysis). For clustering within a dataset we choose \emph{Dirichlet processes} as the method as the number of clusters is learnt from the data and the concept of distance in these models is based upon the likelihood of the Gaussian distributions describing the sub-populations, an intuitive measure for continuous data. Specifically we use Bayesian Dirichlet processes  as these capture uncertainty of membership which is appropriate in this application. Genes can be members of multiple sets or else their membership might be poorly defined \cite{Pita-JuarezPathwayCoexpressionNetwork2018}; thus the model uncertainty represents biological uncertainty.
+	To describe gene sets within the data, some clustering method is required. Applied on expression values or some transformed variation thereof, groups of genes are created based on some concept of similarity (or alternatively on some concept of dissimilarity or distance). Depending on the choice of transformation and clustering method further questions might arise such as defining the number of clusters (required for instance with $K$-means clustering) or the type of distance to use (for instance within hierarchical clustering and the methods that integrate this method such as Weighted Gene Correlation Network Analysis). For clustering within a dataset we choose \emph{mixture models} as the method as the number of clusters is learnt from the data and the concept of distance in these models is based upon the likelihood of the Gaussian distributions describing the sub-populations, an intuitive measure for continuous data. Specifically we use Bayesian mixture models as these capture uncertainty of membership which is appropriate in this application. Genes can be members of multiple sets or else their membership might be poorly defined \cite{Pita-JuarezPathwayCoexpressionNetwork2018}; thus the model uncertainty represents biological uncertainty.
 
 	Within the CEDAR cohort there are multiple datasets containing information about the same genes for different tissues or cell types. Ideally a model could integrate information about common clustering structure across the datasets to reduce uncertainty within making assumptions that could impose false structure upon the data or in some other way reduce the signal unique to each tissue. Such methods are referred to as \emph{integrative clustering methods}. Of this field we choose to use \emph{Multiple Dataset Integration} (MDI) \cite{KirkBayesiancorrelatedclustering2012} as this method is Bayesian (and thus has principled quantification of uncertainty) and is an extension of Dirichlet processes.
 	
-	As we have a large number of variables ($p > 250$), we implement \emph{consensus clustering} to overcome the problem of describing multiple modes in high dimension space. This is a recurring problem with Bayesian clustering methods as they rely upon \emph{Markov Chain Monte Carlo} (MCMC) methods to describe the posterior distribution. These methods have the property that they guarantee describing the posterior distribution given infinite time. However, if the posterior distribution is multi-modal, it is possible that no finite amount of time is sufficient to describe the space \cite{TjelmelandModeJumpingProposals2001}. This problem is more prevalent as the number of dimensions scales. In this case the algorithm tends to describe the space within a mode, but as the mode is far denser than the surrounding space (particularly in high dimensions), the probability of escaping the mode and exploring the full space is very low. Thus to describe the full space in finite time requires use of multiple unique initialisations. The number of initialisations is required to be sufficiently high that each mode is described. In this way the full space can be explored by the combinations of models. Combining clustering models in this way is referred to as \emph{consensus clustering}. It is a natural extension to the concept of ensemble methods (such as Random Forest \cite{BreimanRandomForests1}). The final model is a strong method built of many weak methods; it depends upon the instability of the individual models, similarly to Bagging \cite{BreimanBaggingpredictors1996}. Our implementation of consensus clustering uses many short MCMC chains of MDI aggressively thinned, thus it is both a better description of the target distribution than an individual model, but also far quicker to run as each chain is both embarrassingly parallel and short.
+	As we have a large number of variables ($p > 250$), we implement \emph{consensus clustering} to overcome the problem of describing multiple modes in high dimension space. This is a recurring problem with Bayesian clustering methods as they rely upon \emph{Markov Chain Monte Carlo} (MCMC) methods to describe the posterior distribution. These methods have the property that they guarantee describing the posterior distribution given infinite time. However, if the posterior distribution is multi-modal, it is possible that no finite amount of time is sufficient to describe the space \cite{TjelmelandModeJumpingProposals2001}. This problem is more prevalent as the number of dimensions scales. In this case the algorithm tends to describe the space within a mode, but as the mode is far denser than the surrounding space (particularly in high dimensions), the probability of escaping the mode and exploring the full space is very low. Thus to describe the full space in finite time requires use of multiple unique initialisations. The number of initialisations is required to be sufficiently high that each mode is described. In this way the full space can be explored by the combinations of models. Combining clustering models in this way is referred to as \emph{consensus clustering}. It is a natural extension to the concept of ensemble methods (such as Random Forest \cite{BreimanRandomForests1}). The final model depends upon the instability of the individual models, similarly to Bagging \cite{BreimanBaggingpredictors1996}. Our implementation of consensus clustering uses many short MCMC chains of MDI aggressively thinned, thus it is both a more comprehensive description of the target distribution than an individual model, but also far quicker to run as each chain is both embarrassingly parallel and short.
 	
 	
 
@@ -405,9 +405,10 @@
 	\end{align}
 	We use a Multivariate Normal (MVN) distribution to describe each subpopulation for three reasons:
 	\begin{enumerate}
-		\item Convention: the Gaussian distribution is extremely common within the literature;
-		\item Pragmatism: the Gaussian distribution is easy to work with (due to conjugacy); and
-		\item Conservatism: if the only statements we are willing to make about a distribution over real numbers are its mean and variance, than the Gaussian distribution maximises the entropy and is thus the most conservative choice of distribution.
+		\item Convention: the Gaussian distribution is extremely common within the literature; and
+		\item Pragmatism: the Gaussian distribution is easy to work with (due to conjugacy).
+		%; and
+		%\item Conservatism: if the only statements we are willing to make about a distribution over real numbers are its mean and variance, than the Gaussian distribution maximises the entropy and is thus the most conservative choice of distribution.
 	\end{enumerate}
 	We use a large $K$ (specifically, 50) to imitate a Dirichlet process. Strictly speaking a Dirichlet process sets $K=\infty$, but if we use a sufficiently large $K$ such that the model learns to empty any clusters from the data, then we have the desired property of Dirichlet processes. This property is that the number of inhabited clusters is not fixed and can increase or decrease depending on the data.
 	
@@ -450,99 +451,7 @@
 	
 	We then combine the clusterings from all $n_{seeds}$ within a posterior similarity matrix (PSM) for the $n$ genes. This is a $n \times n$ matrix where the $(i,j)$ entry is the proportion of times genes $i$ and $j$ are in the same cluster. This means that the PSM is not affected by label-flipping (a problem in clustering) and that it is a symmetric matrix with $1$'s along the diagonal and all entries in the unit interval. From this PSM a summary clustering may be calculated. The combination of different initialisations explores all the possible likelihood maixma and thus provides a more informed clustering. As the algorithm is not exploring the full space in any given iteration, we expect that the uncertainty quantification is optimistic. However we argue that an estimate made using insufficient data is better than one made using none at all and that this method is the best currently available to us for quantifying the uncertainty and exploring the posterior distribution.
 	
-	There has already been numerous applications of consensus clustering \cite{LiWeightedConsensusClustering2008} \cite{LancichinettiConsensusclusteringcomplex2012} \cite{BreimanRandomForests1}, but we show the validity of this implementation of consensus clustering by means of simulations. In this case we know the true clustering as we can control which points are drawn from which subpopulations. We can then compare the quality of recorded clusterings generated by a single converged chain of MDI to different version of consensus clustering (i.e. varying $n_{iter}$). We let the quality of a clustering be defined by its similarity to the ground truth, measured using the \emph{adjusted Rand index}.
-	
-	\subsection{Rand index} \label{sec:rand_index}
-	A popular metric for comparing the similarity of two clusterings of the data is the \emph{Rand index} \cite{RandObjectiveCriteriaEvaluation1971}. 	If one assumes that all points are of equal importance in determining clusterings, then in combination with the discrete nature of clusters and the fact that a cluster is defined as much by what it does not contain as that which it does, \citet{RandObjectiveCriteriaEvaluation1971} proposes a metric to measure similarity between clusterings. Between clusterings $Y$ and $Y'$ for any two points $x_i$ and $x_j$ there can exist one of a number of scenarios regarding their labeling. Let $\gamma_{ij}$ be a measure between the two points $x_i$ and $x_j$. For the two points, they can have:
-	\begin{enumerate} \label{list:labelling_scenarios}
-	\item the same label in both clusterings ($c_i = c_j \land c'_i = c'_j$) ($\gamma_{ij}=1$); \label{list:sub:same_label_1}
-	\item different labels in both ($c_i \neq c_j \land c'_i \neq c'_j$) ($\gamma_{ij}=1$); or \label{list:sub:same_label_2}
-	\item the same label in one but not in the other ($c_i \neq c_j \land c'_i = c'_j \lor c_i = c_j \land c'_i \neq c'_j$) ($\gamma_{ij}=0$). \label{list:sub:different_label}
-	\end{enumerate}
-	Thus \citet{RandObjectiveCriteriaEvaluation1971} propose counting the number of times any two points have one of \ref{list:sub:same_label_1} or \ref{list:sub:same_label_2} from list \ref{list:labelling_scenarios} and finding the proportion of these compared to the number of all possible point combinations. More formally, this is:
-	\begin{eqnarray} \label{eqn:rand_index}
-	A \binom{n}{2}^{-1} & = & \frac{1}{\binom{n}{2}} \sum_{i=1}^{n-1}\sum_{j=i + 1}^n\gamma_{ij} 
-	\end{eqnarray}
-%	This is the quantity of points in agreement between the two clusters.
-	This can be envisioned as a $K \times K'$ contingency table of the count of overlapping points, as shown in table \ref{table:rand_contingency}. Table \ref{table:rand_contingency} uses the following notation:
-	\begin{itemize}
-	\item $n_{ij}$ is the number of points that have membership in $Y_i$ in clustering $Y$ and $Y'_j$ in clustering $Y'$;
-	\item $n_{\cdot j}$ is the number of points in cluster $Y'_j$ in clustering $Y'$;
-	\item $n_{i \cdot}$ is the number of points in cluster $Y_i$ in clustering $Y$; and
-	\item $n_{\cdot \cdot} = n$ is the number of points in clusterings $Y$ and $Y'$.
-	\end{itemize}
-	\begin{table}[] 
-	\centering
-	\begin{tabular}{c|cccc|c} 
-	$ {{} \atop Y}  \!\diagdown\! ^{Y'}$	& $Y'_1$	& $Y'_2$	& $\cdots$	& $Y'_{K'}$	& Sums	\\ 
-	\hline
-	$Y_1$		& $n_{11}$	& $n_{12}$	& $\cdots$	& $n_{1K'}$	& $n_{1 \cdot}$	\\
-	$Y_2$		& $n_{21}$	& $n_{22}$	& $\cdots$	& $n_{2K'}$	& $n_{2 \cdot}$	\\
-	$\vdots$	& $\vdots$	& $\vdots$	& $\ddots$	& $\vdots$	& $\vdots$		 \\
-	$Y_{K}$	& $n_{K1}$	& $n_{K2}$	& $\cdots$	& $n_{KK'}$	& $n_{K \cdot}$	\\ 
-	\hline
-	 Sums	& $n_{\cdot 1}$	&  $n_{\cdot 2}$	& $\cdots$	& $n_{\cdot K'}$	& $n_{\cdot \cdot} = n$         
-	\end{tabular}
-	\caption{Contingency table used by \citet{RandObjectiveCriteriaEvaluation1971} to calculate a measure of similarity between clusterings $Y$ and $Y'$.}
-	\label{table:rand_contingency}
-	\end{table}
-	One can restate equation \ref{eqn:rand_index} in terms of the notation from table \ref{table:rand_contingency} \cite{BrennanMeasuringagreementwhen1974}:
-	\begin{eqnarray} \label{eqn:rand_index_alternative}
-	A &=& \binom{n}{2} + \sum_{i=1}^K\sum_{j=1}^{K'}n_{ij}^2 - \frac{1}{2}\left(\sum_{i=1}^K n_{i\cdot}^2 + \sum_{j=1}^{K'}n_{\cdot j}^2  \right) \\
-	  &=& \binom{n}{2} + 2 \sum_{i=1}^{K}\sum_{j=1}^{K'}\binom{n_{ij}}{2} - \left[\sum_{i=1}^{K}\binom{n_{i \cdot}}{2} + \sum_{j=1}^{K'}\binom{n_{\cdot j}}{2}\right]% \binom{n}{2} ^{-1} 
-	\end{eqnarray}
-%	This function, $c$, has three properties.
-%	\begin{itemize}
-%	\item $c(\cdot, \cdot) \in [0,1]$ (0 for no similarity, 1 for high similarity);
-%	\item $1 - c$ is a distance measure;
-%	\item if one assumes a distribution to describe $X$, then $c$ is a random variable.
-%	\end{itemize}
-	\citet{HubertComparingpartitions1985} extend the Rand index to account for chance. They include a null hypothesis and assume that there is a probability of some points having a $\gamma$ value of 1 by chance. Consider the scenario where a point $x_i$ has the same label as another point $x_j$ under clustering $Y$. For another clustering $Y'$, there a non-zero is a probability $c'_i=c'_j$ purely by chance and does not represent a similarity between $Y$ and $Y'$. If one generates two clusterings $Y$ and $Y'$ by sampling from the integers in the closed interval $[1,K]$ (i.e. by sampling from discrete unfirom distribution $\mathcal{U}\left\{1,K\right\}$), then the contingency table generated is constructed from the generalised hyper-geometric distribution \cite{HubertComparingpartitions1985}. It can be shown that the expected number of points with common membership in both clusters is non-zero. Specifically:
-	\begin{eqnarray}
-	\mathbb{E}\left(\sum_{i=1}^K \sum_{j=1}^K\binom{n_{ij}}{2}\right) = \frac{\sum_{i=1}^K \binom{n_{i\cdot}}{2} \sum_{j=1}^K \binom{n_{\cdot j}}{2}}{\binom{n}{2}}
-	\end{eqnarray}
-	This is the product of the number of distinct pairs that can be formed from rows and the number of distinct pairs that can be constructed from columns, divided by the total number of pairs. 
-	
-	For a particular cell of the contingency table, the expected number of entries of the type described in point \ref{list:sub:same_label_1}, is the product of number of pairs in its row and in its column divided by the total number of possible pairs:
-	\begin{eqnarray} \label{eqn:expected_nij}
-	\mathbb{E}\left(\binom{n_{ij}}{2}\right) = \frac{\binom{n_{i\cdot}}{2}\binom{n_{\cdot j}}{2}}{\binom{n}{2}}
-	\end{eqnarray}
-	One can see that as each component of equation \ref{eqn:rand_index_alternative} is some transformation of $\sum_{i,j}\binom{n_{ij}}{2}$, one can directly state the expected value of the Rand index by combining equations \ref{eqn:rand_index_alternative} and \ref{eqn:expected_nij}:
-	\begin{eqnarray}
-	\mathbb{E}\left(A \binom{n}{2}^{-1}\right) = 1 + 2 \sum_{i=1}^{K} \binom{n_{i \cdot}}{2} \sum_{j=1}^{K'} \binom{n_{\cdot j}}{2} \binom{n}{2}^{-2} - \left[\sum_{i=1}^{K} \binom{n_{i \cdot}}{2} + \sum_{j=1}^{K'} \binom{n_{\cdot j}}{2}\right] \binom{n}{2}^{-1}
-	\end{eqnarray}
-	Defining an index corrected for chance as:
-	\begin{eqnarray}
-	\text{Corrected index} = \frac{\text{Index} - \text{Expected index}}{\text{Maximum index} - \text{Expected index}}
-	\end{eqnarray}
-	Assuming a maximum value of 1 for the Rand index then gives a corrected Rand index:
-	\begin{eqnarray} \label{eqn:adjusted_rand_index}
-	\frac{\sum_{i=1}^{K}\sum_{j=1}^{K'} \binom{n_{ij}}{2} - \sum_{i=1}^{K} \binom{n_{i \cdot}}{2} \sum_{j=1}^{K'} \binom{n_{\cdot j}}{2} \binom{n}{2}^{-1}}{\frac{1}{2} \left[\sum_{i=1}^{K} \binom{n_{i \cdot}}{2} + \sum_{j=1}^{K'} \binom{n_{\cdot j}}{2}\right] - \sum_{i=1}^{K} \binom{n_{i \cdot}}{2} \sum_{j=1}^{K'} \binom{n_{\cdot j}}{2} \binom{n}{2}^{-1}}
-	\end{eqnarray}
-	We define this quantity described in equation \ref{eqn:adjusted_rand_index} as the \emph{adjusted Rand index} and we use it as our measure of choice for similarity between clusterings.
-	
-	We describe an explicit example motivating the adjusted Rand index in section \ref{sec:motivating_example_adjusted_rand_index}.
-	
-	\subsubsection{Motivating example: adjusted Rand index} \label{sec:motivating_example_adjusted_rand_index}
-	Consider the case of $n$ labels $Y$ and $Y'$ generated from $\mathcal{U}\left\{1,3\right\}$ where $n$ is some arbitrarily large number and $\mathcal{U}\{x,y\}$ is the uniform distribution over the interval $[x,y]$ . Then as $n$ tends to infinity we can expect that our contingency table has entries of $\frac{n}{9}$ in each cell. If one calculates the Rand index on these random partitions where any similarity is purely by chance one finds, it comes to (approximately) $0.56$. This suggests there is some similarity between $Y$ and $Y'$, but this is misleading as we know any similarity is stochastic. In the same scenario the adjusted Rand index between the partitions is 0. This seems preferable. Based on this, one could argue that the Rand index has inflated values. Consider the case that we have $n$ points in total, but we let the first $\frac{7n}{16}$ have a common label (say $\left(c_1,\ldots,c_{n_1}\right)=1$ for $n_1 = \frac{7n}{16}$) and then draw the remaining $\frac{9n}{16}$ points from $\mathcal{U}\left\{1,3\right\}$. Then, as $n$ tends to infinity, our contingency table tends to that described in table \ref{table:rand_contingency_example}. One feels that the high Rand index for such a clustering, $0.64$, is misleading in its magnitude. In such a scenario we feel one has to consider this 0.64 in the context of the 0.56 for a purely random similarity - this is difficult to do without explicitly checking what the Rand index is for a random partitioning for a given $K$ and $K'$. Thus the use of the full unit interval in comparing similarity by a corrected index such as the adjusted Rand index requires less vigilance on the part of the analyst. In the second scenario, the adjusted Rand index is $0.28$.
-	
-	\begin{table}[] 
-		\centering
-		\begin{tabular}{c|ccc|c} 
-			$ {{} \atop Y}  \!\diagdown\! ^{Y'}$	& $Y'_1$	& $Y'_2$	& $Y'_3 $	& Sums	\\ 
-			\hline
-			$Y_1$		& $\frac{n}{2}$	& $\frac{n}{16}$ & $\frac{n}{16}$	& $\frac{10n}{16}$	\\
-			$Y_2$		& $\frac{n}{16}$	& $\frac{n}{16}$	& $\frac{n}{16}$	& $\frac{3n}{16}$	\\
-			$Y_3$	& $\frac{n}{16}$	& $\frac{n}{16}$	& $\frac{n}{16}$	& $\frac{3n}{16}$	\\ 
-			\hline
-			Sums	& $\frac{10n}{16}$	&  $\frac{3n}{16}$	& $\frac{3n}{16}$	& $\frac{16n}{16} = n$         
-		\end{tabular}
-		\caption{Contingency table for the non-random clustering described in section \ref{sec:motivating_example_adjusted_rand_index}.}
-		\label{table:rand_contingency_example}
-	\end{table}
-	
-	
-	
+	There has already been numerous applications of consensus clustering \cite{LiWeightedConsensusClustering2008} \cite{LancichinettiConsensusclusteringcomplex2012} \cite{BreimanRandomForests1}, but we show the validity of this implementation of consensus clustering by means of simulations. In this case we know the true clustering as we can control which points are drawn from which subpopulations. We can then compare the quality of recorded clusterings generated by a single converged chain of MDI to different version of consensus clustering (i.e. varying $n_{iter}$). We let the quality of a clustering be defined by its similarity to the ground truth, measured using the \emph{adjusted Rand index} (see section \ref{sec:rand_index}).
 	
 
 
@@ -648,65 +557,7 @@
 %	
 %	Gene sets should contain sets of genes that have correlated expression. If this is the case, it is often assumed that the genes are common members of some metabolic pathway and that their products interact. As this correlated expression is represented by a common variation across people rather than in the magnitude of expression, we will standardise the expression data as described in section \ref{sec:standardisation}. We describe a small example to highlight our reasoning in section \ref{sec:motivating_example_standardisation}.
 	
-		\subsection{Standardisation} \label{sec:standardisation}
-	For a $p$-vector of observations, $X_i=(x_{i1},\ldots,x_{1p})$, we define standardisation of $X_i$ as the mapping from $X_i$ to $X'_i=(x'_{i1},\ldots,x'_{ip})$ defined by the \emph{sample mean}, $\bar{x}_i$, and sample standard deviation, $s_i$:
-	\begin{eqnarray} \label{eqn:standardisation}
-	\bar{x}_i &=& \frac{1}{p}\sum_{j=1}^p x_{ij} \\
-	s_i^2 &=& \frac{1}{p - 1}\sum_{j=1}^p \left( x_{ij} - \bar{x}_i \right) ^2 \\
-	x'_{ij} &=& \frac{x_{ij}- \bar{x}_i}{s_i} \quad \forall \quad j \in (1,\ldots,p)
-	\end{eqnarray}
-	We refer to $X'_i$ as the standardised form of $X$. If we are given a dataset $X=(X_1,\ldots,X_n)$ where each $X_i$ is a $p$-vector of observations of the form referred to above, then in referring to the standardised form of $X$, we mean the dataset $X'=(X'_1,\ldots,X'_n)$ where each $X'_i$ is the standardised form of $X_i$.
-	
-	Standardisation moves the values observed for each $X_i$ to a common scale where each vector has an observed mean and standard deviation of 0 and 1 respectively.
-	
-	\subsubsection{Motivating example: Standardising gene expression data} \label{sec:motivating_example_standardisation}
-	If one considers table \ref{table:example_gene_expression_data} which contains an example of expression data for some genes A, B, C, D and E across people 1 to 4.
-	\begin{table}[!htb] 
-		\centering
-		\begin{tabular}{c|cccc} 
-			Genes 	& Person 1	& Person 2	& Person 3	& Person 4	\\ 
-			\hline
-			A 		& 5.1		& 5.2 		& 4.9		& 5.0		\\
-			B 		& 5.1		& 4.9		& 5.2		& 5.4		\\
-			C 		& 1.4		& 1.5		& 1.2		& 1.3		\\
-			D 		& 1.4		& 1.2		& 1.5		& 1.7		\\
-			E 		& 1.4		& 1.5		& 1.4		& 1.5		
-		\end{tabular}
-		\caption{Example gene expression data.}
-		\label{table:example_gene_expression_data}
-	\end{table}
-	\begin{figure}[!htb]
-		\centering
-		\includegraphics[scale=0.55]{Images/Examples/example_expression_data.png}
-		\caption{Heatmap of expression data in table \ref{table:example_gene_expression_data} showing the clusters based upon magnitude of expression.}
-		\label{fig:example_expression_data}
-	\end{figure}
-One can see that genes A and C have similar patters in variation across the people, as do genes B and D. Gene E is not consistent with any other gene here. However, as this relative variation is of interest rather than the magnitude of expression, one can see that standardising the data is required. 
 
-If one were to cluster the data as represented in table \ref{table:example_gene_expression_data}, one would place genes A and B in one cluster and genes C, D and E in another as their absolute expression levels are similar (as can be seen in figure \ref{fig:example_expression_data}). However, if the expression level of each gene is standardised as per section \ref{sec:standardisation}, the data is then as represented in table \ref{table:example_standardised_gene_expression_data}. The data are now on the same scale and thus the characteristic that will determine a clustering is the variation of expression across people. As we want genes with similar patterns of variation (i.e. that are co-expressed) this enables us to cluster under our objective of defining gene sets. In this case genes A and C are one cluster, genes B and D another with gene E in a cluster alone, as can be seen in figure \ref{fig:example_standardised_expression_data}. As this is the type of data we wish to cluster across, we therefore most standardise our expression data before clustering can be implemented.
-	
-	\begin{table}[] 
-		\centering
-		\begin{tabular}{c|cccc} 
-			Genes 	& Person 1	& Person 2	& Person 3	& Person 4	\\ 
-			\hline
-			A 		& 0.39		& 1.16 		& -1.16		& -0.39		\\
-			B 		& -0.24		& -1.20		& 0.24		& 1.20		\\
-			C 		& 0.39		& 1.16		& -1.16		& -0.39		\\
-			D 		& -0.24		& -1.20		& 0.24		& 1.20		\\
-			E 		& -0.87		& 0.87		& -0.87		& 0.87		
-		\end{tabular}
-		\caption{Example standardised gene expression data.}
-		\label{table:example_standardised_gene_expression_data}
-	\end{table}
-	
-	\begin{figure}[!htb]
-		\centering
-		\includegraphics[scale=0.55]{Images/Examples/example_standardised_expression_data.png}
-		\caption{Heatmap of expression data in table \ref{table:example_standardised_gene_expression_data} showing the clusters based upon variation of expression across people.}
-		\label{fig:example_standardised_expression_data}
-	\end{figure}
-	
 %	\subsection{The importance of gene sets}
 %	If we can cluster genes together it is possible that we can find deeper biological interpretation, understanding the context of the gene products and what they interact with. This can offer some insight into the connection between the gene and the expressed phenotype. Furthermore, \citet{NicaExpressionquantitativetrait2013} recommend investigating groups of cis-eQTL affecting a gene network that when perturbed results in a disease state. They claim this is far higher powered than the classical approach. This claim is supported by the findings of \citet{VosaUnravelingpolygenicarchitecture2018} who found that associations between \emph{polygenic risk scores} and gene expression (this association is referred to as ``expression quantitative trait score'' (eQTS) in \cite{VosaUnravelingpolygenicarchitecture2018}) contained the most biological information about disease in a comparison of cis-eQTL, trans-EQTL and eQTS. This finding is not unique to this paper \cite{DudbridgePowerPredictiveAccuracy2013}\cite{WrayResearchReviewPolygenic2014}. More generally, gene set enrichment analysis (GSEA) \cite{SubramanianGenesetenrichment2005a}\cite{MooneyGenesetanalysis2015} relies upon pre-defined gene sets. This method determines if gene sets have statistically significant, concordant differences between phenotypes and offers biological interpretation of the sets. Thus well-defined gene sets are required for informative, interpretable analysis of genomic information.
 	
@@ -720,7 +571,13 @@ If one were to cluster the data as represented in table \ref{table:example_gene_
 %	\subsection{Variance stabilisation}
 	
 
-	\section{Data}
+	\section{Case study examples}
+	We first show via simulated data that consensus clustering does produce similar results to a converged single run for MDI.
+	
+	We then simulate data where individual chains of MDI will struggle to converge and possibly will not converge in finite time. We show that consensus clustering explores a wider space than any individual chain and appears to describe something similar to the space described by the union of the chains.
+	
+	Finally we apply consensus clustering to 254 probes for 8 datasets from the CEDAR dataset. An initial set of probes are chosen based on the members of 3 KEGG pathways:
+	
 	\subsection{Simulation: Case 1} \label{sec:sim:data:case_1}
 	The data in the first simulation is designed to allow MDI to converge. In this case we take the data from the original MDI paper \cite{KirkBayesiancorrelatedclustering2012}. As this data is highly separable we add some noise to ensure that the chain has not converged within a small number of iterations (i.e. to ensure that the consensus clustering is not converged in each chain sampled). 
 	
@@ -781,6 +638,40 @@ If one were to cluster the data as represented in table \ref{table:example_gene_
 		\label{fig:white_blood_cell_differentiation}
 	\end{figure}
 
+	 We create two subsets of CEDAR data defined around KEGG pathways and random other probes. This is used to test if the annotated gene sets are identifiable using this method in real data.
+	 
+
+	 
+
+	\subsubsection{CEDAR: Case 1 - Inostiol gene set}
+
+	We create an example dataset of 250 probes from the CEDAR dataset. This dataset contained 60 probes from the Inositol phosphate metabolism pathway as defined in the KEGG database. This scale of dataset allows implementation of MDI across 7 datasets simultaneously.
+	
+	\subsubsection{CEDAR: Case 2 - 1,000 probes}
+	
+	A second dataset of 1,000 probes defined by three KEGG pathways was used to explore the clustering on a larger, more diverse dataset. Unfortunately, this size limits how many datasets MDI can effectively receive as input. The pathways used are:
+	
+	\begin{enumerate} \label{list:kegg_pathways}
+		\item Inositol phosphate metabolism (a broad biological pathway);
+		\item NOD-like receptor signaling pathway (a specific biological pathway with known involvement in IBD \cite{CarneiroNodlikeproteinsinflammation2008}\cite{GarrettHomeostasisInflammationIntestine2010}); and
+		\item Inflammatory bowel disease (IBD) (a pathological pathway).
+	\end{enumerate}
+
+The union of these sets corresponds to 169 unique genes (or 237 probes as the mapping from the space of probes to that of genes is non-injective) that are present in the CEDAR dataset. The remaining probes are randomly selected from the total possible space (18,524 probes) less those corresponding to these genes (leaving 18,287 possible candidate probes).
+
+	 	\subsubsection{Pipeline}
+For the CEDAR data, we follow this pipeline to prepare the data for clustering:
+\begin{enumerate} \label{list:methods}
+	\item Transpose the data to have rows associated with gene probes and columns associated with individuals;
+	\item Remove NAs either imputing values using the minimum expressed value (as missingness is not random) or if above a threshold of missingness removing the column;
+	\item Standardise the data (see section \ref{sec:standardisation}); and
+	%		\item Apply variance stabilisation \cite{huber_variance_2002} to normalise the gene expression data;
+	%		\item Inspect the data by PCA and remove outlier individuals for each dataset in each gene set;
+	%	\item To apply MDI we require that each dataset have the same row names in the same order, so we re-arrange our datasets to have common order of probes;
+	\item For probes entirely missing from a given dataset we generate expression from a standard normal distribution for each probe. Then these probes are expressed as noise in the dataset and any clustering imposed upon them should be due to information about these probes present in other datasets. %; and
+	%	\item Apply MDI \cite{MasonMDIGPUacceleratingintegrative2016a}.
+\end{enumerate}
+
 
 %	Individuals were genotyped for more than 700,000 SNPs using Illumina's Human OmniExpress BeadChips, an iScan system and the Genome Studio software following the guidelines of the manufacturer. Variants were elimanted with call rate $\leq 0.95$, deviating from Hardy-Weinberg equilibrium $(p \leq 0.95)$, or which were monomorphic.
 %	
@@ -797,36 +688,25 @@ If one were to cluster the data as represented in table \ref{table:example_gene_
 %	We kept $29,464/47,323$ autosomal probes (corresponding to 19,731 genes) mapped by Re-Annotator39 to a single gene body with $\leq 2$ mismatches and not spanning known variants with MAF$>0.05$. Within cell types, we only considered probes (i.e., “usable” probes) with detection $p-value \leq 0.05$ in $\geq 25\%$ of the samples. Fluorescence intensities were $\log_2$ transformed and Robust Spline Normalized (RSN) with Lumi38.
 	
 	
-	\section{Methods}
-	We first show via simulated data that consensus clustering does produce similar results to a converged single run for MDI.
+%	\section{Methods}
+%	We first show via simulated data that consensus clustering does produce similar results to a converged single run for MDI.
+%	
+%	We then simulate data where individual chains of MDI will struggle to converge and possibly will not converge in finite time. We show that consensus clustering explores a wider space than any individual chain and appears to describe something similar to the space described by the union of the chains.
+%	
+%	Finally we apply consensus clustering to 254 probes for 8 datasets from the CEDAR dataset. An initial set of probes are chosen based on the members of 3 KEGG pathways:
 	
-	We then simulate data where individual chains of MDI will struggle to converge and possibly will not converge in finite time. We show that consensus clustering explores a wider space than any individual chain and appears to describe something similar to the space described by the union of the chains.
+%	\begin{enumerate} \label{list:kegg_pathways}
+%		\item Inositol phosphate metabolism (a broad biological pathway);
+%		\item NOD-like receptor signaling pathway (a specific biological pathway with known involvement in IBD \cite{CarneiroNodlikeproteinsinflammation2008}\cite{GarrettHomeostasisInflammationIntestine2010}); and
+%		\item Inflammatory bowel disease (IBD) (a pathological pathway).
+%	\end{enumerate}
+%	The union of these sets corresponds to 169 unique genes (or 237 probes as the mapping from the space of probes to that of genes is non-injective) that are present in the CEDAR dataset. The remaining probes are randomly selected from the total possible space (18,524 probes) less those corresponding to these genes (leaving 18,287 possible candidate probes). We then expect that the genes from the sets mentioned above (list \ref{list:kegg_pathways}) should cluster together. We use this as a test of our final clustering.
 	
-	Finally we apply consensus clustering to 254 probes for 8 datasets from the CEDAR dataset. An initial set of probes are chosen based on the members of 3 KEGG pathways:
-	
-	\begin{enumerate} \label{list:kegg_pathways}
-		\item Inositol phosphate metabolism (a broad biological pathway);
-		\item NOD-like receptor signaling pathway (a specific biological pathway with known involvement in IBD \cite{CarneiroNodlikeproteinsinflammation2008}\cite{GarrettHomeostasisInflammationIntestine2010}); and
-		\item Inflammatory bowel disease (IBD) (a pathological pathway).
-	\end{enumerate}
-	The union of these sets corresponds to 169 unique genes (or 237 probes as the mapping from the space of probes to that of genes is non-injective) that are present in the CEDAR dataset. The remaining probes are randomly selected from the total possible space (18,524 probes) less those corresponding to these genes (leaving 18,287 possible candidate probes). We then expect that the genes from the sets mentioned above (list \ref{list:kegg_pathways}) should cluster together. We use this as a test of our final clustering.
-	
-	\subsection{CEDAR data pipeline}
-	For the CEDAR data, we follow this pipeline to prepare the data for clustering:
-	\begin{enumerate} \label{list:methods}
-		\item Transpose the data to have rows associated with gene probes and columns associated with individuals;
-		\item Remove NAs either imputing values using the minimum expressed value (as missingness is not random) or if above a threshold of missingness removing the column;
-		\item Standardise the data;
-%		\item Apply variance stabilisation \cite{huber_variance_2002} to normalise the gene expression data;
-%		\item Inspect the data by PCA and remove outlier individuals for each dataset in each gene set;
-		\item To apply MDI we require that each dataset have the same row names in the same order, so we re-arrange our datasets to have common order of probes;
-		\item For probes entirely missing from a given dataset we generate expression from a standard normal distribution for each probe. Then these probes are expressed as noise in the dataset and any clustering imposed upon them should be due to information about these probes present in other datasets; and
-		\item Apply MDI \cite{MasonMDIGPUacceleratingintegrative2016a}.
-	\end{enumerate}
+
 	
 	\section{Results}
-%	\subsection{Simulations}
-	\subsection{Case 1: Proof of consensus} \label{sec:results:case_1}
+	\subsection{Simulations}
+	\subsubsection{Case 1: Proof of consensus} \label{sec:results:case_1}
 	10 separate chains of MDI were run for 2 million iterations with a thinning factor of 50 and consensus clustering of 1,000 different seeds for different 4 lengths of chains were applied to the data generated as described in section \ref{sec:sim:data:case_1}. Results are compared by means of a Geweke plot \cite{GewekeEvaluatingAccuracySamplingBased}, a Gelman plot \cite{GelmanInferenceIterativeSimulation1992} and the distribution of adjusted Rand index comparing the clustering at each iteration (or each seed in the consensus clustering) with the clustering defined by the subpopluations used to generate the data. These were shown to have converged successfully both wtihin chain, by inspecting a Geweke plot (see figure \ref{fig:gen_data_case_1_geweke_plot_3}), and across chains, by means of the Gelman-Rubin convergence statistic (see figure \ref{fig:gen_data_case_1_gelman_plot}). The clustering at each iteration was compared to the the clustering defined by the subpopulations that generated the data and the long chains were compared to each other and consensus clustering for various chain lengths (see figure \ref{fig:gen_data_case_1_boxplot}). One can see that the consensus clustering perform very similarly to the individual chains. Finally, in figure \ref{fig:gen_data_case_1_collapsed_boxplot}, the full space of clusterings across all chains is compared to the consensus clustering under the adjusted Rand Index.
 
 	\newpage
@@ -870,7 +750,7 @@ If one were to cluster the data as represented in table \ref{table:example_gene_
 		\newpage
 
 	
-	\subsection{Case 2: Overcoming multiple modes} \label{sec:results:case_2}
+	\subsubsection{Case 2: Overcoming multiple modes} \label{sec:results:case_2}
 	Similar versions of consensus clustering and individual chains were run for the data generated as described in section \ref{sec:sim:data:case_2}. These were then compared using the same methods. We can see in figure \ref{fig:gen_data_case_2_geweke_plot_3} an example of how the individual chains have reached stationarity (the individual chain is no longer exploring new space). However, convergence has not been achieved across chains as is shown in figure \ref{fig:gen_data_case_2_gelman_plot}. The space explored across the ten chains is compared to that explored in each of the consensus clusterings (see figures \ref{fig:gen_data_case_2_boxplot}, \ref{fig:gen_data_case_2_collapsed_boxplot} and \ref{fig:gen_data_case_2_collapsed_violin_plot}).
 	
 			\newpage
@@ -922,7 +802,7 @@ If one were to cluster the data as represented in table \ref{table:example_gene_
 
 	\newpage
 
-	\subsection{Case 3: CEDAR data}
+	\subsection{CEDAR data}
 	Consensus clustering with MDI $n_{iter}=500$ and $n_{seeds}=1000$ was implemented on 7 datasets. Individual Dirichlet processes were also run on each dataset for the same number of seeds and iterations as a comparison. Each chain of MDI took approximately 7 hours and 20 minutes to run. The output was inspected under multiple lenses: 
 	
 	\begin{enumerate}
@@ -1259,8 +1139,10 @@ If one were to cluster the data as represented in table \ref{table:example_gene_
 
 
 
-	%\bibliographystyle{abbrv}
+%	\bibliographystyle{abbrv}
 	\bibliographystyle{plainnat}
+%	\bibliographystyle{ieeetr}
+	
 %	\bibliography{thesis}
 	\bibliography{thesis_ref_better}
 	
@@ -1269,6 +1151,163 @@ If one were to cluster the data as represented in table \ref{table:example_gene_
 
 \appendix
 %\section{Data generation explained}
+
+\section{Additional theory}
+
+\subsection{Rand index} \label{sec:rand_index}
+A popular metric for comparing the similarity of two clusterings of the data is the \emph{Rand index} \cite{RandObjectiveCriteriaEvaluation1971}. 	If one assumes that all points are of equal importance in determining clusterings, then in combination with the discrete nature of clusters and the fact that a cluster is defined as much by what it does not contain as that which it does, \citet{RandObjectiveCriteriaEvaluation1971} proposes a metric to measure similarity between clusterings. Between clusterings $Y$ and $Y'$ for any two points $x_i$ and $x_j$ there can exist one of a number of scenarios regarding their labeling. Let $\gamma_{ij}$ be a measure between the two points $x_i$ and $x_j$. For the two points, they can have:
+\begin{enumerate} \label{list:labelling_scenarios}
+	\item the same label in both clusterings ($c_i = c_j \land c'_i = c'_j$) ($\gamma_{ij}=1$); \label{list:sub:same_label_1}
+	\item different labels in both ($c_i \neq c_j \land c'_i \neq c'_j$) ($\gamma_{ij}=1$); or \label{list:sub:same_label_2}
+	\item the same label in one but not in the other ($c_i \neq c_j \land c'_i = c'_j \lor c_i = c_j \land c'_i \neq c'_j$) ($\gamma_{ij}=0$). \label{list:sub:different_label}
+\end{enumerate}
+Thus \citet{RandObjectiveCriteriaEvaluation1971} propose counting the number of times any two points have one of \ref{list:sub:same_label_1} or \ref{list:sub:same_label_2} from list \ref{list:labelling_scenarios} and finding the proportion of these compared to the number of all possible point combinations. More formally, this is:
+\begin{eqnarray} \label{eqn:rand_index}
+A \binom{n}{2}^{-1} & = & \frac{1}{\binom{n}{2}} \sum_{i=1}^{n-1}\sum_{j=i + 1}^n\gamma_{ij} 
+\end{eqnarray}
+%	This is the quantity of points in agreement between the two clusters.
+This can be envisioned as a $K \times K'$ contingency table of the count of overlapping points, as shown in table \ref{table:rand_contingency}. Table \ref{table:rand_contingency} uses the following notation:
+\begin{itemize}
+	\item $n_{ij}$ is the number of points that have membership in $Y_i$ in clustering $Y$ and $Y'_j$ in clustering $Y'$;
+	\item $n_{\cdot j}$ is the number of points in cluster $Y'_j$ in clustering $Y'$;
+	\item $n_{i \cdot}$ is the number of points in cluster $Y_i$ in clustering $Y$; and
+	\item $n_{\cdot \cdot} = n$ is the number of points in clusterings $Y$ and $Y'$.
+\end{itemize}
+\begin{table}[] 
+	\centering
+	\begin{tabular}{c|cccc|c} 
+		$ {{} \atop Y}  \!\diagdown\! ^{Y'}$	& $Y'_1$	& $Y'_2$	& $\cdots$	& $Y'_{K'}$	& Sums	\\ 
+		\hline
+		$Y_1$		& $n_{11}$	& $n_{12}$	& $\cdots$	& $n_{1K'}$	& $n_{1 \cdot}$	\\
+		$Y_2$		& $n_{21}$	& $n_{22}$	& $\cdots$	& $n_{2K'}$	& $n_{2 \cdot}$	\\
+		$\vdots$	& $\vdots$	& $\vdots$	& $\ddots$	& $\vdots$	& $\vdots$		 \\
+		$Y_{K}$	& $n_{K1}$	& $n_{K2}$	& $\cdots$	& $n_{KK'}$	& $n_{K \cdot}$	\\ 
+		\hline
+		Sums	& $n_{\cdot 1}$	&  $n_{\cdot 2}$	& $\cdots$	& $n_{\cdot K'}$	& $n_{\cdot \cdot} = n$         
+	\end{tabular}
+	\caption{Contingency table used by \citet{RandObjectiveCriteriaEvaluation1971} to calculate a measure of similarity between clusterings $Y$ and $Y'$.}
+	\label{table:rand_contingency}
+\end{table}
+One can restate equation \ref{eqn:rand_index} in terms of the notation from table \ref{table:rand_contingency} \cite{BrennanMeasuringagreementwhen1974}:
+\begin{eqnarray} \label{eqn:rand_index_alternative}
+A &=& \binom{n}{2} + \sum_{i=1}^K\sum_{j=1}^{K'}n_{ij}^2 - \frac{1}{2}\left(\sum_{i=1}^K n_{i\cdot}^2 + \sum_{j=1}^{K'}n_{\cdot j}^2  \right) \\
+&=& \binom{n}{2} + 2 \sum_{i=1}^{K}\sum_{j=1}^{K'}\binom{n_{ij}}{2} - \left[\sum_{i=1}^{K}\binom{n_{i \cdot}}{2} + \sum_{j=1}^{K'}\binom{n_{\cdot j}}{2}\right]% \binom{n}{2} ^{-1} 
+\end{eqnarray}
+%	This function, $c$, has three properties.
+%	\begin{itemize}
+%	\item $c(\cdot, \cdot) \in [0,1]$ (0 for no similarity, 1 for high similarity);
+%	\item $1 - c$ is a distance measure;
+%	\item if one assumes a distribution to describe $X$, then $c$ is a random variable.
+%	\end{itemize}
+\citet{HubertComparingpartitions1985} extend the Rand index to account for chance. They include a null hypothesis and assume that there is a probability of some points having a $\gamma$ value of 1 by chance. Consider the scenario where a point $x_i$ has the same label as another point $x_j$ under clustering $Y$. For another clustering $Y'$, there a non-zero is a probability $c'_i=c'_j$ purely by chance and does not represent a similarity between $Y$ and $Y'$. If one generates two clusterings $Y$ and $Y'$ by sampling from the integers in the closed interval $[1,K]$ (i.e. by sampling from discrete unfirom distribution $\mathcal{U}\left\{1,K\right\}$), then the contingency table generated is constructed from the generalised hyper-geometric distribution \cite{HubertComparingpartitions1985}. It can be shown that the expected number of points with common membership in both clusters is non-zero. Specifically:
+\begin{eqnarray}
+\mathbb{E}\left(\sum_{i=1}^K \sum_{j=1}^K\binom{n_{ij}}{2}\right) = \frac{\sum_{i=1}^K \binom{n_{i\cdot}}{2} \sum_{j=1}^K \binom{n_{\cdot j}}{2}}{\binom{n}{2}}
+\end{eqnarray}
+This is the product of the number of distinct pairs that can be formed from rows and the number of distinct pairs that can be constructed from columns, divided by the total number of pairs. 
+
+For a particular cell of the contingency table, the expected number of entries of the type described in point \ref{list:sub:same_label_1}, is the product of number of pairs in its row and in its column divided by the total number of possible pairs:
+\begin{eqnarray} \label{eqn:expected_nij}
+\mathbb{E}\left(\binom{n_{ij}}{2}\right) = \frac{\binom{n_{i\cdot}}{2}\binom{n_{\cdot j}}{2}}{\binom{n}{2}}
+\end{eqnarray}
+One can see that as each component of equation \ref{eqn:rand_index_alternative} is some transformation of $\sum_{i,j}\binom{n_{ij}}{2}$, one can directly state the expected value of the Rand index by combining equations \ref{eqn:rand_index_alternative} and \ref{eqn:expected_nij}:
+\begin{eqnarray}
+\mathbb{E}\left(A \binom{n}{2}^{-1}\right) = 1 + 2 \sum_{i=1}^{K} \binom{n_{i \cdot}}{2} \sum_{j=1}^{K'} \binom{n_{\cdot j}}{2} \binom{n}{2}^{-2} - \left[\sum_{i=1}^{K} \binom{n_{i \cdot}}{2} + \sum_{j=1}^{K'} \binom{n_{\cdot j}}{2}\right] \binom{n}{2}^{-1}
+\end{eqnarray}
+Defining an index corrected for chance as:
+\begin{eqnarray}
+\text{Corrected index} = \frac{\text{Index} - \text{Expected index}}{\text{Maximum index} - \text{Expected index}}
+\end{eqnarray}
+Assuming a maximum value of 1 for the Rand index then gives a corrected Rand index:
+\begin{eqnarray} \label{eqn:adjusted_rand_index}
+\frac{\sum_{i=1}^{K}\sum_{j=1}^{K'} \binom{n_{ij}}{2} - \sum_{i=1}^{K} \binom{n_{i \cdot}}{2} \sum_{j=1}^{K'} \binom{n_{\cdot j}}{2} \binom{n}{2}^{-1}}{\frac{1}{2} \left[\sum_{i=1}^{K} \binom{n_{i \cdot}}{2} + \sum_{j=1}^{K'} \binom{n_{\cdot j}}{2}\right] - \sum_{i=1}^{K} \binom{n_{i \cdot}}{2} \sum_{j=1}^{K'} \binom{n_{\cdot j}}{2} \binom{n}{2}^{-1}}
+\end{eqnarray}
+We define this quantity described in equation \ref{eqn:adjusted_rand_index} as the \emph{adjusted Rand index} and we use it as our measure of choice for similarity between clusterings.
+
+We describe an explicit example motivating the adjusted Rand index in section \ref{sec:motivating_example_adjusted_rand_index}.
+
+\subsubsection{Motivating example: adjusted Rand index} \label{sec:motivating_example_adjusted_rand_index}
+Consider the case of $n$ labels $Y$ and $Y'$ generated from $\mathcal{U}\left\{1,3\right\}$ where $n$ is some arbitrarily large number and $\mathcal{U}\{x,y\}$ is the uniform distribution over the interval $[x,y]$ . Then as $n$ tends to infinity we can expect that our contingency table has entries of $\frac{n}{9}$ in each cell. If one calculates the Rand index on these random partitions where any similarity is purely by chance one finds, it comes to (approximately) $0.56$. This suggests there is some similarity between $Y$ and $Y'$, but this is misleading as we know any similarity is stochastic. In the same scenario the adjusted Rand index between the partitions is 0. This seems preferable. Based on this, one could argue that the Rand index has inflated values. Consider the case that we have $n$ points in total, but we let the first $\frac{7n}{16}$ have a common label (say $\left(c_1,\ldots,c_{n_1}\right)=1$ for $n_1 = \frac{7n}{16}$) and then draw the remaining $\frac{9n}{16}$ points from $\mathcal{U}\left\{1,3\right\}$. Then, as $n$ tends to infinity, our contingency table tends to that described in table \ref{table:rand_contingency_example}. One feels that the high Rand index for such a clustering, $0.64$, is misleading in its magnitude. In such a scenario we feel one has to consider this 0.64 in the context of the 0.56 for a purely random similarity - this is difficult to do without explicitly checking what the Rand index is for a random partitioning for a given $K$ and $K'$. Thus the use of the full unit interval in comparing similarity by a corrected index such as the adjusted Rand index requires less vigilance on the part of the analyst. In the second scenario, the adjusted Rand index is $0.28$.
+
+\begin{table}[] 
+	\centering
+	\begin{tabular}{c|ccc|c} 
+		$ {{} \atop Y}  \!\diagdown\! ^{Y'}$	& $Y'_1$	& $Y'_2$	& $Y'_3 $	& Sums	\\ 
+		\hline
+		$Y_1$		& $\frac{n}{2}$	& $\frac{n}{16}$ & $\frac{n}{16}$	& $\frac{10n}{16}$	\\
+		$Y_2$		& $\frac{n}{16}$	& $\frac{n}{16}$	& $\frac{n}{16}$	& $\frac{3n}{16}$	\\
+		$Y_3$	& $\frac{n}{16}$	& $\frac{n}{16}$	& $\frac{n}{16}$	& $\frac{3n}{16}$	\\ 
+		\hline
+		Sums	& $\frac{10n}{16}$	&  $\frac{3n}{16}$	& $\frac{3n}{16}$	& $\frac{16n}{16} = n$         
+	\end{tabular}
+	\caption{Contingency table for the non-random clustering described in section \ref{sec:motivating_example_adjusted_rand_index}.}
+	\label{table:rand_contingency_example}
+\end{table}
+
+
+
+
+
+
+
+\subsection{Standardisation} \label{sec:standardisation}
+For a $p$-vector of observations, $X_i=(x_{i1},\ldots,x_{1p})$, we define standardisation of $X_i$ as the mapping from $X_i$ to $X'_i=(x'_{i1},\ldots,x'_{ip})$ defined by the \emph{sample mean}, $\bar{x}_i$, and sample standard deviation, $s_i$:
+\begin{eqnarray} \label{eqn:standardisation}
+\bar{x}_i &=& \frac{1}{p}\sum_{j=1}^p x_{ij} \\
+s_i^2 &=& \frac{1}{p - 1}\sum_{j=1}^p \left( x_{ij} - \bar{x}_i \right) ^2 \\
+x'_{ij} &=& \frac{x_{ij}- \bar{x}_i}{s_i} \quad \forall \quad j \in (1,\ldots,p)
+\end{eqnarray}
+We refer to $X'_i$ as the standardised form of $X$. If we are given a dataset $X=(X_1,\ldots,X_n)$ where each $X_i$ is a $p$-vector of observations of the form referred to above, then in referring to the standardised form of $X$, we mean the dataset $X'=(X'_1,\ldots,X'_n)$ where each $X'_i$ is the standardised form of $X_i$.
+
+Standardisation moves the values observed for each $X_i$ to a common scale where each vector has an observed mean and standard deviation of 0 and 1 respectively.
+
+\subsubsection{Motivating example: Standardising gene expression data} \label{sec:motivating_example_standardisation}
+If one considers table \ref{table:example_gene_expression_data} which contains an example of expression data for some genes A, B, C, D and E across people 1 to 4.
+\begin{table}[!htb] 
+	\centering
+	\begin{tabular}{c|cccc} 
+		Genes 	& Person 1	& Person 2	& Person 3	& Person 4	\\ 
+		\hline
+		A 		& 5.1		& 5.2 		& 4.9		& 5.0		\\
+		B 		& 5.1		& 4.9		& 5.2		& 5.4		\\
+		C 		& 1.4		& 1.5		& 1.2		& 1.3		\\
+		D 		& 1.4		& 1.2		& 1.5		& 1.7		\\
+		E 		& 1.4		& 1.5		& 1.4		& 1.5		
+	\end{tabular}
+	\caption{Example gene expression data.}
+	\label{table:example_gene_expression_data}
+\end{table}
+\begin{figure}[!htb]
+	\centering
+	\includegraphics[scale=0.55]{Images/Examples/example_expression_data.png}
+	\caption{Heatmap of expression data in table \ref{table:example_gene_expression_data} showing the clusters based upon magnitude of expression.}
+	\label{fig:example_expression_data}
+\end{figure}
+One can see that genes A and C have similar patters in variation across the people, as do genes B and D. Gene E is not consistent with any other gene here. However, as this relative variation is of interest rather than the magnitude of expression, one can see that standardising the data is required. 
+
+If one were to cluster the data as represented in table \ref{table:example_gene_expression_data}, one would place genes A and B in one cluster and genes C, D and E in another as their absolute expression levels are similar (as can be seen in figure \ref{fig:example_expression_data}). However, if the expression level of each gene is standardised as per section \ref{sec:standardisation}, the data is then as represented in table \ref{table:example_standardised_gene_expression_data}. The data are now on the same scale and thus the characteristic that will determine a clustering is the variation of expression across people. As we want genes with similar patterns of variation (i.e. that are co-expressed) this enables us to cluster under our objective of defining gene sets. In this case genes A and C are one cluster, genes B and D another with gene E in a cluster alone, as can be seen in figure \ref{fig:example_standardised_expression_data}. As this is the type of data we wish to cluster across, we therefore most standardise our expression data before clustering can be implemented.
+
+\begin{table}[] 
+	\centering
+	\begin{tabular}{c|cccc} 
+		Genes 	& Person 1	& Person 2	& Person 3	& Person 4	\\ 
+		\hline
+		A 		& 0.39		& 1.16 		& -1.16		& -0.39		\\
+		B 		& -0.24		& -1.20		& 0.24		& 1.20		\\
+		C 		& 0.39		& 1.16		& -1.16		& -0.39		\\
+		D 		& -0.24		& -1.20		& 0.24		& 1.20		\\
+		E 		& -0.87		& 0.87		& -0.87		& 0.87		
+	\end{tabular}
+	\caption{Example standardised gene expression data.}
+	\label{table:example_standardised_gene_expression_data}
+\end{table}
+
+\begin{figure}[!htb]
+	\centering
+	\includegraphics[scale=0.55]{Images/Examples/example_standardised_expression_data.png}
+	\caption{Heatmap of expression data in table \ref{table:example_standardised_gene_expression_data} showing the clusters based upon variation of expression across people.}
+	\label{fig:example_standardised_expression_data}
+\end{figure}
+
 
 \section{Additional convergence plots}
 \subsection{Case 1: Convergence diagnostics}
