@@ -422,7 +422,7 @@
 	\end{enumerate}
 	The output consists of a matrix $n_{iter}$ rows and $p$ columns (for $p$ genes). The $i^{th}$ row describes the cluster the genes are assigned to in the $i^{th}$ iteration of the Gibbs sampler. To summarise this information we use a posterior similarity matrix (PSM). The $(i,j)$ cell of the PSM contains there is the fraction of recorded iterations for which the $i^{th}$ and $j^{th}$ genes have common labelling. One can see that this implies the PSM is symmetric and has diagonal entries of 1.
 	
-	From this PSM a single clustering estimate, $\hat{c}$, can be described from the PSM by maximising the posterior expected adjusted Rand index \cite{FritschImprovedcriteriaclustering2009}. Other methods such as minimisation of Binder's loss function or  minimization of Dahl’s criterion are based on the original Rand index, and thus are unadjusted for chance. We prefer use of the adjusted Rand index for reasons mentioned in section \ref{sec:rand_index} and thus choose to use the method described by \citet{FritschImprovedcriteriaclustering2009} utilisng the  posterior expected adjusted Rand index.
+	From this PSM a single clustering estimate, $\hat{c}$, can be described from the PSM by maximising the posterior expected adjusted Rand index \cite{FritschImprovedcriteriaclustering2009}. Other methods such as minimisation of Binder's loss function or  minimization of Dahl’s criterion are based on the original Rand index, and thus are unadjusted for chance. We prefer use of the adjusted Rand index for reasons mentioned in section \ref{sec:rand_index} and thus choose to use the method described by \citet{FritschImprovedcriteriaclustering2009} utilising the  posterior expected adjusted Rand index.
 	
 	\subsection{Multiple dataset integration}
 	Consider the case when we have observed paired datasets $X_1 = (x_{1,1},\ldots,x_{n,1})$, $X_2 = (x_{1,2},\ldots,x_{n,2})$, where observations in the $i$th row of each dataset represent information about the same gene. We would like to cluster genes using information common to both datasets. One could concatenate the datasets, adding additional covariates for each gene. However, if the two datasets have different clustering structures this would reduce the signal of both clusterings and probably have one dominate. If the two datasets have the same structure but different signal-to-noise ratios this would reduce the signal in the final clustering. In both these cases independent models on each dataset would be preferable. \citet{KirkBayesiancorrelatedclustering2012} suggest a method to carry out clustering on both datasets where common information is used but two individual clusterings are outputted. This method is driven by the allocation prior:
@@ -584,8 +584,23 @@
 	In this case we have 3 datasets (MDItestdata1, MDItestdata2 and MDItestdata3). We use MDItestdata1 as the basis to define new data. We generate two overlapping clusters (cluster A and B) defined by two of the original clusters (cluster  1 and 2). We define cluster A to be generated from a MVN distribution with a mean defined by the weighted means of clusters 1 and 2 and a variance defined by the weighted variance of these same clusters. For cluster A the relative weights are 0.6 and 1 for clusters 1 and 2. Cluster B is defined in the same way, but the weights are reversed such that cluster B is more similar to cluster 1.
 	
 	\subsection{Simulation: Case 2} \label{sec:sim:data:case_2}
-	The data in the first simulation is designed to prevent MDI from achieving convergence. This data is based upon 5 clusters of 25, 50, 75, 100 and 150 genes each. Each cluster is defined by a MVN distribution with common variance of 1. We then perturb the clusters, adding a small amount of noise generate from a normal distribution of mean 0 and standard deviation 0.1. This noise makes the clusters less distinct. We generate 3 datasets this way, varying the means defining the clusters between datasets.
-	
+	The data in the first simulation is designed to prevent MDI from achieving convergence. This data is based upon 5 clusters of $n_{clust}=\{25, 50, 75, 100, 150\}$ genes (let $n_{clust_i}$ be the number of genes in each subcluster) for $p=400$ people. Each cluster is defined by a MVN distribution with common variance of 1. We then perturb the clusters, adding a small amount of noise generate from a normal distribution of mean 0 and standard deviation 0.1. This noise makes the clusters less distinct. We generate 3 datasets this way, varying the means defining the clusters between datasets. Specifically each subpopulation is defined by combining $p$ samples for $n_{clust_i}$ genes where each sample is pulled from the $(i, j)$ entry of table \ref{table:generated_data_case_2} (where $i$ is the cluster number and $j$ is the dataset number), and perturbed by a random sample drawn from $\mathcal{N}(0,0.1)$.
+
+\begin{table}[!htb] 
+	\centering
+	\begin{tabular}{c|ccc} 
+		Subpopulation	& Dataset 1	& Dataset 2	& Dataset 3	\\ 
+		\hline
+		1 		& $\mathcal{N}(2,1)$	& $\mathcal{N}(2,1)$ 	& $\mathcal{N}(2,1)$	\\
+		2 		& $\mathcal{N}(4,1)$	& $\mathcal{N}(2,1)$ 	& $\mathcal{N}(2,1)$	\\
+		3 		& $\mathcal{N}(7,1)$	& $\mathcal{N}(2,1)$ 	& $\mathcal{N}(2,1)$	\\
+		4 		& $\mathcal{N}(2,1)$	& $\mathcal{N}(2,1)$ 	& $\mathcal{N}(2,1)$	\\
+		5 		& $\mathcal{N}(2,1)$	& $\mathcal{N}(2,1)$ 	& $\mathcal{N}(2,1)$	
+	\end{tabular}
+	\caption{Subpopulations defining the simulated data in case 2.}
+	\label{table:generated_data_case_2}
+\end{table}
+
 	\begin{figure}[!htb]
 		\centering
 		\includegraphics[scale=0.65]{Images/Gen_data/Case_2/data_pheatmap_0.png}
