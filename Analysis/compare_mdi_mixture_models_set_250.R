@@ -18,6 +18,7 @@ all_dir <- "~/Desktop/Set_250/Analysis/"
 gen_tib_name <- "compare_tibble.rds"
 save_dir <- "~/Desktop/Set_250/Comparison_mdi_mixture_model/"
 gen_ph_name <- "comparison_all_specific_sim_cor.png"
+gen_ph_no_cor_name <- "comparison_all_specific_sim.png"
 
 
 tib_all <- readRDS(paste0(all_dir, gen_tib_name)) 
@@ -87,5 +88,10 @@ for(d in datasets){
   
   # Combine these in a grid and save
   combine_pheatmaps(ph_list, save_name = ph_save, main = ph_title, font_size = 20)
+ 
+  # Combine these in a grid and save
+  no_cor_ph_save <- paste0(save_dir, d, "_", gen_ph_no_cor_name)
+  combine_pheatmaps(ph_list[1:2], save_name = no_cor_ph_save, main = ph_title, font_size = 20)
   
+   
 }
