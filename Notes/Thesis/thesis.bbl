@@ -1,4 +1,4 @@
-\begin{thebibliography}{40}
+\begin{thebibliography}{55}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -18,6 +18,12 @@ Michael Ashburner, Catherine~A. Ball, Judith~A. Blake, David Botstein, Heather
 \newblock \emph{Nature Genetics}, 25\penalty0 (1):\penalty0 25--29, May 2000.
 \newblock ISSN 1061-4036, 1546-1718.
 \newblock \doi{10.1038/75556}.
+
+\bibitem[Bache and Wickham(2014)]{BacheMagrittr2014}
+Stefan~Milton Bache and Hadley Wickham.
+\newblock magrittr: A forward-pipe operator for r, 2014.
+\newblock URL \url{https://CRAN.R-project.org/package=magrittr}.
+\newblock R package version 1.5.
 
 \bibitem[Breiman(1)]{BreimanRandomForests1}
 Leo Breiman.
@@ -51,6 +57,38 @@ Lam Carneiro, Jg~Magalhaes, I~Tattoli, Dj~Philpott, and Lh~Travassos.
   January 2008.
 \newblock ISSN 00223417, 10969896.
 \newblock \doi{10.1002/path.2271}.
+
+\bibitem[Cooper et~al.(1989)Cooper, Eckhardt, and
+  Shera]{CooperCardinalsChaosReflection1989}
+N.~G. Cooper, Roger Eckhardt, and Nancy Shera.
+\newblock \emph{From {{Cardinals}} to {{Chaos}}: {{Reflection}} on the {{Life}}
+  and {{Legacy}} of {{Stanislaw Ulam}}}.
+\newblock {CUP Archive}, February 1989.
+\newblock ISBN 978-0-521-36734-9.
+
+\bibitem[Dahl(2005)]{dahl_sequentially-allocated_2005}
+David~B Dahl.
+\newblock Sequentially-{Allocated} {Merge}-{Split} {Sampler} for {Conjugate}
+  and {Nonconjugate} {Dirichlet} {Process} {Mixture} {Models}.
+\newblock page~27, 2005.
+
+\bibitem[Davis(2019)]{DavisOptparse2019}
+Trevor~L Davis.
+\newblock \emph{optparse: Command Line Option Parser}, 2019.
+\newblock URL \url{https://CRAN.R-project.org/package=optparse}.
+\newblock R package version 1.6.2.
+
+\bibitem[Dowle and Srinivasan(2019)]{DowleData.Table2019}
+Matt Dowle and Arun Srinivasan.
+\newblock data.table: Extension of `data.frame`, 2019.
+\newblock URL \url{https://CRAN.R-project.org/package=data.table}.
+\newblock R package version 1.12.0.
+
+\bibitem[Duane et~al.(1987)Duane, Kennedy, Pendleton, and
+  Roweth]{duane1987hybrid}
+Simon Duane, Anthony~D Kennedy, Brian~J Pendleton, and Duncan Roweth.
+\newblock Hybrid monte carlo.
+\newblock \emph{Physics letters B}, 195\penalty0 (2):\penalty0 216--222, 1987.
 
 \bibitem[Dudbridge(2013)]{DudbridgePowerPredictiveAccuracy2013}
 Frank Dudbridge.
@@ -93,6 +131,15 @@ Andrew Gelman and Donald~B. Rubin.
 \newblock ISSN 0883-4237.
 \newblock \doi{10.1214/ss/1177011136}.
 
+\bibitem[Geman and Geman(1984)]{GemanStochasticRelaxationGibbs1984}
+S.~Geman and D.~Geman.
+\newblock Stochastic {{Relaxation}}, {{Gibbs Distributions}}, and the
+  {{Bayesian Restoration}} of {{Images}}.
+\newblock \emph{IEEE Transactions on Pattern Analysis and Machine
+  Intelligence}, PAMI-6\penalty0 (6):\penalty0 721--741, November 1984.
+\newblock ISSN 0162-8828.
+\newblock \doi{10.1109/TPAMI.1984.4767596}.
+
 \bibitem[Geweke()]{GewekeEvaluatingAccuracySamplingBased}
 John Geweke.
 \newblock Evaluating the {{Accuracy}} of {{Sampling}}-{{Based Approaches}} to
@@ -132,6 +179,12 @@ Elin Grundberg, Kerrin~S Small, {\AA}sa~K Hedman, Alexandra~C Nica, Alfonso
 \newblock ISSN 0028-0836, 1476-4687.
 \newblock \doi{10.1038/nature24277}.
 
+\bibitem[Hastings()]{HastingsMonteCarloSampling}
+W~K Hastings.
+\newblock Monte {{Carlo Sampling Methods Using Markov Chains}} and {{Their
+  Applications}}.
+\newblock page~14.
+
 \bibitem[Hejblum et~al.(2015)Hejblum, Skinner, and
   Thi{\'e}baut]{HejblumTimeCourseGeneSet2015}
 Boris~P. Hejblum, Jason Skinner, and Rodolphe Thi{\'e}baut.
@@ -141,6 +194,13 @@ Boris~P. Hejblum, Jason Skinner, and Rodolphe Thi{\'e}baut.
   e1004310, June 2015.
 \newblock ISSN 1553-7358.
 \newblock \doi{10.1371/journal.pcbi.1004310}.
+
+\bibitem[Hoffman and Gelman(2014)]{hoffman2014no}
+Matthew~D Hoffman and Andrew Gelman.
+\newblock The no-u-turn sampler: adaptively setting path lengths in hamiltonian
+  monte carlo.
+\newblock \emph{Journal of Machine Learning Research}, 15\penalty0
+  (1):\penalty0 1593--1623, 2014.
 
 \bibitem[Hubert and Arabie(1985)]{HubertComparingpartitions1985}
 Lawrence Hubert and Phipps Arabie.
@@ -182,6 +242,11 @@ Paul Kirk, Jim~E. Griffin, Richard~S. Savage, Zoubin Ghahramani, and David~L.
   December 2012.
 \newblock ISSN 1460-2059, 1367-4803.
 \newblock \doi{10.1093/bioinformatics/bts595}.
+
+\bibitem[Kolde(2018)]{KoldepheatmapPrettyHeatmaps2018}
+Raivo Kolde.
+\newblock Pheatmap: {{Pretty Heatmaps}}, 2018.
+\newblock R package version 1.0.10.
 
 \bibitem[Lancichinetti and
   Fortunato(2012)]{LancichinettiConsensusclusteringcomplex2012}
@@ -250,12 +315,6 @@ John Lonsdale, Jeffrey Thomas, Mike Salvatore, Rebecca Phillips, Edmund Lo,
 \newblock ISSN 1061-4036, 1546-1718.
 \newblock \doi{10.1038/ng.2653}.
 
-\bibitem[MacKay(2003)]{MacKayInformationTheoryInference2003}
-David J~C MacKay.
-\newblock \emph{Information {{Theory}}, {{Inference}}, and {{Learning
-  Algorithms}}}.
-\newblock September 2003.
-
 \bibitem[Maniatis et~al.(1987)Maniatis, Goodbourn, and
   Fischer]{ManiatisRegulationinducibletissuespecific1987}
 T~Maniatis, S~Goodbourn, and J.~Fischer.
@@ -274,6 +333,24 @@ Samuel~A. Mason, Faiz Sayyid, Paul~D.W. Kirk, Colin Starr, and David~L. Wild.
 \newblock ISSN 1544-6115, 2194-6302.
 \newblock \doi{10.1515/sagmb-2015-0055}.
 
+\bibitem[Metropolis and Ulam(1949)]{MetropolisMonteCarloMethod1949}
+Nicholas Metropolis and S.~Ulam.
+\newblock The {{Monte Carlo Method}}.
+\newblock \emph{Journal of the American Statistical Association}, 44\penalty0
+  (247):\penalty0 335, September 1949.
+\newblock ISSN 01621459.
+\newblock \doi{10.2307/2280232}.
+
+\bibitem[Metropolis et~al.(1953)Metropolis, Rosenbluth, Rosenbluth, Teller, and
+  Teller]{MetropolisEquationStateCalculations1953}
+Nicholas Metropolis, Arianna~W. Rosenbluth, Marshall~N. Rosenbluth, Augusta~H.
+  Teller, and Edward Teller.
+\newblock Equation of {{State Calculations}} by {{Fast Computing Machines}}.
+\newblock \emph{The Journal of Chemical Physics}, 21\penalty0 (6):\penalty0
+  1087--1092, June 1953.
+\newblock ISSN 0021-9606, 1089-7690.
+\newblock \doi{10.1063/1.1699114}.
+
 \bibitem[Monti()]{MontiConsensusClusteringResamplingBased}
 Stefano Monti.
 \newblock Consensus {{Clustering}}: {{A Resampling}}-{{Based Method}} for
@@ -288,6 +365,12 @@ Michael~A. Mooney and Beth Wilmot.
   Genetics}, 168\penalty0 (7):\penalty0 517--527, October 2015.
 \newblock ISSN 15524841.
 \newblock \doi{10.1002/ajmg.b.32328}.
+
+\bibitem[Müller and Wickham(2019)]{MullerTibble2019}
+Kirill Müller and Hadley Wickham.
+\newblock tibble: Simple data frames, 2019.
+\newblock URL \url{https://CRAN.R-project.org/package=tibble}.
+\newblock R package version 2.1.1.
 
 \bibitem[Nica and Dermitzakis(2013)]{NicaExpressionquantitativetrait2013}
 A.~C. Nica and E.~T. Dermitzakis.
@@ -322,6 +405,12 @@ Yered {Pita-Ju{\'a}rez}, Gabriel Altschuler, Sokratis Kariotis, Wenbin Wei,
   e1006042, March 2018.
 \newblock ISSN 1553-7358.
 \newblock \doi{10.1371/journal.pcbi.1006042}.
+
+\bibitem[Plummer(2018)]{PlummerRjags2018}
+Martyn Plummer.
+\newblock \emph{rjags: Bayesian Graphical Models using MCMC}, 2018.
+\newblock URL \url{https://CRAN.R-project.org/package=rjags}.
+\newblock R package version 4-8.
 
 \bibitem[Rand(1971)]{RandObjectiveCriteriaEvaluation1971}
 William~N. Rand.
@@ -364,6 +453,11 @@ Damian Szklarczyk, Annika~L Gable, David Lyon, Alexander Junge, Stefan Wyder,
   January 2019.
 \newblock ISSN 0305-1048, 1362-4962.
 \newblock \doi{10.1093/nar/gky1131}.
+
+\bibitem[Team(2018)]{RCoreTeamLanguageEnvironmentStatistical2018}
+R~Core Team.
+\newblock R: {{A Language}} and {{Environment}} for {{Statistical Computing}}.
+\newblock R Foundation for Statistical Computing, 2018.
 
 \bibitem[{The International IBD Genetics Consortium} et~al.(2018){The
   International IBD Genetics Consortium}, Momozawa, Dmitrieva, Th{\'e}{\^a}tre,
@@ -451,6 +545,11 @@ Matthew~T. Weirauch.
   April 2011.
 \newblock ISBN 978-3-527-63807-9 978-3-527-32750-8.
 \newblock \doi{10.1002/9783527638079.ch11}.
+
+\bibitem[Wickham(2016)]{WickhamGgplot22016}
+Hadley Wickham.
+\newblock ggplot2: Elegant graphics for data analysis, 2016.
+\newblock URL \url{https://ggplot2.tidyverse.org}.
 
 \bibitem[Wray et~al.(2014)Wray, Lee, Mehta, Vinkhuyzen, Dudbridge, and
   Middeldorp]{WrayResearchReviewPolygenic2014}
