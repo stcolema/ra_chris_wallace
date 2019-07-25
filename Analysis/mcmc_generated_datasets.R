@@ -12,7 +12,7 @@ library(ggplot2)
 yeast_data_dir <- "~/Desktop/Yeast_3_datasets/MDI_output"
 
 # Directroy to save plots to
-yeast_plot_dir <- "Notes/Thesis/Images/Gen_data/Case_1"
+yeast_plot_dir <- "~/Desktop/ra_chris_wallace/Notes/Thesis/Images/Gen_data/Case_1"
 
 
 all_dirs <- list.dirs(yeast_data_dir, recursive = F)
@@ -64,7 +64,12 @@ for(i in 1:n_consensus){
   curr_data <- read.csv(consensus_files[i], header = T)[, 1:6]
   
   consensus_mcmc_yeast[[i]] <- mcmc(curr_data)
+  
 }
+
+
+
+
 # gelman.plot(consensus_mcmc_yeast)
 png(paste0(yeast_plot_dir, "/Gelman_plot.png"))
 gelman.plot(long_mcmc_yeast)
@@ -73,6 +78,10 @@ dev.off()
 for(i in 1:n_long){
   png(paste0(yeast_plot_dir, "/Esimated_burn_in_plot_", long_seed[i], ".png"))
   plotESSBurn(long_mcmc_yeast[[i]])
+  dev.off()
+  
+  png(paste0(yeast_plot_dir, "/Auto_correlation_plot_", long_seed[i], ".png"))
+  autocorr.plot(long_mcmc_yeast[[i]])
   dev.off()
 }
 
@@ -119,7 +128,7 @@ gen_data_dir <- "~/Desktop/Gen_data_output/MDI_output"
 
 
 # Directroy to save plots to
-gen_plot_dir <- "Notes/Thesis/Images/Gen_data/Case_2"
+gen_plot_dir <- "~/Desktop/ra_chris_wallace/Notes/Thesis/Images/Gen_data/Case_2"
 dir.create(plot_dir, showWarnings = F)
 
 all_dirs <- list.dirs(gen_data_dir, recursive = F)
@@ -184,6 +193,10 @@ for(i in 1:n_long){
   png(paste0(gen_plot_dir, "/Esimated_burn_in_plot_", long_seed[i], ".png"))
   plotESSBurn(long_mcmc_gen[[i]])
   dev.off()
+  
+  png(paste0(gen_plot_dir, "/Auto_correlation_plot_", long_seed[i], ".png"))
+  autocorr.plot(long_mcmc_gen[[i]])
+  dev.off()
 }
 
 burn_mcmc_gen <- list()
@@ -199,6 +212,10 @@ for(i in 1:n_long){
 for(i in 1:n_long){
   png(paste0(gen_plot_dir, "/Geweke_plot_burn_", burn, "_", long_seed[i], ".png"))
   geweke.plot(burn_mcmc_gen[[i]])
+  dev.off()
+  
+  png(paste0(gen_plot_dir, "/Auto_correlation_plot_burn_", burn, "_", long_seed[i], ".png"))
+  autocorr.plot(burn_mcmc_gen[[i]])
   dev.off()
 }
 
