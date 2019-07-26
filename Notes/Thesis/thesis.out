@@ -6,14 +6,14 @@
 \BOOKMARK [3][-]{subsubsection.2.3.1}{Dirichlet process}{subsection.2.3}% 6
 \BOOKMARK [3][-]{subsubsection.2.3.2}{Bayesian mixture models}{subsection.2.3}% 7
 \BOOKMARK [2][-]{subsection.2.4}{Multiple dataset integration}{section.2}% 8
-\BOOKMARK [3][-]{subsubsection.2.4.1}{Priors}{subsection.2.4}% 9
+\BOOKMARK [3][-]{subsubsection.2.4.1}{Prior distributions}{subsection.2.4}% 9
 \BOOKMARK [2][-]{subsection.2.5}{Consensus clustering}{section.2}% 10
 \BOOKMARK [1][-]{section.3}{Case study examples}{}% 11
 \BOOKMARK [2][-]{subsection.3.1}{Simulations}{section.3}% 12
 \BOOKMARK [3][-]{subsubsection.3.1.1}{Simulation: Case 1}{subsection.3.1}% 13
 \BOOKMARK [3][-]{subsubsection.3.1.2}{Simulation: Case 2}{subsection.3.1}% 14
 \BOOKMARK [2][-]{subsection.3.2}{CEDAR dataset}{section.3}% 15
-\BOOKMARK [3][-]{subsubsection.3.2.1}{CEDAR: Case 1 - Inostiol gene set}{subsection.3.2}% 16
+\BOOKMARK [3][-]{subsubsection.3.2.1}{CEDAR: Case 1 - Inositol gene set}{subsection.3.2}% 16
 \BOOKMARK [3][-]{subsubsection.3.2.2}{CEDAR: Case 2 - 1,000 probes}{subsection.3.2}% 17
 \BOOKMARK [3][-]{subsubsection.3.2.3}{Pipeline}{subsection.3.2}% 18
 \BOOKMARK [1][-]{section.4}{Results}{}% 19
@@ -35,4 +35,8 @@
 \BOOKMARK [3][-]{subsubsection.A.3.1}{Monte Carlo integration}{subsection.A.3}% 35
 \BOOKMARK [3][-]{subsubsection.A.3.2}{Markov chains}{subsection.A.3}% 36
 \BOOKMARK [3][-]{subsubsection.A.3.3}{Markov-Chain Monte Carlo methods}{subsection.A.3}% 37
-\BOOKMARK [3][-]{subsubsection.A.3.4}{Convergence}{subsection.A.3}% 38
+\BOOKMARK [2][-]{subsection.A.4}{Convergence}{appendix.A}% 38
+\BOOKMARK [3][-]{subsubsection.A.4.1}{Effective sample size}{subsection.A.4}% 39
+\BOOKMARK [3][-]{subsubsection.A.4.2}{Auto-correlation}{subsection.A.4}% 40
+\BOOKMARK [3][-]{subsubsection.A.4.3}{Geweke Z-score}{subsection.A.4}% 41
+\BOOKMARK [3][-]{subsubsection.A.4.4}{Gelman-Rubin shrink factor}{subsection.A.4}% 42

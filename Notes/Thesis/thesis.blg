@@ -12,45 +12,45 @@ Warning--empty year in HastingsMonteCarloSampling
 Warning--empty journal in MontiConsensusClusteringResamplingBased
 Warning--empty year in MontiConsensusClusteringResamplingBased
 Warning--empty year in MontiConsensusClusteringResamplingBased
-You've used 55 entries,
+You've used 57 entries,
             2773 wiz_defined-function locations,
-            1043 strings with 25167 characters,
-and the built_in function-call counts, 43469 in all, are:
-= -- 3456
-> -- 4510
-< -- 39
-+ -- 1514
-- -- 1459
-* -- 4332
-:= -- 7188
-add.period$ -- 244
-call.type$ -- 55
-change.case$ -- 647
-chr.to.int$ -- 55
-cite$ -- 119
-duplicate$ -- 1118
-empty$ -- 2122
-format.name$ -- 1548
-if$ -- 8623
+            1055 strings with 25380 characters,
+and the built_in function-call counts, 44228 in all, are:
+= -- 3523
+> -- 4541
+< -- 42
++ -- 1525
+- -- 1468
+* -- 4387
+:= -- 7305
+add.period$ -- 250
+call.type$ -- 57
+change.case$ -- 655
+chr.to.int$ -- 57
+cite$ -- 123
+duplicate$ -- 1158
+empty$ -- 2194
+format.name$ -- 1561
+if$ -- 8782
 int.to.chr$ -- 1
 int.to.str$ -- 1
-missing$ -- 48
-newline$ -- 360
-num.names$ -- 222
-pop$ -- 1210
+missing$ -- 51
+newline$ -- 370
+num.names$ -- 230
+pop$ -- 1229
 preamble$ -- 1
-purify$ -- 595
+purify$ -- 602
 quote$ -- 0
-skip$ -- 1167
+skip$ -- 1196
 stack$ -- 0
-substring$ -- 1024
-swap$ -- 127
-text.length$ -- 5
+substring$ -- 1053
+swap$ -- 130
+text.length$ -- 6
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 595
+type$ -- 612
 warning$ -- 9
-while$ -- 213
+while$ -- 221
 width$ -- 0
-write$ -- 862
+write$ -- 888
 (There were 9 warnings)

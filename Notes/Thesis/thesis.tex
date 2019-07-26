@@ -257,20 +257,23 @@
 				
 			\vspace*{\fill}
 				\begin{abstract}
-				\emph{A priori} defined gene sets are key to gene set enrichment analysis \cite{SubramanianGenesetenrichment2005a} a powerful tool in genetic analysis. Gene sets are constructed through linking genes by some common feature. This can be a function, the location of the gene product, the participation of the product in some metabolic or signalling pathway, the protein structure, the presence of transcription-factor-binding sites or other regulatory elements, the participation in multiprotein complexes, or any one of several other definitions \cite{SzklarczykSTRINGv11protein2019}\cite{SubramanianGenesetenrichment2005a}\cite{KanehisaNewapproachunderstanding2019}\cite{AshburnerGeneOntologytool2000a}. However, all of these criteria are tissue agnostic.
-%				Some attempts to include tissue specific information has been proposed \cite{frost_computation_2018}\cite{greene_understanding_2015}, but these attempts have limitations.
-				We propose to produce tissue specific gene sets by applying Multiple Dataset Integration \cite{KirkBayesiancorrelatedclustering2012} (a Bayesian clustering method) to the gene expression data from the Correlated Expression and Disease Association Research cohort \cite{TheInternationalIBDGeneticsConsortiumIBDriskloci2018}, a dataset of 9 tissue / cell types.
+				Bayesian inference of large and / or high dimensional sets can be limited by the computational cost of Markov chain Monte Carlo (MCMC) methods and the difficulty of sampling the full posterior density for many such methods. I propose consensus clustering as an alternative inferential paradigm. Consensus clustering is a computationally tractable method of implementing approximate Bayesian inference. I show via simulation that this method approximates Bayesian inference well when MCMC methods can successfully describe the target distribution in finite time, that it can describe multiple modes of a complex space, and that the method is quick. I apply this method, carrying out consensus clustering inference of an integrative clustering model with real data. The data used consists of several cell type or tissue specific gene expression datasets. I attempt to recreate a KEGG pathway as a validation of the clustering method. This analysis aims to explore the concept of annotating gene sets with tissue and cell-type specific information. I find encouraging results for this concept that suggest further work could be rewarded in this area.
 				
-				We show that problems with convergence and dependence upon initialisation common in high dimensionality settings can be overcome by means of consensus clustering \cite{MontiConsensusClusteringResamplingBased}. We then use consensus clustering of Multiple Dataset Integration models to produce gene sets.
+				
+%				\emph{A priori} defined gene sets are key to gene set enrichment analysis \cite{SubramanianGenesetenrichment2005a} a powerful tool in genetic analysis. Gene sets are constructed through linking genes by some common feature. This can be a function, the location of the gene product, the participation of the product in some metabolic or signalling pathway, the protein structure, the presence of transcription-factor-binding sites or other regulatory elements, the participation in multi protein complexes, or any one of several other definitions \cite{SzklarczykSTRINGv11protein2019}\cite{SubramanianGenesetenrichment2005a}\cite{KanehisaNewapproachunderstanding2019}\cite{AshburnerGeneOntologytool2000a}. However, all of these criteria are tissue agnostic.
+%				Some attempts to include tissue specific information has been proposed \cite{frost_computation_2018}\cite{greene_understanding_2015}, but these attempts have limitations.
+%				We propose to produce tissue specific gene sets by applying Multiple Dataset Integration \cite{KirkBayesiancorrelatedclustering2012} (a Bayesian clustering method) to the gene expression data from the Correlated Expression and Disease Association Research cohort \cite{TheInternationalIBDGeneticsConsortiumIBDriskloci2018}, a dataset of 9 tissue / cell types.
+				
+%				We show that problems with convergence and dependence upon initialisation common in high dimensionality settings can be overcome by means of consensus clustering \cite{MontiConsensusClusteringResamplingBased}. We then use consensus clustering of Multiple Dataset Integration models to produce gene sets.
 			\end{abstract}
 		\vspace*{\fill}	
 	
 	\newpage
 	
 	\section*{Acknowledgements}
-	This project is based upon the data collected by \citet{TheInternationalIBDGeneticsConsortiumIBDriskloci2018} and the implementation of Multiple Dataset Integration coded by \citet{MasonMDIGPUacceleratingintegrative2016a}. My consensus clustering model is encoded in bash. All analysis and data preparation is done using the R language \cite{RCoreTeamLanguageEnvironmentStatistical2018}. The data.table \cite{DowleData.Table2019}, magrittr \cite{BacheMagrittr2014} and optparse \cite{DavisOptparse2019} packages were integral to the analysis pipeline. In terms of visualisation, all plots other than the Geweke and Gelman plots were generated using the pheatmap \cite{KoldepheatmapPrettyHeatmaps2018} and ggplot2 \cite{WickhamGgplot22016} packages. The exceptions were generated using the rjags \cite{PlummerRjags2018} package. The tibble \cite{MullerTibble2019} package eased saving and holding of data. This report was generated using \LaTeX.
+	This project is based upon the data collected by \citet{TheInternationalIBDGeneticsConsortiumIBDriskloci2018} and the implementation of Multiple Dataset Integration coded by \citet{MasonMDIGPUacceleratingintegrative2016a}. My consensus clustering model is encoded in bash. All analysis and data preparation is done using the R language \cite{RCoreTeamLanguageEnvironmentStatistical2018}. The data.table \cite{DowleData.Table2019}, magrittr \cite{BacheMagrittr2014} and optparse \cite{DavisOptparse2019} packages were integral to the analysis pipeline. In terms of visualisation, all plots other than the convergence diagnostic plots were generated using the pheatmap \cite{KoldepheatmapPrettyHeatmaps2018} and ggplot2 \cite{WickhamGgplot22016} packages. The exceptions were generated using the rjags \cite{PlummerRjags2018} package. The tibble \cite{MullerTibble2019} package eased saving and holding of data. This report was generated using \LaTeX.
 	
-	Thanks are due to Paul Kirk of the Cambridge Biostatistics Unit (BSU) for his advice throughout the project and advice on how to sense-check clustering results. Colin Starr of the BSU (maintainer of the MDI-GPU software) and Stuart Rankin of the Cambridge Research Computing Services were always generous with their time and help. More generally, the Wallace Group was incredibly welcoming; my time with them has been both pleasant and enlightening.
+	Thanks are due to Paul Kirk of the Cambridge Biostatistics Unit (BSU) for his advice throughout the project and specifically regarding how to sense-check clustering results. Colin Starr of the BSU (maintainer of the MDI-GPU software) and Stuart Rankin of the Cambridge Research Computing Services were always generous with their time and help. More generally, the Wallace Group was incredibly welcoming; my time with them has been both pleasant and enlightening.
 	
 	\newpage
 	
@@ -348,7 +351,7 @@
 	
 %	We use consensus clustering to produce tissue-specific gene sets. In this section we briefly introduce the core components of this project such as gene sets, the data and the concepts of consensus and integrative clustering.
 	
-	With the onset of microarrays and RNAseq, producing gene expression data in large quantities for a wide number of genes is increasingly enabled. Unfortunately the large amount of data npw available to the genomics community by these methods is difficult to interpret and analyse. Gene Set Enrichment Analysis (GSEA) attempts to overcome some of these issues by using prior knowledge to define groups of genes linked through their biological function \cite{HejblumTimeCourseGeneSet2015}. The set is defined using knowledge external to the current analysis; a common method is using the manually annotated discrete pathways available on the Kyoto Encyclopedia of Genes and Genomes (KEGG) database \cite{FridleyGenesetanalysis2011}.
+	With the onset of microarrays and RNAseq, producing gene expression data in large quantities for a wide number of genes is increasingly enabled. Unfortunately the large amount of data now available to the genomics community by these methods is difficult to interpret and analyse. Gene Set Enrichment Analysis (GSEA) attempts to overcome some of these issues by using prior knowledge to define groups of genes linked through their biological function \cite{HejblumTimeCourseGeneSet2015}. The set is defined using knowledge external to the current analysis; a common method is using the manually annotated discrete pathways available on the Kyoto Encyclopedia of Genes and Genomes (KEGG) database \cite{FridleyGenesetanalysis2011}.
 	
 	Analysis of gene sets is advantageous both from the perspective of biological interpretation and statistical power. In terms of the underlying biology, genes do not function in isolation; they participate in pathways, interacting with other genes to carry out specific biological processes. Thus analysis of gene sets is analysis of an object closer to phenotype than the individual gene. Furthermore, it is known from Genome Wide Association Studies that many diseases are polygenic in nature \cite{MooneyGenesetanalysis2015}. \citet{SubramanianGenesetenrichment2005a} highlight the importance of gene sets, claiming that within a single metabolic pathway an increase of $20\%$ in all the associated gene products may have more impact upon phenotype than a 20-fold increase in a single gene.  Thus gene sets have more relevance than individual genes to biological impact. The interpretation of gene sets in the context of pathways is a step closer to phenotype than the information encoded in individual genes. As a deeper biological understanding of the phenotype or disease state is the aim, this encourages the use of gene sets.
 	
@@ -391,7 +394,7 @@
 	
 %	Thus to describe the full space in finite time requires use of multiple unique initialisations. The number of initialisations is required to be sufficiently high that each mode is described. In this way the full space can be explored by the combinations of models.
 	
-	These problems are highly prevalent in Bayesian clustering methods. The large number of discrete labels encourages a spiky likelihood surface that can trap MCMC chains. Thus convergence can take a space of time beyond realistic constraints. This means that a method capable of overcoming multi-modality and doing so in a useful time-frame (e.g. on the scale of 24 hours) while quantifying uncertainty is highly attractive. I propose using a fast consensus clustering approach for performing approximate Bayesian inference in model-based clustering.  Consensus clustering traditionally uses multiple version of the same deterministic clustering method in conjunction with resampling techniques to assess the stability of discovered clusters or else using different initialisations of unstable method such as $K$-means clustering \cite{MontiConsensusClusteringResamplingBased}. These implementations are conceptually similar to ensemble methods such as Random Forest \cite{BreimanRandomForests1} in that they combine many different models, and to Bagging \cite{BreimanBaggingpredictors1996} in the dependence upon the instability of the individual models.
+	These problems are particularly prevalent in Bayesian clustering methods. The large number of discrete labels encourages a spiky likelihood surface that can trap MCMC chains. Thus convergence can take a space of time beyond realistic constraints. This means that a method capable of overcoming multi-modality and doing so in a useful time-frame (e.g. on the scale of 24 hours) while quantifying uncertainty is highly attractive. I propose using a fast consensus clustering approach for performing approximate Bayesian inference in model-based clustering.  Consensus clustering traditionally uses multiple version of the same deterministic clustering method in conjunction with resampling techniques to assess the stability of discovered clusters or else using different initialisations of unstable method such as $K$-means clustering \cite{MontiConsensusClusteringResamplingBased}. These implementations are conceptually similar to ensemble methods such as Random Forest \cite{BreimanRandomForests1} in that they combine many different models, and to Bagging \cite{BreimanBaggingpredictors1996} in the dependence upon the instability of the individual models.
 	
 	The method of inference I propose involves running a large number of short MCMC chains in parallel, which I then combine using a consensus approach. I show that this provides significant computational gains over traditional MCMC approaches, while still enabling meaningful clustering structures to be uncovered and assessments of uncertainty to be performed. Moreover, I show that this approach is better able to explore complex multi-modal posterior distributions as a consequence of the vast number of parallel chains that are used to establish the consensus.
 	
@@ -405,7 +408,7 @@
 		\item It is consistent with converged MDI chains;
 		\item That is is faster than running multiple long chains of MDI;
 		\item That the space sampled for possible clusterings is sensible when individual chains become trapped; and
-		\item That the method is robust to different lengths of sub-model chains.
+		\item That the method is robust to different lengths of model chains.
 	\end{enumerate}
 	I then apply the method to real biological data with known pathways present and show encouraging results for uncovering this structure. This gene expression data is from the Correlated Expression and Disease Association Research (CEDAR) datasets. Within the CEDAR cohort there are multiple datasets containing information about the same genes for different tissues or cell types; this allows me to implement exploratory analysis of the clustering structure being tissue or cell-type dependent.
 	
@@ -454,12 +457,12 @@
 	n_k & = & \mid Y_k \mid \enskip \geq 1 \enskip \forall \enskip k \in \{1,\ldots,K\} \\
 	\sum_{k=1}^Kn_k &=& n
 	\end{eqnarray}
-	In short there are $K$ nonempty disjoint sets of data, each of which is referred to as a \emph{cluster} or a \emph{component}, the set of which form a \emph{clustering}. A label $c_i=k$ states that point $x_i$ is assigned to cluster $Y_k$. We define the collection of labels $c=(c_1,\ldots,c_n)$ as denoting the membership of each point.
+	In short there are $K$ non-empty disjoint sets of data, each of which is referred to as a \emph{cluster} or a \emph{component}, the set of which form a \emph{clustering}. A label $c_i=k$ states that point $x_i$ is assigned to cluster $Y_k$. We define the collection of labels $c=(c_1,\ldots,c_n)$ as denoting the membership of each point.
 	
 	\subsection{Mixture models} \label{sec:theory:sub_sec:mixture_models}
 	My underlying clustering model is a mixture model. These models assume that the data may be described in terms of $K$ clusters defined by some parametric distribution, $f(\cdot)$. It is assumed that the clusters represent the structure of underlying sub-populations of the dataset. A common probability density function is chosen to represent each cluster. However, the parameters defining the $k^{th}$ cluster and its associated distribution are learnt from the points assigned to the $k^{th}$ cluster; thus while there is a common density function there are cluster-specific parameters.
 	
-	More formally, if one is given some data $X = (x_1, \ldots, x_n)$, we assume $K$ unobserved subpopulations generate the data and that insights into these subpopulations can be revealed by imposing a clustering $Y = \left\{Y_1,\ldots,Y_K\right\}$ on the data. It is assumed that each of the $K$ clusters can be modelled by a parametric distribution, $f(\cdot)$ with parameters $\theta_k$. We let membership in the $k^{th}$ cluster for the $i^{th}$ individual be denoted by $c_i = k$. The full model density is then the weighted sum of the probability density functions where the weights, $\pi_k$, are the proportion of the total population assigned to the $k^{th}$ cluster:
+	More formally, if one is given some data $X = (x_1, \ldots, x_n)$, we assume $K$ unobserved sub-populations generate the data and that insights into these sub-populations can be revealed by imposing a clustering $Y = \left\{Y_1,\ldots,Y_K\right\}$ on the data. It is assumed that each of the $K$ clusters can be modelled by a parametric distribution, $f(\cdot)$ with parameters $\theta_k$. We let membership in the $k^{th}$ cluster for the $i^{th}$ individual be denoted by $c_i = k$. The full model density is then the weighted sum of the probability density functions where the weights, $\pi_k$, are the proportion of the total population assigned to the $k^{th}$ cluster:
 	\begin{align}
 	p(x_i|c_i = k) &= \pi_k f(x_i | \theta_k) \\
 	p(x_i) &= \sum_{k=1}^K \pi_k f(x_i | \theta_k)
@@ -490,7 +493,7 @@
 	
 	The output consists of a matrix $n_{iter}$ rows and $p$ columns (for $p$ genes). The $i^{th}$ row describes the cluster the genes are assigned to in the $i^{th}$ iteration of the Gibbs sampler. To summarise this information I use a posterior similarity matrix (PSM). his is a $n \times n$ matrix where the $(i,j)$ entry is the proportion of times genes $i$ and $j$ are in the same cluster. This means that the PSM is not affected by label switching (a problem in Bayesian model-based clustering) and that it is a symmetric matrix with $1$'s along the diagonal and all entries in the unit interval. (note that for imputed data I set the diagonal entry to -1 for ease of interpretation, please see figure \ref{fig:results:cedar_1:mdi_cd4_psm} for an example of this).
 	
-	From this PSM a single clustering estimate, $\hat{c}$, can be described from the PSM by maximising the posterior expected adjusted Rand index \cite{FritschImprovedcriteriaclustering2009}. Other methods such as minimisation of Binder's loss function or  minimization of Dahl’s criterion are based on the original Rand index, and thus are unadjusted for chance. I prefer use of the adjusted Rand index for reasons mentioned in section \ref{sec:rand_index} and thus choose to use the method described by \citet{FritschImprovedcriteriaclustering2009} utilising the  posterior expected adjusted Rand index.
+	From this PSM a single clustering estimate, $\hat{c}$, can be described from the PSM by maximising the posterior expected adjusted Rand index \cite{FritschImprovedcriteriaclustering2009}. Other methods such as minimisation of Binder's loss function or  minimization of Dahl's criterion are based on the original Rand index, and thus are unadjusted for chance. I prefer use of the adjusted Rand index for reasons mentioned in section \ref{sec:rand_index} and thus choose to use the method described by \citet{FritschImprovedcriteriaclustering2009} utilising the  posterior expected adjusted Rand index.
 	
 	\subsection{Multiple dataset integration}
 	Consider the case when one has observed paired datasets $X_1 = (x_{1,1},\ldots,x_{n,1})$, $X_2 = (x_{1,2},\ldots,x_{n,2})$, where observations in the $i$th row of each dataset represent information about the same gene. Ideally, one would like to cluster genes using information common to both datasets. One could concatenate the datasets adding additional covariates for each gene. However, if the two datasets have different clustering structures this would reduce the signal of both clusterings and probably one would dominate. If the two datasets have the same structure but different signal-to-noise ratios this would reduce the signal in the final clustering. In both these cases independent models on each dataset would be preferable. \citet{KirkBayesiancorrelatedclustering2012} suggest a method to carry out clustering on both datasets where common information is used but two individual clusterings are outputted. This method is driven by the allocation prior:
@@ -513,19 +516,19 @@
 	\end{align}
 	Here $\boldsymbol{\phi}$ is the ${L \choose 2}$-vector of all $\phi_{ij}$ where $\phi_{12}$ is the variable $\phi$ in \eqref{allocation_prior_l_2}.
 
-	Thus MDI is an extension of mixture models to multiple datasets where correlated clustering structure is used to ``upweigh'' similar clusters across datasets. MDI has been applied to precision medicine, specifically identifying function modules of genes and glioblastoma sub-typing \cite{SavageIdentifyingcancersubtypes2013a}, in the past showing its potential as a tool.
+	Thus MDI is an extension of mixture models to multiple datasets where correlated clustering structure is used to ``up weigh'' similar clusters across datasets. MDI has been applied to precision medicine, specifically identifying function modules of genes and glioblastoma sub-typing \cite{SavageIdentifyingcancersubtypes2013a}, in the past showing its potential as a tool.
 	
-	\subsubsection{Priors}
+	\subsubsection{Prior distributions}
 	The priors on the MDI model are considered in two steps. First, the priors of the parameters in \eqref{eqn:allocation_prior}, and second, the parameters specific to the underlying Gaussian densities.
 	
 	For the parameters in \eqref{eqn:allocation_prior}:
 	\begin{itemize}
-		\item $\text{Ga}(1, 0.2)$ is the prior on the $\phi_{ij} \: \forall \: i,j \in (1, \ldots, L)$; 
+		\item The prior on the $\phi_{ij}$ is $\text{Ga}(1, 0.2) \: \forall \: i,j \in (1, \ldots, L)$; 
 		\item $\text{Ga}(\alpha_l / K, 1)$ is the prior on the $\gamma_{k_ll}  \: \forall \: l \in (1, \ldots, L)$, $k \in (1,\ldots, K)$;
 		\item The prior on the $\alpha_l$ is $\text{Ga}(2,4) \: \forall \: l \in (1,\ldots,L)$;
 	\end{itemize}
 
-	For the Gaussian density, it is assumed that each component is modelled by a Gaussian likelihood of unknown mean and  precision. A Normal-Gamma  prior is imposed upon these. The  density can therefore be represented in closed form and the mean and precision may be marginalised. This leaves the following marginal likelihood function for a component with $n$ genes allocated to it:
+	For the Gaussian density, it is assumed that each component is modelled by a Gaussian likelihood of unknown mean and  precision. A Normal-Gamma  prior is imposed upon these. The  density can therefore be represented in closed form and the mean and precision may be marginalised (one of the reasons the Gaussian distribution is easy to work with as referenced in section \ref{sec:theory:sub_sec:mixture_models}). This leaves the following marginal likelihood function for a component with $n$ genes allocated to it:
 	\begin{align}
 	f = \frac{\Gamma(\alpha_n)}{\Gamma(\alpha_0)} \frac{\beta_0 ^ {\alpha_0}}{\beta_n ^ {\alpha_n}} \left(\frac{\kappa_0}{\kappa_n}\right)^{\frac{1}{2}}\left(2\pi\right)^{-\frac{n}{2}}
 	\end{align}
@@ -543,16 +546,16 @@
 	\beta_0 &= 0.5 \\
 	\kappa_0 &= 0.001
 	\end{align}
-	These are intended to be broad, uniformed priors that allow the model to infer from the data without overt influence from the priors. A mean of 0 is imposed upon the $\mu$ parameter as the data has been standardised.
+	These are intended to be broad, uniformed priors (recalling that the data has been standardised - this is particularly relevant to the mean of 0 for the $\mu$ parameter). This allows the model to infer from the data without an overtly strong influence from the priors.
 		
 	\subsection{Consensus clustering} \label{sec:consensus_clustering}
-	In the scenario that MDI struggles to explore the entire posterior distribution from any given initialisation for any realistic number of iterations of MCMC, I propose use of a ``consensus clustering'' \cite{MontiConsensusClusteringResamplingBased}. In this scenario I draw samples of clusterings from MCMC chains with different initialisations and use these clusterings to describe the target distribution. In practice this involves running $n_{seeds}$ different chains of MDI for a smaller number of iterations, $n_{iter}$, and burning out the first $n_{iter} - 1$ iterations. The clustering from the final iteration is then saved for this model.
+	In the scenario that MDI struggles to explore the entire posterior distribution from any given initialisation for any realistic number of iterations of MCMC, I propose use of a ``consensus clustering'' \cite{MontiConsensusClusteringResamplingBased} to perform approximate Bayesian inference. In this scenario I draw samples of clusterings from MCMC chains with different initialisations and use these clusterings to describe the target distribution. In practice this involves running $n_{seeds}$ different chains of MDI for a smaller number of iterations, $n_{iter}$, and burning out the first $n_{iter} - 1$ iterations. The clustering from the final iteration is then saved for this model.
 	
 	I then combine the clusterings from all $n_{seeds}$ within a PSM for the $n$ genes.  From this PSM a summary clustering may be calculated. The combination of different initialisations enables exploration of multiple maxima in the posterior density and thus provides a more informed clustering than a method liable to become trapped in a single mode. 
 	
 %	As the algorithm is not exploring the full space in any given iteration, we expect that the uncertainty quantification is optimistic. However we argue that an estimate made using insufficient data is better than one made using none at all and that this method is the best currently available to us for quantifying the uncertainty and exploring the posterior distribution.
 	
-	There have already been numerous applications of consensus clustering \cite{LiWeightedConsensusClustering2008} \cite{LancichinettiConsensusclusteringcomplex2012} \cite{BreimanRandomForests1}. However, none of these previous implementations have used a Bayesian model. I show the validity of my implementation of consensus clustering by means of simulations. In this case I know the true clustering as I have chosen which points are drawn from which subpopulations. I can then compare the quality of recorded clusterings generated by a single converged chain of MDI to different version of consensus clustering (i.e. varying $n_{iter}$). I let the quality of a clustering be defined by its similarity to the ground truth, measured using the \emph{adjusted Rand index} (see section \ref{sec:rand_index}).
+	There have already been numerous applications of consensus clustering \cite{LiWeightedConsensusClustering2008} \cite{LancichinettiConsensusclusteringcomplex2012} \cite{BreimanRandomForests1}. However, none of these previous implementations have used a Bayesian model. I show the validity of my implementation of consensus clustering by means of simulations. In this case I know the true clustering as I have chosen which points are drawn from which sub-populations I can then compare the quality of recorded clusterings generated by a single converged chain of MDI to different version of consensus clustering (i.e. varying $n_{iter}$). I let the quality of a clustering be defined by its similarity to the ground truth, measured using the \emph{adjusted Rand index} (see section \ref{sec:rand_index}).
 	
 
 
@@ -681,7 +684,7 @@
 	
 	I then simulate data where individual chains of MDI are expected to struggle to converge and possibly will not converge in finite time. I show that consensus clustering explores a wider space than any individual chain and appears to describe something similar to the space described by the union of the chains.
 	
-	Finally I apply consensus clustering to two sets of probes for 7 tissue or cell-type specific datasets from the CEDAR dataset; a set of 250 probes with a single KEGG pathway present and a se of 1,000 probes with three KEGG pathways present.
+	Finally I apply consensus clustering to two sets of probes for 7 tissue or cell-type specific datasets from the CEDAR dataset; a set of 250 probes with a single KEGG pathway present and a set of 1,000 probes with three KEGG pathways present.
 	
 	\subsection{Simulations}
 	\subsubsection{Simulation: Case 1} \label{sec:sim:data:case_1}
@@ -690,7 +693,7 @@
 	In this case I have 3 datasets (MDItestdata1, MDItestdata2 and MDItestdata3). I use MDItestdata1 as the basis to define new data. I generate two overlapping clusters (cluster A and B) defined by two of the original clusters (cluster  1 and 2). I define cluster A to be generated from a MVN distribution with a mean defined by the weighted means of clusters 1 and 2 and a variance defined by the weighted variance of these same clusters. For cluster A the relative weights are 0.6 and 1 for clusters 1 and 2. Cluster B is defined in the same way, but the weights are reversed such that cluster B is more similar to cluster 1.
 	
 	\subsubsection{Simulation: Case 2} \label{sec:sim:data:case_2}
-	The data in the second simulation is designed to be a testing example in which MDI might struggle to converge. This data is based upon 5 clusters of $n_{clust}=\{25, 50, 75, 100, 150\}$ genes (let $n_{clust_i}$ be the number of genes in each the $i^{th}$ cluster) for $p=400$ people. Each cluster is defined by a MVN distribution with common variance of 1. I then perturb the clusters, adding a small amount of noise generated from a normal distribution of mean 0 and standard deviation 0.1. This noise makes the clusters less distinct. I generate 3 datasets this way, varying the means defining the clusters between datasets. Specifically each subpopulation is defined by combining $p$ samples for $n_{clust_i}$ genes where each sample is pulled from the $(i, j)$ entry of table \ref{table:generated_data_case_2} (where $i$ is the cluster number and $j$ is the dataset number), and perturbed by a random sample drawn from $\mathcal{N}(0,0.1)$. One can see that the underlying structure should be easier to uncover in dataset 2 and harder to uncover in dataset 3 (due to the distance between means of subpopulations).
+	The data in the second simulation is designed to be a testing example in which MDI might struggle to converge. This data is based upon 5 clusters of $n_{clust}=\{25, 50, 75, 100, 150\}$ genes (let $n_{clust_i}$ be the number of genes in each the $i^{th}$ cluster) for $p=400$ people. Each cluster is defined by a MVN distribution with common variance of 1. I then perturb the clusters, adding a small amount of noise generated from a normal distribution of mean 0 and standard deviation 0.1. This noise makes the clusters less distinct. I generate 3 datasets this way, varying the means defining the clusters between datasets. Specifically each subpopulation is defined by combining $p$ samples for $n_{clust_i}$ genes where each sample is pulled from the $(i, j)$ entry of table \ref{table:generated_data_case_2} (where $i$ is the cluster number and $j$ is the dataset number), and perturbed by a random sample drawn from $\mathcal{N}(0,0.1)$. One can see that the underlying structure should be easier to uncover in dataset 2 and harder to uncover in dataset 3 (due to the distance between means of sub-populations).
 
 \begin{table}[!htb] 
 	\centering
@@ -703,7 +706,7 @@
 		4 		& $\mathcal{N}(6,1)$	& $\mathcal{N}(9,1)$ 	& $\mathcal{N}(4,1)$	\\
 		5 		& $\mathcal{N}(8,1)$	& $\mathcal{N}(12,1)$ 	& $\mathcal{N}(5,1)$	
 	\end{tabular}
-	\caption{Subpopulations defining the simulated data in case 2.}
+	\caption{Sub-populations defining the simulated data in case 2.}
 	\label{table:generated_data_case_2}
 \end{table}
 
@@ -729,7 +732,7 @@
 	\end{itemize}
 	Data from intestinal biopsies are also present, with samples taken from three distinct locations:
 	\begin{itemize}
-		\item the illeum (IL);
+		\item the ileum (IL);
 		\item the rectum (RE); and
 		\item the colon (TR).
 	\end{itemize} 
@@ -762,7 +765,7 @@
 
 	 
 
-	\subsubsection{CEDAR: Case 1 - Inostiol gene set} \label{sec:case_studies:cedar:dataset_1}
+	\subsubsection{CEDAR: Case 1 - Inositol gene set} \label{sec:case_studies:cedar:dataset_1}
 
 	I create an example dataset of 250 probes from the CEDAR dataset. This dataset contained 60 probes from the Inositol phosphate metabolism pathway as defined in the KEGG database. This scale of dataset allows implementation of MDI across 7 datasets simultaneously.
 	
@@ -772,7 +775,7 @@
 	
 	\begin{enumerate} \label{list:kegg_pathways}
 		\item Inositol phosphate metabolism (a broad biological pathway);
-		\item NOD-like receptor signaling pathway (a specific biological pathway with known involvement in IBD \cite{CarneiroNodlikeproteinsinflammation2008}\cite{GarrettHomeostasisInflammationIntestine2010}); and
+		\item NOD-like receptor signalling pathway (a specific biological pathway with known involvement in IBD \cite{CarneiroNodlikeproteinsinflammation2008}\cite{GarrettHomeostasisInflammationIntestine2010}); and
 		\item Inflammatory bowel disease (IBD) (a pathological pathway).
 	\end{enumerate}
 
@@ -839,19 +842,19 @@
 			10,000						& 00:20:00 \\
 			2,000,000					& 28:30:00
 		\end{tabular}
-		\caption{Subpopulations defining the simulated data in case 2.}
+		\caption{Sub-populations defining the simulated data in case 2.}
 		\label{table:results:sim_1:timing}
 	\end{table}
 
 	The estimated burn-in time required is checked by means of the effective sample size of MCMC samples drawn (see figure \ref{fig:gen_data_case_1_estimated_burn_in_plot_3}).
 	
-	After implementing the required burn-in across all chains, results are compared by means of an autocorrelation plot, a Geweke plot \cite{GewekeEvaluatingAccuracySamplingBased}, a Gelman plot \cite{GelmanInferenceIterativeSimulation1992} and the distribution of adjusted Rand index comparing the clustering at each iteration (or each seed in the consensus clustering) with the clustering defined by the subpopluations used to generate the data. These were shown to have converged successfully both within chain, by inspecting an autocorrelation plot and a Geweke plot (see figures \ref{fig:gen_data_case_1_autocorrelation_plot_3} and \ref{fig:gen_data_case_1_geweke_plot_3}), and across chains, by means of the Gelman-Rubin convergence statistic (see figure \ref{fig:gen_data_case_1_gelman_plot}). The clustering at each iteration was compared to the the clustering defined by the subpopulations that generated the data and the long chains were compared to each other and consensus clustering for various chain lengths (see figure \ref{fig:gen_data_case_1_boxplot}). One can see that the consensus clustering perform very similarly to the individual chains. Finally, in figure \ref{fig:gen_data_case_1_collapsed_boxplot}, the full space of clusterings across all chains is compared to the consensus clustering under the adjusted Rand Index.
+	After implementing the required burn-in across all chains, results are compared by means of an autocorrelation plot, a Geweke plot \cite{GewekeEvaluatingAccuracySamplingBased}, a Gelman plot \cite{GelmanInferenceIterativeSimulation1992} and the distribution of adjusted Rand index comparing the clustering at each iteration (or each seed in the consensus clustering) with the clustering defined by the sub-populations used to generate the data. These were shown to have converged successfully both within chain, by inspecting an autocorrelation plot and a Geweke plot (see figures \ref{fig:gen_data_case_1_autocorrelation_plot_3} and \ref{fig:gen_data_case_1_geweke_plot_3}), and across chains, by means of the Gelman-Rubin convergence statistic (see figure \ref{fig:gen_data_case_1_gelman_plot}). The clustering at each iteration was compared to the the clustering defined by the sub-populations that generated the data and the long chains were compared to each other and consensus clustering for various chain lengths (see figure \ref{fig:gen_data_case_1_boxplot}). One can see that the consensus clustering perform very similarly to the individual chains. Finally, in figure \ref{fig:gen_data_case_1_collapsed_boxplot}, the full space of clusterings across all chains is compared to the consensus clustering under the adjusted Rand Index.
 
 
 	\begin{figure}[!htb]
 	\centering
 	\includegraphics[scale=0.65]{Images/Gen_data/Case_1/Esimated_burn_in_plot_3.png}
-	\caption{An estimate for burn-in cut-off is estimated by plotting the effective sample size (ESS) against the burn-in at different iterations (shown here for seed 3 in case 1 of the simulations). ESS is the number of independent samples equivalent to the number of autocorrelated samples (basically it's an attempt to convert the number of MCMC samples, which can be highly autocorrelated, into a number of independent samples). The ESS should be maximised at the optimal estimate of the burn-in - thus one looks for the iteration at which ESS is maximised for the most parameters. Here it is a iteration 0.}
+	\caption{An estimate for burn-in cut-off is estimated by plotting the effective sample size (ESS) against the burn-in at different iterations (shown here for seed 3 in case 1 of the simulations). ESS is the number of independent samples equivalent to the number of autocorrelated samples. The ESS should be maximised at the optimal estimate of the burn-in - thus one looks for the iteration at which ESS is maximised for the most parameters. Here it is a iteration 0. For a more thorough description of ESS, please go to section \ref{sec:additional_theory:sub_sec:convergence:sub_sub_sec:geweke}.}
 	\label{fig:gen_data_case_1_estimated_burn_in_plot_3}
 \end{figure}
 
@@ -860,7 +863,7 @@
 	\begin{figure}[!htb]
 		\centering
 		\includegraphics[scale=0.65]{Images/Gen_data/Case_1/Auto_correlation_plot_3.png}
-		\caption{Autocorrelation plot for a long chain with random seed 3 in case 1 of the simulations. The autocorrelation at lag 0 is always 1 (as the observation correlates with itself). If the samples drawn are no longer correlated with samples at any lag visible here (recalling that a lag of 1 corresponds to 50 iterations due to the thinning factor) then this indicates the chain has achieved stationarity.}
+		\caption{Autocorrelation plot for a long chain with random seed 3 in case 1 of the simulations. The autocorrelation at lag 0 is always 1 (as the observation correlates with itself). If the samples drawn are no longer correlated with samples at any lag visible here (recalling that a lag of 1 corresponds to 50 iterations due to the thinning factor) then this indicates the chain has achieved stationarity. For more discussion of autocorrelation, please read section \ref{sec:additional_theory:sub_sec:convergence:sub_sub_sec:geweke}.}
 		\label{fig:gen_data_case_1_autocorrelation_plot_3}
 	\end{figure}
 
@@ -868,7 +871,7 @@
 	\begin{figure}[!htb]
 		\centering
 		\includegraphics[scale=0.65]{Images/Gen_data/Case_1/Geweke_plot_3.png}
-		\caption{Geweke plot \cite{GewekeEvaluatingAccuracySamplingBased} for a long chain with random seed 3 in case 1 of the simulations. If the chain has reached stationarity the Z-scores should be described by a standard normal distribution (in which case 95\% of recorded values should be contained within the dashed lines). This is the case here, indicating, particularly in conjunction with figure \ref{fig:gen_data_case_1_autocorrelation_plot_3}, that the chain has converged.}
+		\caption{Geweke plot \cite{GewekeEvaluatingAccuracySamplingBased} for a long chain with random seed 3 in case 1 of the simulations. 	This plot is generated using the plot.geweke function from the rjags R package \cite{PlummerRjags2018}. The samples are split into disjoint bins, with the first set of $\frac{n}{2(n_{bins} -1)}$ samples in the first bin, the second set of $\frac{n}{2(n_{bins} -1)}$ samples in the second, etc. with the final bin containing the final $50\%$ of samples. Geweke's $Z$-score \cite{GewekeEvaluatingAccuracySamplingBased} is repeatedly calculated, comparing the members of each bin to the final $50\%$ of samples with the $Z$-scores than plotted as above. If the chain has reached stationarity the Z-scores should be described by a standard normal distribution (in which case 95\% of recorded values should be contained within the dashed lines). For more information, please see section \ref{sec:additional_theory:sub_sec:convergence:sub_sub_sec:geweke}. This is the case here, indicating, particularly in conjunction with figure \ref{fig:gen_data_case_1_autocorrelation_plot_3}, that the chain has converged.}
 		\label{fig:gen_data_case_1_geweke_plot_3}
 	\end{figure}
 		
@@ -877,7 +880,7 @@
 	\begin{figure}[!htb]
 			\centering
 			\includegraphics[scale=0.65]{Images/Gen_data/Case_1/Gelman_plot.png}
-			\caption{Plot of the shrinkage factor described by \citet{GelmanInferenceIterativeSimulation1992} for the continuous variables across chains in case 1 of the simulations. If the chains are truly converged (and thus describing similar spaces to one another) the values should tend to 1 (as is the case here).}
+			\caption{Plot of the shrink factor described by \citet{GelmanInferenceIterativeSimulation1992} for the continuous variables across chains in case 1 of the simulations. If the chains are converged (and thus describing similar spaces to one another) the values should tend to 1 (as is the case here). For a more thorough description of the shrink factor, please see section \ref{sec:additional_theory:sub_sec:convergence:sub_sub_sec:gelman}.}
 			\label{fig:gen_data_case_1_gelman_plot}
 		\end{figure}
 
@@ -945,7 +948,7 @@
 	\begin{figure}[!htb]
 			\centering
 			\includegraphics[scale=0.65]{Images/Gen_data/Case_2/Gelman_plot_burn_20000.png}
-			\caption{Plot of the  Gelman-Rubin shrinkage factor for the continuous variables across chains in case 2 of the simulations. The behaviour of the shrinkage factor for the $\phi_{ij}$ parameters indicates that convergence across chains has not been achieved.}
+			\caption{Plot of the  Gelman-Rubin shrink factor for the continuous variables across chains in case 2 of the simulations. The behaviour of the shrinkage factor for the $\phi_{ij}$ parameters indicates that convergence across chains has not been achieved.}
 			\label{fig:gen_data_case_2_gelman_plot}
 		\end{figure}
 	
@@ -996,7 +999,7 @@
 		\item The comparison of the PSM, the standardised expression data and the correlation matrix were plotted with a common row ordering for each dataset (see an example in  figure \ref{fig:results:cedar_1:mdi_cd4_psm_expr_cor}). %; and
 %		\item The expression of fused genes was plotted for all dataset combinations (see an example in  figure \ref{fig:mdi_cd4_cd8_fused_genes}).
 	\end{enumerate}
-	Note that some of these (such as the $\phi_{ij}$ plots and the fused genes only apply to MDI, not the mixture models as this is the single dataset case and comparisons across datasets are not possible).
+	Note that some of these (such as the $\phi_{ij}$ plots only apply to MDI, not the mixture models as this is the single dataset case and comparisons across datasets are not possible).
 
 	\newpage
 	
@@ -1126,7 +1129,7 @@
 	\begin{sidewaysfigure}[h]
 		\centering
 		\includegraphics[scale=0.75]{Images/Biology_data/Set_250/All_datasets/Heatmaps/KEGG_INOSITOL_PHOSPHATE_METABOLISM/CD4_comp_psm_corr.png}
-		\caption{Heatmap of the PSM and expression data for the Inostiol genes for the CD4 datasets from the consensus clustering of MDI.}
+		\caption{Heatmap of the PSM and expression data for the Inositol genes for the CD4 datasets from the consensus clustering of MDI.}
 		\label{fig:results:cedar_1:mdi_cd4_inostiol_psm_cor}
 	\end{sidewaysfigure}
 
@@ -1134,14 +1137,14 @@
 \begin{figure}[h]
 	\centering
 	\includegraphics[scale=0.75]{Images/Biology_data/Set_250/All_datasets/Mean_alignment_probability/CD4_KEGG_INOSITOL_PHOSPHATE_METABOLISM.png}
-	\caption{Plot of the distribution of the mean probability of pairwise alignment for a random sample of 60 genes (to coincide with the number of genes associated with the Inostiol pathway present) with a dashed line indicating the mean probability of pairwise alignment for the Inostiol genes.}
+	\caption{Plot of the distribution of the mean probability of pairwise alignment for a random sample of 60 genes (to coincide with the number of genes associated with the Inositol pathway present) with a dashed line indicating the mean probability of pairwise alignment for the Inositol genes.}
 	\label{fig:results:cedar_1:mdi_cd4_inostiol_alignemnt_prob_distn}
 \end{figure}
 
 \begin{figure}[h]
 	\centering
 	\includegraphics[scale=0.75]{Images/Biology_data/Set_250/All_datasets/PSM_densities/KEGG_INOSITOL_PHOSPHATE_METABOLISM/CD4.png}
-	\caption{Violin plot of the PSM entries for the Inostiol genes and the genes not belonging to this pathway for the CD4 datasets from the consensus clustering of MDI.}
+	\caption{Violin plot of the PSM entries for the Inositol genes and the genes not belonging to this pathway for the CD4 datasets from the consensus clustering of MDI.}
 	\label{fig:results:cedar_1:mdi_cd4_inostiol_psm_violin}
 \end{figure}
 %	\newpage
@@ -1153,7 +1156,7 @@
 	\begin{sidewaysfigure} %[h]
 		\centering
 		\includegraphics[scale=0.75]{Images/Biology_data/Set_250/Comparison_mdi_mixture_model/TR_comparison_all_specific_sim.png}
-		\caption{Comparison of the PSMs generated by applying consensus clustering using MDI sub-models and mixture models using only the TR dataset.}
+		\caption{Comparison of the PSMs generated by applying consensus clustering using an MDI model and individual mixture models using only the TR dataset.}
 		\label{fig:results:cedar_1:mdi_mixture_model_comp_tr}
 	\end{sidewaysfigure}
 	
@@ -1297,13 +1300,13 @@
 %		\item future work - more datasets; include sick people, more people; try different clustering methods within consensus clustering
 %	\end{itemize}
 	
-	It can be seen that when MDI does converge and successfully samples from the posterior space (section \ref{sec:results:case_1}), consensus clustering samples from the same space and performs very similarly in terms of describing the underlying structure of the data. The results in section \ref{sec:results:case_2} show that even when MCMC methods struggle to converge, consensus clustering offers a description of the space of interest. Consensus clustering captures multiple modes in a similar distribution to the space described across all chains of MDI (see figure \ref{fig:gen_data_case_2_collapsed_violin_plot}). The consensus clustering also appears to be robust in terms of the number of iterations used in each individual chain (each consensus clustering length performs identically). As each chain used in Consensus clustering is independent of the others, the problem is embarassingly parallel; therefore 1,000 chains of 500 iterations is far quicker to run in parallel than a single long chain. This means that even when multi-modality is not expected to be an issue for MCMC methods that consensus clustering is a useful alternative based purely on the reduction in run-times.
+	It can be seen that when MDI does converge and successfully samples from the posterior space (section \ref{sec:results:case_1}), consensus clustering samples from the same space and performs very similarly in terms of describing the underlying structure of the data. The results in section \ref{sec:results:case_2} show that even when MCMC methods struggle to converge, consensus clustering offers a description of the space of interest. Consensus clustering captures multiple modes in a similar distribution to the space described across all chains of MDI (see figure \ref{fig:gen_data_case_2_collapsed_violin_plot}). The consensus clustering also appears to be robust in terms of the number of iterations used in each individual chain (each consensus clustering length performs identically). As each chain used in Consensus clustering is independent of the others, the problem is embarrassingly parallel; therefore 1,000 chains of 500 iterations is far quicker to run in parallel than a single long chain. This means that even when multi-modality is not expected to be an issue for MCMC methods that consensus clustering is a useful alternative based purely on the reduction in run-times.
 	
 	The combination of these results encourages the claim that consensus clustering is a quick, robust solution to the problem of scaling Bayesian clustering methods generally and of multi-modality specifically. Consensus clustering produces a more accurate description of the posterior distribution than any single chain is capable of in a multi-modal high dimensional space within a realistic number of iterations; thus this implementation has many of the advantages of Bayesian inference (the use of priors, quantification of error) but overcomes the limitations of convergence and speed. It should be noted that these limits of Bayesian clustering methods apply to any field where high dimensional, multi-modal datasets are used and thus this implementation of consensus clustering has applications ranging beyond the case studies described here.
 	
 	Applied to the CEDAR case studies, consensus clustering has positive results. The agreement between the PSM and the correlation matrix that can be seen in figure \ref{fig:results:cedar_1:mdi_cd4_psm_expr_cor} is reassuring - it shows that the clustering imposed is in line with the data. Furthermore, the results displayed in figures \ref{fig:results:cedar_1:mdi_cd4_inostiol_alignemnt_prob_distn} and \ref{fig:results:cedar_2:mdi_il_ibd_alignment_prob_distn} are encouraging. It looks like my model has successfully uncovered some of the structure of a pathway. This is supported by the difference between the PSM entries for the associated probes compared to the non-pathway probes as can be seen in figure \ref{fig:results:cedar_1:mdi_cd4_inostiol_psm_violin}. The contrast between figures \ref{fig:results:cedar_2:mdi_il_ibd_alignment_prob_distn} and \ref{fig:results:cedar_2:mdi_cd14_ibd_alignment_prob_distn} is also encouraging of the thesis that tissue annotation is important for pathways, as the IBD pathway is uncovered with some success in the IL dataset, but none at all in the CD14 dataset. This is as one might expect - the colonic samples are pieces of tissue, thus there are a range of cells present here, including auto-immune cells. These auto-immune cells, which mediate IBD, are in the environment where IBD manifests, thus I expect to see the IBD pathway here, whereas the auto-immune cell datasets could be from any location, and thus I do not expect to see a tissue specific disease pathway present.
 	
-	We can see the benefits of using MDI sub-models in figures \ref{fig:results:cedar_1:mdi_mixture_model_comp_tr}, \ref{fig:results:cedar_1:mdi_adj_rand_ind_heatmap}, \ref{fig:results:cedar_1:mdi_phi_heatmap}, \ref{fig:results:cedar_2:mdi_adj_rand_ind_heatmap} and \ref{fig:results:cedar_2:mdi_phi_heatmap}. The first, figure \ref{fig:results:cedar_1:mdi_mixture_model_comp_tr}, shows that MDI is more confident in allocating probes together. This is due to the additional information available to the model through the other datasets. The other plots, figures \ref{fig:results:cedar_1:mdi_adj_rand_ind_heatmap}, \ref{fig:results:cedar_1:mdi_phi_heatmap}, \ref{fig:results:cedar_2:mdi_adj_rand_ind_heatmap} and \ref{fig:results:cedar_2:mdi_phi_heatmap}, show that MDI can be used to quantify the similarity in structure of the datasets, something individual mixture models cannot do. As one would expect, these show that the three colon samples are quite similar and the CD datasets are similar, with little information shared across these sets of datasets. We can also see that the CD4 and CD8 datasets are highly correlated (the high mean $\phi$ value across seeds), as one would expect from two types of T lymphocyte.
+	We can see the benefits of using MDI models in figures \ref{fig:results:cedar_1:mdi_mixture_model_comp_tr}, \ref{fig:results:cedar_1:mdi_adj_rand_ind_heatmap}, \ref{fig:results:cedar_1:mdi_phi_heatmap}, \ref{fig:results:cedar_2:mdi_adj_rand_ind_heatmap} and \ref{fig:results:cedar_2:mdi_phi_heatmap}. The first, figure \ref{fig:results:cedar_1:mdi_mixture_model_comp_tr}, shows that MDI is more confident in allocating probes together. This is due to the additional information available to the model through the other datasets. The other plots, figures \ref{fig:results:cedar_1:mdi_adj_rand_ind_heatmap}, \ref{fig:results:cedar_1:mdi_phi_heatmap}, \ref{fig:results:cedar_2:mdi_adj_rand_ind_heatmap} and \ref{fig:results:cedar_2:mdi_phi_heatmap}, show that MDI can be used to quantify the similarity in structure of the datasets, something individual mixture models cannot do. As one would expect, these show that the three colon samples are quite similar and the CD datasets are similar, with little information shared across these sets of datasets. We can also see that the CD4 and CD8 datasets are highly correlated (the high mean $\phi$ value across seeds), as one would expect from two types of T lymphocyte.
 	
 	\section{Future work}
 	With regards to consensus clustering there are several avenues to explore:
@@ -1512,7 +1515,7 @@
 \section{Additional theory}
 
 \subsection{Rand index} \label{sec:rand_index}
-A popular metric for comparing the similarity of two clusterings of the data is the \emph{Rand index} \cite{RandObjectiveCriteriaEvaluation1971}. 	If one assumes that all points are of equal importance in determining clusterings, then in combination with the discrete nature of clusters and the fact that a cluster is defined as much by what it does not contain as that which it does, \citet{RandObjectiveCriteriaEvaluation1971} proposes a metric to measure similarity between clusterings. Between clusterings $Y$ and $Y'$ for any two points $x_i$ and $x_j$ there can exist one of a number of scenarios regarding their labeling. Let $\gamma_{ij}$ be a measure between the two points $x_i$ and $x_j$. For the two points, they can have:
+A popular metric for comparing the similarity of two clusterings of the data is the \emph{Rand index} \cite{RandObjectiveCriteriaEvaluation1971}. If one assumes that all points are of equal importance in determining clusterings, then in combination with the discrete nature of clusters and the fact that a cluster is defined as much by what it does not contain as that which it does, \citet{RandObjectiveCriteriaEvaluation1971} proposes a metric to measure similarity between clusterings. Between clusterings $Y$ and $Y'$ for any two points $x_i$ and $x_j$ there can exist one of a number of scenarios regarding their labelling. Let $\gamma_{ij}$ be a measure between the two points $x_i$ and $x_j$. For the two points, they can have:
 \begin{enumerate} \label{list:labelling_scenarios}
 	\item the same label in both clusterings ($c_i = c_j \land c'_i = c'_j$) ($\gamma_{ij}=1$); \label{list:sub:same_label_1}
 	\item different labels in both ($c_i \neq c_j \land c'_i \neq c'_j$) ($\gamma_{ij}=1$); or \label{list:sub:same_label_2}
@@ -1696,19 +1699,48 @@ Consider a random variable $X$ observed at discrete times $t = (t_0,\ldots,t_n)$
 \end{align}
 Thus prediction depends only on the information in the present; the process is said to be memory-less as the past does not affect future outcomes. In this case we refer to $X$ as a \emph{Markov process}. A \emph{Markov chain} refers to a sequence of random variables $(X_0,\ldots,X_n)$ generated by a Markov process.
 
-We define the $n$-step transition probability $p_{ij}^n$ as the probability that the process is in state $j$ given it was in state $i$ $n$ steps ago, i.e.:
+Let $\mathbf{P}$ be the matrix of $|S| \times |S|$ where entry $(i,j)$ is the transition probability from state $s_i$ to $s_j$. We define the $n$-step transition probability $p_{ij}^n$ as the probability that the process is in state $s_j$ given it was in state $s_i$ at a remove of $n$ steps, i.e.:
 
 \begin{align}
 p_{ij}^n = \mathbb{Pr}(X(t_{i+n} = s_j | X(t_i) = s_i)
 \end{align}
-A Markov chain is said to be \emph{irreducible} if $p_{ij}^n > 0 \; \forall \; i,j \in \mathbb{N}$. This means that there always exists a possible path from any state $s_i$ to every other state $s_j$. If this is true we say that the states \emph{communicate}. If the number of steps between two states is not required to be the multiple of some integer than we say that the chain is \emph{aperiodic}.
+A Markov chain is said to be \emph{irreducible} if $p_{ij}^n > 0 \; \forall \; i,j \in \mathbb{N}$. This means that there always exists a possible path from any state $s_i$ to every other state $s_j$. If this is true the states are said to communicate. If the number of steps between two states is not required to be the multiple of some integer than the chain is considered aperiodic.
 
-For some state $s \in S$ denote $ \mathbb{Pr}(X(t_{n+1}) = s)$ by $\pi_s$. The chain has the \emph{reversible} property if for any states $x, y \in S$ the \emph{detailed balance} holds:
+For some state $s \in S$ denote $ \mathbb{Pr}(X(t_{n+1}) = s)$ by $\pi_s$. The chain has the \emph{reversible} property if for any states $x, y \in S$ the detailed balance \eqref{eqn:detailed_balance} holds:
 
-\begin{align}
+\begin{align} \label{eqn:detailed_balance}
 \mathbb{Pr}(X(t_{n+1}) = x | X(t_n) = y)  \pi_x  =  \mathbb{Pr}(X(t_{n+1}) = y | X(t_n) = x) \pi_y
 \end{align}
-This is sufficient condition for a unique, stationary distribution. That is the probability of being in any given state for the process is independent of the starting condition given sufficient time.
+This is sufficient condition for a unique, stationary distribution. That is the probability of being in any given state for the process is independent of the starting condition given sufficient time and the transition probabilities have approached some limiting value. 
+
+
+More formally, a stationary distribution, $\pi$, is a row-vector with $|S|$ entries defined by:
+\begin{align}
+\pi_j &\geq 0 \: \forall \: j \in (1,\ldots,|S|) \\
+\sum_{j=1}^{|S|}\pi_j &= 1
+\end{align}
+That is invariant under the operation of the transition matrix $\mathbf{P}$ upon it. That is:
+\begin{align} \label{eqn:stationary_distribution}
+\pi = \pi\mathbf{P}
+\end{align}
+Thus the distribution, $\pi$, remains unchanged in the Markov chain as time progresses.
+
+%If the detailed balance holds, then $\mathbf{P}$ goes to a limiting distribution under the number of transitions, $n$:
+%\begin{align}
+%\lim_{n\to\infty}\mathbf{P}^n &= \begin{bmatrix}
+%1 \\
+%1 \\
+%\vdots \\
+%1
+%\end{bmatrix} \pi
+%\end{align}
+If for any initial state $\pi_0$, the chain has the property:
+\begin{align}
+\lim_{n\to\infty} \pi_0 \mathbf{P}^n = \pi
+\end{align}
+For some transition matrix $\mathbf{P}$ and stationary distribution $\pi$, then the chain is said to converge to $\pi$. Once the chain is sampling from $\pi$, then as this distribution is stationary, the samples drawn should be independent of the previous draws as can be seen in \eqref{eqn:stationary_distribution}. For this reason auto-correlation is one of the tests of convergence within a Markov chain.
+
+%Thus one can converge in which case one has achieved stationarity and the transition matrix being drawn from is independent of the initial transition matrix.
 
 \subsubsection{Markov-Chain Monte Carlo methods}
 Markov-Chain Monte Carlo (MCMC) methods developed as a method to obtain samples from some complex distribution $p(x)$ for the decomposition suggested in \eqref{monte_carlo_basis}. Our goal in the following is to draw samples from some distribution $p(\theta)$ where we have some distribution $f(\theta)$ such that:
@@ -1745,10 +1777,50 @@ This generates a Markov chain $(\theta_0,\ldots,\theta_k,\ldots, \theta_n)$ as e
 
 These methods are useful in a Bayesian context as one is interested in a rather complex distribution, the posterior, and know two simpler quantities, the prior and the likelihood, that the posterior is proportional to (as shown in \eqref{Bayes_theorem}). Thus one can use MCMC methods to sample directly from the posterior distribution without directly calculating the normalising constant.
 
-\subsubsection{Convergence}
-Auto correlation
-Gelman
-Geweke
+\subsection{Convergence}
+Assessment of convergence of Markov chains is a non-trivial issue. Apparent convergence can occur quite quickly when using a Gibbs sampler. \citet{ripley1990iterative} refer to a case when convergence was apparently achieved within several minutes, but then the algorithm jumped after a week of run-time. The following sub-sections briefly describe several heuristic measures to inspect convergence, but none are considered an absolute guarantee.
+
+\subsubsection{Effective sample size} \label{sec:additional_theory:sub_sec:convergence:sub_sub_sec:ess}
+The Effective sample size (ESS) \cite{ripley2009stochastic} is an attempt to convert the number of MCMC samples, which can be highly autocorrelated, into an equivalent number of independent samples; consider it as an exchange rate. For $n$ samples and the letting $\rho(i)$ denote the correlation between the $n^{th}$ sample and the sample drawn at a lag of $i$:
+\begin{align} \label{eqn:effective_smaple_size}
+ESS &= \frac{n}{1 + 2 \sum_{i=1}^\infty \rho(i)}
+\end{align}
+If the level of autocorrelation present is 0, then $ESS=n$;  if the autocorrelation decreases sufficiently slowly with regards to the lag that the sum in the denominator diverges, then $ESS=0$. One can use this to estimate the burn-in required to use samples only from the stationary distribution. One should use the burn-in at which ESS is maximised across all variables, as one wants to maximise the amount of samples available  while also ensuring one is sampling from the correct distribution.
+
+\subsubsection{Auto-correlation} \label{sec:additional_theory:sub_sec:convergence:sub_sub_sec:autocorrelation}
+The autocorrelation, $\rho(i)$, is the correlation between the current sample and the sample at a lag of $i$. $\rho(0)=1$ as the observation correlates perfectly with itself. If the samples drawn are no longer correlated with previous samples this indicates the chain has achieved stationarity based upon \eqref{eqn:stationary_distribution}.
+
+\subsubsection{Geweke $Z$-score} \label{sec:additional_theory:sub_sec:convergence:sub_sub_sec:geweke}
+Geweke plot \cite{GewekeEvaluatingAccuracySamplingBased} for a long chain with random seed 3 in case 1 of the simulations. If the chain has reached stationarity the Z-scores should be described by a standard normal distribution (in which case 95\% of recorded values should be contained within the dashed lines). This is the case here, indicating, particularly in conjunction with figure \ref{fig:gen_data_case_1_autocorrelation_plot_3}, that the chain has converged.
+
+\citet{GewekeEvaluatingAccuracySamplingBased} proposed a statistic based upon time-series methods to test the convergence. If the object of interest is a mean (which applies in the case of the continuous parameters of the MDI model) then this method is appropriate. The concept is based upon the belief that if the samples are all from the same distribution (i.e. the whole chain has converged), then the mean of the early samples should be similar to that from the later samples. To do this the samples are considered within two sets; the first $10\%$ and the last $50\%$ of the recorded samples.  The convergence statistic, $Z$ is the difference of the means associated with the samples from each set divided by the asymptotic standard error of their difference. As the number of samples recorded goes to infinity, the sampling distribution of $Z$ goes to $\mathcal{N}(0,1)$ if the chain has converged. Therefore the Geweke plot is inspected for to see if many of the $Z$-scores occupy the extreme tails of the $\mathcal{N}(0,1)$ distribution.
+
+\subsubsection{Gelman-Rubin shrink factor}
+\label{sec:additional_theory:sub_sec:convergence:sub_sub_sec:gelman}
+The approach described by \citet{GelmanInferenceIterativeSimulation1992} compares sequences across chains. If these are all sampling from the same distribution this is taken as evidence for convergence. This method tries to check if the samples from different chains are more different than would be expected based upon their internal variability; it does this by an analysis of the variance. Convergence is diagnosed when the between-sequence variance $B$ is no larger than the within-sequence variance $W$.
+
+Consider a $m$ parallel chains, each of length $n$ of the variable $X$. Denote the chain specific samples by $x_i = (x_i1,\ldots,x_in)$. Then:
+
+\begin{align}
+B &= \frac{n}{m-1}\sum_{i=1}^m (\bar{x}_i - \bar{x})^2 \\
+W &= \frac{1}{m}\sum_{i=1}^m s_i^2
+\end{align}
+where $\bar{x}_i$ is the sample mean and $s_i$ is the sample standard deviation of the $i^{th}$ chain and $\bar{x}$ is the sample mean across chains (with these values calculated as per \eqref{eqn:standardisation}). 
+
+From these variance components, it is expected that $W$ should be an estimate of $Var(X)$; a second estimate is constructed:
+\begin{align}
+\hat{Var}(X) = \frac{n-1}{n}W + \frac{1}{n}B
+\end{align}
+If the chains are stationary, this quantity $\hat{Var}(X)$ is an unbiased estimate of $Var(X)$, but if the starting points are over-dispersed, then it is an over-estimate.
+
+As $W$ should under-estimate $Var(X)$ for any finite value of $n$ (as the individual chains should not explore the full target distribution and thus will underestimate the variance present), there are two quantities estimating $Var(X)$ that should also impose the upper and lower bounds on $Var(X)$. Thus \citet{GelmanInferenceIterativeSimulation1992} proposed using the ratio of these quantities to estimate across-chain convergence. Specifically the estimated potential scale reduction or \emph{shrink factor}:
+\begin{align}
+\sqrt{\hat{R}} = \sqrt{\frac{\hat{Var}}{W}}
+\end{align}
+As the simulation converges, $\sqrt{\hat{R}}$ falls to 1. This means that the parallel Markov chains  are  essentially  overlapping.   If  the  shrink  factor  is  high,  then  one  should  proceed  with further simulations.
+
+%Plot of the shrinkage factor described by \citet{GelmanInferenceIterativeSimulation1992} for the continuous variables across chains in case 1 of the simulations. If the chains are truly converged (and thus describing similar spaces to one another) the values should tend to 1 (as is the case here)
+
 
 %\subsection{MDI: model} \label{sec:additional_theory:sub_sec:mdi}
 %
