@@ -97,6 +97,7 @@ longer_dirs <- all_dirs_short %>%
 # types <- c(consensus_types, long_types)
 
 types <- stringr::str_replace(tib_types, "_", " ")
+n_types <- length(types)
 
 # types <- types[match(stringr::str_replace(tib_types, "_", " "), types)]
 
@@ -119,14 +120,23 @@ for (j in 1:n_types) {
   curr_type <- types[j]
   curr_nice_type <- nice_types[j]
 
-  curr_tib <- all_tibbles[[j]]
+  curr_tib <- all_tibs[[j]]
   for (d in datasets) {
     # rel_comp <- comparison_data[which(comparison_data$Dataset == d & comparison_data$Type == "Truth"), ]
 
     curr_ind <- which(curr_tib$dataset == d)
     
     curr_clustering <- curr_tib$mdi_allocation[[curr_ind]]
-    curr_rand_vec <- apply(curr_clustering, 1, unlist_arandi, true_clusters[[d]])
+    
+    if(grepl("Long", curr_type)){
+      burn_in <- 10
+      n <- nrow(curr_clustering)
+      curr_rand_vec <- apply(curr_clustering[burn_in:n, ], 1, unlist_arandi, true_clusters[[d]])
+      
+    } else {
+      curr_rand_vec <- apply(curr_clustering, 1, unlist_arandi, true_clusters[[d]])
+    }
+    # curr_rand_vec <- apply(curr_clustering, 1, unlist_arandi, true_clusters[[d]])
     
     
     comparison_data_entry <- tibble(
@@ -156,7 +166,7 @@ bp <- ggplot(data = comparison_data_1, aes(x = Type, y = Adjusted_rand_index)) +
   facet_wrap(~Dataset) +
   # theme(axis.text.x = element_text(angle = 30, hjust=1)) +
   labs(
-    title = "Generated data: comparison of consensus clusterings and individual chains",
+    title = "Simulation 1: comparison of consensus clusterings and individual chains to true clustering",
     y = "Adjusted rand index"
     
   )
@@ -164,7 +174,7 @@ bp <- ggplot(data = comparison_data_1, aes(x = Type, y = Adjusted_rand_index)) +
 plot_dir <- "Notes/Thesis/Images/Gen_data/Case_1"
 dir.create(plot_dir, showWarnings = F)
 
-ggsave(paste0(plot_dir, "/box_plot_ari_true_clustering.png"), plot = bp)
+ggsave(paste0(plot_dir, "/box_plot_ari_true_clustering_burn_in.png"), plot = bp)
 
 
 # long_nice_types <- paste("Long run: seed", 1:10)
@@ -183,12 +193,12 @@ bp_collapsed <- ggplot(data = comparison_data_2, aes(x = Type, y = Adjusted_rand
   facet_wrap(~Dataset) +
   theme(axis.text.x = element_text(angle = 30, hjust=1)) +
   labs(
-    title = "Generated data: comparison of consensus clusterings and collapsed chains",
+    title = "Simulation 1: comparison of consensus clusterings and collapsed chains to true clustering",
     # subtitle = "Consensus clustering for various iterations, long runs corresponds to 10 chains of 2 million iterations",
     y = "Adjusted rand index"
     
   )
-ggsave(paste0(plot_dir, "/box_plot_ari_true_clustering_collapsed_long.png"), plot = bp_collapsed)
+ggsave(paste0(plot_dir, "/box_plot_ari_true_clustering_collapsed_long_burn_in.png"), plot = bp_collapsed)
 
 
 
@@ -197,11 +207,11 @@ vp <- ggplot(data = comparison_data_2, aes(x = Type, y = Adjusted_rand_index)) +
   facet_wrap(~Dataset) +
   theme(axis.text.x = element_text(angle = 30, hjust=1)) +
   labs(
-    title = "Generated data: comparison of consensus clusterings and collapsed chains",
+    title = "Simulation 1: comparison of consensus clusterings and collapsed chains to true clustering",
     # subtitle = "Consensus clustering for various iterations, long runs corresponds to 10 chains of 2 million iterations",
     y = "Adjusted rand index"
     
   )
 
-ggsave(paste0(plot_dir, "/violin_plot_ari_true_clustering_collapsed_long.png"), plot = vp)
+ggsave(paste0(plot_dir, "/violin_plot_ari_true_clustering_collapsed_long_burn_in.png"), plot = vp)
 
