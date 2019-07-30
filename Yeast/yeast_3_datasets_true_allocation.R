@@ -45,15 +45,6 @@ theme_set(theme_bw() + theme(axis.text.x = element_text(angle = 30, hjust=1)))
 
 true_clusters <- readRDS("~/Desktop/ra_chris_wallace/Yeast/true_clusters_for_yeast_data.rds")
 
-function_dir <- "/home/MINTS/sdc56/Desktop/ra_chris_wallace/Analysis/Analysis_script_functions/"
-
-function_scripts <- c(
-  "plot_rand_index.R"
-)
-
-for (f in paste0(function_dir, function_scripts)) {
-  source(f)
-}
 
 
 comparison_data <- tibble(
