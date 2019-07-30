@@ -1,4 +1,4 @@
-\begin{thebibliography}{57}
+\begin{thebibliography}{58}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -25,13 +25,6 @@ Stefan~Milton Bache and Hadley Wickham.
 \newblock URL \url{https://CRAN.R-project.org/package=magrittr}.
 \newblock R package version 1.5.
 
-\bibitem[Breiman(1)]{BreimanRandomForests1}
-Leo Breiman.
-\newblock Random {{Forests}}.
-\newblock \emph{Machine Learning}, 45\penalty0 (1573-0565):\penalty0 5--32,
-  January 1.
-\newblock \doi{10.1023/A:1010933404324}.
-
 \bibitem[Breiman(1996)]{BreimanBaggingpredictors1996}
 Leo Breiman.
 \newblock Bagging predictors.
@@ -39,6 +32,13 @@ Leo Breiman.
   1996.
 \newblock ISSN 0885-6125, 1573-0565.
 \newblock \doi{10.1007/BF00058655}.
+
+\bibitem[Breiman(2001)]{BreimanRandomForests2001}
+Leo Breiman.
+\newblock Random {{Forests}}.
+\newblock \emph{Machine Learning}, 45\penalty0 (1573-0565):\penalty0 5--32,
+  January 2001.
+\newblock \doi{10.1023/A:1010933404324}.
 
 \bibitem[Brennan and Light(1974)]{BrennanMeasuringagreementwhen1974}
 Robert~L. Brennan and Richard~J. Light.
@@ -57,14 +57,6 @@ Lam Carneiro, Jg~Magalhaes, I~Tattoli, Dj~Philpott, and Lh~Travassos.
   January 2008.
 \newblock ISSN 00223417, 10969896.
 \newblock \doi{10.1002/path.2271}.
-
-\bibitem[Cooper et~al.(1989)Cooper, Eckhardt, and
-  Shera]{CooperCardinalsChaosReflection1989}
-N.~G. Cooper, Roger Eckhardt, and Nancy Shera.
-\newblock \emph{From {{Cardinals}} to {{Chaos}}: {{Reflection}} on the {{Life}}
-  and {{Legacy}} of {{Stanislaw Ulam}}}.
-\newblock {CUP Archive}, February 1989.
-\newblock ISBN 978-0-521-36734-9.
 
 \bibitem[Dahl(2005)]{dahl_sequentially-allocated_2005}
 David~B Dahl.
@@ -106,6 +98,12 @@ Brooke~L Fridley and Joanna~M Biernacka.
 \newblock ISSN 1018-4813, 1476-5438.
 \newblock \doi{10.1038/ejhg.2011.57}.
 
+\bibitem[Fritsch(2012)]{FritschMcclust2012}
+Arno Fritsch.
+\newblock mcclust: Process an mcmc sample of clusterings, 2012.
+\newblock URL \url{https://CRAN.R-project.org/package=mcclust}.
+\newblock R package version 1.0.
+
 \bibitem[Fritsch and Ickstadt(2009)]{FritschImprovedcriteriaclustering2009}
 Arno Fritsch and Katja Ickstadt.
 \newblock Improved criteria for clustering based on the posterior similarity
@@ -140,11 +138,11 @@ S.~Geman and D.~Geman.
 \newblock ISSN 0162-8828.
 \newblock \doi{10.1109/TPAMI.1984.4767596}.
 
-\bibitem[Geweke()]{GewekeEvaluatingAccuracySamplingBased}
-John Geweke.
+\bibitem[Geweke et~al.(1991)]{GewekeEvaluatingAccuracySamplingBased}
+John Geweke et~al.
 \newblock Evaluating the {{Accuracy}} of {{Sampling}}-{{Based Approaches}} to
   the {{Calculation}} of {{Posterior Moments}}.
-\newblock \emph{Bayesian Statistics}, 4:\penalty0 169--193.
+\newblock \emph{Bayesian Statistics}, 4:\penalty0 169--193, 1991.
 
 \bibitem[Grundberg et~al.(2012)Grundberg, Small, Hedman, Nica, Buil, Keildson,
   Bell, Yang, Meduri, Barrett, Nisbett, Sekowska, Wilk, Shin, Glass, Travers,
@@ -179,11 +177,11 @@ Elin Grundberg, Kerrin~S Small, {\AA}sa~K Hedman, Alexandra~C Nica, Alfonso
 \newblock ISSN 0028-0836, 1476-4687.
 \newblock \doi{10.1038/nature24277}.
 
-\bibitem[Hastings()]{HastingsMonteCarloSampling}
-W~K Hastings.
+\bibitem[Hastings(1970)]{HastingsMonteCarloSampling}
+W~Keith Hastings.
 \newblock Monte {{Carlo Sampling Methods Using Markov Chains}} and {{Their
   Applications}}.
-\newblock page~14.
+\newblock page~14, 1970.
 
 \bibitem[Hejblum et~al.(2015)Hejblum, Skinner, and
   Thi{\'e}baut]{HejblumTimeCourseGeneSet2015}
@@ -351,12 +349,13 @@ Nicholas Metropolis, Arianna~W. Rosenbluth, Marshall~N. Rosenbluth, Augusta~H.
 \newblock ISSN 0021-9606, 1089-7690.
 \newblock \doi{10.1063/1.1699114}.
 
-\bibitem[Monti()]{MontiConsensusClusteringResamplingBased}
-Stefano Monti.
+\bibitem[Monti et~al.(2003)Monti, Tamayo, Mesirov, and
+  Golub]{MontiConsensusClusteringResamplingBased}
+Stefano Monti, Pablo Tamayo, Jill Mesirov, and Todd Golub.
 \newblock Consensus {{Clustering}}: {{A Resampling}}-{{Based Method}} for
   {{Class Discovery}} and {{Visualization}} of {{Gene Expression Microarray
   Data}}.
-\newblock page~28.
+\newblock \emph{Machine learning}, 52\penalty0 (1-2):\penalty0 91--118, 2003.
 
 \bibitem[Mooney and Wilmot(2015)]{MooneyGenesetanalysis2015}
 Michael~A. Mooney and Beth Wilmot.
@@ -580,5 +579,11 @@ James~Homer Wright.
   July 1910.
 \newblock ISSN 0362-2525, 1097-4687.
 \newblock \doi{10.1002/jmor.1050210204}.
+
+\bibitem[Zhang and Horvath(2005)]{zhang2005general}
+Bin Zhang and Steve Horvath.
+\newblock A general framework for weighted gene co-expression network analysis.
+\newblock \emph{Statistical applications in genetics and molecular biology},
+  4\penalty0 (1), 2005.
 
 \end{thebibliography}

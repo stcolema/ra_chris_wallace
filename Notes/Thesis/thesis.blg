@@ -4,53 +4,46 @@ The top-level auxiliary file: thesis.aux
 The style file: plainnat.bst
 Database file #1: thesis_ref_better.bib
 Warning--empty journal in dahl_sequentially-allocated_2005
-Warning--empty year in GewekeEvaluatingAccuracySamplingBased
-Warning--empty year in GewekeEvaluatingAccuracySamplingBased
 Warning--empty journal in HastingsMonteCarloSampling
-Warning--empty year in HastingsMonteCarloSampling
-Warning--empty year in HastingsMonteCarloSampling
-Warning--empty journal in MontiConsensusClusteringResamplingBased
-Warning--empty year in MontiConsensusClusteringResamplingBased
-Warning--empty year in MontiConsensusClusteringResamplingBased
-You've used 57 entries,
+You've used 58 entries,
             2773 wiz_defined-function locations,
-            1055 strings with 25380 characters,
-and the built_in function-call counts, 44228 in all, are:
-= -- 3523
-> -- 4541
+            1069 strings with 25683 characters,
+and the built_in function-call counts, 44720 in all, are:
+= -- 3578
+> -- 4581
 < -- 42
-+ -- 1525
-- -- 1468
-* -- 4387
-:= -- 7305
-add.period$ -- 250
-call.type$ -- 57
-change.case$ -- 655
-chr.to.int$ -- 57
-cite$ -- 123
-duplicate$ -- 1158
-empty$ -- 2194
-format.name$ -- 1561
-if$ -- 8782
++ -- 1538
+- -- 1480
+* -- 4424
+:= -- 7387
+add.period$ -- 253
+call.type$ -- 58
+change.case$ -- 662
+chr.to.int$ -- 58
+cite$ -- 118
+duplicate$ -- 1167
+empty$ -- 2229
+format.name$ -- 1577
+if$ -- 8885
 int.to.chr$ -- 1
 int.to.str$ -- 1
-missing$ -- 51
-newline$ -- 370
-num.names$ -- 230
-pop$ -- 1229
+missing$ -- 50
+newline$ -- 375
+num.names$ -- 234
+pop$ -- 1223
 preamble$ -- 1
-purify$ -- 602
+purify$ -- 607
 quote$ -- 0
-skip$ -- 1196
+skip$ -- 1222
 stack$ -- 0
-substring$ -- 1053
-swap$ -- 130
-text.length$ -- 6
+substring$ -- 1077
+swap$ -- 126
+text.length$ -- 5
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 612
-warning$ -- 9
-while$ -- 221
+type$ -- 628
+warning$ -- 2
+while$ -- 226
 width$ -- 0
-write$ -- 888
-(There were 9 warnings)
+write$ -- 905
+(There were 2 warnings)
