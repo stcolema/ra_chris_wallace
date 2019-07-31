@@ -220,12 +220,10 @@ col_pal <- colorRampPalette(c("#FF9900", "white", "#146EB4"))(100)
 cor_pal <- colorRampPalette(c("#146EB4", "white", "#FF9900"))(100)
 
 # Read in the universe of genes for this project
-print("HI")
 probe_key <- fread(args$probe_key)
 universe <- probe_key$Gene
 my_universe <- probe_key$Unique_gene_name
 reduced_universe <- unique(universe)
-print("LOE")
 
 # The KEGG data
 kegg_data <- "~/Desktop/ra_chris_wallace/Data/kegg_msigdb.txt"
@@ -239,7 +237,7 @@ pathway_names <- c(
 
 abbreviated_names <- c(
   # "NOD like",
-  "Inostiol" #,
+  "Inositol" #,
   # "IBD"
 )
 
@@ -291,8 +289,6 @@ for (p in pathway_names) {
 # === Update meta data =========================================================
 
 # Update the row names of the probe key to genes
-
-print(probes_present_per_dataset)
 
 new_row_names <- probe_key$Unique_gene_name[match(row.names(probes_present_per_dataset), probe_key$ProbeID)]
 
@@ -494,7 +490,7 @@ for (d in datasets) {
   }
 }
 
-# === Investigate inostiol clustering probability ==============================
+# === Investigate Inositol clustering probability ==============================
 
 big_non_empty_non_pathway_dt <- data.frame(
   Prob = numeric(),
