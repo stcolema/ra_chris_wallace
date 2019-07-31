@@ -5,45 +5,45 @@ The style file: plainnat.bst
 Database file #1: thesis_ref_better.bib
 Warning--empty journal in dahl_sequentially-allocated_2005
 Warning--empty journal in HastingsMonteCarloSampling
-You've used 58 entries,
+You've used 60 entries,
             2773 wiz_defined-function locations,
-            1069 strings with 25683 characters,
-and the built_in function-call counts, 44720 in all, are:
-= -- 3578
-> -- 4581
-< -- 42
-+ -- 1538
-- -- 1480
-* -- 4424
-:= -- 7387
-add.period$ -- 253
-call.type$ -- 58
-change.case$ -- 662
-chr.to.int$ -- 58
-cite$ -- 118
-duplicate$ -- 1167
-empty$ -- 2229
-format.name$ -- 1577
-if$ -- 8885
+            1081 strings with 26029 characters,
+and the built_in function-call counts, 45632 in all, are:
+= -- 3666
+> -- 4623
+< -- 44
++ -- 1552
+- -- 1492
+* -- 4498
+:= -- 7523
+add.period$ -- 259
+call.type$ -- 60
+change.case$ -- 672
+chr.to.int$ -- 60
+cite$ -- 122
+duplicate$ -- 1207
+empty$ -- 2309
+format.name$ -- 1595
+if$ -- 9077
 int.to.chr$ -- 1
 int.to.str$ -- 1
-missing$ -- 50
-newline$ -- 375
-num.names$ -- 234
-pop$ -- 1223
+missing$ -- 52
+newline$ -- 385
+num.names$ -- 242
+pop$ -- 1239
 preamble$ -- 1
-purify$ -- 607
+purify$ -- 615
 quote$ -- 0
-skip$ -- 1222
+skip$ -- 1254
 stack$ -- 0
-substring$ -- 1077
-swap$ -- 126
+substring$ -- 1131
+swap$ -- 128
 text.length$ -- 5
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 628
+type$ -- 650
 warning$ -- 2
-while$ -- 226
+while$ -- 236
 width$ -- 0
-write$ -- 905
+write$ -- 931
 (There were 2 warnings)

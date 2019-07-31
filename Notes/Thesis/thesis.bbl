@@ -1,4 +1,4 @@
-\begin{thebibliography}{58}
+\begin{thebibliography}{60}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -143,6 +143,12 @@ John Geweke et~al.
 \newblock Evaluating the {{Accuracy}} of {{Sampling}}-{{Based Approaches}} to
   the {{Calculation}} of {{Posterior Moments}}.
 \newblock \emph{Bayesian Statistics}, 4:\penalty0 169--193, 1991.
+
+\bibitem[Green and Richardson(2001)]{green2001modelling}
+Peter~J Green and Sylvia Richardson.
+\newblock Modelling heterogeneity with and without the dirichlet process.
+\newblock \emph{Scandinavian journal of statistics}, 28\penalty0 (2):\penalty0
+  355--375, 2001.
 
 \bibitem[Grundberg et~al.(2012)Grundberg, Small, Hedman, Nica, Buil, Keildson,
   Bell, Yang, Meduri, Barrett, Nisbett, Sekowska, Wilk, Shin, Glass, Travers,
@@ -348,6 +354,12 @@ Nicholas Metropolis, Arianna~W. Rosenbluth, Marshall~N. Rosenbluth, Augusta~H.
   1087--1092, June 1953.
 \newblock ISSN 0021-9606, 1089-7690.
 \newblock \doi{10.1063/1.1699114}.
+
+\bibitem[Monserrate and York(2010)]{monserrate2010inositol}
+Jessica~P Monserrate and John~D York.
+\newblock Inositol phosphate synthesis and the nuclear processes they affect.
+\newblock \emph{Current opinion in cell biology}, 22\penalty0 (3):\penalty0
+  365--373, 2010.
 
 \bibitem[Monti et~al.(2003)Monti, Tamayo, Mesirov, and
   Golub]{MontiConsensusClusteringResamplingBased}
