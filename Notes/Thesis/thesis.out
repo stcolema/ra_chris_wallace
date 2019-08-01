@@ -18,24 +18,25 @@
 \BOOKMARK [2][-]{subsection.3.1}{Simulations}{section.3}% 18
 \BOOKMARK [3][-]{subsubsection.3.1.1}{Simulation: Case 1}{subsection.3.1}% 19
 \BOOKMARK [3][-]{subsubsection.3.1.2}{Simulation: Case 2}{subsection.3.1}% 20
-\BOOKMARK [2][-]{subsection.3.2}{CEDAR dataset}{section.3}% 21
-\BOOKMARK [3][-]{subsubsection.3.2.1}{CEDAR: Case 1 - Inositol gene set}{subsection.3.2}% 22
-\BOOKMARK [3][-]{subsubsection.3.2.2}{CEDAR: Case 2 - 1,000 probes}{subsection.3.2}% 23
-\BOOKMARK [3][-]{subsubsection.3.2.3}{Pipeline}{subsection.3.2}% 24
-\BOOKMARK [1][-]{section.4}{Results}{}% 25
-\BOOKMARK [2][-]{subsection.4.1}{Simulations}{section.4}% 26
-\BOOKMARK [3][-]{subsubsection.4.1.1}{Case 1: Proof of consensus}{subsection.4.1}% 27
-\BOOKMARK [3][-]{subsubsection.4.1.2}{Case 2: Overcoming multiple modes}{subsection.4.1}% 28
-\BOOKMARK [2][-]{subsection.4.2}{CEDAR dataset}{section.4}% 29
-\BOOKMARK [3][-]{subsubsection.4.2.1}{Case 1: 250 probes}{subsection.4.2}% 30
-\BOOKMARK [3][-]{subsubsection.4.2.2}{Case 2: 1,000 probes}{subsection.4.2}% 31
-\BOOKMARK [1][-]{section.5}{Conclusion}{}% 32
-\BOOKMARK [1][-]{section.6}{Future work}{}% 33
-\BOOKMARK [1][-]{section*.56}{References}{}% 34
-\BOOKMARK [1][-]{appendix.A}{Gibbs sampling}{}% 35
-\BOOKMARK [2][-]{subsubsection.A.0.1}{Monte Carlo integration}{appendix.A}% 36
-\BOOKMARK [3][-]{subsubsection.A.0.2}{Markov chains}{subsubsection.A.0.1}% 37
-\BOOKMARK [3][-]{subsubsection.A.0.3}{Markov-Chain Monte Carlo methods}{subsubsection.A.0.1}% 38
-\BOOKMARK [1][-]{appendix.B}{Motivating examples}{}% 39
-\BOOKMARK [2][-]{subsection.B.1}{Adjusted Rand index}{appendix.B}% 40
-\BOOKMARK [2][-]{subsection.B.2}{Standardising gene expression data}{appendix.B}% 41
+\BOOKMARK [3][-]{subsubsection.3.1.3}{Pipeline}{subsection.3.1}% 21
+\BOOKMARK [2][-]{subsection.3.2}{CEDAR dataset}{section.3}% 22
+\BOOKMARK [3][-]{subsubsection.3.2.1}{CEDAR: Case 1 - Inositol gene set}{subsection.3.2}% 23
+\BOOKMARK [3][-]{subsubsection.3.2.2}{CEDAR: Case 2 - 1,000 probes}{subsection.3.2}% 24
+\BOOKMARK [3][-]{subsubsection.3.2.3}{Pipeline}{subsection.3.2}% 25
+\BOOKMARK [1][-]{section.4}{Results}{}% 26
+\BOOKMARK [2][-]{subsection.4.1}{Simulations}{section.4}% 27
+\BOOKMARK [3][-]{subsubsection.4.1.1}{Case 1: Proof of consensus}{subsection.4.1}% 28
+\BOOKMARK [3][-]{subsubsection.4.1.2}{Case 2: Overcoming multiple modes}{subsection.4.1}% 29
+\BOOKMARK [2][-]{subsection.4.2}{CEDAR dataset}{section.4}% 30
+\BOOKMARK [3][-]{subsubsection.4.2.1}{Case 1: 250 probes}{subsection.4.2}% 31
+\BOOKMARK [3][-]{subsubsection.4.2.2}{Case 2: 1,000 probes}{subsection.4.2}% 32
+\BOOKMARK [1][-]{section.5}{Conclusion}{}% 33
+\BOOKMARK [1][-]{section.6}{Future work}{}% 34
+\BOOKMARK [1][-]{section*.57}{References}{}% 35
+\BOOKMARK [1][-]{appendix.A}{Gibbs sampling}{}% 36
+\BOOKMARK [2][-]{subsubsection.A.0.1}{Monte Carlo integration}{appendix.A}% 37
+\BOOKMARK [3][-]{subsubsection.A.0.2}{Markov chains}{subsubsection.A.0.1}% 38
+\BOOKMARK [3][-]{subsubsection.A.0.3}{Markov-Chain Monte Carlo methods}{subsubsection.A.0.1}% 39
+\BOOKMARK [1][-]{appendix.B}{Motivating examples}{}% 40
+\BOOKMARK [2][-]{subsection.B.1}{Adjusted Rand index}{appendix.B}% 41
+\BOOKMARK [2][-]{subsection.B.2}{Standardising gene expression data}{appendix.B}% 42

@@ -1,4 +1,4 @@
-\begin{thebibliography}{60}
+\begin{thebibliography}{63}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -24,6 +24,11 @@ Stefan~Milton Bache and Hadley Wickham.
 \newblock magrittr: A forward-pipe operator for r, 2014.
 \newblock URL \url{https://CRAN.R-project.org/package=magrittr}.
 \newblock R package version 1.5.
+
+\bibitem[Berger and Wolpert(1988)]{berger1988thelikelihoodprinciple}
+JO~Berger and RL~Wolpert.
+\newblock Thelikelihoodprinciple. institute of mathematical statistics,
+  hayward, 1988.
 
 \bibitem[Breiman(1996)]{BreimanBaggingpredictors1996}
 Leo Breiman.
@@ -88,6 +93,12 @@ Frank Dudbridge.
 \newblock \emph{PLoS Genetics}, 9\penalty0 (3):\penalty0 e1003348, March 2013.
 \newblock ISSN 1553-7404.
 \newblock \doi{10.1371/journal.pgen.1003348}.
+
+\bibitem[Efron(2013)]{efron2013250}
+Bradley Efron.
+\newblock A 250-year argument: Belief, behavior, and the bootstrap.
+\newblock \emph{Bulletin of the American Mathematical Society}, 50\penalty0
+  (1):\penalty0 129--146, 2013.
 
 \bibitem[Fridley and Biernacka(2011)]{FridleyGenesetanalysis2011}
 Brooke~L Fridley and Joanna~M Biernacka.
@@ -236,6 +247,15 @@ Minoru Kanehisa, Yoko Sato, Miho Furumichi, Kanae Morishima, and Mao Tanabe.
   January 2019.
 \newblock ISSN 0305-1048, 1362-4962.
 \newblock \doi{10.1093/nar/gky962}.
+
+\bibitem[King et~al.(2019)King, Lovell, Neufcourt, and
+  Nunes]{PhysRevLett.122.232502}
+G.~B. King, A.~E. Lovell, L.~Neufcourt, and F.~M. Nunes.
+\newblock Direct comparison between bayesian and frequentist uncertainty
+  quantification for nuclear reactions.
+\newblock \emph{Phys. Rev. Lett.}, 122:\penalty0 232502, Jun 2019.
+\newblock \doi{10.1103/PhysRevLett.122.232502}.
+\newblock URL \url{https://link.aps.org/doi/10.1103/PhysRevLett.122.232502}.
 
 \bibitem[Kirk et~al.(2012)Kirk, Griffin, Savage, Ghahramani, and
   Wild]{KirkBayesiancorrelatedclustering2012}
