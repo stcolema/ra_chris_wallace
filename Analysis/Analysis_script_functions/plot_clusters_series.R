@@ -3,7 +3,7 @@
 # Function to save plot of the numbers of clusters present in each iteration 
 # of MCMC for each dataset
 
-library(ggplot2)
+library(ggplot2, quietly = T)
 
 plot_clusters_present <- function(n_clust_list,
                                   datasets, 

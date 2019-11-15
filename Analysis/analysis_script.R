@@ -18,7 +18,45 @@
 # For posterioir similarity matrices
 # Rcpp::sourceCpp("/home/MINTS/sdc56/Desktop/ra_chris_wallace/Analysis/posterior_sim_mat.cpp") # install.packages("Rcpp", dep = T)
 
-function_dir <- "/home/MINTS/sdc56/Desktop/ra_chris_wallace/Analysis/Analysis_script_functions/"
+
+
+# For tibbles
+library(tibble, quietly = T) # for dataframe of lists
+
+# For data wrangling
+library(dplyr, quietly = T)
+
+# Heatmapping
+library(pheatmap, quietly = T) # install.packages("pheatmap", dep = T)
+
+# Colour palettes
+library(RColorBrewer, quietly = T)
+
+# For Bayesian clustering output (possibly should use mcclust) and Adjusted Rand Index
+library(mclust, quietly = T) # install.packages("mclust", dep = T)
+
+# For plotting
+library(ggplot2, quietly = T)
+
+# For command line arguments
+library(optparse, quietly = T) # install.packages("optparse")
+
+# Load data.table to access fread and fwrite functions
+library(data.table, quietly = T) # install.packages("data.table", dep = T)
+
+# Load magrittr for the pipe %>%
+library(magrittr, quietly = T)
+
+# For defensive programming in plot_fused_samples
+library(attempt, quietly = T)
+
+# For having several plots on the same grid
+library(cowplot, quietly = T)
+
+# For praise
+library(praise, quietly = T)
+
+function_dir <- "~/Documents/PhD/Year_1/Consensus_clustering/ra_chris_wallace/Analysis/Analysis_script_functions/"
 
 function_scripts <- c(
   "plot_phi_series.R",
@@ -26,7 +64,7 @@ function_scripts <- c(
   "plot_phi_histograms.R",
   "plot_similarity_matrices.R",
   "plot_rand_index.R",
-  "plot_fused_genes.R",
+  "plot_fused_samples.R",
   "plot_comparison_expression_clustering.R",
   "plot_mass_parameters.R",
   "plot_clusters_series.R",
@@ -38,44 +76,9 @@ for (f in paste0(function_dir, function_scripts)) {
   source(f)
 }
 
-# For tibbles
-library(tibble) # for dataframe of lists
-
-# For data wrangling
-library(dplyr)
-
-# Heatmapping
-library(pheatmap) # install.packages("pheatmap", dep = T)
-
-# Colour palettes
-library(RColorBrewer)
-
-# For Bayesian clustering output (possibly should use mcclust) and Adjusted Rand Index
-library(mclust) # install.packages("mclust", dep = T)
-
-# For plotting
-library(ggplot2)
-
-# For command line arguments
-library(optparse) # install.packages("optparse")
-
-# Load data.table to access fread and fwrite functions
-library(data.table) # install.packages("data.table", dep = T)
-
-# Load magrittr for the pipe %>%
-library(magrittr)
-
-# For defensive programming in plot_fused_genes
-library(attempt)
-
-# For having several plots on the same grid
-library(cowplot)
-
-# For praise
-library(praise)
-
 # === Functions ================================================================
 
+# print("Functions")
 
 # Function to find the mode of a vector
 getmode <- function(v) {
@@ -128,7 +131,6 @@ unique_names_from_recurring <- function(name_vec) {
   duplicate_vec
 }
 
-
 # User inputs from command line
 input_arguments <- function() {
   option_list <- list(
@@ -137,7 +139,7 @@ input_arguments <- function() {
     optparse::make_option(c("--datasets"),
       type = "character",
       default = "CD14.csv CD15.csv CD19.csv CD4.csv CD8.csv IL.csv PLA.csv RE.csv TR.csv",
-      help = "command to transpose all [EXT] files in currect directory [default= %default]",
+      help = "names of dataset files [default= %default]",
       metavar = "character"
     ),
 
@@ -150,10 +152,10 @@ input_arguments <- function() {
     ),
 
     # Number of genes in each dataset
-    optparse::make_option(c("--n_genes"),
+    optparse::make_option(c("--n_samples"),
       type = "integer",
       default = NA,
-      help = "Number of genes in the datasets (if NA will find - this is included to avoid repetitive calculations) [default= %default]",
+      help = "Number of samples in the datasets (if NA is given this will be calculated - this is included to avoid repetitive calculations) [default= %default]",
       metavar = "integer"
     ),
 
@@ -161,7 +163,7 @@ input_arguments <- function() {
     optparse::make_option(c("-n", "--n_iter"),
       type = "integer",
       default = NA,
-      help = "Number of iterations in the MCMC step of MDI [default= %default]",
+      help = "Number of iterations in the MCMC step of MDI (if NA is given will calcualte as the number of rows in the MDI output file) [default= %default]",
       metavar = "integer"
     ),
 
@@ -182,17 +184,18 @@ input_arguments <- function() {
     ),
 
     # .csv file describing which probes are not present in which datasets
-    optparse::make_option(c("--probes_present"),
+    optparse::make_option(c("--samples_present"),
       type = "character",
-      default = "/home/MINTS/sdc56/Desktop/ra_chris_wallace/Analysis/probes_present_per_dataset.csv",
-      help = "Name of .csv files describing which probes are empty in which dataset [default= %default]",
+      default = NA, # "/home/MINTS/sdc56/Desktop/ra_chris_wallace/Analysis/samples_present_per_dataset.csv",
+      help = "Name of .csv files describing which samples are missing in which dataset [default= %default]",
       metavar = "character"
     ),
 
+    ### MOVE THIS TO A PRE-PROCESSING STAGE
     # .csv connecting probe IDs to genes
     optparse::make_option(c("--probe_key"),
       type = "character",
-      default = "/home/MINTS/sdc56/Desktop/ra_chris_wallace/Analysis/probe_key_unique_names.csv",
+      default = NA, # "/home/MINTS/sdc56/Desktop/ra_chris_wallace/Analysis/probe_key_unique_names.csv",
       help = "Name of .csv files describing which probes are associated with which gene [default= %default]",
       metavar = "character"
     ),
@@ -253,7 +256,6 @@ input_arguments <- function() {
       metavar = "logical"
     ),
 
-
     # Instruction to plot phi densities
     optparse::make_option(c("--plot_mass_parameters"),
       type = "logical",
@@ -261,24 +263,25 @@ input_arguments <- function() {
       help = "Instruction to plot mass parameter values across iterations for each dataset [default= %default]",
       metavar = "logical"
     ),
-    # Location for expression data
-    optparse::make_option(c("--expression_dir"),
+    
+    # Location for raw data
+    optparse::make_option(c("--raw_data_dir"),
       type = "character",
-      default = "/home/MINTS/sdc56/Desktop/Matlab_input_small_names",
-      help = "Path to the directory containing the expression data .csv files [default= %default]",
+      default = NA,
+      help = "Path to the directory containing the raw data .csv files (if NA no expression heatmaps can be generated) [default= %default]",
       metavar = "character"
     ),
 
 
-    # Location for expression data
-    optparse::make_option(c("--plot_expression_data"),
+    # Instruction to plot the raw data
+    optparse::make_option(c("--plot_raw_data"),
       type = "logical",
       default = TRUE,
-      help = "Instruction to plot heatmaps of the expression data [default= %default]",
+      help = "Instruction to plot heatmaps of the raw data [default= %default]",
       metavar = "logical"
     ),
 
-    # Instruction to time programme
+    # Set the random seed
     optparse::make_option(c("--seed"),
       type = "integer",
       default = 1,
@@ -287,18 +290,18 @@ input_arguments <- function() {
     ),
 
 
-    # Threshold for proportion of iterations we reuiqre probes to have the same
+    # Threshold for proportion of iterations we require samples to have the same
     # label to be considered ''fused''
     optparse::make_option(c("--fusion_threshold"),
       type = "double",
       default = 0.5,
-      help = "Threshold for proportion of iterations we reuiqre probes to have the same label to be considered ''fused'' [default= %default]",
+      help = "Threshold for proportion of iterations we require samples to have the same label to be considered ''fused'' [default= %default]",
       metavar = "double"
     ),
 
 
-    # Instruction to plot gene expression data hheatmaps for fused genes
-    optparse::make_option(c("--plot_fused_genes"),
+    # Instruction to plot raw data heatmaps for fused samples
+    optparse::make_option(c("--plot_fused_samples"),
       type = "logical",
       default = TRUE,
       help = "Instruction to plot heatmaps of the expression data for fused genes [default= %default]",
@@ -347,12 +350,16 @@ input_arguments <- function() {
 # Set the ggplot2 theme
 theme_set(theme_bw())
 
+# print("In script")
+
 args <- input_arguments()
 save_plots <- T
 stm_i <- Sys.time()
 
 seed <- args$seed
 set.seed(seed)
+
+# print("Inputs received?")
 
 # Colour palette for PSMs
 col_pal <- colorRampPalette(c("white", "#146EB4"))(100)
@@ -370,68 +377,31 @@ my_breaks <- c(
 )
 
 # All possible datasets (and the names of the probes present columns)
-all_datasets <- c(
-  "CD14",
-  "CD15",
-  "CD19",
-  "CD4",
-  "CD8",
-  "IL",
-  "PLA",
-  "RE",
-  "TR"
-)
+# all_datasets <- c(
+#   "CD14",
+#   "CD15",
+#   "CD19",
+#   "CD4",
+#   "CD8",
+#   "IL",
+#   "PLA",
+#   "RE",
+#   "TR"
+# )
 
-# Directory holding the expression data files
-data_dir <- args$expression_dir
+# Directory holding the raw data files
+data_dir <- args$raw_data_dir
+do_no_raw_data_plots <- F
+
+if(is.na(data_dir)){
+  do_no_raw_data_plots <- T
+}
+
+# print("Me")
 
 # Read in the file relating the probe IDs to the related gene
-probe_key <- fread(args$probe_key)
-
-# Read in the probes present - this is a matrix of bools with the first column
-# as the probe IDs and the remaining columns corrresponding to the cell types
-# with TRUE indicating the probe is present in this cell type (i.e. not added
-# manually with an imputed value) and FALSE indicates we added it in.
-probes_present_dt <- fread(args$probes_present) 
-all_datasets <- colnames(probes_present_dt)[2: ncol(probes_present_dt)]
-
-curr_viable_datasets <- list(
-  c(
-    "CD14",
-    "CD15",
-    "CD19",
-    "CD4",
-    "CD8",
-    "IL",
-    "PLA",
-    "RE",
-    "TR"
-  ),
-  c(
-    "MDItestdata1",
-    "MDItestdata2",
-    "MDItestdata3",
-    "MDItestdata4",
-    "MDItestdata5",
-    "MDItestdata6"
-  )
-)
-
-# Check columns are as expected.
-if(length(all_datasets) == length(curr_viable_datasets[[1]])){
-  if(! all.equal(all_datasets[match(curr_viable_datasets[[1]], all_datasets)], curr_viable_datasets[[1]])){
-    cat("\nDatasets appears to be CEDAR (based on probes_present_per_dataset.csv), but datasets in columns do not match expected.")
-    stop(paste("Expected", curr_viable_datasets[[1]]))
-  
-  }
-}
-
-if(length(all_datasets) == length(curr_viable_datasets[[2]])){
-  if(! all.equal(all_datasets[match(curr_viable_datasets[[2]], all_datasets)], curr_viable_datasets[[2]])){
-    cat("\nDatasets appears to be Yeast (based on probes_present_per_dataset.csv), but datasets in columns do not match expected.")
-    stop(paste("Expected", curr_viable_datasets[[2]]))
-  }
-}
+# SHOULD THIS BE PRE-PROCESSING?
+# probe_key <- fread(args$probe_key)
 
 # Read in the MDI output file
 file_path <- args$dir
@@ -442,11 +412,12 @@ n_iter <- args$n_iter
 thin <- args$thin
 burn <- args$burn
 
-
-# Number of genes present in datasets
-# The number of genes is the number of columns in the mcmc_output
+# Number of samples present in datasets
+# The number of samples is the number of columns in the mcmc_output
 # exclusing the columns containing information on the phi and mass parameters
-n_genes <- args$n_genes
+# divided by the number of datasets present
+# (i.e. (ncol(MDI_OUTPUT) - n_datasets - choose(n_datasets, 2)) / n_datasets)
+n_samples <- args$n_samples
 
 # The files / tissues used in the MDI
 # Have to have the order from the call
@@ -459,29 +430,41 @@ files_present <- args$datasets %>%
   strsplit(., " ") %>%
   unlist()
 
-num_datasets <- length(files_present)
-col_names <- paste0("D", 1:num_datasets)
+n_datasets <- length(files_present)
+col_names <- paste0("D", 1:n_datasets)
 
 # Remove the file extension
 dataset_names <- tools::file_path_sans_ext(files_present)
 
-# From the probes present file keep only the columns that are in the dataset names
-cols_to_keep <- all_datasets %in% dataset_names
+# print("Here")
 
+# Instructions for different plots and calculations
 do_dendrograms_ie_trees <- args$plot_trees
 do_rand_plot <- args$plot_rand_index
 do_similarity_matrices_plot <- args$plot_similarity_matrices
 do_phis_series <- args$plot_phi_series
 do_phis_densities <- args$plot_phi_densities
-do_expression_heatmap <- args$plot_expression_data
 do_phis_histograms <- args$plot_phi_histograms
-do_fused_gene_expression <- args$plot_fused_genes
-do_comparison_plots <- args$plot_comparison
 do_mass_parameter_plots <- args$plot_mass_parameters
 do_arandi_matrices <- args$plot_arandi_matrix
 do_clusters_series <- args$plot_clusters
 
-# Plto type
+# Plot based upon raw data - do not allow to be TRUE if no raw data is given
+if(do_no_raw_data_plots){
+  cat(paste0("\nNo directory given for raw data.\nPlots incorporating raw data ",
+    "are not possible regardless of user instruction. \nDefaulting to FALSE."
+    )
+  )
+  do_raw_data_heatmap <- FALSE
+  do_fused_samples_heatmaps <- FALSE
+  do_comparison_plots <- FALSE
+} else {
+  do_raw_data_heatmap <- args$plot_raw_data
+  do_fused_samples_heatmaps <- args$plot_fused_samples
+  do_comparison_plots <- args$plot_comparison
+}
+
+# Plot type
 plot_type <- args$plot_type
 
 # Fusion threshold
@@ -528,32 +511,101 @@ if(is.na(n_iter)){
 eff_n_iter <- n_iter / thin # - burn
 
 # Note that as each mdi output is on the same data, we only need to count one dataset
-if (is.na(n_genes)) {
-  n_genes <- mcmc_out_lst[[1]] %>%
-    select(contains("Dataset1")) %>%
-    ncol()
-
-  # n_genes <- mcmc_out_lst[[1]]$nitems
+if (is.na(n_samples)) {
+  
+  dataset_1_ind <- colnames(mcmc_out_lst[[1]]) %>%
+    grep("Dataset1", .)
+  
+  sample_names <- colnames(mcmc_out_lst[[1]])[dataset_1_ind] %>% 
+    stringr::str_remove_all("Dataset1_") %>%
+    stringr::str_remove_all("X")
+  
+  n_samples  <- sample_names %>%
+    length()
 }
 
 
 # Boolean instructing labels to be included in heatmaps
 show_heatmap_labels <- TRUE
 
-if(n_genes > 50) {
+if(n_samples > 50) {
   show_heatmap_labels <- FALSE
 }
+
+# Read in the probes present - this is a matrix of bools with the first column
+# as the probe IDs and the remaining columns corrresponding to the cell types
+# with TRUE indicating the probe is present in this cell type (i.e. not added
+# manually with an imputed value) and FALSE indicates we added it in.
+samples_present <- args$samples_present
+check_missingness <- ! is.na(samples_present) 
+
+# If we have not given the meta-data to check this, assume all samples are 
+# present in all datasets
+if(check_missingness){
+  samples_present_dt <- fread(samples_present) 
+  all_datasets <- colnames(samples_present_dt)[2: ncol(samples_present_dt)]
+  
+ } else {
+  samples_present_dt <- matrix(data = T, ncol = n_datasets, nrow = n_samples) %>% 
+    as.data.frame() %>% 
+    set_rownames(sample_names) %>% 
+    set_colnames(dataset_names)
+  
+  all_datasets <- dataset_names
+}
+
+# If using datasets with missing entries, keep only the meta data for the relevant files
+cols_to_keep <- all_datasets %in% dataset_names
+
+# curr_viable_datasets <- list(
+#   c(
+#     "CD14",
+#     "CD15",
+#     "CD19",
+#     "CD4",
+#     "CD8",
+#     "IL",
+#     "PLA",
+#     "RE",
+#     "TR"
+#   ),
+#   c(
+#     "MDItestdata1",
+#     "MDItestdata2",
+#     "MDItestdata3",
+#     "MDItestdata4",
+#     "MDItestdata5",
+#     "MDItestdata6"
+#   )
+# )
+# 
+# # Check columns are as expected.
+# if(length(all_datasets) == length(curr_viable_datasets[[1]])){
+#   if(! all.equal(all_datasets[match(curr_viable_datasets[[1]], all_datasets)], curr_viable_datasets[[1]])){
+#     cat("\nDatasets appears to be CEDAR (based on samples_present_per_dataset.csv), but datasets in columns do not match expected.")
+#     stop(paste("Expected", curr_viable_datasets[[1]]))
+#     
+#   }
+# }
+# 
+# if(length(all_datasets) == length(curr_viable_datasets[[2]])){
+#   if(! all.equal(all_datasets[match(curr_viable_datasets[[2]], all_datasets)], curr_viable_datasets[[2]])){
+#     cat("\nDatasets appears to be Yeast (based on samples_present_per_dataset.csv), but datasets in columns do not match expected.")
+#     stop(paste("Expected", curr_viable_datasets[[2]]))
+#   }
+# }
+
 
 # === Plotting phis ==========================================================
 
 # Plot phi value between each dataset combination across iterations
 if (do_phis_series) {
-  if(num_datasets > 1){
+  if(n_datasets > 1){
   cat("\n\nPlotting phi values across iterations.\n")
   plot_phi_series(mcmc_out_lst,
     file_path,
     num_files,
-    num_datasets,
+    n_datasets,
     start_index,
     eff_n_iter,
     save_plots = T
@@ -567,7 +619,7 @@ if (do_phis_series) {
 # === Prepare the tibble =======================================================
 
 # Create an empty dataframe with column names corresponding to dataset numbers
-compare_df <- data.frame(matrix(ncol = num_datasets, nrow = n_genes))
+compare_df <- data.frame(matrix(ncol = n_datasets, nrow = n_samples))
 
 # Set the cell type to the column names (make sure order is as per MDI call)
 colnames(compare_df) <- dataset_names
@@ -576,21 +628,21 @@ cat("\nConstructing tibble.\n")
 
 # Now put everything in a tibble
 compare_tibble <- tibble(
-  mdi = rep(file_names, num_datasets),
+  mdi = rep(file_names, n_datasets),
   dataset = rep(dataset_names, num_files), # unlist(lapply(dataset_names, rep, num_files))
-  seed = unlist(lapply(1:num_files, rep, num_datasets)), # rep(1:num_files, num_datasets),
-  phis = rep(vector("list", num_files), num_datasets),
+  seed = unlist(lapply(1:num_files, rep, n_datasets)), # rep(1:num_files, num_datasets),
+  phis = rep(vector("list", num_files), n_datasets),
   pred_allocation = list(compare_df),
-  mdi_allocation = rep(vector("list", num_files), num_datasets),
-  n_clust = rep(vector("list", num_files), num_datasets),
-  similarity_matrix = list(data.frame(matrix(ncol = n_genes, nrow = n_genes))),
-  correlation_matrix = list(data.frame(matrix(ncol = n_genes, nrow = n_genes))),
-  expression_data = rep(vector("list", num_files), num_datasets),
-  non_zero_probes_ind = rep(vector("list", num_files), num_datasets),
-  non_zero_probes = rep(vector("list", num_files), num_datasets),
-  fused_probes = rep(vector("list", num_files), num_datasets),
-  fused_non_zero_probes = rep(vector("list", num_files), num_datasets),
-  mass_parameter = rep(vector("list", num_files), num_datasets)
+  mdi_allocation = rep(vector("list", num_files), n_datasets),
+  n_clust = rep(vector("list", num_files), n_datasets),
+  similarity_matrix = list(data.frame(matrix(ncol = n_samples, nrow = n_samples))),
+  correlation_matrix = list(data.frame(matrix(ncol = n_samples, nrow = n_samples))),
+  expression_data = rep(vector("list", num_files), n_datasets),
+  non_zero_probes_ind = rep(vector("list", num_files), n_datasets),
+  non_zero_probes = rep(vector("list", num_files), n_datasets),
+  fused_probes = rep(vector("list", num_files), n_datasets),
+  fused_non_zero_probes = rep(vector("list", num_files), n_datasets),
+  mass_parameter = rep(vector("list", num_files), n_datasets)
 )
 
 # compare_tibble$phis <- phis
@@ -613,7 +665,7 @@ for (j in 1:num_files) {
     dplyr::select(contains("Phi"))
 
 
-  for (i in 1:num_datasets) {
+  for (i in 1:n_datasets) {
     dataset_name <- paste0("Dataset", i)
 
     # Extract mass parameters
@@ -645,68 +697,82 @@ for (j in 1:num_files) {
         rep((eff_n_iter - (start_index - 1))) # as we include start_index
     }
     
-    if (i == 1) {
-
-      # Find the Probe IDs
-      probe_names <- colnames(.mdi_alloc) %>%
-        stringr::str_remove_all(paste0(dataset_name, "_")) %>%
-        stringr::str_remove_all("X")
-
-      # Find the relevant part of the key
-      probe_key_rel <- probe_key[probe_key$ProbeID %in% probe_names, ]
-
-      # Pull out the Gene IDs in the correct order
-      gene_id <- probe_key_rel %>%
-        .[match(probe_names, .$ProbeID)] %>%
-        .$Unique_gene_name
-
-      probes_present_dt <- probes_present_dt[probes_present_dt$V1 %in% probe_names, ]
-
-      # Add the gene names to the probes_present dataframe
-      probes_present_dt$Gene_names <- gene_id # [match(probe_key_rel$ProbeID, probes_present_dt$V1)]
-
-      # Make sure the order is as in the MDI data
-      # probes_present_dt <- probes_present_dt[match(probe_names, probes_present_dt$V1)]
-
-      # unique_gene_id <- gene_id
-    }
+    # This step does not need to be part of the for loop
+    # if (i == 1) {
+    # 
+    #   # Find the Probe IDs
+    #   probe_names <- colnames(.mdi_alloc) %>%
+    #     stringr::str_remove_all(paste0(dataset_name, "_")) %>%
+    #     stringr::str_remove_all("X")
+    # 
+    #   # Find the sample names
+    #   sample_names <- colnames(.mdi_alloc) %>%
+    #       stringr::str_remove_all(paste0(dataset_name, "_")) %>%
+    #       stringr::str_remove_all("X")
+    #   
+    #   # I think this should be a pre-processing step now.
+    #   if(FALSE){
+    #   # Find the relevant part of the key
+    #   probe_key_rel <- probe_key[probe_key$ProbeID %in% probe_names, ]
+    # 
+    #   # Pull out the Gene IDs in the correct order
+    #   gene_id <- probe_key_rel %>%
+    #     .[match(probe_names, .$ProbeID)] %>%
+    #     .$Unique_gene_name
+    # 
+    #   }
+    #   
+    #   samples_present_dt <- samples_present_dt[samples_present_dt$V1 %in% probe_names, ]
+    # 
+    #   # Add the gene names to the samples_present dataframe
+    #   samples_present_dt$Gene_names <- gene_id # [match(probe_key_rel$ProbeID, samples_present_dt$V1)]
+    # 
+    #   # Make sure the order is as in the MDI data
+    #   # samples_present_dt <- samples_present_dt[match(probe_names, samples_present_dt$V1)]
+    # 
+    #   # unique_gene_id <- gene_id
+    # }
 
     curr_dataset <- dataset_names[[i]]
-
-    # extract the empty genes
-    rel_empty_genes <- probes_present_dt %>%
-      dplyr::select(dplyr::one_of(c(curr_dataset, "Gene_names")))
-
-    # Create a diagonal matrix of genes x genes with -2 on the diagonal entries
-    # corresponding to empty genes and 0's elsewhere
-    empty_gene_mat <- diag(!rel_empty_genes[[curr_dataset]]) * (-2)
 
     # Create and save the posterior similarity matrix (PSM) for the current
     # allocation
     # We transpose as we are interested in how the genes cluster rahter than the
     # people
- 
-    # .sim_mat <- similarity_mat(t(.mdi_alloc)) %>%
+    # .sim_mat <- make_psm(.mdi_alloc) %>%
     #   set_colnames(gene_id) %>%
     #   set_rownames(gene_id)
     
     .sim_mat <- make_psm(.mdi_alloc) %>%
-      set_colnames(gene_id) %>%
-      set_rownames(gene_id)
-
+      set_colnames(sample_names) %>%
+      set_rownames(sample_names)
+    
     # Use the maxpear() function from mcclust to interpret the PSM as a clustering
     .pred_alloc <- .sim_mat %>%
       mcclust::maxpear()
+    
+    if(check_missingness){
+      # extract the empty genes
+      rel_empty_samples <- samples_present_dt %>%
+        dplyr::select(dplyr::one_of(c(curr_dataset, "Gene_names")))
+  
+      # Create a diagonal matrix of genes x genes with -2 on the diagonal entries
+      # corresponding to empty genes and 0's elsewhere
+      empty_gene_mat <- diag(rel_empty_samples[[curr_dataset]]) * (-2)
+      
+      # Now highlight the empty probes by setting their diagonal to -1 in the PSM
+      .sim_mat <- .sim_mat %>%
+        add(empty_gene_mat)
+    }
 
-    # Now highlight the empty probes by setting their diagonal to -1 in the PSM
-    .sim_mat <- .sim_mat %>%
-      add(empty_gene_mat)
+
 
     # Set the row nad column names of the PSM
     # row.names(.sim_mat) <- colnames(.sim_mat) <- gene_id
 
     # Set the column names of the MDI to the Probe IDs (consider using gene IDs)
-    colnames(.mdi_alloc) <- probe_names
+    # colnames(.mdi_alloc) <- probe_names
+    colnames(.mdi_alloc) <- sample_names
 
     # Save these objects to the tibble
     compare_tibble$mdi_allocation[i + (j - 1) * num_files][[1]] <- .mdi_alloc
@@ -728,32 +794,32 @@ for (j in 1:num_files) {
 # print("Finding probes present.")
 
 # # Find which probes are relevant from the full set
-# probes_actually_present_ind <- probes_present_dt %>%
+# probes_actually_present_ind <- samples_present_dt %>%
 #   magrittr::use_series("V1") %>%
 #   magrittr::is_in(probe_names)
 #
 # # Select these
-# probes_actually_present <- probes_present_dt[probes_actually_present_ind, ]
+# probes_actually_present <- samples_present_dt[probes_actually_present_ind, ]
 #
 # # Find the appropriate order
 # probes_order <- match(probe_names, probes_actually_present$V1)
 #
 # # Order the probes so comparable to allocation data frame
-# probes_present_ordered <- probes_actually_present[probes_order, ] %>%
+# samples_present_ordered <- probes_actually_present[probes_order, ] %>%
 #   as.data.frame() %>%
 #   set_colnames(all_datasets)
 #
 # # Remove the irrelevant columns and set row names
-# probes_present_final <- probes_present_ordered %>%
+# samples_present_final <- samples_present_ordered %>%
 #   magrittr::set_rownames(probes_actually_present$V1) %>%
 #   magrittr::extract(, cols_to_keep)
 #
-# colnames(probes_present_final) <- dataset_names
+# colnames(samples_present_final) <- dataset_names
 
 # === Phi denisty plots ================================================================
 
 if (do_phis_densities) {
-  if(num_datasets > 1){
+  if(n_datasets > 1){
   cat("\nSaving phi density plots.\n")
   plot_phi_densities(phis, file_path, start_index, eff_n_iter)
   } else {
@@ -764,7 +830,7 @@ if (do_phis_densities) {
 # === Phi histograms ===========================================================
 
 if (do_phis_histograms) {
-  if(num_datasets > 1){
+  if(n_datasets > 1){
   cat("\nSaving phi histogram plots.\n")
   plot_phi_histograms(phis, file_path, start_index, eff_n_iter)
   } else {
@@ -780,10 +846,10 @@ if (do_similarity_matrices_plot) {
 
   plot_similarity_matrices(
     compare_tibble$similarity_matrix,
-    # probes_present_final,
+    # samples_present_final,
     dataset_names,
     num_files,
-    num_datasets,
+    n_datasets,
     file_path,
     col_pal = col_pal_sim,
     breaks = my_breaks,
@@ -802,7 +868,7 @@ if(do_clusters_series){
   
   plot_clusters_present(n_clust_list,
     dataset_names, 
-    num_datasets, 
+    n_datasets, 
     start_index,
     eff_n_iter,
     thin,
@@ -823,7 +889,7 @@ if (do_rand_plot) {
     file_path,
     dataset_names,
     num_files,
-    num_datasets,
+    n_datasets,
     eff_n_iter,
     burn = burn,
     thin = thin
@@ -832,8 +898,8 @@ if (do_rand_plot) {
 
 # If instructed do Rand index matrices and the heatmap
 if(do_arandi_matrices){
-  if(num_datasets > 1){
-  arandi_matrices <- arandi_matrices(compare_tibble$mdi_allocation, num_datasets)
+  if(n_datasets > 1){
+  arandi_matrices <- arandi_matrices(compare_tibble$mdi_allocation, n_datasets)
   
   avg_arandi_matrix <- average_matrix(arandi_matrices) %>% 
     set_colnames(dataset_names) %>% 
@@ -867,9 +933,11 @@ if (do_mass_parameter_plots) {
 }
 
 # === Heatmap expression data ==================================================
+# If no raw data given, do not attempt this section.
+if(! do_no_raw_data_plots){
 loc_dir <- paste0(save_path, "Expression_heatmaps/")
 
-if (do_expression_heatmap) {
+if (do_raw_data_heatmap) {
   cat("\nSaving gene expression heatmaps.\n")
 
 
@@ -897,11 +965,11 @@ datasets_relevant_indices <- files_present %>%
 datasets_relevant <- expression_datasets[datasets_relevant_indices]
 relevant_input_files <- mdi_input_files[datasets_relevant_indices]
 
-mega_df <- data.frame(matrix(nrow = n_genes, ncol = 0)) %>%
-  magrittr::set_rownames(gene_id)
+mega_df <- data.frame(matrix(nrow = n_samples, ncol = 0)) %>%
+  magrittr::set_rownames(sample_names) # magrittr::set_rownames(gene_id)
 
-big_annotation <- data.frame(matrix(nrow = n_genes, ncol = num_datasets)) %>%
-  magrittr::set_rownames(gene_id) %>%
+big_annotation <- data.frame(matrix(nrow = n_samples, ncol = n_datasets)) %>%
+  magrittr::set_rownames(sample_names) %>%  # magrittr::set_rownames(gene_id) %>%
   magrittr::set_colnames(datasets_relevant)
 
 n_total_clusters <- 0
@@ -912,7 +980,7 @@ n_people <- c()
 
 data_files <- list()
 
-for (i in 1:num_datasets) {
+for (i in 1:n_datasets) {
   curr_dataset <- datasets_relevant[[i]]
 
   file_name <- gen_ph_file_name %>%
@@ -925,7 +993,7 @@ for (i in 1:num_datasets) {
   pred_clustering <- compare_tibble$pred_allocation[compare_tibble$dataset == curr_dataset][[1]] %>%
     as.factor() %>%
     as.data.frame() %>%
-    magrittr::set_rownames(gene_id) %>%
+    magrittr::set_rownames(sample_names) %>% # magrittr::set_rownames(gene_id) %>%
     magrittr::set_colnames(c("Cluster"))
 
   # Read in the expression data
@@ -933,13 +1001,14 @@ for (i in 1:num_datasets) {
   expression_data <- fread(f, header = T)
 
   # Convert from probe ids to gene ids if necessary
-  if(sum(expression_data[[1]] %in% probe_names) > 0){
+  # if(sum(expression_data[[1]] %in% probe_names) > 0){
+  if(sum(expression_data[[1]] %in% sample_names) > 0){
     
-    expression_data[,1] <- gene_id[match(expression_data[[1]], probe_names)]
+    expression_data[,1] <- sample_names # gene_id[match(expression_data[[1]], probe_names)]
     
   }
   
-  if(! all.equal(unname(unlist(expression_data[[1]])), gene_id)){
+  if(! all.equal(unname(unlist(expression_data[[1]])), sample_names)) { # gene_id)){
     stop("Gene ids not matching in expression data.")
   }
   
@@ -948,7 +1017,7 @@ for (i in 1:num_datasets) {
   expression_data_tidy <- expression_data %>%
     magrittr::extract(, -1) %>%
     as.matrix() %>%
-    magrittr::set_rownames(gene_id)
+    magrittr::set_rownames(sample_names) # gene_id)
 
   expression_data_tidy[is.na(expression_data_tidy)] <- 0
 
@@ -975,7 +1044,7 @@ for (i in 1:num_datasets) {
   expr_min <- min(expression_data_tidy)
   expr_max <- max(expression_data_tidy)
 
-  expr_breaks <- define_breaks(col_pal_expr, lb = expr_min, ub = expr_max)
+  expr_breaks <- define_breaks(col_pal_expr, lb = expr_min, ub = expr_max) %>% unique()
   
   n_people <- c(n_people, ncol(expression_data_tidy))
   show_expr_col_names <- TRUE
@@ -983,7 +1052,7 @@ for (i in 1:num_datasets) {
     show_expr_col_names <- FALSE
   }
   
-  if (do_expression_heatmap) {
+  if (do_raw_data_heatmap) {
     if (n_clusters > 12) {
       cat("\nToo many clusters. Cannot include annotation row.\n")
 
@@ -1041,15 +1110,15 @@ big_ph_title <- "All datasets" %>%
 
 mega_matrix <- mega_df %>%
   as.matrix() %>%
-  magrittr::set_rownames(gene_id)
+  magrittr::set_rownames(sample_names) # gene_id)
 
 expr_min <- min(mega_matrix)
 expr_max <- max(mega_matrix)
 
-expr_breaks <- define_breaks(col_pal_expr, lb = expr_min, ub = expr_max)
+expr_breaks <- define_breaks(col_pal_expr, lb = expr_min, ub = expr_max) %>% unique()
 
 
-if (do_expression_heatmap) {
+if (do_raw_data_heatmap) {
   if (TRUE) { # n_total_clusters > 20) {
     pheatmap(mega_matrix,
       filename = big_file_name,
@@ -1072,33 +1141,34 @@ if (do_expression_heatmap) {
       annotation_colors = annotation_colors,
       color = col_pal_expr,
       breaks = expr_breaks,
+      cluster_cols = F,
       show_colnames = F,
       show_rownames = show_heatmap_labels
     )
   }
 }
-
+}
 # === Fused probes =============================================================
 
 # Find which probes are ''fused'' across datasets
 # We save this as a named list to the tibble. Each entry in the list corresponds
 # to a dataset and records the fused probes between the current dataset and the
 # entry name
-if(num_datasets > 2){
+if(n_datasets > 2){
 cat("\nFinding ''fused'' probes.\n")
 for (k in 1:num_files) {
-  for (i in 1:num_datasets) {
+  for (i in 1:n_datasets) {
     dataset_i <- dataset_names[i]
 
-    fused_probes_curr <- vector("list", num_datasets) %>%
+    fused_probes_curr <- vector("list", n_datasets) %>%
       magrittr::set_names(dataset_names)
 
-    fused_non_zero_probes_curr <- vector("list", num_datasets) %>%
+    fused_non_zero_probes_curr <- vector("list", n_datasets) %>%
       magrittr::set_names(dataset_names)
 
     # fused_probes_curr[dataset_i] <- 1.0
 
-    for (j in 1:num_datasets) {
+    for (j in 1:n_datasets) {
       dataset_j <- dataset_names[j]
 
       count <- count + 1
@@ -1150,18 +1220,18 @@ for (k in 1:num_files) {
 
 # === Gene expression for fused and unfused genes ==============================
 
-if (do_fused_gene_expression) {
+if (do_fused_samples_heatmaps) {
   cat("\nSaving heatmaps of pairwise fused gene expression across datasets.\n")
   
   fused_gene_heatmaps(
     compare_tibble$expression_data,
     compare_tibble$fused_probes,
-    gene_id,
+    sample_names, # gene_id,
     dataset_names,
     file_path,
-    num_datasets,
+    n_datasets,
     plot_type,
-    probes_present_dt #,
+    samples_present_dt #,
     # show_row_labels = TRUE
   )
 }
@@ -1175,7 +1245,7 @@ if (do_comparison_plots) {
   plot_comparison_expression_to_clustering(
     compare_tibble,
     dataset_names,
-    num_datasets,
+    n_datasets,
     file_path,
     plot_type,
     col_pal_sim = col_pal_sim,
@@ -1185,7 +1255,7 @@ if (do_comparison_plots) {
   plot_comparison_corr_sim_expr(
     compare_tibble,
     dataset_names,
-    num_datasets,
+    n_datasets,
     file_path,
     plot_type,
     col_pal_sim = col_pal_sim,

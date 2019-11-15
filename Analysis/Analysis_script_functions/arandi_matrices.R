@@ -1,20 +1,20 @@
 
-library(pheatmap)
-library(magrittr)
-library(mcclust)
-library(tibble)
+library(pheatmap, quietly = T)
+library(magrittr, quietly = T)
+library(mcclust, quietly = T)
+library(tibble, quietly = T)
 
 
-function_dir <- "/home/MINTS/sdc56/Desktop/ra_chris_wallace/Analysis/Analysis_script_functions/"
+# function_dir <- "/home/MINTS/sdc56/Desktop/ra_chris_wallace/Analysis/Analysis_script_functions/"
+# 
+# function_scripts <- c(
+#   "plot_rand_index.R", # for unlisted arandi
+#   "create_psm.R" # for constructing symmetric matrices
+# )
 
-function_scripts <- c(
-  "plot_rand_index.R", # for unlisted arandi
-  "create_psm.R" # for constructing symmetric matrices
-)
-
-for (f in paste0(function_dir, function_scripts)) {
-  source(f)
-}
+# for (f in paste0(function_dir, function_scripts)) {
+#   source(f)
+# }
 
 arandi_for_vectorisation <- function(my_vec, break_col, end_col){
   

@@ -1,10 +1,10 @@
 #!/usr/bin/env Rscript
 
 # Functions to save comparison of heatmaps
-library(cowplot)
-library(pheatmap)
-library(ggplot2)
-library(RColorBrewer)
+library(cowplot, quietly = T)
+library(pheatmap, quietly = T)
+library(ggplot2, quietly = T)
+library(RColorBrewer, quietly = T)
 
 define_breaks <- function(col_pal, lb = -1, ub = 1){
   palette_length <- length(col_pal)

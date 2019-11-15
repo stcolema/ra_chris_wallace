@@ -83,7 +83,7 @@ fused_gene_heatmaps <- function(expression_data_lst,
       expr_min <- min(new_expression_data)
       expr_max <- max(new_expression_data)
       
-      expr_breaks <- define_breaks(col_pal_expr, lb = expr_min, ub = expr_max)
+      expr_breaks <- define_breaks(col_pal_expr, lb = expr_min, ub = expr_max) %>% unique()
       
       # Filename for fused genes heatmap
       fused_ph_file_name <- paste0(
@@ -130,9 +130,10 @@ fused_gene_heatmaps <- function(expression_data_lst,
       }
       
       # If more than 1 fused gene can attempt to cluster rows
+      show_row_labels <- T
       if (sum(fused_ind) > 1) {
         
-        show_row_labels <- T
+        
         if(nrow(new_expression_data) > 50){
           show_row_labels <- F
         }

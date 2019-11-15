@@ -1,10 +1,10 @@
 
-library(data.table)
-library(dplyr)
-library(ggplot2)
-library(magrittr)
-library(pheatmap)
-library(tibble)
+library(data.table, quietly = T)
+library(dplyr, quietly = T)
+library(ggplot2, quietly = T)
+library(magrittr, quietly = T)
+library(pheatmap, quietly = T)
+library(tibble, quietly = T)
 
 # Plot and save the mass parameters in the tibble
 plot_mass_parameters <- function(my_tibble, thin = 1L, file_path = "./", plot_type = ".png") {

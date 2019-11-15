@@ -2,9 +2,9 @@
 
 # Functions to create a Posterior similarity matrix
 
-library(data.table)
-library(magrittr)
-library(Rcpp)
+library(data.table, quietly = T)
+library(magrittr, quietly = T)
+library(Rcpp, quietly = T)
 # Rcpp::sourceCpp("/home/MINTS/sdc56/Desktop/ra_chris_wallace/Analysis/posterior_sim_mat.cpp") # install.packages("Rcpp", dep = T)
 
 
