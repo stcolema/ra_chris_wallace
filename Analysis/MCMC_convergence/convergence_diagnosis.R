@@ -14,10 +14,12 @@ library(patchwork)
 
 # === Functions ================================================================
 
+# Given a string of the format "aaaa_111" extract the numbers (in this case "111")
 extractNumericalFromString <- function(my_string) {
   gsub("[^0-9.]", "", my_string)
 }
 
+# Calculate the expected sample size for a chain for a given test burn-in
 findESS <- function(mcmc_out, test_burn_in) {
 
   # initialise data.frame of ess estimates
@@ -39,11 +41,14 @@ findESS <- function(mcmc_out, test_burn_in) {
 }
 
 # From Stack Exchange https://stackoverflow.com/questions/22908050/formula-evaluation-with-mutate
+# Use dplyr::mutate with a formula encoded as a string (used as we do not want
+# to restrict the number of variables present)
 stringMutate <- function(df, str_formula) {
   q <- quote(mutate(df, Total = str_formula))
   eval(parse(text = sub("str_formula", str_formula, deparse(q))))
 }
 
+# Create parameter names for output from MDI for a given number of datasets
 createParameterNames <- function(n_datasets) {
   # The parameters of interest
 
@@ -61,6 +66,8 @@ createParameterNames <- function(n_datasets) {
   all_parameters
 }
 
+# Find the appropriate burn-in for a given chain of MCMC (approximate and
+# possible to fail - check plottd output to be sure)
 findBurnIn <- function(mcmc_out,
                        n_datasets,
                        max_burn_in = ifelse(is.data.frame(mcmc_out) | is.mcmc(mcmc_out), nrow(mcmc_out), nrow(mcmc_out[[1]])) / 2,
@@ -95,15 +102,13 @@ findBurnIn <- function(mcmc_out,
   est_burn_in_df <- df_ess.burn.in %>%
     stringMutate(param_func)
 
-
-  # dplyr::mutate(Total = as.formula(param_func)) # MassParameter_1 + MassParameter_2 + MassParameter_3 + Phi_12 + Phi_13 + Phi_23)
-
   # Choose the burn in for which the parameters have the largest combined ESS
   est_burn_in <- est_burn_in_df$burn_in[est_burn_in_df$Total == max(est_burn_in_df$Total)]
 
   est_burn_in
 }
 
+# Save ESS plots
 saveESSPlots <- function(my_data, n_seeds, save_dirs, plot_titles,
                          gen_ess_title = "Burn in diagnosis plot",
                          plot_type = ".png") {
@@ -129,10 +134,13 @@ saveESSPlots <- function(my_data, n_seeds, save_dirs, plot_titles,
   }
 }
 
+# Save autocorrelation plots using ggplot2 style
 saveAutoCorrelationPlots <- function(mcmc_data, n_seeds, save_dirs, plot_titles,
                                      lag.max = NULL,
                                      gen_auto_corr_title = "Autocorrelation",
                                      plot_type = ".png") {
+
+  # The filenames and plot titles for the plots
   auto_corr_file_names <- paste0(save_dirs, "/autocorrelation_plot", plot_type)
   auto_corr_titles <- paste0(plot_titles, ": ", gen_auto_corr_title)
 
@@ -149,19 +157,32 @@ saveAutoCorrelationPlots <- function(mcmc_data, n_seeds, save_dirs, plot_titles,
       as.ts() %>%
       acf(lag.max = lag.max, plot = FALSE)
 
+    # Create a data.frame to hold the autocorrelation info
     auto_cor_df <- data.frame(Lag = x_auto_cor$lag[, 1, 1])
 
+    # Add the autocorrelation for each variable to said data.frame
     for (jj in 1:nvar(x)) {
       auto_cor_df <- cbind(auto_cor_df, x_auto_cor$acf[, jj, jj])
     }
 
     colnames(auto_cor_df) <- c("Lag", varnames(x))
 
+    # The variables to be considered in going from wide to long
     vars_to_gather <- varnames(x)
 
-    auto_cor_df_long <- tidyr::gather_(auto_cor_df, "Parameter", "Autocorrelation", vars_to_gather, factor_key = TRUE)
+    # The long form of the original dataset (to better fit ggplot2)
+    auto_cor_df_long <- tidyr::gather_(auto_cor_df,
+      "Parameter",
+      "Autocorrelation",
+      vars_to_gather,
+      factor_key = TRUE
+    )
 
-    p_lst[[ii]] <- ggplot(auto_cor_df_long, aes(x = Lag, Autocorrelation, colour = Parameter)) +
+    # Plots!
+    p_lst[[ii]] <- ggplot(
+      auto_cor_df_long,
+      aes(x = Lag, y = Autocorrelation, colour = Parameter)
+    ) +
       geom_line() +
       labs(
         title = paste0("Seed ", ii, ": ", gen_auto_corr_title)
@@ -169,18 +190,24 @@ saveAutoCorrelationPlots <- function(mcmc_data, n_seeds, save_dirs, plot_titles,
 
     ggsave(curr_file_name)
   }
+  # Return a list of plots
   p_lst
 }
 
 # === Setup ====================================================================
 
+# Set ggplot2 theme
 theme_set(theme_bw())
 
 # Example directory for output data
 gen_mdi_dir <- "~/Documents/PhD/Year_1/Consensus_clustering/Yeast/Output_data/MDI/"
 
 # List the sub directories
-sub_dirs <- list.dirs(path = gen_mdi_dir, full.names = F, recursive = FALSE)
+sub_dirs <- list.dirs(
+  path = gen_mdi_dir,
+  full.names = F,
+  recursive = FALSE
+)
 
 # The generic file name before the seed and extension
 gen_file_name <- "out_"
@@ -235,6 +262,8 @@ n_datasets <- 3
 # the number of continuous variables outputted
 n_cols_cont <- n_datasets + choose(n_datasets, 2)
 
+# === Read in data =============================================================
+
 # Load the relevant data
 my_data <- vector("list", length = n_seeds)
 
@@ -256,30 +285,7 @@ if (plot_burn_in) {
     gen_ess_title = "Burn in diagnosis plot",
     plot_type = ".png"
   )
-
-  # gen_ess_title <- "Burn in diagnosis plot"
-  # ess_file_names <- paste0(new_full_sub_dirs, "/burn_in_plot", plot_type)
-  # ess_titles <- paste0(pretty_sub_dir_names, ": ", gen_ess_title)
-  #
-  # for (i in 1:n_seeds) {
-  #
-  #   # Plot title and filename
-  #   curr_file_name <- ess_file_names[i]
-  #   curr_title <- ess_titles[i]
-  #
-  #   # Create plot
-  #   plotESSBurn(my_data[[i]]) +
-  #     labs(
-  #       title = curr_title,
-  #       x = "Tested burn in",
-  #       y = "Effective sample size"
-  #     )
-  #
-  #   # Save
-  #   ggsave(curr_file_name)
-  # }
 }
-
 
 
 # Find the common burn in across chains
@@ -289,103 +295,17 @@ common_burn_in <- sapply(my_data, findBurnIn, 3) %>%
 # Apply the burn in to the data
 new_data <- lapply(my_data, burnAndThin, burn = common_burn_in)
 
-autocorr.plot(new_data[[1]])
-
+# Plot autocorrelation for each seed for each parameter
 if (plot_auto_corr) {
-
-  # saveESSPlots(my_data, n_seeds, new_full_sub_dirs, pretty_sub_dir_names,
-  # gen_ess_title = "Burn in diagnosis plot",
-  # plot_type = ".png")
-
-  gen_auto_corr_title <- "Auto-correlation"
-  auto_corr_file_names <- paste0(new_full_sub_dirs, "/autocorrelation_plot", plot_type)
-  auto_corr_titles <- paste0(pretty_sub_dir_names, ": ", gen_auto_corr_title)
-
-
-  for (i in 1:n_seeds) {
-
-    # Plot title and filename
-    curr_file_name <- auto_corr_file_names[i]
-    curr_title <- auto_corr_titles[i]
-
-    # Create plot
-    if (plot_type == ".png") {
-      png(curr_file_name)
-      autocorr.plot(new_data[[i]])
-      dev.off()
-    }
-
-    if (plot_type == ".pdf") {
-      pdf(curr_file_name)
-      autocorr.plot(new_data[[i]])
-      dev.off()
-    }
-  }
+  p_lst <- saveAutoCorrelationPlots(new_data,
+    n_seeds,
+    new_full_sub_dirs,
+    pretty_sub_dir_names,
+    lag.max = NULL,
+    gen_auto_corr_title = "Autocorrelation",
+    plot_type = plot_type
+  )
 }
-
-p_lst <- vector("list", n_seeds)
-
-gen_auto_corr_title <- "Auto-correlation"
-auto_corr_file_names <- paste0(new_full_sub_dirs, "/autocorrelation_plot", plot_type)
-auto_corr_titles <- paste0(pretty_sub_dir_names, ": ", gen_auto_corr_title)
-
-p_lst <- saveAutoCorrelationPlots(new_data, n_seeds, new_full_sub_dirs, pretty_sub_dir_names,
-                         lag.max = NULL,
-                         gen_auto_corr_title = "Autocorrelation",
-                         plot_type = plot_type)
-
-# # 
-# # for (ii in 1:n_seeds) {
-# #   x <- mcmc.list(as.mcmc(new_data[[ii]]))
-# # 
-# #   # Plot title and filename
-# #   curr_file_name <- auto_corr_file_names[ii]
-# #   curr_title <- auto_corr_titles[ii]
-# # 
-# # 
-# # 
-# #   lag.max <- NULL
-# #   nchain(mcmc.list(new_data))
-# # 
-# #   for (i in 1:nchain(x)) {
-# # 
-# #     # Consider the chain as a time series and calculate the auto-correlation
-# #     x_auto_cor <- x[[i]] %>%
-# #       as.ts() %>%
-# #       acf(lag.max = lag.max, plot = FALSE)
-# # 
-# #     auto_cor_df <- data.frame(Lag = x_auto_cor$lag[, 1, 1])
-# # 
-# #     for (j in 1:nvar(x)) {
-# #       auto_cor_df <- cbind(auto_cor_df, x_auto_cor$acf[, j, j])
-# #     }
-# # 
-# #     colnames(auto_cor_df) <- c("Lag", varnames(x))
-# # 
-# #     vars_to_gather <- varnames(x)
-# # 
-# #     auto_cor_df_long <- tidyr::gather_(auto_cor_df, "Parameter", "Autocorrelation", vars_to_gather, factor_key = TRUE)
-# # 
-# #     p_lst[[ii]] <- ggplot(auto_cor_df_long, aes(x = Lag, Autocorrelation, colour = Parameter)) +
-# #       geom_line() +
-# #       labs(
-# #         title = paste0("Seed ", ii, ": Autocorrelation")
-# #       )
-# # 
-# #     ggsave(curr_file_name)
-# #   }
-# # }
-# 
-# p_lst[[1]]
-# p_lst[[2]]
-# p_lst[[3]]
-# p_lst[[4]]
-# p_lst[[5]]
-# p_lst[[6]]
-# p_lst[[7]]
-# p_lst[[8]]
-# p_lst[[9]]
-# p_lst[[10]]
 
 p_lst[[1]] / p_lst[[10]] + plot_layout(guides = "collect")
 
