@@ -6,6 +6,7 @@ library(magrittr)
 library(rjags)
 library(fitR) # some extensions for rjags
 library(ggplot2)
+library(coda)
 
 # === Yeast data with some generated clusters ==================================
 
