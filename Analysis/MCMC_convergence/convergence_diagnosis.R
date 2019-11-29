@@ -244,7 +244,20 @@ makeESSPlots <- function(mcmc_lst,
 }
 
 
-autoCorrelationPlot <- function(x, plot_title, lag.max = NULL, facet = FALSE) {
+#' @titel Auto-correlation plot
+#' @description Makes an auto-correlation plot as per the coda package, but in
+#' the ggplot2 environment rather than base R.
+#' 
+#' @param x An mcmc chain.
+#' @param plot_title The plot title.
+#' @param lag_max The maximum lag for which to calculate auto-correlation. 
+#' Defaults to 50.
+#' @param facet A logical instructing the plotting of the autocorrelaiton plots
+#' of the parameters as facetted upon parameter or else combined in one plot and
+#' separated by colour.
+#' @return A plot of the auto-correlation for each parameter in x over a number 
+#' of lag values.
+autoCorrelationPlot <- function(x, plot_title, lag_max = NULL, facet = FALSE) {
 
   # The preferred object type for interacting with coda functions
   x <- mcmc.list(x)
@@ -252,7 +265,7 @@ autoCorrelationPlot <- function(x, plot_title, lag.max = NULL, facet = FALSE) {
   # Consider the chain as a time series and calculate the auto-correlation
   x_auto_cor <- x[[1]] %>%
     as.ts() %>%
-    acf(lag.max = lag.max, plot = FALSE)
+    acf(lag.max = lag_max, plot = FALSE)
 
   # Create a data.frame to hold the autocorrelation info
   auto_cor_df <- data.frame(Lag = x_auto_cor$lag[, 1, 1])
@@ -305,7 +318,7 @@ autoCorrelationPlot <- function(x, plot_title, lag.max = NULL, facet = FALSE) {
 # Save autocorrelation plots using ggplot2 style
 saveAutoCorrelationPlots <- function(mcmc_data, save_dirs, plot_titles,
                                      n_seeds = length(mcmc_data),
-                                     lag.max = NULL,
+                                     lag_max = NULL,
                                      gen_auto_corr_title = "Autocorrelation",
                                      plot_type = ".png",
                                      facet = FALSE,
@@ -325,7 +338,7 @@ saveAutoCorrelationPlots <- function(mcmc_data, save_dirs, plot_titles,
     curr_title <- auto_corr_titles[i]
 
     # Create the autocorrelation plot
-    p_lst[[i]] <- autoCorrelationPlot(mcmc_data[[i]], curr_title, lag.max = lag.max, facet = facet)
+    p_lst[[i]] <- autoCorrelationPlot(mcmc_data[[i]], curr_title, lag_max = lag_max, facet = facet)
 
     if (save_plots) {
       ggsave(curr_file_name, plot = p_lst[[i]])
@@ -753,7 +766,7 @@ if (plot_auto_corr) {
   auto_p_lst <- saveAutoCorrelationPlots(new_data,
     new_full_sub_dirs,
     pretty_sub_dir_names,
-    lag.max = NULL,
+    lag_max = NULL,
     gen_auto_corr_title = "Autocorrelation",
     plot_type = plot_type,
     facet = TRUE,
