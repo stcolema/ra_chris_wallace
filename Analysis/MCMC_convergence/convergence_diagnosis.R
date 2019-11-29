@@ -5,16 +5,16 @@
 # devtools::install_github("sbfnk/fitR")
 # devtools::install_github("thomasp85/patchwork")
 
-library(magrittr)
-library(rjags)
-library(fitR) # some extensions for rjags
-library(ggplot2)
+library(magrittr, quietly = T)
+library(rjags, quietly = T)
+library(fitR, quietly = T) # some extensions for rjags
+library(ggplot2, quietly = T)
 library(coda)
-library(patchwork)
-library(dplyr)
-library(plyr)
-library(tidyr)
-library(stringr)
+library(patchwork, quietly = T)
+library(plyr, quietly = T, verbose = F, include.only = c("ldply"), warn.conflicts = F)
+library(dplyr, quietly = T, verbose = F, include.only = c("mutate"), warn.conflicts = F)
+library(tidyr, quietly = T, verbose = F, include.only = c("gather", "gather_"), warn.conflicts = F)
+library(stringr, verbose = F, include.only = c("str_to_sentence", "str_replace"), warn.conflicts = F)
 
 # === Functions ================================================================
 
@@ -24,6 +24,13 @@ extractNumericalFromString <- function(my_string) {
 }
 
 # Calculate the expected sample size for a chain for a given test burn-in
+#' @title find ESS
+#' @description Calculates the effective sample size (ESS) for an MCMC chain 
+#' over a range of potential burn-in values.
+#' @param mcmc_out An MCMC object (as per the coda package)
+#' @param test_burn_in A numrical vector of different burn in values to 
+#' calculate the ESS at.
+#' @return A data.frame of the ESS for different values of burn-in.
 findESS <- function(mcmc_out, test_burn_in) {
 
   # initialise data.frame of ess estimates
@@ -47,12 +54,37 @@ findESS <- function(mcmc_out, test_burn_in) {
 # From Stack Exchange https://stackoverflow.com/questions/22908050/formula-evaluation-with-mutate
 # Use dplyr::mutate with a formula encoded as a string (used as we do not want
 # to restrict the number of variables present)
-stringMutate <- function(df, str_formula) {
-  q <- quote(dplyr::mutate(df, Total = str_formula))
+#' @title string mutate
+#' @description Given a formula captured in a string, creates a new variable 
+#' defined by that formula. Created to allow for dynamic combinations when the 
+#' names and number of variables present is allowed to vary.
+#' @param df A data.frame.
+#' @param str_formula A string enclosing a formula referring to variables in df.
+#' @param varname A string that is the name of the new variable created.
+#' @return A data.frame of the form of df with an additional column defined by 
+#' varname and str_formula.
+#' @example stringMutate(mpg, "hwy - cty", "diff")
+#' @example
+#' # This does not make much sense - it's purely demonstrative
+#' numerical_cols <- unlist(lapply(mpg, is.numeric))
+#' vars_to_add <- colnames(mpg)[numerical_cols]
+#' str_formula <- paste(vars_to_add, collapse = "+")
+#' new_df <- stringMutate(mpg, str_formula, "Total")
+#' @example stringMutate(randu, "sqrt(x**2 + y**2 + z**2)", "dist")
+stringMutate <- function(df, str_formula, varname) {
+  q <- quote(dplyr::mutate(df, !!varname:= str_formula))
   eval(parse(text = sub("str_formula", str_formula, deparse(q))))
 }
 
 # Create parameter names for output from MDI for a given number of datasets
+#' @title Create parameter names 
+#' @description Creates parameter names from an MDI analysis based upon the
+#' number of datasets used.
+#' 
+#' @param n_datasets Integer. The number of datasets used in the analysis.
+#' @return A vector of strings. There will be n_datasets MassParameter_ 
+#' variables (appended 1:n_datasets) and n_datasets choose 2 Phi_ parameters
+#' (appended by ij, where i and j are dataset indices)
 createParameterNames <- function(n_datasets) {
   # The parameters of interest
 
@@ -72,15 +104,38 @@ createParameterNames <- function(n_datasets) {
 
 # Find the appropriate burn-in for a given chain of MCMC (approximate and
 # possible to fail - check plottd output to be sure)
-findBurnIn <- function(mcmc_out,
-                       n_datasets,
-                       max_burn_in = ifelse(is.data.frame(mcmc_out) | is.mcmc(mcmc_out), nrow(mcmc_out), nrow(mcmc_out[[1]])) / 2,
+#' @title Find burn-in
+#' @description Given a chains of MCMC output, this function finds an
+#' appropriate burn-in across for the chain. It does this by calculating the 
+#' effective smaple size (ESS) for each variable at a number of potential 
+#' burn-in values and then selecting the burn-in value for which the sum of
+#' these is maximised. This method is somewhat approximate (as it assumes a 
+#' common order of magnitude for each ESS time series) so we reccomend combining
+#' this with makeESSPlots to check if it makes sense.
+#' @param mcmc_data A mcmc object (as per the coda package).
+#' @param max_burn_in The maximum burn-in value to test against. Defaults to 
+#' half the number of samples present.
+#' @param step_size The granularity of burn-in values to test (i.e. the distance 
+#' between subsequent values). Defaults to 0.02 of the max_burn_in.
+#' 
+#' @return An integer. The reccomended burn in for the current chain.
+#' 
+#' @example
+#' findBurnIn(mcmc_data)
+#' 
+#' @example 
+#' # applied across multiple chains: 
+#' sapply(mcmc_lst, findBurnIn)
+findBurnIn <- function(mcmc_data,
+                       # n_datasets,
+                       max_burn_in = ifelse(is.data.frame(mcmc_data) | is.mcmc(mcmc_data), nrow(mcmc_data), nrow(mcmc_data[[1]])) / 2,
                        step_size = round(max_burn_in / 50)) {
 
 
   # What parameters are present
-  all_parameters <- createParameterNames(n_datasets)
-
+  # all_parameters <- createParameterNames(n_datasets)
+  all_parameters <- varnames(mcmc_data)
+  
   # The function describing the sum of all parameters ESS
   param_func <- paste(all_parameters, collapse = "+")
 
@@ -89,22 +144,22 @@ findBurnIn <- function(mcmc_out,
   test_burn_in <- seq(0, max_burn_in, step_size) # test values
 
   # If not already a list, change mcmc_out to a list
-  if (!class(mcmc_out) %in% c("mcmc.list", "list")) {
-    mcmc_out <- list("chain_1" = mcmc_out)
+  if (!class(mcmc_data) %in% c("mcmc.list", "list")) {
+    mcmc_data <- list("chain_1" = mcmc_data)
   }
 
   # If there are no names, set these to chain_{1..n_chains}
-  if (is.null(names(mcmc_out))) {
-    names(mcmc_out) <- paste0("chain_", seq_along(mcmc_out))
+  if (is.null(names(mcmc_data))) {
+    names(mcmc_data) <- paste0("chain_", seq_along(mcmc_data))
   }
 
   # Create a data.frame of effective sample size for each parameter at each
   # possible burn in
-  df_ess.burn.in <- plyr::ldply(mcmc_out, .fun = findESS, test_burn_in)
+  df_ess.burn.in <- plyr::ldply(mcmc_data, .fun = findESS, test_burn_in)
 
   # Create a variable comparing the ESS for each variable
   est_burn_in_df <- df_ess.burn.in %>%
-    stringMutate(param_func)
+    stringMutate(param_func, "Total")
 
   # Choose the burn in for which the parameters have the largest combined ESS
   est_burn_in <- est_burn_in_df$burn_in[est_burn_in_df$Total == max(est_burn_in_df$Total)]
@@ -113,37 +168,81 @@ findBurnIn <- function(mcmc_out,
 }
 
 # Save ESS plots
-saveESSPlots <- function(my_data, save_dirs, plot_titles,
-                         n_seeds = length(my_data),
+#' @title Make ESS plots
+#' @description Makes ESS plots for a list of MCMC chains (can be a list of 1). 
+#' These are plots of the effective sample size calculated for different 
+#' potential burn-in values and are an aid in choosing an appropriate burn-in
+#' value.
+#' @param mcmc_lst A list of mcmc chains.
+#' @param plot_titles The vector of plot titles corresponding to each chain in
+#' mcmc_lst. If NULL defaults to the length of mcmc_lst of the format "chain_i" 
+#' @param gen_ess_title The component of the title desired in each plot. 
+#' Defaults to "Burn in diagnosis plot". Combined with plot_titles in the form
+#' ``paste0(plot_titles[i], ": ", gen_ess_title)``
+#' @param save_plots Logical. Instruction to save the plots that are generated.
+#' @param save_dirs Characted vector. The locations to save the plots in.
+#' @param plot_type The plot type (one of ".png" or ".pdf"). Defaults to ".png".
+#' @param common_burn_in An integer. Represents the burn-in the user intends to 
+#' apply to each chain. Added as a vertical line to each plot.
+#' @return A list of ggplot2 plots.
+makeESSPlots <- function(mcmc_lst, 
+                         plot_titles = NULL,
                          gen_ess_title = "Burn in diagnosis plot",
+                         save_plots = FALSE,
+                         save_dirs = ".",
                          plot_type = ".png",
-                         save_plots = FALSE) {
+                         common_burn_in = NULL) {
+  
+  if(save_plots){
   ess_file_names <- paste0(save_dirs, "/burn_in_plot", plot_type)
+  }
+
+  if(! is.mcmc.list(mcmc_lst)){
+    mcmc_lst <- mcmc.list(mcmc_lst)
+  }
+
+  # The number of chains in mcmc_lst
+  n_chains <- length(mcmc_lst)
+  
+  # The vector of plot titles
+  if(is.null(plot_titles)){
+    plot_titles <- paste("chain", 1:n_chains)
+  }
   ess_titles <- paste0(plot_titles, ": ", gen_ess_title)
+  
+  p_lst <- vector("list", n_chains)
 
-  p_lst <- vector("list", n_seeds)
+  for (i in 1:n_chains) {
 
-  for (i in 1:n_seeds) {
-
-    # Plot title and filename
-    curr_file_name <- ess_file_names[i]
+    # Plot title
     curr_title <- ess_titles[i]
 
     # Create plot
-    p_lst[[i]] <- plotESSBurn(my_data[[i]]) +
+    p_lst[[i]] <- plotESSBurn(mcmc_lst[[i]]) +
       labs(
         title = curr_title,
         x = "Tested burn in",
         y = "Effective sample size"
-      )
+      ) 
+    # + theme(axis.text.x = element_text(angle = 30, hjust = 1))
+    
+    if(! is.null(common_burn_in)){
+      p_lst[[i]] <- p_lst[[i]] +
+        geom_vline(aes(xintercept= common_burn_in, linetype = "Applied burn-in"), colour= 'red') +
+        scale_linetype_manual(name = "", values = c(2), 
+                              guide = guide_legend(override.aes = list(color = c("red"))))
+    }
 
     # Save
     if (save_plots) {
-      ggsave(curr_file_name)
+      # Current save name
+      curr_file_name <- ess_file_names[i]
+      ggsave(curr_file_name, plot = p_lst[[i]])
     }
   }
   p_lst
 }
+
 
 autoCorrelationPlot <- function(x, plot_title, lag.max = NULL, facet = FALSE) {
 
@@ -226,7 +325,7 @@ saveAutoCorrelationPlots <- function(mcmc_data, save_dirs, plot_titles,
     curr_title <- auto_corr_titles[i]
 
     # Create the autocorrelation plot
-    p_lst[[i]] <- autoCorrelationPlot(mcmc_data[[ii]], curr_title, lag.max = lag.max, facet = facet)
+    p_lst[[i]] <- autoCorrelationPlot(mcmc_data[[i]], curr_title, lag.max = lag.max, facet = facet)
 
     if (save_plots) {
       ggsave(curr_file_name, plot = p_lst[[i]])
@@ -319,7 +418,7 @@ saveGewekePlots <- function(mcmc_lst, save_dirs, plot_titles,
   p_lst <- vector("list", n_seeds)
 
   for (i in 1:n_seeds) {
-    x <- mcmc.list(as.mcmc(mcmc_lst[[ii]]))
+    x <- mcmc.list(as.mcmc(mcmc_lst[[i]]))
 
     # Plot title and filename
     curr_file_name <- file_names[i]
@@ -366,10 +465,8 @@ gelmanValues <- function(x,
     end(x)
   )
 
-
-  confidence_threshold <- paste(50 * (confidence + 1), "%",
-    sep = ""
-  )
+  # String for the 1-way confidence interval
+  confidence_threshold <- paste(50 * (confidence + 1), "%", sep = "")
 
   # Array to hold the shrinkage factor (median and condifence threshold)
   shrink <- array(dim = c(n_bins + 1, nvar(x), 2))
@@ -404,6 +501,8 @@ gelmanValues <- function(x,
 }
 
 
+#' @title gelman plot
+#' @description Create a plot of the Gelman-Rubin shrinkage factor
 gelmanPlot <- function(x,
                        max_bins = 50,
                        confidence = 0.95,
@@ -414,6 +513,8 @@ gelmanPlot <- function(x,
                        ylab = "shrink factor",
                        title = "Gelman-Rubin diagnostic plot") {
   x <- as.mcmc.list(x)
+  
+  confidence_threshold <- paste(50 * (confidence + 1), "%", sep = "")
 
   gelman_obj <- gelmanValues(x,
     max_bins = max_bins,
@@ -426,7 +527,7 @@ gelmanPlot <- function(x,
   last_iter_vec <- gelman_obj$last_iter_vec
 
   median_values <- shrink[, , "median"]
-  threshold_values <- shrink[, , confidence_threhsold]
+  threshold_values <- shrink[, , confidence_threshold]
 
   vars_to_gather <- varnames(x)
 
@@ -434,7 +535,7 @@ gelmanPlot <- function(x,
 
   threshold_df <- data.frame(
     "Last_iter" = last_iter_vec,
-    "Quantity" = confidence_threhsold
+    "Quantity" = confidence_threshold
   ) %>%
     cbind(threshold_values) %>%
     tidyr::gather("Parameter", "Gelman_stat", vars_to_gather)
@@ -449,18 +550,19 @@ gelmanPlot <- function(x,
 
   p <- ggplot(gelman_df, aes(x = Last_iter, y = Gelman_stat, colour = Quantity, linetype = Quantity)) +
     geom_line() +
-    scale_color_manual(values = c("black", "red")) +
+    scale_color_manual(values = c("black", "grey")) +
     facet_wrap(~Parameter) +
     labs(
       x = xlab,
       y = ylab,
       title = title
-    )
+    ) +
+    geom_hline(yintercept = 1L, colour = "red", linetype = 2)
 
   p
 }
 
-input_arguments <- function() {
+inputArguments <- function() {
   option_list <- list(
 
     # Parent directory to MDI output directories
@@ -534,7 +636,7 @@ input_arguments <- function() {
 
 # === Setup ====================================================================
 
-args <- input_arguments()
+args <- inputArguments()
 
 # Set ggplot2 theme
 theme_set(theme_bw())
@@ -605,6 +707,8 @@ n_cols_cont <- n_datasets + choose(n_datasets, 2)
 
 # === Read in data =============================================================
 
+cat("\nReading in data. \n")
+
 # Load the relevant data
 my_data <- vector("list", length = n_seeds)
 
@@ -620,24 +724,32 @@ for (i in 1:n_seeds) {
 
 # === Plotting =================================================================
 
+# Find the common burn in across chains
+common_burn_in <- sapply(my_data, findBurnIn) %>% #, 3) %>%
+  max()
+
 # If instructed to plot burn in diagnosis
 if (plot_burn_in) {
-  ess_p_lst <- saveESSPlots(my_data, new_full_sub_dirs, pretty_sub_dir_names,
+  cat("\nPlotting effective sample size to aid burn-in diagnosis.\n")
+  ess_p_lst <- makeESSPlots(my_data, 
+                            save_dirs = new_full_sub_dirs, 
+                            plot_titles = pretty_sub_dir_names,
     gen_ess_title = "Burn in diagnosis plot",
-    plot_type = ".png"
+    plot_type = ".png",
+    save_plots = TRUE,
+    common_burn_in = common_burn_in
   )
 }
 
-
-# Find the common burn in across chains
-common_burn_in <- sapply(my_data, findBurnIn, 3) %>%
-  max()
+# plotESSBurn(my_data[[1]]) 
 
 # Apply the burn in to the data
+cat("\nApplying a burn-in of", common_burn_in, "to each chain.\n")
 new_data <- lapply(my_data, burnAndThin, burn = common_burn_in)
 
 # Plot autocorrelation for each seed for each parameter
 if (plot_auto_corr) {
+  cat("\nPlotting autocorrelation for within-chain convergence diagnosis.\n")
   auto_p_lst <- saveAutoCorrelationPlots(new_data,
     new_full_sub_dirs,
     pretty_sub_dir_names,
@@ -653,6 +765,7 @@ if (plot_auto_corr) {
 
 # Plot the Geweke diagnostic statistic for each seed
 if (plot_geweke) {
+  cat("\nPlotting Geweke statistic for within-chain convergence diagnosis.\n")
   geweke_p_lst <- saveGewekePlots(new_data,
     new_full_sub_dirs,
     pretty_sub_dir_names,
@@ -661,9 +774,23 @@ if (plot_geweke) {
   )
 }
 
-# Plot the Gelman-Rubin shrinkage factor
-gelmanPlot(new_data,
-  xlab = "Last iteration in chain",
-  ylab = "Shrinkage factor",
-  title = "MDI: Gelman-Rubin diagnostic plot"
-)
+
+
+if(plot_gelman){
+  cat("\nPlotting Gelman-Rubin shrinkage factor for across-chain convergence diagnosis.\n")
+  gelman_plot_gen_name <- paste0("gelman_plot", plot_type)
+  
+  # Plot the Gelman-Rubin shrinkage factor
+  p_gelman <- gelmanPlot(new_data,
+    xlab = "Last iteration in chain",
+    ylab = "Shrinkage factor",
+    title = "MDI: Gelman-Rubin diagnostic plot"
+  )
+  
+  # Save it in the parent directory and everywhere else.
+  ggsave(paste0(gen_mdi_dir, gelman_plot_gen_name), plot = p_gelman)
+  
+  for(d in new_full_sub_dirs){
+    ggsave(paste0(d, "/", gelman_plot_gen_name), plot = p_gelman)
+  }
+}
