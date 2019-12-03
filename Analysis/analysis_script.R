@@ -56,25 +56,28 @@ library(cowplot, quietly = T)
 # For praise
 library(praise, quietly = T)
 
-function_dir <- "~/Documents/PhD/Year_1/Consensus_clustering/ra_chris_wallace/Analysis/Analysis_script_functions/"
+# My own helper function
+library(mdiHelpR)
 
-function_scripts <- c(
-  "plot_phi_series.R",
-  "plot_phi_densities.R",
-  "plot_phi_histograms.R",
-  "plot_similarity_matrices.R",
-  "plot_rand_index.R",
-  "plot_fused_samples.R",
-  "plot_comparison_expression_clustering.R",
-  "plot_mass_parameters.R",
-  "plot_clusters_series.R",
-  "create_psm.R",
-  "arandi_matrices.R"
-)
-
-for (f in paste0(function_dir, function_scripts)) {
-  source(f)
-}
+# function_dir <- "~/Documents/PhD/Year_1/Consensus_clustering/ra_chris_wallace/Analysis/Analysis_script_functions/"
+# 
+# function_scripts <- c(
+#   "plot_phi_series.R",
+#   "plot_phi_densities.R",
+#   "plot_phi_histograms.R",
+#   "plot_similarity_matrices.R",
+#   "plot_rand_index.R",
+#   "plot_fused_samples.R",
+#   "plot_comparison_expression_clustering.R",
+#   "plot_mass_parameters.R",
+#   "plot_clusters_series.R",
+#   "create_psm.R",
+#   "arandi_matrices.R"
+# )
+# 
+# for (f in paste0(function_dir, function_scripts)) {
+#   source(f)
+# }
 
 # === Functions ================================================================
 
@@ -433,6 +436,9 @@ files_present <- args$datasets %>%
 n_datasets <- length(files_present)
 col_names <- paste0("D", 1:n_datasets)
 
+# print(files_present)
+# print(n_datasets)
+
 # Remove the file extension
 dataset_names <- tools::file_path_sans_ext(files_present)
 
@@ -602,13 +608,15 @@ cols_to_keep <- all_datasets %in% dataset_names
 if (do_phis_series) {
   if(n_datasets > 1){
   cat("\n\nPlotting phi values across iterations.\n")
-  plot_phi_series(mcmc_out_lst,
+  mdiHelpR::plotPhiSeries(mcmc_out_lst,
     file_path,
     num_files,
     n_datasets,
     start_index,
     eff_n_iter,
-    save_plots = T
+    save_plots = T,
+    burn = burn,
+    thin = thin
   )
   } else {
     cat("\nOnly one dataset. No phi parameters.")
@@ -653,7 +661,7 @@ compare_tibble <- tibble(
 phis <- list()
 
 # Collect the number of clusters present in each iteration
-n_clust_list <- list()
+n_clust_list <- vector("list", length = n_datasets) # list() 
 
 for (j in 1:num_files) {
 
@@ -677,6 +685,12 @@ for (j in 1:num_files) {
       dplyr::select(contains(dataset_name)) %>%
       magrittr::extract(start_index:eff_n_iter, )
 
+    # cat(paste("\n\n", dataset_name, " currently\n\n"))
+    # print(str(.mdi_alloc))
+    
+    # print(nrow(.mdi_alloc))
+    # print(ncol(.mdi_alloc))
+    
     # If there is the same number of clusters in each iteration apply(., 1, unique)
     # retrns a matrix rather than a list with each column representing the unique
     # entries in one iteration (or in a given row of .mdi_alloc).
@@ -687,16 +701,28 @@ for (j in 1:num_files) {
     
     # Find the number of clusters in each iteration
     if(typeof(unique_labels) == "list"){
+      
       n_clust_list[[i]] <- unique_labels %>% 
         lapply(length) %>% 
         unlist()
-    } else {
+    } else{
+      
+      if(! is.null(nrow(unique_labels))){
 
       n_clust_list[[i]] <- unique_labels %>%
         nrow() %>% 
         rep((eff_n_iter - (start_index - 1))) # as we include start_index
+    } else {
+      n_clust_list[[i]] <- rep(1, (eff_n_iter - (start_index - 1)))
+    }
     }
     
+    
+    
+    # if(i > 1){
+    # print(str(unique_labels))
+    # print(str(n_clust_list[[i]]))
+    # }
     # This step does not need to be part of the for loop
     # if (i == 1) {
     # 
@@ -742,8 +768,8 @@ for (j in 1:num_files) {
     # .sim_mat <- make_psm(.mdi_alloc) %>%
     #   set_colnames(gene_id) %>%
     #   set_rownames(gene_id)
-    
-    .sim_mat <- make_psm(.mdi_alloc) %>%
+  
+    .sim_mat <- mdiHelpR::makePSM(.mdi_alloc) %>%
       set_colnames(sample_names) %>%
       set_rownames(sample_names)
     
@@ -821,7 +847,9 @@ for (j in 1:num_files) {
 if (do_phis_densities) {
   if(n_datasets > 1){
   cat("\nSaving phi density plots.\n")
-  plot_phi_densities(phis, file_path, start_index, eff_n_iter)
+    mdiHelpR::plotPhiDensities(phis, file_path, start_index, eff_n_iter,
+                     burn = burn, 
+                     thin = thin)
   } else {
     cat("\nOnly one dataset. No phi parameters.")
   }
@@ -832,7 +860,9 @@ if (do_phis_densities) {
 if (do_phis_histograms) {
   if(n_datasets > 1){
   cat("\nSaving phi histogram plots.\n")
-  plot_phi_histograms(phis, file_path, start_index, eff_n_iter)
+    plotPhiHistograms(phis, file_path, start_index, eff_n_iter,
+                      burn = burn,
+                      thin = thin)
   } else {
     cat("\nOnly one dataset. No phi parameters.")
   }
@@ -899,11 +929,16 @@ if (do_rand_plot) {
 # If instructed do Rand index matrices and the heatmap
 if(do_arandi_matrices){
   if(n_datasets > 1){
-  arandi_matrices <- arandi_matrices(compare_tibble$mdi_allocation, n_datasets)
-  
-  avg_arandi_matrix <- average_matrix(arandi_matrices) %>% 
-    set_colnames(dataset_names) %>% 
-    set_rownames(dataset_names)
+    arandi_matrices <- makeARIMatrices(compare_tibble$mdi_allocation, n_datasets)
+    # arandi_matrices <- arandi_matrices(compare_tibble$mdi_allocation, n_datasets)
+    
+    avg_arandi_matrix <- averageMatrix(arandi_matrices) %>% 
+      set_colnames(dataset_names) %>% 
+      set_rownames(dataset_names)
+    
+  # avg_arandi_matrix <- average_matrix(arandi_matrices) %>% 
+  #   set_colnames(dataset_names) %>% 
+  #   set_rownames(dataset_names)
   
   arandi_pheatmap_title <- "Heatmap comparing adjusted rand index across datasets"
   arandi_pheatmap_file_name <- paste0(save_path, "Arandi_heatmap", plot_type)
@@ -954,9 +989,18 @@ mdi_input_files <- list.files(path = data_dir, full.names = T, include.dirs = F)
 
 input_file_names <- basename(tools::file_path_sans_ext(mdi_input_files))
 
-expression_datasets <- input_file_names %>%
-  gsub("([^\\_]+)\\_.*", "\\1", .)
+print(input_file_names)
+
+expression_datasets <- input_file_names  # %>%
+  # gsub("([^\\_]+)\\_.*", "\\1", .)
 # stringr::str_replace("_sma_mat_nv", "")
+
+print(compare_tibble$dataset)
+print(files_present)
+print(expression_datasets)
+
+expression_datasets <- dataset_names
+# stop()
 
 datasets_relevant_indices <- files_present %>%
   tools::file_path_sans_ext() %>%
@@ -965,8 +1009,10 @@ datasets_relevant_indices <- files_present %>%
 datasets_relevant <- expression_datasets[datasets_relevant_indices]
 relevant_input_files <- mdi_input_files[datasets_relevant_indices]
 
+print("LOL")
 mega_df <- data.frame(matrix(nrow = n_samples, ncol = 0)) %>%
   magrittr::set_rownames(sample_names) # magrittr::set_rownames(gene_id)
+print("Not lol")
 
 big_annotation <- data.frame(matrix(nrow = n_samples, ncol = n_datasets)) %>%
   magrittr::set_rownames(sample_names) %>%  # magrittr::set_rownames(gene_id) %>%
@@ -1043,8 +1089,9 @@ for (i in 1:n_datasets) {
 
   expr_min <- min(expression_data_tidy)
   expr_max <- max(expression_data_tidy)
-
-  expr_breaks <- define_breaks(col_pal_expr, lb = expr_min, ub = expr_max) %>% unique()
+  
+  # expr_breaks <- define_breaks(col_pal_expr, lb = expr_min, ub = expr_max) %>% unique()
+  expr_breaks <- mdiHelpR::defineBreaks(col_pal_expr, lb = expr_min, ub = expr_max) %>% unique()
   
   n_people <- c(n_people, ncol(expression_data_tidy))
   show_expr_col_names <- TRUE
@@ -1115,8 +1162,8 @@ mega_matrix <- mega_df %>%
 expr_min <- min(mega_matrix)
 expr_max <- max(mega_matrix)
 
-expr_breaks <- define_breaks(col_pal_expr, lb = expr_min, ub = expr_max) %>% unique()
-
+# expr_breaks <- define_breaks(col_pal_expr, lb = expr_min, ub = expr_max) %>% unique()
+expr_breaks <- mdiHelpR::defineBreaks(col_pal_expr, lb = expr_min, ub = expr_max) %>% unique()
 
 if (do_raw_data_heatmap) {
   if (TRUE) { # n_total_clusters > 20) {
@@ -1191,15 +1238,6 @@ for (k in 1:num_files) {
       # dataset with each other one
       fused_probes_curr[[dataset_j]] <- .fused_probes_ind_i <- .fusion_prob > fusion_threshold
 
-      # compare_tibble$fused_probes[
-      #   compare_tibble$dataset == dataset_j
-      #   ][[k]] <- .fused_probes_ind_j <- .fusion_prob > fusion_threshold
-
-      # Now record the "fused" probes excluding those which have a value of 0 across the dataset
-      # compare_tibble$fused_non_zero_probes[
-      #   compare_tibble$dataset == dataset_i
-      # ][[k]]
-
       fused_non_zero_probes_curr[[dataset_j]] <- .fused_probes_ind_i & compare_tibble$non_zero_probes_ind[compare_tibble$dataset == dataset_i][[k]]
 
       # compare_tibble$fused_non_zero_probes[
@@ -1242,7 +1280,8 @@ if (do_fused_samples_heatmaps) {
 
 if (do_comparison_plots) {
   cat("\nSaving comparison of similarity matrix and expression data.\n")
-  plot_comparison_expression_to_clustering(
+  # plot_comparison_expression_to_clustering(
+  mdiHelpR::plotComparisonData2Clustering(
     compare_tibble,
     dataset_names,
     n_datasets,
@@ -1252,7 +1291,8 @@ if (do_comparison_plots) {
     show_row_labels = show_heatmap_labels
   )
 
-  plot_comparison_corr_sim_expr(
+  mdiHelpR::plotComparisonCorrelationPSMData(
+  # plot_comparison_corr_sim_expr(
     compare_tibble,
     dataset_names,
     n_datasets,
