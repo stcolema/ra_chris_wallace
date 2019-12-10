@@ -436,13 +436,8 @@ files_present <- args$datasets %>%
 n_datasets <- length(files_present)
 col_names <- paste0("D", 1:n_datasets)
 
-# print(files_present)
-# print(n_datasets)
-
 # Remove the file extension
 dataset_names <- tools::file_path_sans_ext(files_present)
-
-# print("Here")
 
 # Instructions for different plots and calculations
 do_dendrograms_ie_trees <- args$plot_trees
@@ -600,6 +595,19 @@ cols_to_keep <- all_datasets %in% dataset_names
 #     stop(paste("Expected", curr_viable_datasets[[2]]))
 #   }
 # }
+
+mdi_input_files <- list.files(path = data_dir, full.names = T, include.dirs = F) %>%
+  grep("csv", ., value = TRUE)
+
+lower_files <- stringr::str_to_lower(files_present) %>% 
+  tools::file_path_sans_ext() 
+
+mdi_input_files_lower <- stringr::str_to_lower(mdi_input_files) %>% 
+  tools::file_path_sans_ext() %>% 
+  basename()
+
+# expr_data_order <- match(lower_files, mdi_input_files_lower) %>% 
+#   print()
 
 
 # === Plotting phis ==========================================================
@@ -987,17 +995,13 @@ gen_ph_file_name <- paste0(loc_dir, "pheatmap_")
 mdi_input_files <- list.files(path = data_dir, full.names = T, include.dirs = F) %>%
   grep("csv", ., value = TRUE)
 
-input_file_names <- basename(tools::file_path_sans_ext(mdi_input_files))
+# print(mdi_input_files)
 
-print(input_file_names)
+input_file_names <- basename(tools::file_path_sans_ext(mdi_input_files))
 
 expression_datasets <- input_file_names  # %>%
   # gsub("([^\\_]+)\\_.*", "\\1", .)
 # stringr::str_replace("_sma_mat_nv", "")
-
-print(compare_tibble$dataset)
-print(files_present)
-print(expression_datasets)
 
 expression_datasets <- dataset_names
 # stop()
@@ -1006,13 +1010,20 @@ datasets_relevant_indices <- files_present %>%
   tools::file_path_sans_ext() %>%
   match(expression_datasets)
 
+# print("Here's a print statement")
+# print(datasets_relevant_indices)
+# print(mdi_input_files)
+
 datasets_relevant <- expression_datasets[datasets_relevant_indices]
 relevant_input_files <- mdi_input_files[datasets_relevant_indices]
 
-print("LOL")
+datasets_relevant <- datasets_relevant[expr_data_order]
+
+# print(datasets_relevant)
+# print(relevant_input_files)
+
 mega_df <- data.frame(matrix(nrow = n_samples, ncol = 0)) %>%
   magrittr::set_rownames(sample_names) # magrittr::set_rownames(gene_id)
-print("Not lol")
 
 big_annotation <- data.frame(matrix(nrow = n_samples, ncol = n_datasets)) %>%
   magrittr::set_rownames(sample_names) %>%  # magrittr::set_rownames(gene_id) %>%
@@ -1028,7 +1039,8 @@ data_files <- list()
 
 for (i in 1:n_datasets) {
   curr_dataset <- datasets_relevant[[i]]
-
+  # print(curr_dataset)
+  
   file_name <- gen_ph_file_name %>%
     paste0(datasets_relevant[[i]], plot_type)
 
@@ -1044,6 +1056,8 @@ for (i in 1:n_datasets) {
 
   # Read in the expression data
   f <- relevant_input_files[[i]]
+  # print(f)
+  
   expression_data <- fread(f, header = T)
 
   # Convert from probe ids to gene ids if necessary
@@ -1068,12 +1082,17 @@ for (i in 1:n_datasets) {
   expression_data_tidy[is.na(expression_data_tidy)] <- 0
 
   # Add the expression data to our tibble
+  # print(compare_tibble$dataset == curr_dataset)
+  curr_ind <- which(compare_tibble$dataset == curr_dataset)
+  # print(curr_ind)
   num_occurences_dataset <- length(compare_tibble$expression_data[compare_tibble$dataset == curr_dataset])
   for (k in 1:num_occurences_dataset) {
-    compare_tibble$expression_data[compare_tibble$dataset == curr_dataset][[k]] <- expression_data_tidy
-    compare_tibble$non_zero_probes_ind[compare_tibble$dataset == curr_dataset][[k]] <- .non_zero_probes <- rowSums(expression_data_tidy) != 0
-    compare_tibble$non_zero_probes[compare_tibble$dataset == curr_dataset][[k]] <- names(.non_zero_probes)[.non_zero_probes]
-    compare_tibble$correlation_matrix[compare_tibble$dataset == curr_dataset][[k]] <- expression_data_tidy %>%
+    # print(k)
+    # print(compare_tibble$dataset[curr_ind][[k]])
+    compare_tibble$expression_data[curr_ind][[k]] <- expression_data_tidy
+    compare_tibble$non_zero_probes_ind[curr_ind][[k]] <- .non_zero_probes <- rowSums(expression_data_tidy) != 0
+    compare_tibble$non_zero_probes[curr_ind][[k]] <- names(.non_zero_probes)[.non_zero_probes]
+    compare_tibble$correlation_matrix[curr_ind][[k]] <- expression_data_tidy %>%
       t() %>%
       cor()
     
