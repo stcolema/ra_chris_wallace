@@ -30,6 +30,7 @@ def find_ext_files(dir_path:str = ".",
 def big_csv(input_dir: str,
             out_file_name: str,
             line_to_keep: int = 2,
+            header: str = "True",
             extension: str = ".csv"):
     """Replaces all sep with itself twice (for matlab version of MDI)
     """
@@ -45,14 +46,20 @@ def big_csv(input_dir: str,
                 # iterate over the lines in f
                 for j, line in enumerate(f):
 
-                    # if the header line, write directly to file with no changes
-                    if j == 0:
+                    if header.lower() in ["true", "t"]:
 
-                        if i == 0:
+                        print(header.lower())
 
-                            out_f.write(line)
+                        # if the header line, write directly to file with no changes
+                        if j == 0:
+
+                            if i == 0:
+
+                                out_f.write(line)
                     
-                        continue
+                            continue
+
+                    
 
                     if j == line_to_keep:
                         # Else find the first entry and add the appendage
@@ -67,12 +74,19 @@ if __name__ == "__main__":
     out_file_name = argv[2]
     ext = ".csv"
     line_to_keep = 2
-
+    header = "True"
+    
     if(len(argv) > 3):
-        line_to_keep = argv[3]
+        line_to_keep = int(argv[3])
 
     if(len(argv) > 4):
-        ext = argv[4]
+        header = argv[4]
+
+    if(len(argv) > 5):
+        ext = argv[5]
+    
+    if(header.lower() not in ['true', 't', 'false', 'f']):
+        raise ValueError("header value is not true or false. Please check.")
 
     # find_ext_files(dir_path, ext)
-    big_csv(dir_path, out_file_name, line_to_keep, ext)
+    big_csv(dir_path, out_file_name, line_to_keep, header, ext)
