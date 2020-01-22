@@ -606,9 +606,7 @@ mdi_input_files_lower <- stringr::str_to_lower(mdi_input_files) %>%
   tools::file_path_sans_ext() %>% 
   basename()
 
-# expr_data_order <- match(lower_files, mdi_input_files_lower) %>% 
-#   print()
-
+expr_data_order <- match(lower_files, mdi_input_files_lower)
 
 # === Plotting phis ==========================================================
 
@@ -1017,10 +1015,22 @@ datasets_relevant_indices <- files_present %>%
 datasets_relevant <- expression_datasets[datasets_relevant_indices]
 relevant_input_files <- mdi_input_files[datasets_relevant_indices]
 
-datasets_relevant <- datasets_relevant[expr_data_order]
+# print("Dog")
+# print(expression_datasets)
+# print("God")
+# print(datasets_relevant_indices)
+# print("Soon")
+# print(datasets_relevant)
+# print("Hi")
+# print(expr_data_order)
 
+# datasets_relevant <- datasets_relevant[expr_data_order]
+
+# print("MAmmy")
 # print(datasets_relevant)
 # print(relevant_input_files)
+
+relevant_input_files <- relevant_input_files[expr_data_order]
 
 mega_df <- data.frame(matrix(nrow = n_samples, ncol = 0)) %>%
   magrittr::set_rownames(sample_names) # magrittr::set_rownames(gene_id)

@@ -48,8 +48,6 @@ def big_csv(input_dir: str,
 
                     if header.lower() in ["true", "t"]:
 
-                        print(header.lower())
-
                         # if the header line, write directly to file with no changes
                         if j == 0:
 
