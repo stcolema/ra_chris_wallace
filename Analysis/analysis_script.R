@@ -480,8 +480,11 @@ generic_title <- "MDI: Adjusted Rand index for"
 generic_save_name <- file_path
 
 
-mdi_output_files <- list.files(path = file_path, full.names = T, include.dirs = F) %>%
-  grep("csv", ., value = TRUE)
+mdi_output_files <- list.files(path = file_path, 
+                               full.names = T, 
+                               include.dirs = F, 
+                               pattern = ".csv$")  #%>%
+  # grep("csv", ., value = TRUE)
 
 num_files <- length(mdi_output_files)
 file_names <- basename(tools::file_path_sans_ext(mdi_output_files))
@@ -596,8 +599,11 @@ cols_to_keep <- all_datasets %in% dataset_names
 #   }
 # }
 
-mdi_input_files <- list.files(path = data_dir, full.names = T, include.dirs = F) %>%
-  grep("csv", ., value = TRUE)
+mdi_input_files <- list.files(path = data_dir, 
+                              full.names = T, 
+                              include.dirs = F, 
+                              pattern = ".csv$") # %>%
+  # grep("csv", ., value = TRUE)
 
 lower_files <- stringr::str_to_lower(files_present) %>% 
   tools::file_path_sans_ext() 
@@ -990,12 +996,20 @@ gen_ph_title <- ": heatmap of expression data"
 gen_ph_file_name <- paste0(loc_dir, "pheatmap_")
 
 # Find the expression data files
-mdi_input_files <- list.files(path = data_dir, full.names = T, include.dirs = F) %>%
-  grep("csv", ., value = TRUE)
-
-# print(mdi_input_files)
+mdi_input_files <- list.files(path = data_dir, 
+                              full.names = T, 
+                              include.dirs = F, 
+                              pattern = ".csv$") # %>%
+  # grep("csv", ., value = TRUE)
 
 input_file_names <- basename(tools::file_path_sans_ext(mdi_input_files))
+data_to_keep <- match(files_present, input_file_names)
+
+input_file_names <- input_file_names[data_to_keep]
+mdi_input_files <- mdi_input_files[data_to_keep]
+
+datasets_relevant <- input_file_names
+relevant_input_files <- mdi_input_files
 
 expression_datasets <- input_file_names  # %>%
   # gsub("([^\\_]+)\\_.*", "\\1", .)
@@ -1004,16 +1018,16 @@ expression_datasets <- input_file_names  # %>%
 expression_datasets <- dataset_names
 # stop()
 
-datasets_relevant_indices <- files_present %>%
-  tools::file_path_sans_ext() %>%
-  match(expression_datasets)
+# datasets_relevant_indices <- files_present %>%
+#   tools::file_path_sans_ext() %>%
+#   match(expression_datasets)
 
 # print("Here's a print statement")
 # print(datasets_relevant_indices)
 # print(mdi_input_files)
 
-datasets_relevant <- expression_datasets[datasets_relevant_indices]
-relevant_input_files <- mdi_input_files[datasets_relevant_indices]
+# datasets_relevant <- expression_datasets[datasets_relevant_indices]
+# relevant_input_files <- mdi_input_files[datasets_relevant_indices]
 
 # print("Dog")
 # print(expression_datasets)
@@ -1030,7 +1044,8 @@ relevant_input_files <- mdi_input_files[datasets_relevant_indices]
 # print(datasets_relevant)
 # print(relevant_input_files)
 
-relevant_input_files <- relevant_input_files[expr_data_order]
+# relevant_input_files <- relevant_input_files[expr_data_order]
+# print(relevant_input_files)
 
 mega_df <- data.frame(matrix(nrow = n_samples, ncol = 0)) %>%
   magrittr::set_rownames(sample_names) # magrittr::set_rownames(gene_id)
