@@ -491,7 +491,7 @@ mdi_output_files <- list.files(
 num_files <- length(mdi_output_files)
 file_names <- basename(tools::file_path_sans_ext(mdi_output_files))
 
-print(mdi_output_files)
+# print(mdi_output_files)
 
 # For plotting phis
 phis <- list()
@@ -506,12 +506,12 @@ mcmc_out_lst <- list() # vector("list", num_files)
 qual_col_pals <- brewer.pal.info[brewer.pal.info$category == "qual", ]
 col_vector <- brewer.pal(n = 12, name = "Paired") # unlist(mapply(brewer.pal, qual_col_pals$maxcolors, rownames(qual_col_pals)))
 
-print("Hi")
+# print("Hi")
 for (i in 1:num_files) {
   curr_name <- file_names[[i]]
   mcmc_out_lst[[curr_name]] <- fread(mdi_output_files[[i]])
 }
-print("ho")
+# print("ho")
 if (is.na(n_iter)) {
   n_iter <- nrow(mcmc_out_lst[[1]]) * thin
 }
@@ -525,9 +525,9 @@ if (is.na(n_samples)) {
     grep("Dataset1", .)
 
   sample_names <- colnames(mcmc_out_lst[[1]])[dataset_1_ind] %>%
-    stringr::str_remove_all("Dataset1_") 
+    stringr::str_remove_all("Dataset1_")
   # %>%
-    # stringr::str_remove_all("X")
+  # stringr::str_remove_all("X")
 
   n_samples <- sample_names %>%
     length()
@@ -625,8 +625,8 @@ expr_data_order <- match(lower_files, mdi_input_files_lower)
 # Plot phi value between each dataset combination across iterations
 if (do_phis_series) {
   if (n_datasets > 1) {
-    print(str(mcmc_out_lst))
-    print(file_path)
+    # print(str(mcmc_out_lst))
+    # print(file_path)
 
     cat("\n\nPlotting phi values across iterations.\n")
     mdiHelpR::plotPhiSeries(mcmc_out_lst,
@@ -861,6 +861,57 @@ for (j in 1:num_files) {
 # colnames(samples_present_final) <- dataset_names
 
 # === Phi denisty plots ================================================================
+
+# plotPhiDensities <- function(phis, file_path, start_index, eff_n_iter,
+#          burn = 0,
+#          thin = 1) {
+#   loc_dir <- paste0(file_path, "Phi_density_plots/")
+#   dir.create(loc_dir, showWarnings = FALSE)
+#
+#   for (i in 1:length(phis)) {
+#     for (j in 1:ncol(phis[[i]])) {
+#       curr_phi <- colnames(phis[[i]])[j]
+#
+#       density_plot_name <- paste0(loc_dir, curr_phi, "_density_plot", plot_type)
+#
+#       density_title <- paste(curr_phi, ": density plot")
+#
+#       # Find which datasets are used here
+#       dataset_indices <- readr::parse_number(curr_phi)
+#
+#       # The following steps do not work if we have more than 9 datasets (which is not relevant to me)
+#       # This extracts the first dataset index (i.e. from 67 takes 6)
+#       dataset_index_1 <- dataset_indices[1] / 10 %>%
+#         floor(.)
+#
+#       # This extracts the second dataset index
+#       dataset_index_2 <- dataset_indices[1] %% (10)
+#
+#       dataset_1 <- dataset_names[dataset_index_1]
+#       dataset_2 <- dataset_names[dataset_index_2]
+#
+#       density_subtitle <- paste(
+#         "Iterations",
+#         (burn + thin),
+#         "through",
+#         n_iter,
+#         "for",
+#         dataset_1,
+#         "and",
+#         dataset_2
+#       )
+#
+#       ggplot2::ggplot(data = phis[[i]][start_index:eff_n_iter, ], ggplot2::aes_string(x = curr_phi)) +
+#         ggplot2::geom_density() +
+#         ggplot2::labs(
+#           title = density_title,
+#           subtitle = density_subtitle
+#         )
+#
+#       ggplot2::ggsave(density_plot_name)
+#     }
+#   }
+# }
 
 if (do_phis_densities) {
   if (n_datasets > 1) {
@@ -1127,6 +1178,8 @@ if (!do_no_raw_data_plots) {
       compare_tibble$correlation_matrix[curr_ind][[k]] <- expression_data_tidy %>%
         t() %>%
         cor()
+
+      # pheatmap::pheatmap(cor(t(expression_data_tidy)))
     }
 
     data_files[[i]] <- expression_data
@@ -1141,7 +1194,11 @@ if (!do_no_raw_data_plots) {
     expr_max <- max(expression_data_tidy)
 
     # expr_breaks <- define_breaks(col_pal_expr, lb = expr_min, ub = expr_max) %>% unique()
-    expr_breaks <- mdiHelpR::defineBreaks(col_pal_expr, lb = expr_min, ub = expr_max) %>% unique()
+    expr_breaks <- mdiHelpR::defineBreaks(col_pal_expr,
+      lb = expr_min,
+      ub = expr_max
+    ) %>%
+      unique()
 
     n_people <- c(n_people, ncol(expression_data_tidy))
     show_expr_col_names <- TRUE
@@ -1213,7 +1270,11 @@ if (!do_no_raw_data_plots) {
   expr_max <- max(mega_matrix)
 
   # expr_breaks <- define_breaks(col_pal_expr, lb = expr_min, ub = expr_max) %>% unique()
-  expr_breaks <- mdiHelpR::defineBreaks(col_pal_expr, lb = expr_min, ub = expr_max) %>% unique()
+  expr_breaks <- mdiHelpR::defineBreaks(col_pal_expr,
+    lb = expr_min,
+    ub = expr_max
+  ) %>%
+    unique()
 
   if (do_raw_data_heatmap) {
     if (TRUE) { # n_total_clusters > 20) {
@@ -1251,7 +1312,7 @@ if (!do_no_raw_data_plots) {
 # We save this as a named list to the tibble. Each entry in the list corresponds
 # to a dataset and records the fused probes between the current dataset and the
 # entry name
-if (n_datasets > 2) {
+if (n_datasets > 1) {
   cat("\nFinding ''fused'' probes.\n")
   for (k in 1:num_files) {
     for (i in 1:n_datasets) {
@@ -1313,7 +1374,7 @@ if (n_datasets > 2) {
 
     # print(str(compare_tibble$fused_probes))
     # print(str(samples_present_dt))
-    
+
     row.names(samples_present_dt) <- row.names(compare_tibble$expression_data[[1]])
     # print(str(samples_present_dt))
 

@@ -279,7 +279,13 @@ processedExpression %>%
   apply(1, sd) %>% 
   hist(main = "Standard deviation of genes in GE data (post processing)")
 
-ge_zeroness %>% 
+ge_zeroness_post <- rowSums(processedExpression == 0)
+
+ge_zeroness_post %>% 
+  hist(main = "Count of 0's in each gene in GE data post-processing",
+       xlab = "Number of 0's present")
+
+ge_zeroness_post[ge_zeroness_post > 0] %>% 
   hist(main = "Count of 0's in each gene in GE data post-processing",
        xlab = "Number of 0's present")
 
