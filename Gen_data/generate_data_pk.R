@@ -97,6 +97,22 @@ input_arguments <- function() {
       metavar = "character"
     ),
 
+    # Instuction to save pheatmap of data generated
+    optparse::make_option(c("--plot_cor_heatmap"),
+      type = "logical",
+      default = TRUE,
+      help = "Instuction to save pheatmap of correlation within generated data [default= %default]",
+      metavar = "logical"
+    ),
+
+    # Filename of pheatmap (if saved)
+    optparse::make_option(c("--cor_ph_save_name"),
+      type = "character",
+      default = "cor_pheatmap.png",
+      help = "Filename of correlation pheatmap (if saved) [default= %default]",
+      metavar = "character"
+    ),
+
     # Directory to save data and heatmap (if saved)
     optparse::make_option(c("-d", "--dir"),
       type = "character",
@@ -192,6 +208,12 @@ ph_save_name <- args$ph_save_name
 # Instruction to make a heatmap
 do_heatplot <- args$plot_heatmap
 
+# Save name for correlation heatmap
+cor_ph_save_name <- args$cor_ph_save_name
+
+# Instruction to make a correlation heatmap
+do_cor_heatplot <- args$plot_cor_heatmap
+
 # === Main script ==============================================================
 
 set.seed(seed)
@@ -217,6 +239,13 @@ if (do_heatplot) {
   ph1 <- pheatmap::pheatmap(new_data,
     filename = paste0(loc_dir, ph_save_name),
     main = "Heatmap of generated data"
+  )
+}
+
+if (do_cor_heatplot) {
+  ph2 <- pheatmap::pheatmap(cor(t(new_data)),
+    filename = paste0(loc_dir, cor_ph_save_name),
+    main = "Heatmap of correlation across generated data"
   )
 }
 
