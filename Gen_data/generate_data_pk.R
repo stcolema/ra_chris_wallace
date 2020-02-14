@@ -190,6 +190,10 @@ n_clust <- args$n_clust %>%
   unlist() %>%
   as.numeric()
 
+# Row names
+row_names <- paste0("Person_", 1:sum(n_clust))
+col_names <- paste0("Gene_", 1:p)
+
 # The means of the clusters
 means <- args$means %>%
   strsplit(" ") %>%
@@ -228,11 +232,15 @@ new_data <- generate_peturbed_data(
   p
 )
 
+# Assign row.names and columns names
+row.names(new_data) <- row_names
+colnames(new_data) <- col_names
+
 # Create directory if doesn't exist
 dir.create(loc_dir, showWarnings = FALSE)
 
 # Save the data
-fwrite(new_data, paste0(loc_dir, filename))
+write.csv(new_data, paste0(loc_dir, filename))
 
 # Make a heatmap
 if (do_heatplot) {

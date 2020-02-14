@@ -26,43 +26,69 @@ library(stringr)
 library(umap)
 library(ggfortify)
 library(ggplot2)
+library(ggExtra)
 
-makeUMAPLabels <- function(umap_mat){
-  
+# Makes labels based upon UMAP coordinates
+makeUMAPLabels <- function(umap_mat) {
   x_med <- median(umap_mat[, 1])
   y_med <- median(umap_mat[, 2])
-  
+
   my_labels <- rep(0, nrow(umap_mat))
   names(my_labels) <- row.names(umap_mat)
-  
-  my_labels[which(umap_mat[,1] > x_med & umap_mat[,2] > y_med)] <- 1
-  my_labels[which(umap_mat[,1] > x_med & umap_mat[,2] <= y_med)] <- 2
-  my_labels[which(umap_mat[,1] <= x_med & umap_mat[,2] <= y_med)] <- 3
-  my_labels[which(umap_mat[,1] <= x_med & umap_mat[,2] > y_med)] <- 4
+
+  my_labels[which(umap_mat[, 1] > x_med & umap_mat[, 2] > y_med)] <- 1
+  my_labels[which(umap_mat[, 1] > x_med & umap_mat[, 2] <= y_med)] <- 2
+  my_labels[which(umap_mat[, 1] <= x_med & umap_mat[, 2] <= y_med)] <- 3
+  my_labels[which(umap_mat[, 1] <= x_med & umap_mat[, 2] > y_med)] <- 4
 
   my_labels <- as.factor(my_labels)
-  
+
   my_labels
 }
 
-makeUMAPPlotData <- function(umap_mat, labels){
-  
-  plt_data <- data.frame(x = umap_mat[,1],
-                         y = umap_mat[,2],
-                         labels = labels
+# make dataset for a ggplot of UMAP representation given labels
+makeUMAPPlotData <- function(umap_mat, labels) {
+  plt_data <- data.frame(
+    x = umap_mat[, 1],
+    y = umap_mat[, 2],
+    labels = labels
   )
-  
+
   plt_data
 }
 
-plotUMAP <- function(plt_data){
-  
+# Using the UMAP plot data, create a ggplot2 object colour by labelling
+plotUMAP <- function(plt_data) {
   p <- ggplot(data = plt_data, aes(x = x, y = y, colour = labels)) +
     geom_point()
-  
+
   p
 }
 
+# Plot summayr statistics of the rows of a given dataset and their marginal histograms
+plotMarginals <- function(data,
+                          margin = 1,
+                          main = "summary_statistics_comparison") {
+
+  # Create a data.frame of summary statistics
+  summary_data <- data.frame(
+    Mean = apply(data, margin, mean),
+    Std_dev = apply(data, margin, sd)
+  )
+
+  # Create a scatter plot of the summary stats
+  p <- ggplot(summary_data) +
+    geom_point(aes(x = Mean, y = Std_dev)) +
+    theme_bw() +
+    labs(
+      title = main,
+      x = "Mean",
+      y = "Standard deviation"
+    )
+
+  # Add marginal histograms
+  ggMarginal(p, summary_data, Mean, Std_dev, type = "histogram")
+}
 
 set.seed(1)
 
@@ -80,12 +106,11 @@ data_types <- c(
   "protein"
 )
 
-file_names <- lapply(plots, function(x){
+file_names <- lapply(plots, function(x) {
   paste0(save_loc, data_types, x, file_type)
 })
 
 umap_file_names <- paste0(save_loc, data_types, "_umap", file_type)
-
 ```
 
 ## Data
@@ -158,11 +183,10 @@ Protein.mat <- as.matrix(Protein.mat[, MatchProt]) %>%
 Meth.mat <- as.matrix(Meth[, MatchMeth]) %>%
   set_rownames(row.names(Meth))
 
-Exp.mat      <- as.matrix(GE[,2:349])
+Exp.mat <- as.matrix(GE[, 2:349])
 
-reduced_matrix_data <- list(Exp.mat, miRNA.mat, Protein.mat, Meth.mat) %>% 
+reduced_matrix_data <- list(Exp.mat, miRNA.mat, Protein.mat, Meth.mat) %>%
   magrittr::set_names(c("GE", "miRNA", "Protein", "Meth"))
-
 ```
 
 How much missingness is present?
@@ -170,26 +194,27 @@ How much missingness is present?
 ```{r missingness}
 
 # How many missing entries in our data
-print(lapply(reduced_matrix_data, function(x){
+print(lapply(reduced_matrix_data, function(x) {
   sum(is.na(x))
-}
-))
+}))
 
 # The only dataset with NAs is the Gene expression data
 dim(reduced_matrix_data$GE)
 ge_missingness <- rowSums(is.na(reduced_matrix_data$GE))
-ge_missingness[ge_missingness > 0] %>% 
-  hist(main = "Count of NAs in each gene in GE data (0's excluded)",
-       xlab = "Number of NAs present")
+ge_missingness[ge_missingness > 0] %>%
+  hist(
+    main = "Count of NAs in each gene in GE data (0's excluded)",
+    xlab = "Number of NAs present"
+  )
 ```
 
 As the Gene Expression contains actual NA's we will impute missing values using ``knn`` with $k=10$ (the default setting).
 
 ```{r impute_ge, message=FALSE, warning=FALSE, results="hide"}
 # Impute missing values via KNN (K=10) for the Gene expression data
-Exp.mat      <- impute.knn(Exp.mat)
-Exp.mat      <- Exp.mat$data %>% 
-  set_rownames(GE[,1])
+Exp.mat <- impute.knn(Exp.mat)
+Exp.mat <- Exp.mat$data %>%
+  set_rownames(GE[, 1])
 
 reduced_matrix_data$GE <- Exp.mat
 ```
@@ -198,36 +223,42 @@ We might also be interested in the number of 0's present in the datasets as this
 
 ```{r miRNA_missing}
 # Check how many 0's there are in the datasets (possibly these are missing points too!)
-print(lapply(reduced_matrix_data, function(x){
+print(lapply(reduced_matrix_data, function(x) {
   sum(x == 0)
-}
-))
+}))
 
 # The GE and miRNA datasets both have 0 entries, check how many genes have 0's
-print(lapply(reduced_matrix_data, function(x){
+print(lapply(reduced_matrix_data, function(x) {
   sum(rowSums(x == 0) > 0)
-}
-))
+}))
 
 ge_zeroness <- rowSums(reduced_matrix_data$GE == 0)
-ge_zeroness[ge_zeroness > 0] %>% 
-  hist(main = "Count of 0's in each gene in GE data (0's excluded)",
-       xlab = "Number of 0's present")
+ge_zeroness[ge_zeroness > 0] %>%
+  hist(
+    main = "Count of 0's in each gene in GE data (0's excluded)",
+    xlab = "Number of 0's present"
+  )
 
 miRNA_zeroness <- rowSums(reduced_matrix_data$miRNA == 0)
-miRNA_zeroness %>% 
-  hist(main = "Count of 0's in each gene in miRNA data",
-       xlab = "Number of 0's present")
+miRNA_zeroness %>%
+  hist(
+    main = "Count of 0's in each gene in miRNA data",
+    xlab = "Number of 0's present"
+  )
 
-miRNA_zeroness[miRNA_zeroness > 0] %>% 
-  hist(main = "Count of 0's in each gene in miRNA data (0's excluded)",
-       xlab = "Number of 0's present")
+miRNA_zeroness[miRNA_zeroness > 0] %>%
+  hist(
+    main = "Count of 0's in each gene in miRNA data (0's excluded)",
+    xlab = "Number of 0's present"
+  )
 
-# There's a far greater number of 0 entries in the miRNA compared to the GE; 
+# There's a far greater number of 0 entries in the miRNA compared to the GE;
 # also, no gene in the GE dataset has more than 3 associated 0 entries
 ```
 
-Now we visualise the effect of the preprocessing steps by mapping the points to a 2D UMAP; colouring based upon their UMAP coordinates. We split the points based upon the median of the points in each direction, so points are assigned values based upon:
+## Processing
+
+We consider the impact of the processing upon the data in three ways. First we visualise the effect of the preprocessing steps by mapping the points to a 2D UMAP and colouring based upon their UMAP coordinates. We split the points based upon the median of the points in each direction, so points are assigned values based upon:
 
 ```{r label_table, echo = FALSE, results = "asis"}
 x <- 1:4
@@ -237,254 +268,370 @@ label_df <- data.frame("Condition in UMAP 1" = y, "Condition in UMAP 2" = z, "La
 knitr::kable(label_df, caption = "Labels defined by UMAP coordinates.")
 ```
 
-First consider the 
+We then visualise the impact of the processing upon:
 
-```{r ge_preprocessing_visualisation}
-# Do PCA
-ge_pca <- prcomp(Exp.mat)
+1. global structure - through visualisation of the first two principal components (PCs) from a PCA plot;
+2. local structure - through visualisation of the first two dimensions of a UMAP reduction; and
+3. the relationship between the mean and standard deviation of each gene and their marginal histograms.
 
-# Visaulise the first two components
-# autoplot(ge_pca)
+### Gene expresion
+
+Note: We have used ``knn.impute`` to fill any NAs already.
+
+Processing step: remove any genes with a standard deviation below 1.5. The argument is that genes with high standard deviation contribute more to the clustering.
+
+First apply the filtering to the dataset and inspect the number of genes dropped.
+
+```{r ge_processing}
+processedExpression <- Exp.mat[apply(Exp.mat, 1, sd) > 1.5, ] ### Filter to select only most variable genes
+print(nrow(Exp.mat) - nrow(processedExpression))
+```
+
+Now generate labels for the data based upon the first two UMAP components (as described in the table above).
+
+```{r ge_umap_labels}
 
 # Apply UMAP to the data
 ge_umap <- umap(Exp.mat)
 
 # Find labels from the UMAP to track how transform changes layout of data
 ge_labels <- makeUMAPLabels(ge_umap$layout)
+```
+
+We visualise the global structure pre- and post-processing using the first two components of PCA:
+
+```{r ge_pca}
+# Do PCA
+ge_pca <- prcomp(Exp.mat)
+
+# Plot PCA with UMAP defined labels
+autoplot(ge_pca, data = Exp.mat, colour = ge_labels) +
+  labs(
+    title = "Gene expression: pre-processing",
+    subtitle = "Coloured by UMAP coordinates"
+  )
+
+# ggsave(file_names[[1]][1])
+
+# Look at PCs after transform with the same labelling
+p_ge_pca <- prcomp(processedExpression)
+autoplot(p_ge_pca, data = processedExpression, colour = ge_labels[apply(Exp.mat, 1, sd) > 1.5]) +
+  labs(
+    title = "Gene expression: post-processing",
+    subtitle = "Coloured by UMAP coordinates"
+  )
+
+# ggsave(file_names[[2]][1])
+```
+
+We visualise the summary statistics relationship to each other. We see that $\sigma^2 \propto |\mu|$.
+
+```{r ge_summary_statistics_pre}
+# Plot summary statistics
+plotMarginals(Exp.mat,
+  main = "Gene expression: gene summary statistics (pre-processing)"
+)
+```
+
+```{r ge_summary_statistics_post}
+plotMarginals(processedExpression,
+  main = "Gene expression: gene summary statistics (post-processing)"
+)
+```
+
+To inspect the local structure within the data we see how the data appears within a UMAP 2D representation:
+
+```{r ge_umap}
+
+# UMAP visualisation
 ge_plt_data <- makeUMAPPlotData(ge_umap$layout, ge_labels)
-plotUMAP(ge_plt_data)  +
-  labs(title = "Gene expression: pre-processing UMAP",
-       subtitle = "Coloured by UMAP coordinates",
-       x = "UMAP 1",
-       y = "UMAP 2") 
+plotUMAP(ge_plt_data) +
+  labs(
+    title = "Gene expression: pre-processing UMAP",
+    subtitle = "Coloured by UMAP coordinates",
+    x = "UMAP 1",
+    y = "UMAP 2"
+  )
 
 # Save UMAP plot
 # ggsave(umap_file_names[1])
 
-# Plot PCA with UMAP defined labels
-autoplot(ge_pca, data = Exp.mat, colour = ge_labels) +
-  labs(title = "Gene expression: pre-processing",
-       subtitle = "Coloured by UMAP coordinates")
-
-# ggsave(file_names[[1]][1])
-
-Exp.mat %>% 
-  apply(1, sd) %>% 
-  hist(main = "Standard deviation of genes in GE data (before processing)")
-
-processedExpression  <- Exp.mat[apply(Exp.mat,1,sd)>1.5,] ###Filter to select only most variable genes
-print(ncol(Exp.mat) - ncol(processedExpression))
-
-processedExpression %>% 
-  apply(1, sd) %>% 
-  hist(main = "Standard deviation of genes in GE data (post processing)")
-
-ge_zeroness_post <- rowSums(processedExpression == 0)
-
-ge_zeroness_post %>% 
-  hist(main = "Count of 0's in each gene in GE data post-processing",
-       xlab = "Number of 0's present")
-
-ge_zeroness_post[ge_zeroness_post > 0] %>% 
-  hist(main = "Count of 0's in each gene in GE data post-processing",
-       xlab = "Number of 0's present")
-
-# Look at PCs after transform with the same labelling
-p_ge_pca <- prcomp(processedExpression)
-# autoplot(p_ge_pca)
-autoplot(p_ge_pca, data = processedExpression, colour = ge_labels[apply(Exp.mat,1,sd)>1.5]) +
-  labs(title = "Gene expression: post-processing",
-       subtitle = "Coloured by UMAP coordinates")
-
-# ggsave(file_names[[2]][1])
-
 p_ge_umap <- umap(processedExpression)
-p_ge_plt_data <- makeUMAPPlotData(p_ge_umap$layout, ge_labels[apply(Exp.mat,1,sd)>1.5])
-plotUMAP(p_ge_plt_data)  +
-  labs(title = "Gene expression: post-processing UMAP",
-       subtitle = "Coloured by UMAP coordinates",
-       x = "UMAP 1",
-       y = "UMAP 2") 
+p_ge_plt_data <- makeUMAPPlotData(p_ge_umap$layout, ge_labels[apply(Exp.mat, 1, sd) > 1.5])
+plotUMAP(p_ge_plt_data) +
+  labs(
+    title = "Gene expression: post-processing UMAP",
+    subtitle = "Coloured by UMAP coordinates",
+    x = "UMAP 1",
+    y = "UMAP 2"
+  )
 
 # ggsave("~/Documents/PhD/Year_1/Consensus_clustering/Analysis/BCC_TCGA_data/Data/gene_expression_umap_post_processing.png")
 ```
 
-```{r methylation_processing}
-meth_pca <- prcomp(Meth.mat)
+We are also interested in the number of 0's present within the dataset:
 
+```{r ge_prop_zero}
+
+ge_zeroness_post <- rowSums(processedExpression == 0)
+
+ge_zeroness_post %>%
+  hist(
+    main = "Count of 0's in each gene in GE data post-processing",
+    xlab = "Number of 0's present"
+  )
+
+ge_zeroness_post[ge_zeroness_post > 0] %>%
+  hist(
+    main = "Count of 0's in each gene in GE data post-processing",
+    xlab = "Number of 0's present"
+  )
+```
+
+### Methylation
+
+Processing step: Take the square root of all values.
+
+```{r meth_processing}
+# take square root of methylation data
+processedMethylation <- sqrt(Meth.mat)
+```
+
+As previosuly we create a set of labels based upon the UMAP representation of the data to see how points move after the transform.
+
+```{r meth_umap_labels}
 meth_umap <- umap(Meth.mat)
-
-
 meth_labels <- makeUMAPLabels(meth_umap$layout)
-meth_plt_data <- makeUMAPPlotData(meth_umap$layout, meth_labels)
-plotUMAP(meth_plt_data)  +
-  labs(title = "Methylation: pre-processing UMAP",
-       subtitle = "Coloured by UMAP coordinates",
-       x = "UMAP 1",
-       y = "UMAP 2") 
+```
 
-# ggsave(umap_file_names[2])
+We visualise the first two PCs of the data pre- and post-processing:
 
-
+```{r meth_pca}
+meth_pca <- prcomp(Meth.mat)
 autoplot(meth_pca, data = Meth.mat, colour = meth_labels) +
-  labs(title = "Methylation: pre-processing",
-       subtitle = "Coloured by UMAP coordinates")
+  labs(
+    title = "Methylation: pre-processing",
+    subtitle = "Coloured by UMAP coordinates"
+  )
+
 
 # ggsave(file_names[[1]][2])
 
-Meth.mat %>% 
-  apply(1, sd) %>% 
-  hist(main = "Methylation: Gene standard deviation (before processing)")
-
-Meth.mat %>% 
-  apply(1, mean) %>% 
-  hist(main = "Methylation: Gene mean (after processing)")
-
-processedMethylation <- sqrt(Meth.mat)    ##take square root of methylation data
 p_meth_pca <- prcomp(processedMethylation)
-
-processedMethylation %>% 
-  apply(1, sd) %>% 
-  hist(main = "Methylation: Gene standard deviation (after processing)")
-
-processedMethylation %>% 
-  apply(1, mean) %>% 
-  hist(main = "Methylation: Gene mean (after processing)")
-
 autoplot(p_meth_pca, data = processedMethylation, colour = meth_labels) +
-  labs(title = "Methylation: post-processing",
-       subtitle = "Coloured by UMAP coordinates")
+  labs(
+    title = "Methylation: post-processing",
+    subtitle = "Coloured by UMAP coordinates"
+  )
 
 # ggsave(file_names[[2]][2])
+```
 
+We consider the impact upon local structure through the UMAP:
+
+```{r meth_umap}
+
+meth_plt_data <- makeUMAPPlotData(meth_umap$layout, meth_labels)
+plotUMAP(meth_plt_data) +
+  labs(
+    title = "Methylation: pre-processing UMAP",
+    subtitle = "Coloured by UMAP coordinates",
+    x = "UMAP 1",
+    y = "UMAP 2"
+  )
 
 p_meth_umap <- umap(processedMethylation)
 p_meth_plt_data <- makeUMAPPlotData(p_meth_umap$layout, meth_labels)
 plotUMAP(p_meth_plt_data) +
-  labs(y="Petal length (cm)", x = "Sepal length (cm)")
-  
+  labs(
+    title = "Methylation: post-processing UMAP",
+    subtitle = "Coloured by UMAP coordinates",
+    x = "UMAP 1",
+    y = "UMAP 2"
+  )
 
+
+# ggsave(umap_file_names[2])
 ```
 
-```{r miRNA_preprocessing}
-# Apply PCA for global structure
-miRNA_pca <- prcomp(miRNA.mat)
+Again we are interested in the relationship between the standard deviation of each gene and the mean value:
 
+```{r meth_summary_statistics_pre}
+# Plot summary statistics
+plotMarginals(Meth.mat,
+  main = "Methylation: gene summary statistics (pre-processing)"
+)
+```
+
+```{r meth_summary_statistics_post}
+plotMarginals(processedMethylation,
+  main = "Methylation: gene summary statistics (post-processing)"
+)
+```
+
+### miRNA
+
+Processing step: Filter by the number of 0 entries (any row with more than half of entries being 0 are removed); transform by $\log(x + 1)$.
+
+```{r miRNA_preprocessing}
+# Transform the data
+
+miRNA_to_drop <- rowSums(miRNA.mat == 0) < 348 * 0.5
+processedmiRNA <- log(1 + miRNA.mat[which(miRNA_to_drop), ]) ## take log of miRNA data
+
+print(dim(miRNA.mat))
+print(dim(processedmiRNA))
+```
+
+First define the UMAP labels to track the movement of points within the PCA and UMAP plots.
+
+```{r miRNA_umap_labels}
 # Apply UMAP to see local structure (should not be strongly affected by the transforms)
 miRNA_umap <- umap(miRNA.mat)
 
 # Create labels to record apporximate clustering from UMAP
 miRNA_labels <- makeUMAPLabels(miRNA_umap$layout)
+```
 
-# Create a data.frame of UMAP coordinates and labelling
-miRNA_plt_data <- makeUMAPPlotData(miRNA_umap$layout, miRNA_labels)
+Then visualise the PCA:
 
-# Plot
-plotUMAP(miRNA_plt_data) +
-  labs(title = "miRNA: pre-processing UMAP",
-       subtitle = "Coloured by UMAP coordinates",
-       x = "UMAP 1",
-       y = "UMAP 2") 
+```{r miRNA_pca}
+# Apply PCA for global structure
+miRNA_pca <- prcomp(miRNA.mat)
 
-# ggsave(umap_file_names[3])
-
-
-# miRNA_exclude <- row.names(miRNA_plt_data)[miRNA_plt_data$x >10]
-# autoplot(prcomp(miRNA.mat[! row.names(miRNA.mat) %in% miRNA_exclude, ]))
-autoplot(miRNA_pca, data = miRNA.mat, colour = miRNA_labels) + #, scale = 0) +
-  labs(title = "miRNA: pre-processing",
-       subtitle = "Coloured by UMAP coordinates")  # +
-  # xlim(4e4, 5e4) +
-  # ylim(5.5e3, 6.1e3)
-# miRNA_pca$x[(miRNA_pca$x[,1] < 4e4),1:2]
-# 
-# summary(miRNA_pca$x[,1:2])
-# 
-# miRNA_exclude <- row.names(miRNA_pca$x)[(miRNA_pca$x[,1] < 4e4 & miRNA_pca$x[,2] < 6.1e3)]
-# indices_to_drop <- ! row.names(miRNA.mat) %in% miRNA_exclude
-# miRNA_reduced <- miRNA.mat[which(indices_to_drop),]
-# miRNA_labels_reduced <- miRNA_labels[which(indices_to_drop)]
-# 
-# miRNA_pca_red <- prcomp(miRNA_reduced)
-# 
-# autoplot(miRNA_pca_red, data = miRNA_reduced, colour = miRNA_labels_reduced) +
-#   labs(title = "miRNA: pre-processing",
-#        subtitle = "Coloured by UMAP coordinates") 
+autoplot(miRNA_pca, data = miRNA.mat, colour = miRNA_labels) + # , scale = 0) +
+  labs(
+    title = "miRNA: pre-processing",
+    subtitle = "Coloured by UMAP coordinates"
+  ) 
 
 # Save the PCA plot with UMAP colouring
 # ggsave(file_names[[1]][3])
-
-
-# Transform the data
-miRNA_to_drop <- rowSums(miRNA.mat==0) < 348*0.5
-miRNA.mat    <- miRNA.mat[which(miRNA_to_drop),]
-processedmiRNA       <- log(1+miRNA.mat) ##take log of miRNA data
 
 # Take the PCA of the transformed data
 p_miRNA_pca <- prcomp(processedmiRNA)
 
 # Plot with the same labelling as previosuly applied
 autoplot(p_miRNA_pca, data = processedmiRNA, colour = miRNA_labels[which(miRNA_to_drop)]) +
-  labs(title = "miRNA: post-processing",
-       subtitle = "Coloured by UMAP coordinates") 
+  labs(
+    title = "miRNA: post-processing",
+    subtitle = "Coloured by UMAP coordinates"
+  )
 
 # ggsave(file_names[[2]][3])
+
+```
+
+```{r miRNA_umap}
+# Create a data.frame of UMAP coordinates and labelling
+miRNA_plt_data <- makeUMAPPlotData(miRNA_umap$layout, miRNA_labels)
+
+# Plot
+plotUMAP(miRNA_plt_data) +
+  labs(
+    title = "miRNA: pre-processing UMAP",
+    subtitle = "Coloured by UMAP coordinates",
+    x = "UMAP 1",
+    y = "UMAP 2"
+  )
+
+# ggsave(umap_file_names[3])
 
 p_miRNA_umap <- umap(processedmiRNA)
 p_miRNA_plt_data <- makeUMAPPlotData(p_miRNA_umap$layout, miRNA_labels[which(miRNA_to_drop)])
 plotUMAP(p_miRNA_plt_data) +
-  labs(title = "miRNA: post-processing UMAP",
-       subtitle = "Coloured by UMAP coordinates",
-       x = "UMAP 1",
-       y = "UMAP 2") 
+  labs(
+    title = "miRNA: post-processing UMAP",
+    subtitle = "Coloured by UMAP coordinates",
+    x = "UMAP 1",
+    y = "UMAP 2"
+  )
 
 # ggsave("~/Documents/PhD/Year_1/Consensus_clustering/Analysis/BCC_TCGA_data/Data/miRNA_umap_post_processing.png")
-
-
-# Remove miRNAs with > 50% 0 entries
-print(dim(miRNA.mat))
-miRNA.mat    <- miRNA.mat[rowSums(miRNA.mat==0) < 348*0.5,]
-print(dim(miRNA.mat))
-
 ```
 
+Visualise the relaitonship between the standard deviation and the mean of each gene:
+
+```{r miRNA_summary_statistics_pre}
+# Plot summary statistics
+plotMarginals(miRNA.mat,
+  main = "miRNA: gene summary statistics (pre-processing)"
+)
+```
+
+```{r miRNA_summary_statistics_post}
+plotMarginals(processedmiRNA,
+  main = "miRNA: gene summary statistics (post-processing)"
+)
+```
+
+### Protein
+
+Processing step: scale data by mean centreing and dividing by the standard deviation.
+
 ```{r protein_processing}
-protein_pca <- prcomp(Protein.mat)
-autoplot(protein_pca)
+processedProtein <- scale(Protein.mat, center = TRUE, scale = TRUE) # Column center/scale protein
+```
+
+```{r protein umap_labels}
+
 protein_umap <- umap(Protein.mat)
-plot(protein_umap$layout)
-
 protein_labels <- makeUMAPLabels(protein_umap$layout)
-protein_plt_data <- makeUMAPPlotData(protein_umap$layout, protein_labels)
-plotUMAP(protein_plt_data) +
-  labs(title = "Protein: pre-processing UMAP",
-       subtitle = "Coloured by UMAP coordinates",
-       x = "UMAP 1",
-       y = "UMAP 2") 
+```
 
-# ggsave(umap_file_names[4])
-
+```{r protein_pca}
+protein_pca <- prcomp(Protein.mat)
 autoplot(protein_pca, data = Protein.mat, colour = protein_labels) +
-  labs(title = "Protein: pre-processing",
-       subtitle = "Coloured by UMAP coordinates") 
+  labs(
+    title = "Protein: pre-processing",
+    subtitle = "Coloured by UMAP coordinates"
+  )
 
 # ggsave(file_names[[1]][4])
 
-
-processedProtein     <- scale(Protein.mat,center=TRUE,scale=TRUE) #Column center/scale protein
 p_protein_pca <- prcomp(processedProtein)
-autoplot(p_protein_pca, data = processedProtein, colour = protein_labels)  +
-  labs(title = "Protein: post-processing",
-       subtitle = "Coloured by UMAP coordinates") 
+autoplot(p_protein_pca, data = processedProtein, colour = protein_labels) +
+  labs(
+    title = "Protein: post-processing",
+    subtitle = "Coloured by UMAP coordinates"
+  )
 
 # ggsave(file_names[[2]][4])
+```
 
+```{r protein_umap}
+protein_plt_data <- makeUMAPPlotData(protein_umap$layout, protein_labels)
+plotUMAP(protein_plt_data) +
+  labs(
+    title = "Protein: pre-processing UMAP",
+    subtitle = "Coloured by UMAP coordinates",
+    x = "UMAP 1",
+    y = "UMAP 2"
+  )
+
+# ggsave(umap_file_names[4])
 
 p_protein_umap <- umap(processedProtein)
 p_protein_plt_data <- makeUMAPPlotData(p_protein_umap$layout, protein_labels)
 plotUMAP(p_protein_plt_data) +
-  labs(title = "Protein: post-processing UMAP",
-       subtitle = "Coloured by UMAP coordinates",
-       x = "UMAP 1",
-       y = "UMAP 2") 
+  labs(
+    title = "Protein: post-processing UMAP",
+    subtitle = "Coloured by UMAP coordinates",
+    x = "UMAP 1",
+    y = "UMAP 2"
+  )
+```
+
+
+```{r protein_summary_statistics_pre}
+# Plot summary statistics
+plotMarginals(Protein.mat,
+  main = "Protein: gene summary statistics (pre-processing)"
+)
+```
+
+```{r protein_summary_statistics_post}
+plotMarginals(processedProtein,
+  main = "Protein: gene summary statistics (post-processing)"
+)
 ```

@@ -37,6 +37,30 @@ plotUMAP <- function(plt_data){
   p
 }
 
+plotMarginals <- function(data,
+                          margin = 1, 
+                          main = "summary_statistics_comparison"){
+  
+  # Create a data.frame of summary statistics
+  summary_data <- data.frame(
+    Mean = apply(data, margin, mean),
+    Std_dev = apply(data, margin, sd)
+  )
+  
+  # Create a scatter plot of the summary stats
+  p <- ggplot(summary_data) +
+    geom_point(aes(x = Mean, y = Std_dev)) +
+    theme_bw() +
+    labs(
+      title = main,
+      x = "Mean",
+      y = "Standard deviation"
+    ) 
+  
+  # Add marginal histograms
+  ggMarginal(p, summary_data, Mean, Std_dev, type = "histogram")
+}
+
 # setwd("~/Dropbox/GwenDataIntegration/BCC")
 # source("https://bioconductor.org/biocLite.R")
 
@@ -52,6 +76,7 @@ library(stringr)
 library(umap)
 library(ggfortify)
 library(ggplot2)
+library(ggExtra)
 
 ###Data can be downloaded from the TCGA Data Portal at: https://tcga-data.nci.nih.gov/docs/publications/brca_2012/
 
@@ -125,6 +150,22 @@ Exp.mat      <- impute.knn(Exp.mat) ##Impute missing values via KNN (K=10)
 Exp.mat      <- Exp.mat$data %>% 
   set_rownames(GE[,1])
 
+ge_mean <- apply(Exp.mat, 1, mean)
+ge_sd <- apply(Exp.mat, 1, sd)
+
+summary_data <- data.frame(Mean = ge_mean, Std_dev = ge_sd)
+
+p1 <- ggplot(summary_data) +
+  geom_point(aes(x = Mean, y = Std_dev)) +
+  theme_bw() +
+  labs(
+    title = "Gene expression: gene summary statistics (pre-processing)",
+    x = "Mean",
+    y = "Standard deviation"
+  )
+
+ggMarginal(p1, summary_data, Mean, Std_dev, type = "histogram")
+
 # Do PCA
 ge_pca <- prcomp(Exp.mat)
 
@@ -154,6 +195,26 @@ autoplot(ge_pca, data = Exp.mat, colour = ge_labels) +
 ggsave(file_names[[1]][1])
 
 processedExpression  <- Exp.mat[apply(Exp.mat,1,sd)>1.5,] ###Filter to select only most variable genes
+
+summary_data_2 <- data.frame(
+  Mean = apply(processedExpression, 1, mean),
+  Std_dev = apply(processedExpression, 1, sd)
+)
+
+plotMarginals(processedExpression, 
+              main = "Gene expression: gene summary statistics (post-processing)")
+
+# p2 <- 
+# p2 <- ggplot(summary_data_2) +
+#   geom_point(aes(x = Mean, y = Std_dev)) +
+#   theme_bw() +
+#   labs(
+#     title = "Gene expression: gene summary statistics (pre-processing)",
+#     x = "Mean",
+#     y = "Standard deviation"
+#   ) 
+# ggMarginal(p2, summary_data_2, Mean, Std_dev, type = "histogram")
+
 
 # Look at PCs after transform with the same labelling
 p_ge_pca <- prcomp(processedExpression)

@@ -95,14 +95,14 @@ annotation_labels_1 <- annotation_labels %>%
 
 df_2 <- df %>% 
   set_rownames(row_names[ind_2]) %>% 
-  .[match(row.names(df_1), row.names(df_2)), ]
+  .[match(row.names(df_1), row.names(.)), ]
 
 annotation_labels_2 <- annotation_labels %>% 
   set_rownames(row_names[ind_2])
 
 df_3 <- df %>% 
   set_rownames(row_names[ind_3]) %>% 
-  .[match(row.names(df_1), row.names(df_3)), ]
+  .[match(row.names(df_1), row.names(.)), ]
 
 annotation_labels_3 <- annotation_labels %>% 
   set_rownames(row_names[ind_3])
