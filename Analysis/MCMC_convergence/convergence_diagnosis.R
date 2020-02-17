@@ -605,6 +605,14 @@ inputArguments <- function() {
       help = "Parent directory to MDI output directories [default= %default]",
       metavar = "character"
     ),
+    
+    # Number of datasets present
+    optparse::make_option(c("-n", "--n_dataset"),
+      type = "integer",
+      default = NA,
+      help = "Number of datasets presentin the current MDI analysis [default= %default]",
+      metavar = "integer"
+    ),
 
     # Generic beginning of MDI output files (I save them in the form out_seed_1.csv)
     optparse::make_option(c("--gen_input_file_name"),
@@ -709,6 +717,12 @@ numerical_order <- sub_dirs %>%
 sub_dirs <- sub_dirs[numerical_order]
 full_sub_dirs <- paste0(gen_mdi_dir, sub_dirs)
 
+# The files to be read in
+file_names <- paste0(gen_file_name, sub_dirs, file_ext)
+
+# The filename combined with the directory they reside in
+full_files_names <- paste0(gen_mdi_dir, sub_dirs, "/", file_names)
+
 # This is the sub directory we will save our diagnostic plots to
 new_sub_dirs <- "Convergence_diagnostics"
 new_full_sub_dirs <- paste(full_sub_dirs, new_sub_dirs, sep = "/")
@@ -718,11 +732,6 @@ new_full_sub_dirs <- paste(full_sub_dirs, new_sub_dirs, sep = "/")
 x <- new_full_sub_dirs %>%
   sapply(., dir.create, showWarnings = FALSE)
 
-# The files to be read in
-file_names <- paste0(gen_file_name, sub_dirs, file_ext)
-
-# The filename combined iwth the directory they reside in
-full_files_names <- paste0(gen_mdi_dir, sub_dirs, "/", file_names)
 
 # The sub directory names converted to sentence case for plot title
 pretty_sub_dir_names <- sub_dirs %>%
@@ -733,7 +742,7 @@ pretty_sub_dir_names <- sub_dirs %>%
 n_seeds <- length(sub_dirs)
 
 # the number of datasets used by MDI
-n_datasets <- 3
+n_datasets <- args$n_dataset
 
 # the number of continuous variables outputted
 n_cols_cont <- n_datasets + choose(n_datasets, 2)
