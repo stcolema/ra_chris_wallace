@@ -79,6 +79,4 @@ for (i in 1:n_dirs) {
 
 # See which files are missing
 print(seeds_to_run)
-mclapply(seeds_to_run, length)
-seeds_to_run$N_clust_50_N_iter_1
-seeds_to_run$N_clust_50_N_iter_100
+
