@@ -142,7 +142,7 @@ input_arguments <- function() {
     # Convert all files in target destination (default is FALSE)
     optparse::make_option(c("--datasets"),
       type = "character",
-      default = "CD14.csv CD15.csv CD19.csv CD4.csv CD8.csv IL.csv PLA.csv RE.csv TR.csv",
+      default = NA,
       help = "names of dataset files [default= %default]",
       metavar = "character"
     ),
