@@ -30,7 +30,8 @@ library(dplyr, quietly = T)
 library(pheatmap, quietly = T) # install.packages("pheatmap", dep = T)
 
 # Colour palettes
-library(RColorBrewer, quietly = T)
+library(RColorBrewer, quietly = T)  # for pheatmap values
+library(viridis, quietly = T)       # for annotation labels
 
 # For Bayesian clustering output (possibly should use mcclust) and Adjusted Rand Index
 library(mclust, quietly = T) # install.packages("mclust", dep = T)
@@ -916,6 +917,7 @@ for (j in 1:num_files) {
 if (do_phis_densities) {
   if (n_datasets > 1) {
     cat("\nSaving phi density plots.\n")
+
     mdiHelpR::plotPhiDensities(phis, file_path, start_index, eff_n_iter,
       burn = burn,
       thin = thin
@@ -1192,7 +1194,7 @@ if (!do_no_raw_data_plots) {
 
     expr_min <- min(expression_data_tidy)
     expr_max <- max(expression_data_tidy)
-
+    
     # expr_breaks <- define_breaks(col_pal_expr, lb = expr_min, ub = expr_max) %>% unique()
     expr_breaks <- mdiHelpR::defineBreaks(col_pal_expr,
       lb = expr_min,
@@ -1222,8 +1224,12 @@ if (!do_no_raw_data_plots) {
             show_colnames = show_expr_col_names
           )
       } else {
-        col_pal <- col_vector[1:n_clusters] %>%
+        # col_pal <- col_vector[1:n_clusters] %>%
           # sample(col_vector, n_clusters) %>%
+          # magrittr::set_names(cluster_labels)
+        
+        # Use distinct, colour-blind friendly annotation colours
+        col_pal <- viridis(n_clusters) %>% 
           magrittr::set_names(cluster_labels)
 
         annotation_colors <- list(Cluster = col_pal)
@@ -1405,7 +1411,9 @@ if (do_comparison_plots) {
     file_path,
     plot_type,
     col_pal_sim = col_pal_sim,
-    show_row_labels = show_heatmap_labels
+    show_row_labels = show_heatmap_labels,
+    col_pal_expr = col_pal_expr,
+    expr_breaks = expr_breaks
   )
 
   mdiHelpR::plotComparisonCorrelationPSMData(
@@ -1416,7 +1424,9 @@ if (do_comparison_plots) {
     file_path,
     plot_type,
     col_pal_sim = col_pal_sim,
-    show_row_labels = show_heatmap_labels
+    show_row_labels = show_heatmap_labels,
+    col_pal_expr = col_pal_expr,
+    expr_breaks = expr_breaks
   )
 }
 
