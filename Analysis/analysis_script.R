@@ -354,6 +354,8 @@ input_arguments <- function() {
 # Set the ggplot2 theme
 theme_set(theme_bw())
 
+no_missingness <- TRUE
+
 # print("In script")
 
 args <- input_arguments()
@@ -371,14 +373,21 @@ breaks_0_1 <- c(
   seq(0, 1, length.out = ceiling(length(col_pal)) + 1)
 )
 
-col_pal_sim <- colorRampPalette(c("#FF9900", "white", "#146EB4"))(100)
+# If there are missing entries than we include -1 in the PSM to indicate these
+if(no_missingness){
+  col_pal_sim <- col_pal
+  my_breaks <- breaks_0_1
+} else {
+  col_pal_sim <- colorRampPalette(c("#FF9900", "white", "#146EB4"))(100)
+  
+  my_breaks <- c(
+    seq(-1, 0, length.out = ceiling(palette_length_expr / 2) + 1),
+    seq(1 / palette_length_expr, 1, length.out = floor(palette_length_expr / 2))
+  )
+}
+
 col_pal_expr <- colorRampPalette(c("#146EB4", "white", "#FF9900"))(100)
 palette_length_expr <- length(col_pal_expr)
-
-my_breaks <- c(
-  seq(-1, 0, length.out = ceiling(palette_length_expr / 2) + 1),
-  seq(1 / palette_length_expr, 1, length.out = floor(palette_length_expr / 2))
-)
 
 # All possible datasets (and the names of the probes present columns)
 # all_datasets <- c(
@@ -1411,6 +1420,7 @@ if (do_comparison_plots) {
     file_path,
     plot_type,
     col_pal_sim = col_pal_sim,
+    sim_breaks = my_breaks,
     show_row_labels = show_heatmap_labels,
     col_pal_expr = col_pal_expr,
     expr_breaks = expr_breaks
@@ -1424,6 +1434,7 @@ if (do_comparison_plots) {
     file_path,
     plot_type,
     col_pal_sim = col_pal_sim,
+    sim_breaks = my_breaks,
     show_row_labels = show_heatmap_labels,
     col_pal_expr = col_pal_expr,
     expr_breaks = expr_breaks

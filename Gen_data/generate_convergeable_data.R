@@ -24,6 +24,9 @@ library(magrittr)
 # for mvrnorm
 library(MASS)
 
+# for factor colouring
+library(viridis)
+
 # Reproducibility
 set.seed(1)
 
@@ -55,7 +58,7 @@ row_names <- paste0("Person_", 1:nrow(df))
 my_data <- list()
 
 # Create list of cluster matrices
-for(i in 1:n_clust){
+for (i in 1:n_clust) {
   mu <- rep(means[i], d)
   my_data[[i]] <- mvrnorm(n[i], mu, my_cov)
 }
@@ -70,7 +73,7 @@ label_df <- data.frame(Label = 1:n_clust, N = n)
 
 # Vector to hold membership label
 labels <- c()
-for(i in 1:n_clust){
+for (i in 1:n_clust) {
   labels <- c(labels, rep(label_df[i, 1], label_df[i, 2]))
 }
 
@@ -78,33 +81,40 @@ for(i in 1:n_clust){
 annotation_labels <- data.frame(Labels = as.factor(labels))
 row.names(annotation_labels) <- row_names
 
-# Heatmap!
-pheatmap(df, annotation_row = annotation_labels)
+annotation_colours <- list(Labels = viridis(n_clust) %>% set_names(unique(labels)))
 
-# Now create 3 sets of indices permuting the dataset so different points are in different clusters 
+# Heatmap!
+pheatmap(df,
+  annotation_row = annotation_labels,
+  annotation_colors = annotation_colours,
+  cluster_rows = F,
+  cluster_cols = F
+)
+
+# Now create 3 sets of indices permuting the dataset so different points are in different clusters
 # To do this we permute row names
 ind_1 <- 1:nrow(df)
 ind_2 <- sample(1:nrow(df), nrow(df), replace = F)
 ind_3 <- sample(ind_2, nrow(df), replace = F)
 
-df_1 <- df %>% 
+df_1 <- df %>%
   set_rownames(row_names[ind_1])
 
-annotation_labels_1 <- annotation_labels %>% 
+annotation_labels_1 <- annotation_labels %>%
   set_rownames(row_names[ind_1])
 
-df_2 <- df %>% 
-  set_rownames(row_names[ind_2]) %>% 
+df_2 <- df %>%
+  set_rownames(row_names[ind_2]) %>%
   .[match(row.names(df_1), row.names(.)), ]
 
-annotation_labels_2 <- annotation_labels %>% 
+annotation_labels_2 <- annotation_labels %>%
   set_rownames(row_names[ind_2])
 
-df_3 <- df %>% 
-  set_rownames(row_names[ind_3]) %>% 
+df_3 <- df %>%
+  set_rownames(row_names[ind_3]) %>%
   .[match(row.names(df_1), row.names(.)), ]
 
-annotation_labels_3 <- annotation_labels %>% 
+annotation_labels_3 <- annotation_labels %>%
   set_rownames(row_names[ind_3])
 
 head(df_1)
@@ -113,34 +123,48 @@ head(df_3)
 
 # Visualise the data - all are the same bar row names
 pheatmap(df_1,
-         cluster_rows = F,
-         annotation_row = annotation_labels_1)
+  cluster_rows = F,
+  annotation_row = annotation_labels_1,
+  annotation_colors = annotation_colours,
+  main = "Generated data",
+  filename = paste0(save_dir, ph_name, "data_ordered_by_label.png")
+)
 
 pheatmap(df_2,
-         cluster_rows = F,
-         annotation_row = annotation_labels_2)
+  cluster_rows = F,
+  annotation_row = annotation_labels_2,
+  annotation_colors = annotation_colours
+)
 
 pheatmap(df_3,
-         cluster_rows = F,
-         annotation_row = annotation_labels_3)
+  cluster_rows = F,
+  annotation_row = annotation_labels_3,
+  annotation_colors = annotation_colours
+)
 
 pheatmap(df_1,
-         cluster_rows = T,
-         annotation_row = annotation_labels_1,
-         main = paste0(ph_title, 1),
-         filename = paste0(save_dir, ph_name, 1, ".png"))
+  cluster_rows = T,
+  annotation_row = annotation_labels_1,
+  annotation_colors = annotation_colours,
+  main = paste0(ph_title, 1),
+  filename = paste0(save_dir, ph_name, 1, ".png")
+)
 
 pheatmap(df_2,
-         cluster_rows = T,
-         annotation_row = annotation_labels_2,
-         main = paste0(ph_title, 2),
-         filename = paste0(save_dir, ph_name, 2, ".png"))
+  cluster_rows = T,
+  annotation_row = annotation_labels_2,
+  annotation_colors = annotation_colours,
+  main = paste0(ph_title, 2),
+  filename = paste0(save_dir, ph_name, 2, ".png")
+)
 
 pheatmap(df_3,
-         cluster_rows = T,
-         annotation_row = annotation_labels_3,
-         main = paste0(ph_title, 3),
-         filename = paste0(save_dir, ph_name, 3, ".png"))
+  cluster_rows = T,
+  annotation_row = annotation_labels_3,
+  annotation_colors = annotation_colours,
+  main = paste0(ph_title, 3),
+  filename = paste0(save_dir, ph_name, 3, ".png")
+)
 
 write.csv(df_1, paste0(save_dir, file_name, "1.csv"))
 write.csv(df_2, paste0(save_dir, file_name, "2.csv"))

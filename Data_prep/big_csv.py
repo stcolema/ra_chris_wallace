@@ -62,8 +62,7 @@ def find_ext_files(dir_path:str = ".",
 
     for path, subdir, files in os.walk(dir_path):
 
-        all_csv_files = [file
-                         for file in glob.glob(os.path.join(path, EXT))]
+        all_csv_files = [file for file in glob.glob(os.path.join(path, EXT))]
         break
 
     return(all_csv_files)
