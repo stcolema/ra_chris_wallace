@@ -1,0 +1,567 @@
+---
+title: "Consensus inference - Simulation design"
+author: "Stephen Coleman"
+date: "11/03/2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(knitr)
+library(MASS)
+library(pheatmap)
+library(ggplot2)
+library(viridis)
+library(magrittr)
+
+#' @title Generate dataset
+#' @description Generate a dataset based upon the cluster means
+#' (assumes each feature is independent)
+#' @param cluster_means A k-vector of cluster means defining the k clusters.
+#' @param n The number of samples to generate in the entire dataset.
+#' @param p The number of columns to generate in the dataset.
+#' @param pi A k-vector of the expected proportion of points to be drawn from
+#' each distribution.
+#' @param row_names The row names of the generated dataset.
+#' @param col_names The column names of the generated dataset.
+generateDataset <- function(cluster_means, n, p, pi,
+                            row_names = paste0("Person_", 1:n),
+                            col_names = paste0("Gene_", 1:p)) {
+  
+  # The number of distirbutions to sample from
+  K <- length(cluster_means)
+  
+  # The membership vector for the n points
+  cluster_IDs <- sample(K, n, replace = T, prob = pi)
+  
+  # The data matrix
+  my_data <- matrix(nrow = n, ncol = p)
+  
+  # Iterate over each of the columns permuting the means associated with each
+  # label.
+  for (j in 1:p)
+  {
+    reordered_cluster_means <- sample(cluster_means)
+    
+    # Draw n points from the K univariate Gaussians defined by the permuted means.
+    for (i in 1:n) {
+      my_data[i, j] <- rnorm(1, mean = reordered_cluster_means[cluster_IDs[i]])
+    }
+  }
+  
+  # Order based upon allocation label
+  row_order <- order(cluster_IDs)
+  
+  # Assign rownames and column names
+  rownames(my_data) <- row_names
+  colnames(my_data) <- col_names
+  
+  # Return the data and the allocation labels
+  list(
+    data = my_data[row_order, ],
+    cluster_IDs = cluster_IDs[row_order]
+  )
+}
+
+# This is an idea for generating data
+generateFullDataset <- function(K, n, p, p_noisy = 0, a = 2, b = 2) {
+  cluster_means <- (1:K - ceiling(K / 2))
+  pi <- rbeta(K, a, b)
+  
+  
+  my_data <- generateDataset(cluster_means, n, p, pi)
+  
+  my_data
+}
+
+# Badly named heatmapping function
+plotData <- function(x, cluster_IDs,
+                     col_pal = colorRampPalette(c("#146EB4", "white", "#FF9900"))(100),
+                     my_breaks = mdiHelpR::defineDataBreaks(x, col_pal, mid_point = 0),
+                     main = "gen_dataset",
+                     ...) {
+  
+  anno_row <- data.frame(Cluster = factor(paste("Cluster", cluster_IDs))) %>%
+    set_rownames(rownames(x))
+  
+  K <- length(unique(cluster_IDs))
+  
+  ann_colours <- list(Cluster = viridis(K) %>%
+                        set_names(paste("Cluster", sort(unique(cluster_IDs)))))
+  
+  # print(anno_row)
+  # print(ann_colours)
+  
+  pheatmap(x,
+           color = col_pal,
+           breaks = my_breaks,
+           annotation_row = anno_row,
+           annotation_colors = ann_colours,
+           main = main,
+           ...
+  )
+}
+
+genDataFromTable <- function(my_table){
+  data_lst <- list()
+  for(i in 1:nrow(my_table)){
+    K <- my_table[i,]$K
+    
+    
+    n <- my_table[i,]$n
+    p <- my_table[i,]$p
+    p_signal <- max(0.2 * p, min(p, 100))
+    p_noisy <- p - p_signal
+    
+    a <- 0.5
+    b <- 0.5
+    
+    if(my_table[i,]$mu == "1:K"){
+      cluster_means <- 1:K - ceiling(K / 2)
+    } else {
+      cluster_means <- rnorm(K)
+    }
+    
+    if(my_table[i,]$pi == "constant"){
+      pi <- rep(1 / K, K)
+    } else {
+      pi <- rbeta(K, a, b)
+    }
+    
+    data_lst[[i]] <-  generateDataset(cluster_means, n, p_signal, pi)
+    
+    .curr_data <- data_lst[[i]]$data
+    
+    if(p_noisy > 0){
+    min_data <- min(cluster_means)
+    max_data <- max(cluster_means)
+    
+    noisy_data <- data.frame(
+      matrix(
+        rnorm(n * p_noisy, mean = mean(cluster_means), sd = sd(.curr_data)),
+        ncol = p_noisy
+      )
+    ) %>%
+      set_rownames(row.names(.curr_data)) %>%
+      set_colnames(paste0("Noise_", 1:p_noisy))
+    
+    data_lst[[i]]$data <- cbind(.curr_data, noisy_data)
+    }
+  }
+  data_lst
+}
+
+theme_set(theme_bw() +
+  theme(strip.background = element_rect(fill = "#21677e")) +
+  theme(strip.text = element_text(colour = "white")) )
+
+options(ggplot2.continuous.colour = "viridis")
+options(ggplot2.continuous.fill = "viridis")
+
+
+set.seed(1)
+
+# Our colour palette of choice of heatmaps
+col_pal <- colorRampPalette(c("#146EB4", "white", "#FF9900"))(100)
+
+# Breaks for correlation plots
+cor_breaks <- mdiHelpR::defineBreaks(col_pal)
+
+```
+
+## Introdcution
+
+We wish to design a number of simulations defined by different generating models. These are intended to showcase how useful consensus inference will be in real life. This means the data should be *realistic*. Each generating model will be a mixture of Gaussian distributions. Consider the marginal likelihood:
+
+\[
+p(x_1, \ldots, x_n) = \prod_{i=1}^n \sum_{k=1}^K \pi_k p(x_i | z_i = k, \mu_k, \Sigma_k).
+\]
+
+One can see that to generate the data from the model, 6 parameters must be considered:
+
+* $n$: the number of samples;
+* $p$: the number of features (possibly divided into $p_s$ features containing signal and $p_n$ containing only noise);
+* $K$: the true number of clusters present;
+* $\mu_k$: the mean vector defining the $k^{th}$ distribution;
+* $\Sigma_k$: the covariance matrix associated with the $k^{th}$ distribution; and
+* $\pi_k$: the proportion of samples to be generated from the $k^{th}$ distribution.
+
+We are interested in a range of scenarios. Some should describe:
+
+* Small $n$, large $p$ (typical of 'omics data);
+* Large $n$, small $p$ (such as in flow cytometry);
+* Varying $\pi$ such that cluster sizes are quite varied (with some being very small compared to $n$).
+
+We will normally hold the number of features containing signal at a relatively small portion of columns in the dataset (say $\max(0.2 \times p, \min(p, 100))$). A simple case of interest is 2D Gaussian data:
+
+```{r 2d_gaussian, echo = F}
+
+gaussian_means <- matrix(
+  c(-3, -3, -3, 3, 3, -3, 3, 3, 0, 0),
+  nrow = 2
+)
+
+k <- ncol(gaussian_means)
+n <- 500
+p <- nrow(gaussian_means)
+
+Sigma <- diag(1, nrow = p)
+
+for(i in 1:k){
+  
+  cluster_data <- mvrnorm(n / k, gaussian_means[, i], Sigma)
+  
+  if(i == 1){
+    my_data <- cluster_data
+  } else {
+    my_data <- rbind(my_data, cluster_data)
+  }
+  
+}
+
+my_data <- data.frame(
+  Gene_1 = my_data[, 1],
+  Gene_2 = my_data[, 2]
+) %>% set_rownames(paste0("Person_", 1:n))
+
+plot_data <- my_data
+plot_data$Cluster <- as.factor(rep(1:k, each = n / k))
+
+ggplot(plot_data, aes(x = Gene_1, y = Gene_2, colour = Cluster)) +
+  geom_point() +
+  labs(
+    title = "Simple mixture of Gaussians",
+    x = "Gene 1",
+    y = "Gene 2"
+  )  +
+  scale_colour_viridis_d()
+
+```
+
+Inspecting a heatmap shows that each column is needed to define the clustering - a single feature is insufficient to find any clustering structure.
+
+```{r heatmap_simple_gaussian, echo = F}
+
+plotData(my_data, rep(1:k, each = n / k),
+         main = "Expression data across two genes",
+         cluster_cols = F,
+         show_rownames = F)
+
+
+row_order <- order(my_data[, 1])
+plotData(my_data[row_order, ], rep(1:k, each = n / k)[row_order],
+         main = "Expression data across two genes (ordered by Gene 1)",
+         cluster_rows = F,
+         cluster_cols = F,
+         show_rownames = F)
+
+```
+
+This is characteristic of many cases we are interested in; within a single feature there might be no clear clustering structure, but across a combination of a subset of features (possibly all features) there emerges clear clustering structure.
+
+Another case we would be interested in is the case where there is no clustering structure (i.e. all points are drawn from the same distirbution).
+
+In the first case we consider a 2D Gaussian distribution. In this case by combining many chains we hope that the final consensus matrix consists of a single cluster.
+
+```{r 2d_no_clustering_structure, echo = F}
+
+gaussian_means <- matrix(
+  c(0, 0),
+  nrow = 2
+)
+
+k <- ncol(gaussian_means)
+n <- 500
+p <- nrow(gaussian_means)
+
+Sigma <- diag(1, nrow = p)
+
+my_data <- mvrnorm(n, gaussian_means[, 1], Sigma) %>%
+  set_rownames(paste0("Person_", 1:n)) %>% 
+  set_colnames(paste0("Gene_", 1:p)) %>% 
+  as.data.frame()
+
+ggplot(my_data, aes(x = Gene_1, y = Gene_2)) +
+  geom_point() +
+  labs(
+    title = "No clustering structure (single Gaussian)",
+    x = "Gene 1",
+    y = "Gene 2"
+  ) 
+
+my_data_breaks <- mdiHelpR::defineDataBreaks(my_data, col_pal)
+
+pheatmap(my_data,
+         color = col_pal, 
+         breaks = my_data_breaks,
+         main = "Expression data across two genes (single Gaussian)",
+         cluster_cols = F,
+         show_rownames = F)
+
+
+```
+
+Secondly we consider data generated from a uniform distribution. 
+
+```{r 2d_uniform, echo = F}
+
+unif_data <- matrix(runif(n * p, min = -4, max = 4), ncol = p) %>%
+  set_rownames(paste0("Person_", 1:n)) %>% 
+  set_colnames(paste0("Gene_", 1:p)) %>% 
+  as.data.frame()
+
+ggplot(unif_data, aes(x = Gene_1, y = Gene_2)) +
+  geom_point() +
+  labs(
+    title = "No clustering structure (uniform distribution)",
+    x = "Gene 1",
+    y = "Gene 2"
+  )
+
+unif_breaks <- mdiHelpR::defineDataBreaks(unif_data, col_pal)
+
+pheatmap(unif_data, 
+         main = "Expression data across two genes (uniform)",
+         color = col_pal, 
+         breaks = unif_breaks, 
+         cluster_cols = F)
+
+```
+
+In these scenarios, it becomes more and more obvious that there is no clustering structure as $p$ grows:
+
+```{r uniform_large_p, echo = F}
+
+p <- 5
+
+unif_data <- matrix(runif(n * p, min = -4, max = 4), ncol = p) %>%
+  set_rownames(paste0("Person_", 1:n)) %>% 
+  set_colnames(paste0("Gene_", 1:p)) %>% 
+  as.data.frame()
+
+# unif_breaks <- mdiHelpR::defineDataBreaks(unif_data, col_pal)
+
+pheatmap(unif_data, 
+         main = "Expression data across two genes (uniform)",
+         color = col_pal, 
+         breaks = unif_breaks, 
+         cluster_cols = F)
+
+p <- 50
+
+unif_data <- matrix(runif(n * p, min = -4, max = 4), ncol = p) %>%
+  set_rownames(paste0("Person_", 1:n)) %>% 
+  set_colnames(paste0("Gene_", 1:p)) %>% 
+  as.data.frame()
+
+# unif_breaks <- mdiHelpR::defineDataBreaks(unif_data, col_pal)
+
+pheatmap(unif_data, 
+         main = "Expression data across two genes (uniform)",
+         color = col_pal, 
+         breaks = unif_breaks, 
+         cluster_cols = T)
+
+```
+
+Thus if a consensus inference approach can recognise the lack of structure in the 2D case then it is likely to be able to do so in higher dimensions. This means that for $p = 2$ we have the following scenarios:
+
+```{r 2d_table, echo = F}
+
+table_2d <- data.frame(
+  n = 500,
+  p = 2,
+  Distribution = c("Gaussian", "Gaussian", "Uniform"),
+  K = c(5, 1, 1),
+  pi = "vec(1 / K)"
+)
+
+kable(table_2d)
+
+```
+
+For the Gaussian cases we use 5 different mean vectors:
+
+\[
+\mu_1 = \begin{bmatrix}
+  -3 \\ -3
+\end{bmatrix}, \mu_2 = \begin{bmatrix}
+  -3 \\ 3
+\end{bmatrix},  \mu_3 = \begin{bmatrix}
+  3 \\ -3
+\end{bmatrix},  \mu_4 = \begin{bmatrix}
+  3 \\ 3
+\end{bmatrix},  \mu_5 = \begin{bmatrix}
+  0 \\ 0
+\end{bmatrix} 
+\]
+
+and a common diagonal covariance matrix
+
+\[
+\Sigma = \begin{bmatrix}
+  1 & 0 \\ 0 & 1
+\end{bmatrix}
+\]
+
+to define our 5 distributions we draw from.
+
+We are also interested in varying the proporiton of points assigned to each cluster.
+
+Otehr idea:
+
+* dataset based upon clustering be gene up and down expressed
+
+```{r sim_table, echo = F}
+
+# Table of scenarios to generate
+my_table <- data.frame(
+  Number = 1:16,
+  n = rep(c(1e2, 1e3), each = 8),
+  p = rep(c(30, 500), each = 2, 4),
+  K = c(rep(c(3, 5), 4), rep(c(5, 7), 4)),
+  pi = rep(c("constant", "varying"), each = 4, 2),
+  mu = rep(c("1:K", "rnorm(K)"), 2, each = 2),
+  sigma = "I"
+)
+
+kable(my_table)
+
+```
+
+## Simulations
+
+We wish to generate data.
+
+```{r simulation_data_1}
+
+data_lst <- genDataFromTable(my_table)
+
+# my_data <- generateDataset(cluster_means, n, p, pi)
+# plotData(my_data$data, my_data$cluster_IDs, main = "Simple dataset")
+
+plotData(data_lst[[11]]$data[, 1:100], data_lst[[11]]$cluster_IDs, cluster_rows = T, cluster_cols = T)
+plotData(data_lst[[12]]$data[, 1:100], data_lst[[12]]$cluster_IDs, cluster_rows = T, cluster_cols = T)
+plotData(data_lst[[15]]$data[,1:100], data_lst[[15]]$cluster_IDs, cluster_rows = T, cluster_cols = T)
+plotData(data_lst[[16]]$data[,1:100], data_lst[[16]]$cluster_IDs, cluster_rows = T, cluster_cols = T)
+
+
+
+```
+
+<!-- A simple example of separable data might be defined by the following parameters and take the shape described in the figure below. -->
+
+<!-- ```{r simulation_example_1} -->
+
+<!-- n <- 50 -->
+<!-- p <- 10 -->
+<!-- cluster_means <- c(-1.5, 0, 1.5) -->
+<!-- K <- length(cluster_means) -->
+<!-- pi <- rep(1 / K, K) -->
+
+<!-- my_data <- generateDataset(cluster_means, n, p, pi) -->
+<!-- plotData(my_data$data, my_data$cluster_IDs, main = "Simple dataset") -->
+<!-- ``` -->
+
+<!-- We notice that each additional column provides more information about our clustering and thus we expect the ability of a method to correctly identify the latent structure to scale with the number of informative features present. -->
+
+<!-- If we consider a case where there are an additional $p_n$ noisy features, the data might take the form: -->
+
+<!-- ```{r simulation_example_2} -->
+
+<!-- p_noisy <- 10 -->
+
+<!-- min_data <- min(cluster_means) -->
+<!-- max_data <- max(cluster_means) -->
+
+<!-- noisy_data <- data.frame( -->
+<!--   matrix(runif(n * p_noisy, min = min_data, max = max_data), -->
+<!--     ncol = p_noisy -->
+<!--   ) -->
+<!-- ) %>% -->
+<!--   set_rownames(row.names(my_data$data)) %>% -->
+<!--   set_colnames(paste0("Noise_", 1:p_noisy)) -->
+
+<!-- noisy_data <- cbind(my_data$data, noisy_data) -->
+
+<!-- plotData(noisy_data, my_data$cluster_IDs, main = "Noisy dataset", cluster_cols = F) -->
+<!-- ``` -->
+
+<!-- Another scenario to consider is a varying propotion of points in each component. One way to do this is to draw from a Beta distirbution: -->
+
+<!-- ```{r beta_distn} -->
+<!-- a <- 0.5 -->
+<!-- b <- 0.5 -->
+<!-- n_samples <- 1e5 -->
+<!-- beta_data <- data.frame(Beta_sample = rbeta(n_samples, a, b), X = 1:n_samples) -->
+<!-- ggplot(beta_data, aes(x = Beta_sample)) + -->
+<!--   geom_histogram() + -->
+<!--   # xlim(-0.1, 1) + -->
+<!--   labs( -->
+<!--     title = "Beta distribution", -->
+<!--     subtitle = paste("with a =", a, "b =", b), -->
+<!--     x = "Samples", -->
+<!--     y = "Count" -->
+<!--   ) -->
+<!-- ``` -->
+
+
+<!-- ```{r simulation_example_3} -->
+<!-- pi_var <- rbeta(K, a, b) -->
+
+<!-- my_data <- generateDataset(cluster_means, n, p, pi_var) -->
+<!-- plotData(my_data$data, my_data$cluster_IDs, main = "Varying cluster proportions") -->
+<!-- ``` -->
+
+<!-- We want to explore how well consensus inference scales; thus exploring a range of values for both $n$ and $p$ is important: -->
+
+
+<!-- ```{r simulation_example_4} -->
+<!-- n <- 1e4 -->
+<!-- K <- 10 -->
+<!-- pi <- rbeta(K, a, b) -->
+<!-- p <- 30 -->
+<!-- cluster_means <- 1:K - ceiling(K / 2) -->
+
+<!-- my_data <- generateDataset(cluster_means, n, p, pi) -->
+<!-- plotData(my_data$data, my_data$cluster_IDs, main = "Large n", show_rownames = F) -->
+
+<!-- n <- 1e2 -->
+<!-- K <- 10 -->
+<!-- pi <- rbeta(K, a, b) -->
+<!-- p <- 100 -->
+<!-- p_noisy <- 300 -->
+<!-- cluster_means <- 1:K - ceiling(K / 2) -->
+
+<!-- my_data <- generateDataset(cluster_means, n, p, pi) -->
+
+<!-- min_data <- min(cluster_means) -->
+<!-- max_data <- max(cluster_means) -->
+
+<!-- noisy_data <- data.frame( -->
+<!--   matrix( -->
+<!--     rnorm(n * p_noisy, mean = mean(cluster_means), sd = sd(my_data$data)), -->
+<!--     ncol = p_noisy -->
+<!--   ) -->
+<!-- ) %>% -->
+<!--   set_rownames(row.names(my_data$data)) %>% -->
+<!--   set_colnames(paste0("Noise_", 1:p_noisy)) -->
+
+<!-- #   matrix(runif(n * p_noisy, min = min_data, max = max_data), -->
+<!-- #     ncol = p_noisy -->
+<!-- #   ) -->
+<!-- # ) %>% -->
+<!-- #   set_rownames(row.names(my_data$data)) %>% -->
+<!-- #   set_colnames(paste0("Noise_", 1:p_noisy)) -->
+
+<!-- x <- cbind(my_data$data, noisy_data) -->
+
+
+<!-- plotData(x, my_data$cluster_IDs, -->
+<!--   main = "Large p", -->
+<!--   show_rownames = F, -->
+<!--   show_colnames = F, -->
+<!--   cluster_rows = T, -->
+<!--   cluster_cols = F -->
+<!-- ) -->
+<!-- ``` -->
