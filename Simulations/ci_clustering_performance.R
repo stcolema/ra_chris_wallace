@@ -21,7 +21,7 @@ library(mdiHelpR)
 library(stringr)
 
 # Plotting
-library(gglot2)
+library(ggplot2)
 
 # I don't think this is used
 library(tibble)
@@ -75,10 +75,10 @@ inputArguments <- function() {
 
     # Expected chain length
     optparse::make_option(c("-l", "--length"),
-      type = "integer",
-      default = 10001,
+      type = "character",
+      default = "10 100 1000 10001",
       help = "Expected chain length; will call an error if any chains are less than this [default= %default]",
-      metavar = "integer"
+      metavar = "character"
     ),
 
     # Thinning factor applied within each chain
@@ -160,11 +160,11 @@ set.seed(1)
 
 # Use a subset of people in the tests
 # Remember to set subset cols to -1 to exclude Mass_Parameter
-subset_cols <- -1
-if (interactive()) {
-  subset_cols <- c(2:600)
-  n_people <- length(subset_cols)
-}
+# subset_cols <- -1
+# if (interactive()) {
+#   subset_cols <- c(2:600)
+#   n_people <- length(subset_cols)
+# }
 
 # Files containing simulation data and structure
 cluster_id_file <- paste0(truth_dir, "cluster_IDs_", sim_num, ".Rds")
@@ -175,7 +175,7 @@ truth <- readRDS(cluster_id_file)
 orig_data <- read.csv(orig_data_file)
 
 # True coclustering matrix
-true_cc <- createSimilarityMat(matrix(truth[1:n_people], nrow = 1))
+true_cc <- createSimilarityMat(matrix(truth, nrow = 1))
 
 # List input files for reading in and for anlaying
 files_full <- list.files(data_dir, full.names = T) %>%
