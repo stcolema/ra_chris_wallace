@@ -1,43 +1,43 @@
 \babel@toc {english}{}
-\contentsline {section}{\numberline {1}Introduction}{5}{section.1}
-\contentsline {section}{\numberline {2}Theory}{10}{section.2}
-\contentsline {subsection}{\numberline {2.1}Bayesian inference}{10}{subsection.2.1}
-\contentsline {subsection}{\numberline {2.2}Clustering}{12}{subsection.2.2}
-\contentsline {subsection}{\numberline {2.3}Mixture models}{12}{subsection.2.3}
-\contentsline {subsubsection}{\numberline {2.3.1}Bayesian mixture models}{14}{subsubsection.2.3.1}
-\contentsline {subsection}{\numberline {2.4}Multiple dataset integration}{15}{subsection.2.4}
-\contentsline {subsubsection}{\numberline {2.4.1}Prior distributions}{16}{subsubsection.2.4.1}
-\contentsline {subsection}{\numberline {2.5}Consensus clustering}{19}{subsection.2.5}
-\contentsline {subsection}{\numberline {2.6}Rand index}{19}{subsection.2.6}
-\contentsline {subsection}{\numberline {2.7}Convergence}{23}{subsection.2.7}
-\contentsline {subsubsection}{\numberline {2.7.1}Auto-correlation}{23}{subsubsection.2.7.1}
-\contentsline {subsubsection}{\numberline {2.7.2}Effective sample size}{23}{subsubsection.2.7.2}
-\contentsline {subsubsection}{\numberline {2.7.3}Geweke $Z$-score}{24}{subsubsection.2.7.3}
-\contentsline {subsubsection}{\numberline {2.7.4}Gelman-Rubin shrink factor}{25}{subsubsection.2.7.4}
-\contentsline {subsection}{\numberline {2.8}Standardisation}{26}{subsection.2.8}
-\contentsline {section}{\numberline {3}Case study examples}{27}{section.3}
-\contentsline {subsection}{\numberline {3.1}Simulations}{27}{subsection.3.1}
-\contentsline {subsubsection}{\numberline {3.1.1}Simulation: Case 1}{27}{subsubsection.3.1.1}
-\contentsline {subsubsection}{\numberline {3.1.2}Simulation: Case 2}{29}{subsubsection.3.1.2}
-\contentsline {subsubsection}{\numberline {3.1.3}Pipeline}{31}{subsubsection.3.1.3}
-\contentsline {subsection}{\numberline {3.2}CEDAR dataset}{31}{subsection.3.2}
-\contentsline {subsubsection}{\numberline {3.2.1}CEDAR: Case 1 - Inositol gene set}{35}{subsubsection.3.2.1}
-\contentsline {subsubsection}{\numberline {3.2.2}CEDAR: Case 2 - 1,000 probes}{36}{subsubsection.3.2.2}
-\contentsline {subsubsection}{\numberline {3.2.3}Pipeline}{37}{subsubsection.3.2.3}
-\contentsline {section}{\numberline {4}Results}{39}{section.4}
-\contentsline {subsection}{\numberline {4.1}Simulations}{40}{subsection.4.1}
-\contentsline {subsubsection}{\numberline {4.1.1}Case 1: Proof of consensus}{40}{subsubsection.4.1.1}
-\contentsline {subsubsection}{\numberline {4.1.2}Case 2: Overcoming multiple modes}{42}{subsubsection.4.1.2}
-\contentsline {subsection}{\numberline {4.2}CEDAR dataset}{44}{subsection.4.2}
-\contentsline {subsubsection}{\numberline {4.2.1}Case 1: 250 probes}{44}{subsubsection.4.2.1}
-\contentsline {subsubsection}{\numberline {4.2.2}Case 2: 1,000 probes}{52}{subsubsection.4.2.2}
-\contentsline {section}{\numberline {5}Conclusion}{53}{section.5}
-\contentsline {section}{\numberline {6}Future work}{55}{section.6}
-\contentsline {section}{References}{57}{section*.57}
-\contentsline {section}{\numberline {A}Gibbs sampling}{68}{appendix.A}
-\contentsline {subsubsection}{\numberline {A.0.1}Monte Carlo integration}{68}{subsubsection.A.0.1}
-\contentsline {subsubsection}{\numberline {A.0.2}Markov chains}{69}{subsubsection.A.0.2}
-\contentsline {subsubsection}{\numberline {A.0.3}Markov-Chain Monte Carlo methods}{71}{subsubsection.A.0.3}
-\contentsline {section}{\numberline {B}Motivating examples}{73}{appendix.B}
-\contentsline {subsection}{\numberline {B.1}Adjusted Rand index}{73}{subsection.B.1}
-\contentsline {subsection}{\numberline {B.2}Standardising gene expression data}{74}{subsection.B.2}
+\contentsline {section}{\numberline {1}Introduction}{5}{section.1}%
+\contentsline {section}{\numberline {2}Theory}{9}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Bayesian inference}{9}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Clustering}{10}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Mixture models}{10}{subsection.2.3}%
+\contentsline {subsubsection}{\numberline {2.3.1}Bayesian mixture models}{11}{subsubsection.2.3.1}%
+\contentsline {subsection}{\numberline {2.4}Multiple dataset integration}{12}{subsection.2.4}%
+\contentsline {subsubsection}{\numberline {2.4.1}Prior distributions}{13}{subsubsection.2.4.1}%
+\contentsline {subsection}{\numberline {2.5}Consensus clustering}{15}{subsection.2.5}%
+\contentsline {subsection}{\numberline {2.6}Rand index}{16}{subsection.2.6}%
+\contentsline {subsection}{\numberline {2.7}Convergence}{18}{subsection.2.7}%
+\contentsline {subsubsection}{\numberline {2.7.1}Auto-correlation}{18}{subsubsection.2.7.1}%
+\contentsline {subsubsection}{\numberline {2.7.2}Effective sample size}{18}{subsubsection.2.7.2}%
+\contentsline {subsubsection}{\numberline {2.7.3}Geweke $Z$-score}{19}{subsubsection.2.7.3}%
+\contentsline {subsubsection}{\numberline {2.7.4}Gelman-Rubin shrink factor}{20}{subsubsection.2.7.4}%
+\contentsline {subsection}{\numberline {2.8}Standardisation}{21}{subsection.2.8}%
+\contentsline {section}{\numberline {3}Case study examples}{21}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Simulations}{22}{subsection.3.1}%
+\contentsline {subsubsection}{\numberline {3.1.1}Simulation: Case 1}{22}{subsubsection.3.1.1}%
+\contentsline {subsubsection}{\numberline {3.1.2}Simulation: Case 2}{22}{subsubsection.3.1.2}%
+\contentsline {subsubsection}{\numberline {3.1.3}Pipeline}{25}{subsubsection.3.1.3}%
+\contentsline {subsection}{\numberline {3.2}CEDAR dataset}{25}{subsection.3.2}%
+\contentsline {subsubsection}{\numberline {3.2.1}CEDAR: Case 1 - Inositol gene set}{27}{subsubsection.3.2.1}%
+\contentsline {subsubsection}{\numberline {3.2.2}CEDAR: Case 2 - 1,000 probes}{29}{subsubsection.3.2.2}%
+\contentsline {subsubsection}{\numberline {3.2.3}Pipeline}{30}{subsubsection.3.2.3}%
+\contentsline {section}{\numberline {4}Results}{31}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Simulations}{32}{subsection.4.1}%
+\contentsline {subsubsection}{\numberline {4.1.1}Case 1: Proof of consensus}{32}{subsubsection.4.1.1}%
+\contentsline {subsubsection}{\numberline {4.1.2}Case 2: Overcoming multiple modes}{34}{subsubsection.4.1.2}%
+\contentsline {subsection}{\numberline {4.2}CEDAR dataset}{35}{subsection.4.2}%
+\contentsline {subsubsection}{\numberline {4.2.1}Case 1: 250 probes}{35}{subsubsection.4.2.1}%
+\contentsline {subsubsection}{\numberline {4.2.2}Case 2: 1,000 probes}{42}{subsubsection.4.2.2}%
+\contentsline {section}{\numberline {5}Conclusion}{43}{section.5}%
+\contentsline {section}{\numberline {6}Future work}{46}{section.6}%
+\contentsline {section}{References}{47}{section*.57}%
+\contentsline {section}{\numberline {A}Gibbs sampling}{55}{appendix.A}%
+\contentsline {subsubsection}{\numberline {A.0.1}Monte Carlo integration}{55}{subsubsection.A.0.1}%
+\contentsline {subsubsection}{\numberline {A.0.2}Markov chains}{55}{subsubsection.A.0.2}%
+\contentsline {subsubsection}{\numberline {A.0.3}Markov-Chain Monte Carlo methods}{57}{subsubsection.A.0.3}%
+\contentsline {section}{\numberline {B}Motivating examples}{58}{appendix.B}%
+\contentsline {subsection}{\numberline {B.1}Adjusted Rand index}{58}{subsection.B.1}%
+\contentsline {subsection}{\numberline {B.2}Standardising gene expression data}{59}{subsection.B.2}%

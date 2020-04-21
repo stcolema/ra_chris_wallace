@@ -47,6 +47,9 @@ library(Matrix)
 # For command line arguments
 library(optparse)
 
+# For pipe and related functions
+library(magrittr)
+
 # === Functions ================================================================
 
 # The Frobenius product is used to measure model uncertainty
@@ -116,8 +119,8 @@ inputArguments <- function() {
     # Columns of interest for convergence
     optparse::make_option(c("-c", "--cols"),
       type = "character",
-      default = "-1",
-      help = "Columns to subset by in ``fread`` [default= %default]",
+      default = "1",
+      help = "Columns to drop in ``fread`` [default= %default]",
       metavar = "character"
     )
   )
@@ -138,9 +141,9 @@ dir.create(save_dir)
 
 # Details of analysis
 expected_length <- args$length
-thin <- args$thin %>% 
-  str_split(" ") %>% 
-  unlist() %>% 
+thin <- args$thin %>%
+  str_split(" ") %>%
+  unlist() %>%
   as.numeric()
 
 n_seeds <- args$n_seeds
@@ -150,9 +153,9 @@ sim_num <- args$sim_num
 results_file <- paste0(save_dir, "ConsensusSimulation", sim_num, "ResultsDF.csv")
 
 # Columns to exclude as irrelevant to clustering
-subset_cols <- args$cols %>% 
-  str_split(" ") %>% 
-  unlist() %>% 
+subset_cols <- args$cols %>%
+  str_split(" ") %>%
+  unlist() %>%
   as.numeric()
 
 # For reproducibility
@@ -233,7 +236,7 @@ n_model <- length(iter_used)
 # head()
 
 # Find dimensions of datasets by reading in a 0-row data.table
-s1 <- fread(files_full[1], select = subset_cols, nrows = 0)
+s1 <- fread(files_full[1], drop = subset_cols, nrows = 0)
 n_people <- ncol(s1)
 
 # Old object to hold psms
@@ -282,7 +285,10 @@ for (i in 1:n_seeds) {
     thin_present <- file_details$thin[file_used]
 
     # Read in the relevant samples
-    curr_samples <- fread(files_full[[file_used]], select = subset_cols, nrows = 1 + curr_iter / thin_present) %>%
+    curr_samples <- fread(files_full[[file_used]],
+      drop = subset_cols,
+      nrows = 1 + curr_iter / thin_present
+    ) %>%
       as.matrix(ncol = n_people)
 
     # Create a coclustering matrix based on the current sample
@@ -296,7 +302,16 @@ for (i in 1:n_seeds) {
 
       # Save a sparse representation of the similarity matrix
       sparse_cm <- Matrix(.curr_cm, sparse = TRUE)
-      cm_file <- paste0(save_dir, "consensusMatrixN", curr_iter, "S", i, ".txt")
+      cm_file <- paste0(
+        save_dir,
+        "Simulation",
+        sim_num,
+        "ConsensusMatrixN",
+        curr_iter,
+        "S",
+        i,
+        ".txt"
+      )
       writeMM(sparse_cm, file = cm_file)
 
       # Predicted clustering
@@ -310,61 +325,64 @@ for (i in 1:n_seeds) {
   }
 }
 
+# Add the simulation number as a variable in the data.frame
+results_df$Simulation <- sim_num
+
 # Save the model performance results to a file
 write.csv(results_df, file = results_file)
 
 # === Plotting =================================================================
 
-if(interactive()){
+if (interactive()) {
 
-# Set labels for facet wrapping
-iter_labels <- c(paste0("Number of iterations: ", results_df$N_iter))
-names(iter_labels) <- results_df$N_iter
+  # Set labels for facet wrapping
+  iter_labels <- c(paste0("Number of iterations: ", results_df$N_iter))
+  names(iter_labels) <- results_df$N_iter
 
-seed_labels <- c(paste0("Number of chains: ", results_df$N_seeds))
-names(seed_labels) <- results_df$N_seeds
+  seed_labels <- c(paste0("Number of chains: ", results_df$N_seeds))
+  names(seed_labels) <- results_df$N_seeds
 
-# Plots
-p_ari_iter <- results_df %>%
-  ggplot(aes(x = N_seeds, y = ARI)) +
-  geom_line() +
-  facet_wrap(~N_iter, labeller = labeller(N_iter = iter_labels), ncol = 1) # +
-# labs(
-#   title = "Performance stabilitses by 100 iterations",
-#   subtitle = "CI for large n, large k, small distance between means",
-#   x = "Number of chains used"
-# )
+  # Plots
+  p_ari_iter <- results_df %>%
+    ggplot(aes(x = N_seeds, y = ARI)) +
+    geom_line() +
+    facet_wrap(~N_iter, labeller = labeller(N_iter = iter_labels), ncol = 1) # +
+  # labs(
+  #   title = "Performance stabilitses by 100 iterations",
+  #   subtitle = "CI for large n, large k, small distance between means",
+  #   x = "Number of chains used"
+  # )
 
-p_ari_seed <- results_df %>%
-  ggplot(aes(x = N_iter, y = ARI)) +
-  geom_line() +
-  facet_wrap(~N_seeds, labeller = labeller(N_seeds = seed_labels), ncol = 1) # +
-# labs(
-# title = "Performance stabilitses by 100 iterations",
-# subtitle = "CI for large n, large k, small distance between means",
-# x = "Number of iterations used"
-# )
+  p_ari_seed <- results_df %>%
+    ggplot(aes(x = N_iter, y = ARI)) +
+    geom_line() +
+    facet_wrap(~N_seeds, labeller = labeller(N_seeds = seed_labels), ncol = 1) # +
+  # labs(
+  # title = "Performance stabilitses by 100 iterations",
+  # subtitle = "CI for large n, large k, small distance between means",
+  # x = "Number of iterations used"
+  # )
 
 
-p_unc_iter <- results_df %>%
-  ggplot(aes(x = N_seeds, y = Frobenius_product)) +
-  geom_line() +
-  facet_wrap(~N_iter, labeller = labeller(N_iter = iter_labels), ncol = 1) # +
-# labs(
-#   title = "Performance stabilitses after 40 iterations",
-#   subtitle = "CI for large n, large k, small distance between means",
-#   x = "Number of chains used"
-# )
+  p_unc_iter <- results_df %>%
+    ggplot(aes(x = N_seeds, y = Frobenius_product)) +
+    geom_line() +
+    facet_wrap(~N_iter, labeller = labeller(N_iter = iter_labels), ncol = 1) # +
+  # labs(
+  #   title = "Performance stabilitses after 40 iterations",
+  #   subtitle = "CI for large n, large k, small distance between means",
+  #   x = "Number of chains used"
+  # )
 
-p_unc_seed <- results_df %>%
-  ggplot(aes(x = N_iter, y = Frobenius_product)) +
-  geom_line() +
-  facet_wrap(~N_seeds, labeller = labeller(N_seeds = seed_labels), ncol = 1)
+  p_unc_seed <- results_df %>%
+    ggplot(aes(x = N_iter, y = Frobenius_product)) +
+    geom_line() +
+    facet_wrap(~N_seeds, labeller = labeller(N_seeds = seed_labels), ncol = 1)
 
-p_ari_iter + p_ari_seed
-p_unc_iter + p_unc_seed
+  p_ari_iter + p_ari_seed
+  p_unc_iter + p_unc_seed
 
-p_ari_iter + p_unc_iter
+  p_ari_iter + p_unc_iter
 }
 
 
@@ -441,28 +459,28 @@ p_ari_iter + p_unc_iter
 #   geom_point() +
 #   facet_wrap_paginate(~N_iter, ncol = 3, nrow = 3, page = 3)
 #
-# 
-# 
-# 
+#
+#
+#
 # sim_col <- simColPal()
 # my_breaks <- defineBreaks(sim_col, lb = 0)
 # seed_psm_array[, , 37] %>%
 #   pheatmap(color = sim_col, breaks = my_breaks)
-# 
+#
 # seed_psm_array[, , 1] %>%
 #   pheatmap(color = sim_col, breaks = my_breaks)
-# 
+#
 # seed_psm_array[, , 10] %>%
 #   pheatmap(color = sim_col, breaks = my_breaks)
-# 
+#
 # seed_psm_array[, , 19] %>%
 #   pheatmap(color = sim_col, breaks = my_breaks)
-# 
-# 
+#
+#
 # seed_psm_array[, , 28] %>%
 #   pheatmap(color = sim_col, breaks = my_breaks)
-# 
-# 
+#
+#
 # my_c <- maxpear(seed_psm_array[, , 6])$cl
 # arandi(my_c, truth[1:n_people])
 
@@ -470,16 +488,16 @@ p_ari_iter + p_unc_iter
 #
 # my_c <- maxpear(seed_psm_array[, , 20])$cl
 # annotatedHeatmap(orig_data[1:n_people, 2:5], my_c)
-# 
+#
 # seed_psm_array[, , 1] %>%
 #   pheatmap(color = sim_col, breaks = my_breaks)
-# 
+#
 # seed_psm_array[, , 1, 1] %>%
 #   pheatmap(color = sim_col, breaks = my_breaks)
-# 
+#
 # seed_psm_array[, , 10, 1] %>%
 #   pheatmap(color = sim_col, breaks = my_breaks)
-# 
-# 
+#
+#
 # seed_psm_array[, , 10, 1] %>%
 #   pheatmap(color = sim_col, breaks = my_breaks)
