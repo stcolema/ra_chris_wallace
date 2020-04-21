@@ -193,4 +193,5 @@ if (n_files_short) {
   cat(paste0("\n\n", n_files_short, " files are shorter than expected. Re-run analysis for:\n"))
   f_ind <- which(file_details$Expected_length != file_details$samples_record)
   cat(paste(short_files[f_ind], collapse = "\n"))
+  cat("\n\n")
 }

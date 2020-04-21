@@ -146,6 +146,9 @@ thin <- args$thin %>%
 n_seeds <- args$n_seeds
 sim_num <- args$sim_num
 
+# File to save results of model performance to
+results_file <- paste0(save_dir, "ConsensusSimulation", sim_num, "ResultsDF.csv")
+
 # Columns to exclude as irrelevant to clustering
 subset_cols <- args$cols %>% 
   str_split(" ") %>% 
@@ -307,9 +310,12 @@ for (i in 1:n_seeds) {
   }
 }
 
+# Save the model performance results to a file
+write.csv(results_df, file = results_file)
+
 # === Plotting =================================================================
 
-write.csv(results_df, file = paste0(save_dir, "ResultsCI.csv"))
+if(interactive()){
 
 # Set labels for facet wrapping
 iter_labels <- c(paste0("Number of iterations: ", results_df$N_iter))
@@ -359,6 +365,8 @@ p_ari_iter + p_ari_seed
 p_unc_iter + p_unc_seed
 
 p_ari_iter + p_unc_iter
+}
+
 
 #
 # results_df %>%
