@@ -50,7 +50,10 @@ library(optparse)
 # For pipe and related functions
 library(magrittr)
 
-my_dir <- "/Users/stephen/Desktop/simple_2d/Consensus/"
+# Combining plots
+library(patchwork)
+
+my_dir <- "/Users/stephen/Desktop/Testing_pipeline/simple_2d/Model_performance/Consensus/"
 
 sim_results_files <- list.files(my_dir, pattern = ".csv", full.names = T)
 n_files <- length(sim_results_files)
@@ -68,11 +71,11 @@ for(i in 1:n_files){
 all_results_df$Simulation <- factor(all_results_df$Simulation)
 
 # Set labels for facet wrapping
-iter_labels <- c(paste0("Number of iterations: ", results_df$N_iter))
-names(iter_labels) <- results_df$N_iter
+iter_labels <- c(paste0("Number of iterations: ", all_results_df$N_iter))
+names(iter_labels) <- all_results_df$N_iter
 
-seed_labels <- c(paste0("Number of chains: ", results_df$N_seeds))
-names(seed_labels) <- results_df$N_seeds
+seed_labels <- c(paste0("Number of chains: ", all_results_df$N_seeds))
+names(seed_labels) <- all_results_df$N_seeds
 
 # Plots
 p1 <- all_results_df %>%
@@ -94,10 +97,10 @@ fun.args = list(conf.int = 0.5)
   )
 
 
-all_results_df %>%
+p3 <- all_results_df %>%
   ggplot(aes(x = N_iter, y = ARI)) +
   geom_line(aes(group = Simulation), colour = "grey", alpha = 0.3) +
-  facet_wrap(~N_seeds, labeller = labeller(N_seeds = seed_labels)) + #, ncol = 1) +
+  facet_wrap(~N_seeds, labeller = labeller(N_seeds = seed_labels), ncol = 1) +
   geom_smooth(color = "blue", lty = 1,
               stat = "summary",
               fill = "red",
@@ -125,6 +128,12 @@ p2 <- all_results_df %>%
   )
 
 p1+p2 + plot_annotation(
+  title = 'Model performance on 2D dataset',
+  # subtitle = 'These 3 plots will reveal yet-untold secrets about our beloved data-set',
+  subtitle = 'Model predictive performance increases with chains but not iterations; \nUncertainty quantification does not improve with iterations or chains'
+)
+
+p1+p3+ plot_annotation(
   title = 'Model performance on 2D dataset',
   # subtitle = 'These 3 plots will reveal yet-untold secrets about our beloved data-set',
   subtitle = 'Model predictive performance increases with chains but not iterations; \nUncertainty quantification does not improve with iterations or chains'

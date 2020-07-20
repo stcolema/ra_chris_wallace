@@ -50,6 +50,12 @@ library(optparse)
 # For pipe and related functions
 library(magrittr)
 
+# Combining plots
+library(patchwork)
+
+# For filter and group_by
+library(dplyr)
+
 # === Functions ================================================================
 
 # The Frobenius norm is used to measure model uncertainty
@@ -138,6 +144,14 @@ inputArguments <- function() {
       metavar = "character"
     ),
 
+    # Directory containing Geweke statistic data for each chain
+    optparse::make_option(c("--geweke_dir"),
+      type = "character",
+      default = NA,
+      help = "Directory containing Geweke statistic data for each chain [default= %default]",
+      metavar = "character"
+    ),
+
     # Columns of interest for convergence
     optparse::make_option(c("-c", "--cols"),
       type = "character",
@@ -158,11 +172,14 @@ args <- inputArguments()
 data_dir <- args$dir
 save_dir <- args$save_dir
 truth_dir <- args$truth_dir
+geweke_dir <- args$geweke_dir
 
 dir.create(save_dir)
 
 # data_dir <- "/Users/stephen/Desktop/Testing_pipeline/simple_2d/MDI_output/simulation_1/Bayesian/"
 # truth_dir <- "/Users/stephen/Desktop/Testing_pipeline/simple_2d/Input_data/"
+# geweke_dir <- "/Users/stephen/Desktop/Convergence/large_n_small_p_large_k_small_dm/"
+
 
 # Details of analysis
 expected_length <- args$length
@@ -205,6 +222,22 @@ orig_data <- read.csv(orig_data_file)
 # True coclustering matrix
 true_cc <- createSimilarityMat(matrix(truth, nrow = 1))
 
+# Read in the data containinng Geweke statistics
+geweke_data <- paste0(geweke_dir, "simulation_", sim_num, "GewekeData.csv") %>%
+  read.csv()
+
+# From the Gewke data, find which chains have converged
+test_data <- geweke_data %>%
+  group_by(Chain) %>%
+  summarise(Shapiro_p_value = shapiro.test(Geweke_statistic)$p.value) %>%
+  mutate(Normal = Shapiro_p_value > 0.05)
+
+# Extract the chain number to remove these chains
+chain_number <- test_data$Chain %>%
+  str_extract_all("[1-9][0-9]*") %>%
+  unlist() %>%
+  as.numeric()
+
 # List input files for reading in and for anlaying
 files_full <- list.files(data_dir, full.names = T) %>%
   str_sort(numeric = T)
@@ -221,6 +254,14 @@ file_details <- files_short %>%
   matrix(ncol = 3, byrow = T) %>%
   set_colnames(c("n", "thin", "seed")) %>%
   as.data.frame()
+
+# The chains to use ordered to match files
+chains_to_use <- test_data$Normal[match(file_details$seed, chain_number)]
+
+# Remove any non-converged chains
+files_short <- files_short[chains_to_use]
+files_full <- files_full[chains_to_use]
+file_details <- file_details[which(chains_to_use), ]
 
 # Inspect the file details
 # file_details %>%
@@ -241,7 +282,7 @@ iter_order <- file_details$n %>%
 # head()
 
 # Number of seeds and iterations present
-n_seeds <- max(file_details$seed)
+n_seeds <- length(file_details$seed)
 n_iter <- max(file_details$n)
 
 # Iterations saved across all consensus inference models in simulations run April 2020
@@ -270,7 +311,7 @@ n_people <- ncol(s1)
 
 # Number of iterations and seeds to record for model evaluation
 iters_to_record <- iter_used # c(1, 10, 100, 1000, 10000)
-seeds_to_record <- c(1:10)
+seeds_to_record <- file_details$seed
 
 # The number of models recorded under each measure
 n_iters_recorded <- length(iters_to_record)
@@ -279,20 +320,28 @@ n_seeds_recorded <- length(seeds_to_record)
 # The data.frame that holds the score of each model
 results_df <- data.frame(
   N_iter = rep(iters_to_record, n_seeds_recorded),
-  N_seeds = rep(seeds_to_record, each = n_iters_recorded),
+  Seed = rep(seeds_to_record, each = n_iters_recorded),
   ARI = 0,
   Frobenius_norm = 0
 )
 
 # NOT USED
-# recorded_values <- c("N_iter", "N_seeds", "ARI", "Frobenius_norm")
+# recorded_values <- c("N_iter", "Seed", "ARI", "Frobenius_norm")
 
 # The array that hold the consensus matrix for each model
 seed_psm_array <- array(0, c(n_people, n_people, n_seeds))
 
+# Matrix hold cumulative PSMs
+all_seeds_psm <- matrix(0, nrow = n_people, ncol = n_people)
+
 # === Analysis =================================================================
 
 for (i in 1:n_seeds) {
+  curr_seed <- seeds_to_record[i]
+
+  # Which consensus output matches current requirements of seed and chain
+  # length
+  file_used <- which(file_details$seed == curr_seed)[1]
 
   # Read in the relevant samples
   curr_samples <- fread(files_full[[file_used]], drop = subset_cols) %>%
@@ -302,10 +351,6 @@ for (i in 1:n_seeds) {
 
     # Current number of iterations used
     curr_iter <- iter_used[j]
-
-    # Which consensus output matches current requirements of seed and chain
-    # length
-    file_used <- which(file_details$n > curr_iter & file_details$seed == i)[1]
 
     # What thinning is present in the current file (influences which sample is
     # kept, if in a file where we want the thousandth sample and there is
@@ -318,13 +363,15 @@ for (i in 1:n_seeds) {
     n_samples_used <- length(samples_used)
 
     # Create a coclustering matrix based on the current sample
-    curr_psm <- createSimilarityMat(matrix(curr_samples[samples_used, ], nrow = n_samples_used))
+    curr_psm <- createSimilarityMat(matrix(curr_samples[samples_used, ],
+      nrow = n_samples_used
+    ))
 
     # Update the consensus matrix
     seed_psm_array[, , i] <- curr_psm
 
     # If current model is to to be saved, perform inference
-    if (curr_iter %in% iters_to_record & i %in% seeds_to_record) {
+    if (curr_iter %in% iters_to_record & curr_seed %in% seeds_to_record) {
 
       # Save a sparse representation of the similarity matrix
       sparse_psm <- Matrix(curr_psm, sparse = TRUE)
@@ -335,27 +382,66 @@ for (i in 1:n_seeds) {
         "PSMN",
         curr_iter,
         "S",
-        i,
+        curr_seed,
         ".txt"
       )
+
       writeMM(sparse_psm, file = psm_file)
 
       # Predicted clustering
       curr_pred_cl <- maxpear(curr_psm)$cl
 
       # Record frobenius product and ARI
-      record_ind <- which(results_df$N_iter == curr_iter & results_df$N_seeds == i)
+      record_ind <- which(results_df$N_iter == curr_iter
+      & results_df$Seed == curr_seed)
+
+      # Summary accuracy
       results_df$ARI[record_ind] <- arandi(curr_pred_cl, truth[1:n_people])
+
+      # Uncertainty
       results_df$Frobenius_norm[record_ind] <- normalisedFrobeniusSimilarity(true_cc, curr_psm)
     }
   }
+  all_seeds_psm <- all_seeds_psm + curr_psm
 }
+
+# Normalise the pooled results
+all_seeds_psm <- all_seeds_psm / n_seeds
+
+# Predicted clustering from these
+final_pred_cl <- maxpear(all_seeds_psm)$cl
+
+# Summary accuracy
+final_ARI <- arandi(final_pred_cl, truth[1:n_people])
+
+# Uncertainty
+final_Frobenius_norm <- normalisedFrobeniusSimilarity(true_cc, all_seeds_psm)
+
+# Put these in a data.frame
+final_results <- data.frame(n_iter, "Pooled", final_ARI, final_Frobenius_norm) %>% 
+  set_colnames(colnames(results_df))
+
+# Bind them onto the other results
+results_df <- rbind(results_df, final_results)
 
 # Add the simulation number as a variable in the data.frame
 results_df$Simulation <- sim_num
 
 # Save the model performance results to a file
 write.csv(results_df, file = results_file)
+
+# Convert array to list of matrices
+psm_list <- lapply(seq(dim(seed_psm_array)[3]), function(x) seed_psm_array[, , x])
+
+# Compare PSMs in a heatmap
+ph_grid <- compareSimilarityMatrices(
+  matrices = psm_list,
+  title = paste0("Simulation ", sim_num, ": comparison of PSMs across chains")
+)
+
+# Save the image
+ph_filename <- paste0(save_dir, "BayesianSimulation", sim_num, "PSMs.png")
+ggsave(ph_filename, ph_grid)
 
 # === Plotting =================================================================
 
@@ -365,14 +451,15 @@ if (interactive()) {
   iter_labels <- c(paste0("Number of iterations: ", results_df$N_iter))
   names(iter_labels) <- results_df$N_iter
 
-  seed_labels <- c(paste0("Number of chains: ", results_df$N_seeds))
-  names(seed_labels) <- results_df$N_seeds
+  seed_labels <- c(paste0("Chain ", results_df$Seed))
+  names(seed_labels) <- results_df$Seed
 
   # Plots
-  p_ari_iter <- results_df %>%
-    ggplot(aes(x = N_seeds, y = ARI)) +
-    geom_line() +
-    facet_wrap(~N_iter, labeller = labeller(N_iter = iter_labels), ncol = 1) # +
+  # p_ari_iter <- results_df %>%
+  #   filter(N_iter %in% c(1e3, 1e4, 1e5, 1e6)) %>%
+  #   ggplot(aes(x = Seed, y = ARI)) +
+  #   geom_point() +
+  #   facet_wrap(~N_iter, labeller = labeller(N_iter = iter_labels), ncol = 1) # +
   # labs(
   #   title = "Performance stabilitses by 100 iterations",
   #   subtitle = "CI for large n, large k, small distance between means",
@@ -382,18 +469,18 @@ if (interactive()) {
   p_ari_seed <- results_df %>%
     ggplot(aes(x = N_iter, y = ARI)) +
     geom_line() +
-    facet_wrap(~N_seeds, labeller = labeller(N_seeds = seed_labels), ncol = 1) # +
-  # labs(
-  # title = "Performance stabilitses by 100 iterations",
-  # subtitle = "CI for large n, large k, small distance between means",
-  # x = "Number of iterations used"
-  # )
+    facet_wrap(~Seed, labeller = labeller(Seed = seed_labels), ncol = 1) +
+    labs(
+      # title = "Predictive performance",
+      subtitle = "ARI between summary clustering from PSM and true labelling",
+      x = "Number of iterations used"
+    )
 
 
-  p_unc_iter <- results_df %>%
-    ggplot(aes(x = N_seeds, y = Frobenius_norm)) +
-    geom_line() +
-    facet_wrap(~N_iter, labeller = labeller(N_iter = iter_labels), ncol = 1) # +
+  # p_unc_iter <- results_df %>%
+  #   ggplot(aes(x = Seed, y = Frobenius_norm)) +
+  #   geom_line() +
+  #   facet_wrap(~N_iter, labeller = labeller(N_iter = iter_labels), ncol = 1) # +
   # labs(
   #   title = "Performance stabilitses after 40 iterations",
   #   subtitle = "CI for large n, large k, small distance between means",
@@ -403,12 +490,24 @@ if (interactive()) {
   p_unc_seed <- results_df %>%
     ggplot(aes(x = N_iter, y = Frobenius_norm)) +
     geom_line() +
-    facet_wrap(~N_seeds, labeller = labeller(N_seeds = seed_labels), ncol = 1)
+    facet_wrap(~Seed, labeller = labeller(Seed = seed_labels), ncol = 1) +
+    labs(
+      # title = "Frobenius norm",
+      # subtitle = "CI for large n, large k, small distance between means",
+      x = "Number of iterations used",
+      y = "Frobenius norm",
+      subtitle = "Frobenius norm of difference between PSM and true coclustering matrix"
+    )
 
-  p_ari_iter + p_ari_seed
-  p_unc_iter + p_unc_seed
+  # p_ari_iter + p_ari_seed
+  # p_unc_iter + p_unc_seed
 
-  p_ari_iter + p_unc_iter
+  # p_ari_iter + p_unc_iter
+  patch <- p_ari_seed + p_unc_seed
+  patch + plot_annotation(
+    title = paste0(scenario, ": simulation ", sim_num),
+    subtitle = "Bayesian inference"
+  )
 }
 
 
@@ -416,10 +515,10 @@ if (interactive()) {
 # results_df %>%
 #   ggplot(aes(x = N_iter, y = Uncertainty)) +
 #   geom_point() +
-#   facet_wrap_paginate(~N_seeds, ncol = 3, nrow = 3, page =3)
+#   facet_wrap_paginate(~Seed, ncol = 3, nrow = 3, page =3)
 #
 # results_df %>%
-#   ggplot(aes(x = N_seeds, y = Uncertainty)) +
+#   ggplot(aes(x = Seed, y = Uncertainty)) +
 #   geom_point() +
 #   facet_wrap_paginate(~N_iter, ncol = 4, nrow = 4, page =1) +
 # labs(
@@ -431,7 +530,7 @@ if (interactive()) {
 # results_df %>%
 #   ggplot(aes(x = N_iter, y = Uncertainty)) +
 #   geom_point() +
-#   facet_wrap_paginate(~N_seeds, ncol = 4, nrow = 4, page =1) +
+#   facet_wrap_paginate(~Seed, ncol = 4, nrow = 4, page =1) +
 #   labs(
 #     title = "Performance stabilitses after 40 iterations",
 #     subtitle = "CI for large n, large k, small distance between means",
@@ -439,7 +538,7 @@ if (interactive()) {
 #   )
 #
 # results_df %>%
-#   ggplot(aes(x = N_seeds, y = ARI)) +
+#   ggplot(aes(x = Seed, y = ARI)) +
 #   geom_point() +
 #   facet_wrap_paginate(~N_iter, ncol = 4, nrow = 4, page =1,
 #                       labeller = labeller(N_iter = facet_labels)) +
@@ -451,7 +550,7 @@ if (interactive()) {
 #
 #
 # results_df %>%
-#   ggplot(aes(x = N_seeds, y = Uncertainty)) +
+#   ggplot(aes(x = Seed, y = Uncertainty)) +
 #   geom_point() +
 #   facet_wrap_paginate(~N_iter, ncol = 4, nrow = 4, page =3,
 #                       labeller = labeller(N_iter = facet_labels)) +
@@ -466,7 +565,7 @@ if (interactive()) {
 # results_df %>%
 #   ggplot(aes(x = N_iter, y = ARI)) +
 #   geom_point() +
-#   facet_wrap_paginate(~N_seeds, ncol = 4, nrow = 4, page =1) +
+#   facet_wrap_paginate(~Seed, ncol = 4, nrow = 4, page =1) +
 #   labs(
 #     title = "Performance stabilitses after 40 iterations",
 #     subtitle = "CI for large n, large k, small distance between means",
@@ -476,12 +575,12 @@ if (interactive()) {
 #
 #
 # results_df %>%
-#   ggplot(aes(x = N_seeds, y = Uncertainty)) +
+#   ggplot(aes(x = Seed, y = Uncertainty)) +
 #   geom_point() +
 #   facet_wrap_paginate(~N_iter, ncol = 3, nrow = 3, page =2)
 #
 # results_df %>%
-#   ggplot(aes(x = N_seeds, y = Uncertainty)) +
+#   ggplot(aes(x = Seed, y = Uncertainty)) +
 #   geom_point() +
 #   facet_wrap_paginate(~N_iter, ncol = 3, nrow = 3, page = 3)
 #

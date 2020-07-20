@@ -160,6 +160,9 @@ truth_dir <- args$truth_dir
 
 dir.create(save_dir)
 
+# data_dir <- "/Users/stephen/Desktop/Testing_pipeline/simple_2d/MDI_output/simulation_1/Consensus/"
+# truth_dir <- "/Users/stephen/Desktop/Testing_pipeline/simple_2d/Input_data/"
+
 # Details of analysis
 expected_length <- args$length
 thin <- args$thin %>%
@@ -172,6 +175,7 @@ sim_num <- args$sim_num
 
 # File to save results of model performance to
 results_file <- paste0(save_dir, "ConsensusSimulation", sim_num, "ResultsDF.csv")
+ph_file <- paste0(save_dir, "ConsensusSimulation", sim_num, "ConsensusMatrixGrid.png")
 
 # Columns to exclude as irrelevant to clustering
 subset_cols <- args$cols %>%
@@ -251,6 +255,9 @@ iter_used <- c(
 # Used for book-keeping
 n_model <- length(iter_used)
 
+# Hold matrices to compare heatmaps
+grid_matrices <- data.frame(Iter = c(1, 10, 100, 1000, 10000), N_chain = c(1, 10, 30, 50, 100))
+m_list <- vector("list", nrow(grid_matrices)**2)
 
 # Inspect
 # files_full[seed_order] %>%
@@ -314,6 +321,14 @@ for (i in 1:n_seeds) {
 
     # Update the consensus matrix
     seed_psm_array[, , j] <- .curr_cm <- seed_psm_array[, , j] * (i - 1) / i + curr_psm * (1 / i)
+    
+    if(curr_iter %in% grid_matrices$Iter && i %in% grid_matrices$N_chain){
+      grid_matrices
+      grid_row <- which(curr_iter == grid_matrices$Iter)
+      grid_col <- which(i == grid_matrices$N_chain)
+      m_entry <- (grid_row-1)*nrow(grid_matrices) + grid_col
+      m_list[[m_entry]] <- .curr_cm
+    }
 
     # If current model is to to be saved, perform inference
     if (curr_iter %in% iters_to_record & i %in% seeds_to_record) {
@@ -348,6 +363,13 @@ results_df$Simulation <- sim_num
 
 # Save the model performance results to a file
 write.csv(results_df, file = results_file)
+
+# Save the heatmap grid to a file
+ph_grid <- compareSimilarityMatrices(matrices = m_list, matrix_imposing_order = 25)
+ggsave(ph_file,
+       plot = ph_grid, 
+       width = 24,
+       height = 16)
 
 # === Plotting =================================================================
 
