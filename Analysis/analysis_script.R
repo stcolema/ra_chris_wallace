@@ -5,6 +5,7 @@
 # -d ./MDI/Data/Original\ data/ -w ./VSN_NA_min_data/ -n TRUE
 # --na_people_threshold 0.1 --na_probe_threshold 0.1 -t TRUE -v TRUE
 
+# Rscript /mnt/c/Users/stephen/Documents/PhD/Year_1/Consensus_inference/ra_chris_wallace/Analysis/analysis_script.R -d ./ --datasets "marina_ppi_harbison.csv harbison_ppi_marina_multinomial.csv ppi_marina_harbisonreduced2.csv" --n_iter 21500 --burn 5000 --thin 500 --time TRUE --plot_trees FALSE --plot_rand_index TRUE --plot_phi_series TRUE --plot_phi_densities TRUE --plot_type .png --raw_data_dir /mnt/c/Users/stephen/Documents/PhD/Year_1/Consensus_inference/Consensus_inference_gen/Data/YeastData/ --plot_raw_data TRUE
 
 # Rscript to convert data from CEDAR cohorts (found here: http://cedar-web.giga.ulg.ac.be/)
 # Call from the command line with input arguments
@@ -60,25 +61,26 @@ library(praise, quietly = T)
 # My own helper function
 library(mdiHelpR)
 
-# function_dir <- "~/Documents/PhD/Year_1/Consensus_clustering/ra_chris_wallace/Analysis/Analysis_script_functions/"
-#
-# function_scripts <- c(
-#   "plot_phi_series.R",
-#   "plot_phi_densities.R",
-#   "plot_phi_histograms.R",
-#   "plot_similarity_matrices.R",
-#   "plot_rand_index.R",
-#   "plot_fused_samples.R",
-#   "plot_comparison_expression_clustering.R",
-#   "plot_mass_parameters.R",
-#   "plot_clusters_series.R",
-#   "create_psm.R",
-#   "arandi_matrices.R"
-# )
-#
-# for (f in paste0(function_dir, function_scripts)) {
-#   source(f)
-# }
+function_dir <- "/mnt/c/Users/stephen/Documents/PhD/Year_1/Consensus_inference/ra_chris_wallace/Analysis/Analysis_script_functions/"
+
+
+function_scripts <- c(
+  # "plot_phi_series.R",
+  # "plot_phi_densities.R",
+  # "plot_phi_histograms.R",
+  "plot_similarity_matrices.R",
+  "plot_rand_index.R",
+  "plot_fused_samples.R",
+  "plot_comparison_expression_clustering.R",
+  "plot_mass_parameters.R",
+  "plot_clusters_series.R",
+  "create_psm.R",
+  "arandi_matrices.R"
+)
+
+for (f in paste0(function_dir, function_scripts)) {
+  source(f)
+}
 
 # === Functions ================================================================
 
@@ -351,9 +353,6 @@ input_arguments <- function() {
 
 # === Main script ==============================================================
 
-# Set the ggplot2 theme
-theme_set(theme_bw())
-
 no_missingness <- TRUE
 
 # print("In script")
@@ -367,42 +366,23 @@ set.seed(seed)
 
 # print("Inputs received?")
 
-# Colour palette for PSMs
-col_pal <- colorRampPalette(c("white", "#146EB4"))(100)
-breaks_0_1 <- c(
-  seq(0, 1, length.out = ceiling(length(col_pal)) + 1)
-)
+# === MDI output and parameters ================================================
+# Read in the MDI output file
+file_path <- args$dir
 
-# If there are missing entries than we include -1 in the PSM to indicate these
-if(no_missingness){
-  col_pal_sim <- col_pal
-  my_breaks <- breaks_0_1
-} else {
-  col_pal_sim <- colorRampPalette(c("#FF9900", "white", "#146EB4"))(100)
-  
-  my_breaks <- c(
-    seq(-1, 0, length.out = ceiling(palette_length_expr / 2) + 1),
-    seq(1 / palette_length_expr, 1, length.out = floor(palette_length_expr / 2))
-  )
-}
+mdi_output_files <- list.files(
+  path = file_path,
+  full.names = T,
+  include.dirs = F,
+  pattern = ".csv$"
+) 
 
-col_pal_expr <- colorRampPalette(c("#146EB4", "white", "#FF9900"))(100)
-palette_length_expr <- length(col_pal_expr)
+num_files <- length(mdi_output_files)
+file_names <- basename(tools::file_path_sans_ext(mdi_output_files))
 
-# All possible datasets (and the names of the probes present columns)
-# all_datasets <- c(
-#   "CD14",
-#   "CD15",
-#   "CD19",
-#   "CD4",
-#   "CD8",
-#   "IL",
-#   "PLA",
-#   "RE",
-#   "TR"
-# )
+# === MDI input ================================================================
 
-# Directory holding the raw data files
+# Directory holding the modelled data files
 data_dir <- args$raw_data_dir
 do_no_raw_data_plots <- F
 
@@ -410,15 +390,16 @@ if (is.na(data_dir)) {
   do_no_raw_data_plots <- T
 }
 
-# print("Me")
+# The data files modelled
+files_present <- args$datasets %>%
+  strsplit(., " ") %>%
+  unlist()
 
-# Read in the file relating the probe IDs to the related gene
-# SHOULD THIS BE PRE-PROCESSING?
-# probe_key <- fread(args$probe_key)
+n_datasets <- length(files_present)
+col_names <- paste0("D", 1:n_datasets)
 
-# Read in the MDI output file
-file_path <- args$dir
-# file_path <- "Analysis/MDI_runs/vsn_many_seeds/"
+# Remove the file extension
+dataset_names <- tools::file_path_sans_ext(files_present)
 
 # MDI call specific values
 n_iter <- args$n_iter
@@ -432,22 +413,7 @@ burn <- args$burn
 # (i.e. (ncol(MDI_OUTPUT) - n_datasets - choose(n_datasets, 2)) / n_datasets)
 n_samples <- args$n_samples
 
-# The files / tissues used in the MDI
-# Have to have the order from the call
-# CD4, CD8, CVD19, CD14, CD15, platelets, ileonic, colonic and rectal biopsies
-# transcriptome data for six circulating immune cell types (CD4+ T lymphocytes,
-# CD8+ T lymphocytes, CD19+ B lymphocytes, CD14+ monocytes, CD15+ granulocytes,
-# platelets) as well as ileal, colonic, and rectal biopsies (IL, TR, RE)
-# 323 healthy Europeans
-files_present <- args$datasets %>%
-  strsplit(., " ") %>%
-  unlist()
-
-n_datasets <- length(files_present)
-col_names <- paste0("D", 1:n_datasets)
-
-# Remove the file extension
-dataset_names <- tools::file_path_sans_ext(files_present)
+# === Plotting instructions ====================================================
 
 # Instructions for different plots and calculations
 do_dendrograms_ie_trees <- args$plot_trees
@@ -489,38 +455,29 @@ save_path <- file_path
 generic_title <- "MDI: Adjusted Rand index for"
 generic_save_name <- file_path
 
-
-mdi_output_files <- list.files(
-  path = file_path,
-  full.names = T,
-  include.dirs = F,
-  pattern = ".csv$"
-) # %>%
-# grep("csv", ., value = TRUE)
-
-num_files <- length(mdi_output_files)
-file_names <- basename(tools::file_path_sans_ext(mdi_output_files))
-
-# print(mdi_output_files)
+# 
 
 # For plotting phis
 phis <- list()
 count <- 0
 start_index <- ceiling(burn / thin) + 1 # Consider letting this equal "burn"
 
+# === Reading data =============================================================
+
 # Convert this into useable output using functions provided by Sam Mason
 mcmc_out_lst <- list() # vector("list", num_files)
 
 # Large palette of qualitative colours
 # (see https://stackoverflow.com/questions/15282580/how-to-generate-a-number-of-most-distinctive-colors-in-r)
-qual_col_pals <- brewer.pal.info[brewer.pal.info$category == "qual", ]
-col_vector <- brewer.pal(n = 12, name = "Paired") # unlist(mapply(brewer.pal, qual_col_pals$maxcolors, rownames(qual_col_pals)))
+# qual_col_pals <- brewer.pal.info[brewer.pal.info$category == "qual", ]
+# col_vector <- brewer.pal(n = 12, name = "Paired") # unlist(mapply(brewer.pal, qual_col_pals$maxcolors, rownames(qual_col_pals)))
 
 # print("Hi")
 for (i in 1:num_files) {
   curr_name <- file_names[[i]]
   mcmc_out_lst[[curr_name]] <- fread(mdi_output_files[[i]])
 }
+
 # print("ho")
 if (is.na(n_iter)) {
   n_iter <- nrow(mcmc_out_lst[[1]]) * thin
@@ -529,7 +486,7 @@ if (is.na(n_iter)) {
 # The effective number of iterations saved
 eff_n_iter <- n_iter / thin # - burn
 
-# Note that as each mdi output is on the same data, we only need to count one dataset
+# Note that the number of items present is common in each dataset, 1 is sufficient
 if (is.na(n_samples)) {
   dataset_1_ind <- colnames(mcmc_out_lst[[1]]) %>%
     grep("Dataset1", .)
@@ -551,9 +508,9 @@ if (n_samples > 50) {
   show_heatmap_labels <- FALSE
 }
 
-# Read in the probes present - this is a matrix of bools with the first column
-# as the probe IDs and the remaining columns corrresponding to the cell types
-# with TRUE indicating the probe is present in this cell type (i.e. not added
+# Read in the probes present - this is a matrix of logicals with the first column
+# as the item IDs and the remaining columns corresponding to the cell types
+# with TRUE indicating the item is present in this cell type (i.e. not added
 # manually with an imputed value) and FALSE indicates we added it in.
 samples_present <- args$samples_present
 check_missingness <- !is.na(samples_present)
@@ -563,6 +520,12 @@ check_missingness <- !is.na(samples_present)
 if (check_missingness) {
   samples_present_dt <- fread(samples_present)
   all_datasets <- colnames(samples_present_dt)[2:ncol(samples_present_dt)]
+  
+  # If using datasets with missing entries, keep only the meta data for the relevant files
+  cols_to_keep <- all_datasets %in% dataset_names
+  
+  samples_present_dt <- samples_present_dt[, c(1, cols_to_keep + 1)]
+  
 } else {
   samples_present_dt <- matrix(data = T, ncol = n_datasets, nrow = n_samples) %>%
     as.data.frame() %>%
@@ -571,47 +534,6 @@ if (check_missingness) {
 
   all_datasets <- dataset_names
 }
-
-# If using datasets with missing entries, keep only the meta data for the relevant files
-cols_to_keep <- all_datasets %in% dataset_names
-
-# curr_viable_datasets <- list(
-#   c(
-#     "CD14",
-#     "CD15",
-#     "CD19",
-#     "CD4",
-#     "CD8",
-#     "IL",
-#     "PLA",
-#     "RE",
-#     "TR"
-#   ),
-#   c(
-#     "MDItestdata1",
-#     "MDItestdata2",
-#     "MDItestdata3",
-#     "MDItestdata4",
-#     "MDItestdata5",
-#     "MDItestdata6"
-#   )
-# )
-#
-# # Check columns are as expected.
-# if(length(all_datasets) == length(curr_viable_datasets[[1]])){
-#   if(! all.equal(all_datasets[match(curr_viable_datasets[[1]], all_datasets)], curr_viable_datasets[[1]])){
-#     cat("\nDatasets appears to be CEDAR (based on samples_present_per_dataset.csv), but datasets in columns do not match expected.")
-#     stop(paste("Expected", curr_viable_datasets[[1]]))
-#
-#   }
-# }
-#
-# if(length(all_datasets) == length(curr_viable_datasets[[2]])){
-#   if(! all.equal(all_datasets[match(curr_viable_datasets[[2]], all_datasets)], curr_viable_datasets[[2]])){
-#     cat("\nDatasets appears to be Yeast (based on samples_present_per_dataset.csv), but datasets in columns do not match expected.")
-#     stop(paste("Expected", curr_viable_datasets[[2]]))
-#   }
-# }
 
 mdi_input_files <- list.files(
   path = data_dir,
@@ -629,6 +551,41 @@ mdi_input_files_lower <- stringr::str_to_lower(mdi_input_files) %>%
   basename()
 
 expr_data_order <- match(lower_files, mdi_input_files_lower)
+mdi_input_files <- mdi_input_files[expr_data_order]
+# files_present <- files_present[expr_data_order]
+# print(expr_data_order)
+# print(mdi_input_files)
+# print(files_present)
+# stop("Stop")
+# == Aesthetics ================================================================
+
+# Set the ggplot2 theme
+mdiHelpR::setMyTheme()
+
+# Colour palette for PSMs
+col_pal <- mdiHelpR::simColPal()
+breaks_0_1 <- mdiHelpR::defineBreaks(col_pal, lb = 0, ub = 1)
+# col_pal <- colorRampPalette(c("white", "#146EB4"))(100)
+# breaks_0_1 <- c(
+#   seq(0, 1, length.out = ceiling(length(col_pal)) + 1)
+# )
+
+# If there are missing entries than we include -1 in the PSM to indicate these
+if(no_missingness){
+  col_pal_sim <- col_pal
+  my_breaks <- breaks_0_1
+} else {
+  col_pal_sim <- colorRampPalette(c("#FF9900", "white", "#146EB4"))(100)
+  
+  my_breaks <- c(
+    seq(-1, 0, length.out = ceiling(palette_length_expr / 2) + 1),
+    seq(1 / palette_length_expr, 1, length.out = floor(palette_length_expr / 2))
+  )
+}
+
+# Colour palette for data
+data_col_pal <- mdiHelpR::dataColPal()
+
 
 # === Plotting phis ==========================================================
 
@@ -1064,24 +1021,31 @@ if (!do_no_raw_data_plots) {
   gen_ph_title <- ": heatmap of expression data"
   gen_ph_file_name <- paste0(loc_dir, "pheatmap_")
 
-  # Find the expression data files
-  mdi_input_files <- list.files(
-    path = data_dir,
-    full.names = T,
-    include.dirs = F,
-    pattern = ".csv$"
-  ) # %>%
-  # grep("csv", ., value = TRUE)
-
+  # # Find the expression data files
+  # mdi_input_files <- list.files(
+  #   path = data_dir,
+  #   full.names = T,
+  #   include.dirs = F,
+  #   pattern = ".csv$"
+  # ) # %>%
+  # # grep("csv", ., value = TRUE)
+  # 
+  # print(mdi_input_files)
+  
   input_file_names <- basename(tools::file_path_sans_ext(mdi_input_files))
   data_to_keep <- match(files_present, input_file_names)
 
-  input_file_names <- input_file_names[data_to_keep]
-  mdi_input_files <- mdi_input_files[data_to_keep]
+  # print(data_to_keep)
+  # print(files_present)
+  
+  input_file_names <- files_present #  input_file_names[data_to_keep]
+  # mdi_input_files <- files_present # mdi_input_files[data_to_keep]
 
   datasets_relevant <- input_file_names
   relevant_input_files <- mdi_input_files
 
+  # print(datasets_relevant)
+  
   expression_datasets <- input_file_names # %>%
   # gsub("([^\\_]+)\\_.*", "\\1", .)
   # stringr::str_replace("_sma_mat_nv", "")
@@ -1118,13 +1082,20 @@ if (!do_no_raw_data_plots) {
   # relevant_input_files <- relevant_input_files[expr_data_order]
   # print(relevant_input_files)
 
+  print(length(sample_names))
+  print(n_samples)
+  
   mega_df <- data.frame(matrix(nrow = n_samples, ncol = 0)) %>%
     magrittr::set_rownames(sample_names) # magrittr::set_rownames(gene_id)
 
+  print("Hi")
+  
   big_annotation <- data.frame(matrix(nrow = n_samples, ncol = n_datasets)) %>%
     magrittr::set_rownames(sample_names) %>% # magrittr::set_rownames(gene_id) %>%
     magrittr::set_colnames(datasets_relevant)
 
+  print("Hidra")
+  
   n_total_clusters <- 0
 
   # Vector of columns in each expression dataset (controls showing column names in
@@ -1134,7 +1105,7 @@ if (!do_no_raw_data_plots) {
   data_files <- list()
 
   for (i in 1:n_datasets) {
-    curr_dataset <- datasets_relevant[[i]]
+    curr_dataset <- dataset_names[[i]] # datasets_relevant[[i]]
     # print(curr_dataset)
 
     file_name <- gen_ph_file_name %>%
@@ -1143,6 +1114,16 @@ if (!do_no_raw_data_plots) {
     ph_title <- datasets_relevant[[i]] %>%
       paste0(gen_ph_title)
 
+    print(str(compare_tibble$pred_allocation))
+    print(curr_dataset)
+    print(compare_tibble$dataset)
+    
+    compare_tibble$pred_allocation[compare_tibble$dataset == curr_dataset][[1]] %>%
+      as.factor() %>%
+      as.data.frame() %>% 
+      str() %>% 
+      print()
+    
     # Prepare the clustering information as an annotation row for pheatmap
     pred_clustering <- compare_tibble$pred_allocation[compare_tibble$dataset == curr_dataset][[1]] %>%
       as.factor() %>%
@@ -1152,10 +1133,14 @@ if (!do_no_raw_data_plots) {
 
     # Read in the expression data
     f <- relevant_input_files[[i]]
-    # print(f)
+    print(f)
 
     expression_data <- fread(f, header = T)
 
+    print(dim(expression_data))
+    print(str(expression_data[, 1]))
+    
+    
     # Convert from probe ids to gene ids if necessary
     # if(sum(expression_data[[1]] %in% probe_names) > 0){
     if (sum(expression_data[[1]] %in% sample_names) > 0) {
@@ -1166,6 +1151,9 @@ if (!do_no_raw_data_plots) {
       stop("Gene ids not matching in expression data.")
     }
 
+    print(dim(expression_data))
+    print(str(expression_data[, 1]))
+    
     # Tidy (remove NAs and row name column) and convert to the appropriate format
     # for pheatmap
     expression_data_tidy <- expression_data %>%
@@ -1205,11 +1193,9 @@ if (!do_no_raw_data_plots) {
     expr_max <- max(expression_data_tidy)
     
     # expr_breaks <- define_breaks(col_pal_expr, lb = expr_min, ub = expr_max) %>% unique()
-    expr_breaks <- mdiHelpR::defineBreaks(col_pal_expr,
-      lb = expr_min,
-      ub = expr_max
-    ) %>%
-      unique()
+    expr_breaks <- mdiHelpR::defineDataBreaks(expression_data_tidy, 
+      data_col_pal
+    )
 
     n_people <- c(n_people, ncol(expression_data_tidy))
     show_expr_col_names <- TRUE
@@ -1227,7 +1213,7 @@ if (!do_no_raw_data_plots) {
           pheatmap(
             filename = file_name,
             main = ph_title,
-            color = col_pal_expr,
+            color = data_col_pal,
             breaks = expr_breaks,
             show_rownames = show_heatmap_labels,
             show_colnames = show_expr_col_names
@@ -1253,7 +1239,7 @@ if (!do_no_raw_data_plots) {
             cluster_rows = F,
             annotation_row = pred_clustering,
             annotation_colors = annotation_colors,
-            color = col_pal_expr,
+            color = data_col_pal,
             breaks = expr_breaks,
             show_rownames = show_heatmap_labels,
             show_colnames = show_expr_col_names
@@ -1284,8 +1270,8 @@ if (!do_no_raw_data_plots) {
   expr_min <- min(mega_matrix)
   expr_max <- max(mega_matrix)
 
-  # expr_breaks <- define_breaks(col_pal_expr, lb = expr_min, ub = expr_max) %>% unique()
-  expr_breaks <- mdiHelpR::defineBreaks(col_pal_expr,
+  # expr_breaks <- define_breaks(data_col_pal, lb = expr_min, ub = expr_max) %>% unique()
+  expr_breaks <- mdiHelpR::defineBreaks(data_col_pal,
     lb = expr_min,
     ub = expr_max
   ) %>%
@@ -1296,13 +1282,13 @@ if (!do_no_raw_data_plots) {
       pheatmap(mega_matrix,
         filename = big_file_name,
         main = big_ph_title,
-        color = col_pal_expr,
+        color = data_col_pal,
         breaks = expr_breaks,
         show_colnames = F,
         show_rownames = show_heatmap_labels
       )
     } else {
-      col_pal <- sample(col_vector, n_total_clusters) %>%
+      col_pal <- viridis::viridis(n_total_clusters) %>%
         magrittr::set_names(cluster_labels)
 
       annotation_colors <- list(Cluster = col_pal)
@@ -1312,7 +1298,7 @@ if (!do_no_raw_data_plots) {
         main = big_ph_title,
         annotation_row = big_annotation,
         annotation_colors = annotation_colors,
-        color = col_pal_expr,
+        color = data_col_pal,
         breaks = expr_breaks,
         cluster_cols = F,
         show_colnames = F,
@@ -1422,7 +1408,7 @@ if (do_comparison_plots) {
     col_pal_sim = col_pal_sim,
     sim_breaks = my_breaks,
     show_row_labels = show_heatmap_labels,
-    col_pal_expr = col_pal_expr,
+    col_pal_expr = data_col_pal,
     expr_breaks = expr_breaks
   )
 
@@ -1436,7 +1422,7 @@ if (do_comparison_plots) {
     col_pal_sim = col_pal_sim,
     sim_breaks = my_breaks,
     show_row_labels = show_heatmap_labels,
-    col_pal_expr = col_pal_expr,
+    col_pal_expr = data_col_pal,
     expr_breaks = expr_breaks
   )
 }
