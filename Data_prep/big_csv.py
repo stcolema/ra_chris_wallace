@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 
 """
-Author: Stephen D. Coleman (the D is for David)
-Dedication: This script goes out to all of the boys
+Author: Stephen Coleman
 Description: this is a script to take the last lines from csv files and compile
-    them into one large file. This is part of the CONSENSUS INFERENCE pipeline.
+    them into one large file. This is part of the CONSENSUS CLUSTERING pipeline.
+
+Example: python3 big_csv.py /path/to/learner/outputs/dir/ ConsensusClustering.csv 2 
 """
 # Import statements
 from sys import argv
