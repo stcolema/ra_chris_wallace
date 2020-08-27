@@ -37,7 +37,8 @@ p1 <- my_df %>%
   ggplot(aes(x = Model, y = ARI)) +
   geom_boxplot(colour = "black", fill = "#FDE725FF") +
   coord_flip() +
-  facet_wrap(~Scenario)
+  facet_wrap(~Scenario) +
+  labs(title = "All scenarios: predictive performance")
 
 ggsave(paste0(data_dir, "allmodel_performance_prediction.png"), width = 20, height = 16)
 
@@ -45,8 +46,8 @@ ggsave(paste0(data_dir, "allmodel_performance_prediction.png"), width = 20, heig
 p2 <- my_df %>% 
   ggplot(aes(x = Model, y = Frobenius_norm)) +
   geom_boxplot(colour = "black", fill = "#FDE725FF") +
-  coord_flip() +
-  facet_wrap(~Scenario)
+  coord_flip() + 
+  facet_wrap(~Scenario) 
 
 ggsave(paste0(data_dir, "allmodel_performance_uncertainty.png"), width = 20, height = 16)
 
@@ -67,8 +68,12 @@ na_check <- my_df %>%
 
 na_check[na_check$NAs == 99, ]
 
-my_df %>% 
+summ_df <- my_df %>% 
   dplyr::filter(Model != "Maximum likelihood (Mclust)" | Scenario != "No structure") %>% 
   group_by(Model, Scenario) %>% 
   summarise(Median = median(ARI))
 # summarise(qs = quantile(ARI, c(0.25, 0.5, 0.75)), prob = c(0.25, 0.5, 0.75))
+
+ir100_df <- summ_df %>% filter(Scenario == "Irrelevant features 100")
+
+ir100_df[20:25, ]
