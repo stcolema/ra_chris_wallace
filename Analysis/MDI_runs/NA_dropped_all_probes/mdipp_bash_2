@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-mdipp-1.0.1/mdipp N Na_filled_data/CD4.csv N Na_filled_data/CD8.csv N Na_filled_data/CD14.csv N Na_filled_data/CD15.csv N Na_filled_data/CD19.csv N Na_filled_data/IL.csv N Na_filled_data/RE.csv N Na_filled_data/TR.csv -n 10000 -t 25 -s 1 > output_all_2.csv
-
